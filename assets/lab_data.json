@@ -1,0 +1,3503 @@
+[
+  {
+    "TableName": "TABLE 7.4: NORMAL PEDIATRIC ELECTROCARDIOGRAM (ECG) PARAMETERS",
+    "Age": "0–7 days",
+    "Heart Rate (bpm)": "95–160 (125)",
+    "QRS Axis": "+30 to 180 (110)",
+    "PR Interval (sec)": "0.08–0.12 (0.10)",
+    "QRS Duration (sec)": "0.05 (0.07)",
+    "Lead V1": {
+      "R-Wave Amplitude (mm)": "13.3 (25.5)",
+      "S-Wave Amplitude (mm)": "7.7 (18.8)",
+      "RS Ratio": "2.5"
+    },
+    "Lead V6": {
+      "R-Wave Amplitude (mm)": "4.8 (11.8)",
+      "S-Wave Amplitude (mm)": "3.2 (9.6)",
+      "RS Ratio": "2.2"
+    }
+  },
+  {
+    "Age": "1–3 wk",
+    "Heart Rate (bpm)": "105–180 (145)",
+    "QRS Axis": "+30 to 180 (110)",
+    "PR Interval (sec)": "0.08–0.12 (0.10)",
+    "QRS Duration (sec)": "0.05 (0.07)",
+    "Lead V1": {
+      "R-Wave Amplitude (mm)": "10.6 (20.8)",
+      "S-Wave Amplitude (mm)": "4.2 (10.8)",
+      "RS Ratio": "2.9"
+    },
+    "Lead V6": {
+      "R-Wave Amplitude (mm)": "7.6 (16.4)",
+      "S-Wave Amplitude (mm)": "3.4 (9.8)",
+      "RS Ratio": "3.3"
+    }
+  },
+  {
+    "Age": "1–6 mo",
+    "Heart Rate (bpm)": "110–180 (145)",
+    "QRS Axis": "+10 to +125 (+70)",
+    "PR Interval (sec)": "0.08–0.13 (0.11)",
+    "QRS Duration (sec)": "0.05 (0.07)",
+    "Lead V1": {
+      "R-Wave Amplitude (mm)": "9.7 (19)",
+      "S-Wave Amplitude (mm)": "5.4 (15)",
+      "RS Ratio": "2.3"
+    },
+    "Lead V6": {
+      "R-Wave Amplitude (mm)": "12.4 (22)",
+      "S-Wave Amplitude (mm)": "2.8 (8.3)",
+      "RS Ratio": "5.6"
+    }
+  },
+  {
+    "Age": "6–12 mo",
+    "Heart Rate (bpm)": "110–170 (135)",
+    "QRS Axis": "+10 to +125 (+60)",
+    "PR Interval (sec)": "0.10–0.14 (0.12)",
+    "QRS Duration (sec)": "0.05 (0.07)",
+    "Lead V1": {
+      "R-Wave Amplitude (mm)": "9.4 (20.3)",
+      "S-Wave Amplitude (mm)": "6.4 (18.1)",
+      "RS Ratio": "1.6"
+    },
+    "Lead V6": {
+      "R-Wave Amplitude (mm)": "12.6 (22.7)",
+      "S-Wave Amplitude (mm)": "2.1 (7.2)",
+      "RS Ratio": "7.6"
+    }
+  },
+  {
+    "Age": "1–3 yr",
+    "Heart Rate (bpm)": "90–150 (120)",
+    "QRS Axis": "+10 to +125 (+60)",
+    "PR Interval (sec)": "0.10–0.14 (0.12)",
+    "QRS Duration (sec)": "0.06 (0.07)",
+    "Lead V1": {
+      "R-Wave Amplitude (mm)": "8.5 (18)",
+      "S-Wave Amplitude (mm)": "9 (21)",
+      "RS Ratio": "1.2"
+    },
+    "Lead V6": {
+      "R-Wave Amplitude (mm)": "14 (23.3)",
+      "S-Wave Amplitude (mm)": "1.7 (6)",
+      "RS Ratio": "10"
+    }
+  },
+  {
+    "Age": "4–5 yr",
+    "Heart Rate (bpm)": "65–135 (110)",
+    "QRS Axis": "0 to +110 (+60)",
+    "PR Interval (sec)": "0.11–0.15 (0.13)",
+    "QRS Duration (sec)": "0.07 (0.08)",
+    "Lead V1": {
+      "R-Wave Amplitude (mm)": "7.6 (16)",
+      "S-Wave Amplitude (mm)": "11 (22.5)",
+      "RS Ratio": "0.8"
+    },
+    "Lead V6": {
+      "R-Wave Amplitude (mm)": "15.6 (25)",
+      "S-Wave Amplitude (mm)": "1.4 (4.7)",
+      "RS Ratio": "11.2"
+    }
+  },
+  {
+    "Age": "6–8 yr",
+    "Heart Rate (bpm)": "60–130 (100)",
+    "QRS Axis": "–15 to +110 (+60)",
+    "PR Interval (sec)": "0.12–0.16 (0.14)",
+    "QRS Duration (sec)": "0.07 (0.08)",
+    "Lead V1": {
+      "R-Wave Amplitude (mm)": "6 (13)",
+      "S-Wave Amplitude (mm)": "12 (24.5)",
+      "RS Ratio": "0.6"
+    },
+    "Lead V6": {
+      "R-Wave Amplitude (mm)": "16.3 (26)",
+      "S-Wave Amplitude (mm)": "1.1 (3.9)",
+      "RS Ratio": "13"
+    }
+  },
+  {
+    "Age": "9–11 yr",
+    "Heart Rate (bpm)": "60–110 (85)",
+    "QRS Axis": "–15 to +110 (+60)",
+    "PR Interval (sec)": "0.12–0.17 (0.14)",
+    "QRS Duration (sec)": "0.07 (0.09)",
+    "Lead V1": {
+      "R-Wave Amplitude (mm)": "5.4 (12.1)",
+      "S-Wave Amplitude (mm)": "11.9 (25.4)",
+      "RS Ratio": "0.5"
+    },
+    "Lead V6": {
+      "R-Wave Amplitude (mm)": "16.3 (25.4)",
+      "S-Wave Amplitude (mm)": "1.0 (3.9)",
+      "RS Ratio": "14.3"
+    }
+  },
+  {
+    "Age": "12–16 yr",
+    "Heart Rate (bpm)": "60–110 (85)",
+    "QRS Axis": "–15 to +110 (+60)",
+    "PR Interval (sec)": "0.12–0.17 (0.15)",
+    "QRS Duration (sec)": "0.07 (0.10)",
+    "Lead V1": {
+      "R-Wave Amplitude (mm)": "4.1 (9.9)",
+      "S-Wave Amplitude (mm)": "10.8 (21.2)",
+      "RS Ratio": "0.5"
+    },
+    "Lead V6": {
+      "R-Wave Amplitude (mm)": "14.3 (23)",
+      "S-Wave Amplitude (mm)": "0.8 (3.7)",
+      "RS Ratio": "14.7"
+    }
+  },
+  {
+    "Age": ">16 yr",
+    "Heart Rate (bpm)": "60–100 (80)",
+    "QRS Axis": "–15 to +110 (+60)",
+    "PR Interval (sec)": "0.12–0.20 (0.15)",
+    "QRS Duration (sec)": "0.08 (0.10)",
+    "Lead V1": {
+      "R-Wave Amplitude (mm)": "3 (9)",
+      "S-Wave Amplitude (mm)": "10 (20)",
+      "RS Ratio": "0.3"
+    },
+    "Lead V6": {
+      "R-Wave Amplitude (mm)": "10 (20)",
+      "S-Wave Amplitude (mm)": "0.8 (3.7)",
+      "RS Ratio": "12"
+    }
+  },
+  {
+    "TableReference": "*Normal range and (mean). †Mean and (98th percentile). Data from Park MK. Pediatric Cardiology for Practitioners. 5th ed. St Louis: Elsevier; 2008 and Davignon A, et al. Normal ECG standards for infants and children. Pediatr Cardiol. 1979;1:123-131."
+  }
+]
+
+[
+  {
+    "TableName": "NORMAL T-WAVE AXIS",
+    "Age": "Birth–1 day",
+    "V1, V2": "±",
+    "AVF": "+",
+    "I, V5, V6": "±"
+  },
+  {
+    "Age": "1–4 days",
+    "V1, V2": "±",
+    "AVF": "+",
+    "I, V5, V6": "+"
+  },
+  {
+    "Age": "4 days to adolescent",
+    "V1, V2": "−",
+    "AVF": "+",
+    "I, V5, V6": "+"
+  },
+  {
+    "Age": "Adolescent to adult",
+    "V1, V2": "+",
+    "AVF": "+",
+    "I, V5, V6": "+"
+  },
+  {
+    "TableInstruction": "+, T wave positive; −, T wave negative; ±, T wave normally either positive or negative"
+  }
+]
+
+[
+  {
+    "TableName": "VENTRICULAR HYPERTROPHY CRITERIA",
+    "Category": "Right Ventricular Hypertrophy (RVH) Criteria",
+    "Requirement": "Must Have at Least One of the Following:",
+    "Criteria": [
+      "Upright T wave in lead V₁ after 3 days of age to adolescence",
+      "Presence of Q wave in V₁ (QR or QRS pattern)",
+      "Increased right and anterior QRS voltage (with normal QRS duration): R in lead V₁, >98th percentile for age; S in lead V₆, >98th percentile for age",
+      "Right ventricular strain (associated with inverted T wave in V₁ with tall R wave)"
+    ]
+  },
+  {
+    "Category": "Left Ventricular Hypertrophy (LVH) Criteria",
+    "Criteria": [
+      "Left ventricular strain (associated with inverted T wave in leads V₆, I, and/or aVF)"
+    ]
+  },
+  {
+    "Category": "Supplemental Criteria",
+    "Criteria": [
+      "Left axis deviation (LAD) for patient's age",
+      "Volume overload (associated with Q wave >5 mm and tall T waves in V₅ or V₆)",
+      "Increased QRS voltage in left leads (with normal QRS duration): R in lead V₆ (and I, aVL, V₅), >98th percentile for age; S in lead V₁, >98th percentile for age"
+    ]
+  }
+]
+
+[
+  {
+    "TableName": "MAJOR SYNDROMES ASSOCIATED WITH CARDIAC DEFECTS",
+    "Syndrome": "CHARGE",
+    "Dominant Cardiac Defect": "TOF, truncus arteriosus, aortic arch abnormalities"
+  },
+  {
+    "Syndrome": "DiGeorge",
+    "Dominant Cardiac Defect": "Aortic arch anomalies, TOF, truncus arteriosus, VSD, PDA"
+  },
+  {
+    "Syndrome": "Trisomy 21",
+    "Dominant Cardiac Defect": "Atrioventricular septal defect, VSD"
+  },
+  {
+    "Syndrome": "Marfan",
+    "Dominant Cardiac Defect": "Aortic root dilation, mitral valve prolapse"
+  },
+  {
+    "Syndrome": "Loeys-Dietz",
+    "Dominant Cardiac Defect": "Aortic root dilation with higher risk of rupture at smaller dimensions"
+  },
+  {
+    "Syndrome": "Noonan",
+    "Dominant Cardiac Defect": "Supravalvular pulmonic stenosis, LVH"
+  },
+  {
+    "Syndrome": "Turner",
+    "Dominant Cardiac Defect": "COA, bicuspid aortic valve, aortic root dilation as a teenager"
+  },
+  {
+    "Syndrome": "Williams",
+    "Dominant Cardiac Defect": "Supravalvular aortic stenosis, pulmonary artery stenosis"
+  },
+  {
+    "Syndrome": "FAS",
+    "Dominant Cardiac Defect": "Occasional: VSD, PDA, ASD, TOF"
+  },
+  {
+    "Syndrome": "IDM",
+    "Dominant Cardiac Defect": "TGA, VSD, COA, cardiomyopathy"
+  },
+  {
+    "Syndrome": "VATER/VACTERL",
+    "Dominant Cardiac Defect": "VSD"
+  },
+  {
+    "Syndrome": "VCFS",
+    "Dominant Cardiac Defect": "Truncus arteriosus, TOF, pulmonary atresia with VSD, TGA, interrupted aortic arch"
+  }
+]
+
+[
+  {
+    "TableName": "CARDIAC CONDITIONS FOR WHICH ANTIBIOTIC PROPHYLAXIS IS RECOMMENDED FOR DENTAL, RESPIRATORY TRACT, INFECTED SKIN, SKIN STRUCTURES, OR MUSCULOSKELETAL TISSUE PROCEDURES",
+    "Conditions": [
+      "Prosthetic cardiac valve",
+      "Previous bacterial endocarditis",
+      {
+        "MainCondition": "Congenital heart disease (CHD)—Limited to the following conditions¹",
+        "SubConditions": [
+          "Unrepaired cyanotic defect, including palliative shunts and conduits",
+          "Completely repaired CHD with prosthetic material/device (placed by surgery or catheterization), during first 6 months after procedure²",
+          "Repaired CHD with residual defects at or adjacent to the site of prosthetic patch or device (which inhibit endothelialization)"
+        ]
+      },
+      "Cardiac transplantation patients who develop cardiac valvulopathy"
+    ]
+  }
+]
+
+[
+  {
+    "TableName": "PROPHYLACTIC REGIMENS FOR DENTAL AND RESPIRATORY TRACT PROCEDURES",
+    "Drug": "Amoxicillin†",
+    "Dosing* (not to exceed adult dose)": "Adult: 2 g; Child: 50 mg/kg PO"
+  },
+  {
+    "Drug": "Ampicillin",
+    "Dosing* (not to exceed adult dose)": "Adult: 2 g; Child: 50 mg/kg IM/IV"
+  },
+  {
+    "Drug": "Cefazolin or ceftriaxone‡",
+    "Dosing* (not to exceed adult dose)": "Adult: 1 g; Child: 50 mg/kg IM/IV"
+  },
+  {
+    "Drug": "Cephalexin‡",
+    "Dosing* (not to exceed adult dose)": "Adult: 2 g; Child: 50 mg/kg PO"
+  },
+  {
+    "Drug": "Clindamycin",
+    "Dosing* (not to exceed adult dose)": "Adult: 600 mg; Child: 20 mg/kg PO/IM/IV"
+  },
+  {
+    "Drug": "Azithromycin/clarithromycin",
+    "Dosing* (not to exceed adult dose)": "Adult: 500 mg; Child: 15 mg/kg PO"
+  }
+]
+
+[
+  {
+    "TableName": "GUIDELINES FOR DIAGNOSIS OF INITIAL ATTACK OF RHEUMATIC FEVER (JONES CRITERIA)",
+    "Major Manifestations": [
+      "Carditis",
+      "Polyarthritis",
+      "Chorea",
+      "Erythema marginatum",
+      "Subcutaneous nodule"
+    ],
+    "Minor Manifestations": {
+      "Clinical findings": [
+        "Arthralgia",
+        "Fever"
+      ],
+      "Laboratory findings": [
+        "Elevated acute phase reactants (erythrocyte sedimentation rate, C-reactive protein)",
+        "Prolonged PR interval"
+      ]
+    },
+    "Supporting Evidence of Antecedent Group a Streptococcal Infection": [
+      "Positive throat culture or rapid streptococcal antigen test",
+      "Elevated or rising streptococcal antibody titer"
+    ],
+    "TableInstruction": "NOTE: If supported by evidence of preceding group A streptococcal infection, the presence of two major manifestations or of one major and two minor manifestations indicates a high probability of acute rheumatic fever."
+  }
+]
+
+[
+  {
+    "TableName": "THYROID FUNCTION TESTS: INTERPRETATION",
+    "Disorder": "Primary hyperthyroidism",
+    "TSH": "L",
+    "T4": "H",
+    "Free T4": "High N to H"
+  },
+  {
+    "Disorder": "Primary hypothyroidism",
+    "TSH": "H",
+    "T4": "L",
+    "Free T4": "L"
+  },
+  {
+    "Disorder": "Hypothalamic/pituitary hypothyroidism",
+    "TSH": "L, N, H*",
+    "T4": "L",
+    "Free T4": "L"
+  },
+  {
+    "Disorder": "TBG deficiency",
+    "TSH": "N",
+    "T4": "L",
+    "Free T4": "N"
+  },
+  {
+    "Disorder": "Euthyroid sick syndrome",
+    "TSH": "L, N, H*",
+    "T4": "L",
+    "Free T4": "L to low N"
+  },
+  {
+    "Disorder": "TSH adenoma or pituitary resistance",
+    "TSH": "N to H",
+    "T4": "H",
+    "Free T4": "H"
+  },
+  {
+    "Disorder": "Compensated hypothyroidism†",
+    "TSH": "H",
+    "T4": "N",
+    "Free T4": "N"
+  },
+  {
+    "TableInstruction": "*Can be normal, low, or slightly high. †Treatment may not be necessary. H, high; L, low; N, normal; T4, thyroxine; TBG, thyroxine-binding globulin; TSH, thyroid-stimulating hormone"
+  }
+]
+
+[
+  {
+    "TableName": "AGE-BASED NORMAL VALUES FOR ROUTINE THYROID FUNCTION TESTS",
+    "Age": "Day of birth",
+    "Free T4 (ng/dL)": "0.94–4.39",
+    "TSH (mIU/L)": "2.43–24.3",
+    "T4 (mcg/dL)": "5.85–18.68",
+    "T3 (ng/dL)": "19.53–266.26",
+    "Reverse T3 (ng/dL)": "19.53–358.70",
+    "TBG (mcg/mL)": "19.17–44.7"
+  },
+  {
+    "Age": "1 wk",
+    "Free T4 (ng/dL)": "0.96–4.08",
+    "TSH (mIU/L)": "0.58–5.58*",
+    "T4 (mcg/dL)": "5.90–18.58",
+    "T3 (ng/dL)": "20.83–265.61",
+    "Reverse T3 (ng/dL)": "19.53–338.52",
+    "TBG (mcg/mL)": "19.16–44.68"
+  },
+  {
+    "Age": "1 mo",
+    "Free T4 (ng/dL)": "1.00–3.44",
+    "TSH (mIU/L)": "0.58–5.57*",
+    "T4 (mcg/dL)": "6.06–18.27",
+    "T3 (ng/dL)": "25.39–264.31",
+    "Reverse T3 (ng/dL)": "19.53–283.84",
+    "TBG (mcg/mL)": "19.12–44.59"
+  },
+  {
+    "Age": "3 mo",
+    "Free T4 (ng/dL)": "1.04–2.86",
+    "TSH (mIU/L)": "0.58–5.57*",
+    "T4 (mcg/dL)": "6.39–17.66",
+    "T3 (ng/dL)": "36.46–259.75",
+    "Reverse T3 (ng/dL)": "19.53–197.90",
+    "TBG (mcg/mL)": "19.02–44.35"
+  },
+  {
+    "Age": "6 mo",
+    "Free T4 (ng/dL)": "1.07–2.44",
+    "TSH (mIU/L)": "0.58–5.56*",
+    "T4 (mcg/dL)": "6.75–17.04",
+    "T3 (ng/dL)": "51.43–252.59",
+    "Reverse T3 (ng/dL)": "19.53–137.36",
+    "TBG (mcg/mL)": "18.87–44"
+  },
+  {
+    "Age": "1 yr",
+    "Free T4 (ng/dL)": "1.10–2.19",
+    "TSH (mIU/L)": "0.57–5.54",
+    "T4 (mcg/dL)": "7.10–16.16",
+    "T3 (ng/dL)": "74.87–240.87",
+    "Reverse T3 (ng/dL)": "18.23–85.93",
+    "TBG (mcg/mL)": "18.56–43.28"
+  },
+  {
+    "Age": "2 yr",
+    "Free T4 (ng/dL)": "1.11–2.05",
+    "TSH (mIU/L)": "0.57–5.51",
+    "T4 (mcg/dL)": "7.16–14.98",
+    "T3 (ng/dL)": "103.51–228.50",
+    "Reverse T3 (ng/dL)": "16.93–55.99",
+    "TBG (mcg/mL)": "17.94–41.82"
+  },
+  {
+    "Age": "5 yr",
+    "Free T4 (ng/dL)": "1.08–1.93",
+    "TSH (mIU/L)": "0.56–5.41",
+    "T4 (mcg/dL)": "6.39–12.94",
+    "T3 (ng/dL)": "131.50–212.23",
+    "Reverse T3 (ng/dL)": "13.02–35.81",
+    "TBG (mcg/mL)": "16–37.3"
+  },
+  {
+    "Age": "8 yr",
+    "Free T4 (ng/dL)": "1.04–1.87",
+    "TSH (mIU/L)": "0.55–5.31",
+    "T4 (mcg/dL)": "5.72–11.71",
+    "T3 (ng/dL)": "130.85–202.46",
+    "Reverse T3 (ng/dL)": "11.72–30.60",
+    "TBG (mcg/mL)": "14.2–33.09"
+  },
+  {
+    "Age": "12 yr",
+    "Free T4 (ng/dL)": "0.99–1.81",
+    "TSH (mIU/L)": "0.53–5.16",
+    "T4 (mcg/dL)": "5.08–10.58",
+    "T3 (ng/dL)": "119.78–192.70",
+    "Reverse T3 (ng/dL)": "11.07–27.99",
+    "TBG (mcg/mL)": "12.54–29.24"
+  },
+  {
+    "Age": "15 yr",
+    "Free T4 (ng/dL)": "1.03–1.77",
+    "TSH (mIU/L)": "0.52–5.05",
+    "T4 (mcg/dL)": "4.84–10.13",
+    "T3 (ng/dL)": "110.02–184.88",
+    "Reverse T3 (ng/dL)": "10.42–27.34",
+    "TBG (mcg/mL)": "11.96–27.89"
+  },
+  {
+    "Age": "18 yr",
+    "Free T4 (ng/dL)": "0.93–1.73",
+    "TSH (mIU/L)": "0.51–4.93",
+    "T4 (mcg/dL)": null,
+    "T3 (ng/dL)": "101.56–179.03",
+    "Reverse T3 (ng/dL)": "10.42–26.04",
+    "TBG (mcg/mL)": null
+  },
+  {
+    "TableInstruction": "*Some laboratories report that the reference range upper limit for TSH in children up to 12 months of age is 8.35 mU/L. T3, triiodothyronine; T4, thyroxine; TBG, thyroxine-binding globulin; TSH, thyroid-stimulating hormone. NOTE: If age-specific reference ranges are provided by the laboratory that is running the assay, please refer to those ranges.",
+    "TableReference": "(Data modified from Lem AJ, de Rijke YB, van Toor H, et al. Serum thyroid hormone levels in healthy children from birth to adulthood and in short children born small for gestational age. J Clin Endocrinol Metab. 2012;97:3170-3178)"
+  }
+]
+
+[
+  {
+    "TableName": "MEAN TSH AND T4 OF PRETERM AND TERM INFANTS 0–28 DAYS",
+    "Measurement": "T4 (mcg/dL)",
+    "Data": [
+      {
+        "Age ± SD (Weeks)": "23–27*",
+        "Cord (Day 0)": "5.44 ± 2.02",
+        "Day 7": "4.04 ± 1.79",
+        "Day 14": "4.74 ± 2.56",
+        "Day 28": "6.14 ± 2.33"
+      },
+      {
+        "Age ± SD (Weeks)": "28–30",
+        "Cord (Day 0)": "6.29 ± 2.02",
+        "Day 7": "6.29 ± 2.10",
+        "Day 14": "6.60 ± 2.25",
+        "Day 28": "7.46 ± 2.33"
+      },
+      {
+        "Age ± SD (Weeks)": "31–34",
+        "Cord (Day 0)": "7.61 ± 2.25",
+        "Day 7": "9.40 ± 3.42",
+        "Day 14": "9.09 ± 3.57",
+        "Day 28": "8.94 ± 2.95"
+      },
+      {
+        "Age ± SD (Weeks)": ">37",
+        "Cord (Day 0)": "9.17 ± 1.94",
+        "Day 7": "12.67 ± 2.87",
+        "Day 14": "10.72 ± 1.40",
+        "Day 28": "9.71 ± 2.18"
+      }
+    ]
+  },
+  {
+    "Measurement": "FT4 (ng/dL)",
+    "Data": [
+      {
+        "Age ± SD (Weeks)": "23–27",
+        "Cord (Day 0)": "1.28 ± 0.41",
+        "Day 7": "1.47 ± 0.56",
+        "Day 14": "1.45 ± 0.51",
+        "Day 28": "1.50 ± 0.43"
+      },
+      {
+        "Age ± SD (Weeks)": "28–30",
+        "Cord (Day 0)": "1.45 ± 0.43",
+        "Day 7": "1.82 ± 0.66",
+        "Day 14": "1.65 ± 0.44",
+        "Day 28": "1.71 ± 0.43"
+      },
+      {
+        "Age ± SD (Weeks)": "31–34",
+        "Cord (Day 0)": "1.49 ± 0.33",
+        "Day 7": "2.14 ± 0.57",
+        "Day 14": "1.96 ± 0.43",
+        "Day 28": "1.88 ± 0.46"
+      },
+      {
+        "Age ± SD (Weeks)": ">37",
+        "Cord (Day 0)": "1.41 ± 0.39",
+        "Day 7": "2.70 ± 0.57",
+        "Day 14": "2.03 ± 0.28",
+        "Day 28": "1.65 ± 0.34"
+      }
+    ]
+  },
+  {
+    "Measurement": "TSH (mIU/L)",
+    "Data": [
+      {
+        "Age ± SD (Weeks)": "23–27",
+        "Cord (Day 0)": "6.80 ± 2.90",
+        "Day 7": "3.50 ± 2.60",
+        "Day 14": "3.90 ± 2.70",
+        "Day 28": "3.80 ± 4.70"
+      },
+      {
+        "Age ± SD (Weeks)": "28–30",
+        "Cord (Day 0)": "7.00 ± 3.70",
+        "Day 7": "3.60 ± 2.50",
+        "Day 14": "4.90 ± 11.2",
+        "Day 28": "3.60 ± 2.50"
+      },
+      {
+        "Age ± SD (Weeks)": "31–34",
+        "Cord (Day 0)": "7.90 ± 5.20",
+        "Day 7": "3.60 ± 4.80",
+        "Day 14": "3.80 ± 9.30",
+        "Day 28": "3.50 ± 3.40"
+      },
+      {
+        "Age ± SD (Weeks)": ">37",
+        "Cord (Day 0)": "6.70 ± 4.80",
+        "Day 7": "2.60 ± 1.80",
+        "Day 14": "2.50 ± 2.00",
+        "Day 28": "1.80 ± 0.90"
+      }
+    ]
+  },
+  {
+    "TableInstruction": "*Weeks gestational age. FT4, free thyroxine; T4, thyroxine; TSH, thyroid-stimulating hormone",
+    "TableReference": "(Data modified from Williams FL, Simpson J, Delahunty C, et al. Collaboration from The Scottish Preterm Thyroid Group: Developmental trends in cord and postpartum serum thyroid hormones in preterm infants. J Clin Endocrinol Metab. 2004;89:5314-5320)"
+  }
+]
+
+[
+  {
+    "TableName": "VITAMIN D, 25-HYDROXY VITAMIN D",
+    "25-Hydroxy Vitamin D": "Deficiency",
+    "Value (ng/mL)": "<10–15*"
+  },
+  {
+    "25-Hydroxy Vitamin D": "Insufficiency",
+    "Value (ng/mL)": "15–20"
+  },
+  {
+    "25-Hydroxy Vitamin D": "Optimal level",
+    "Value (ng/mL)": ">20–30†"
+  },
+  {
+    "TableInstruction": "NOTE: 1,25-dihydroxy vitamin D is the physiologically active form, but 25-hydroxy vitamin D is the value to monitor for vitamin D deficiency because it approximates body stores of vitamin D. Cut-off values are not yet well defined. *Values of <10–15 ng/mL have been associated with the bone changes found in rickets. †Controversy exists regarding the optimal 25-hydroxy vitamin D level. Some experts recommend a level of >30 ng/mL as being optimal."
+  }
+]
+
+[
+  {
+    "TableName": "CORTISOL, 8 AM",
+    "Interpretation": "Suggestive of adrenal insufficiency",
+    "Cortisol (mcg/dL)": "<5 mcg/dL"
+  },
+  {
+    "Interpretation": "Indeterminate",
+    "Cortisol (mcg/dL)": "5–14 mcg/dL"
+  },
+  {
+    "Interpretation": "Adrenal insufficiency unlikely",
+    "Cortisol (mcg/dL)": ">14 mcg/dL"
+  }
+]
+
+[
+  {
+    "TableName": "17-HYDROXYPROGESTERONE, SERUM",
+    "Age": "Premature (31–35 weeks)",
+    "Baseline (ng/dL)": "≤360"
+  },
+  {
+    "Age": "Term infants (3 days)",
+    "Baseline (ng/dL)": "≤420"
+  },
+  {
+    "Age": "1–12 mo",
+    "Baseline (ng/dL)": "11–170"
+  },
+  {
+    "Age": "1–4 yr",
+    "Baseline (ng/dL)": "4–115"
+  },
+  {
+    "Age": "5–9 yr",
+    "Baseline (ng/dL)": "≤90"
+  },
+  {
+    "Age": "10–13 yr",
+    "Baseline (ng/dL)": "≤169"
+  },
+  {
+    "Age": "14–17 yr",
+    "Baseline (ng/dL)": "16–283"
+  },
+  {
+    "Age": "Males, Tanner II–III",
+    "Baseline (ng/dL)": "12–130"
+  },
+  {
+    "Age": "Females, Tanner II–III",
+    "Baseline (ng/dL)": "18–220"
+  },
+  {
+    "Age": "Male, Tanner IV–V",
+    "Baseline (ng/dL)": "51–190"
+  },
+  {
+    "Age": "Females, Tanner IV–V",
+    "Baseline (ng/dL)": "36–200"
+  },
+  {
+    "Age": "Male (18–30 yr)",
+    "Baseline (ng/dL)": "32–307"
+  },
+  {
+    "Age": "Adult female",
+    "Subgroups": [
+      {
+        "Phase": "Follicular phase",
+        "Baseline (ng/dL)": "≤185"
+      },
+      {
+        "Phase": "Midcycle phase",
+        "Baseline (ng/dL)": "≤225"
+      },
+      {
+        "Phase": "Luteal phase",
+        "Baseline (ng/dL)": "≤285"
+      }
+    ]
+  },
+  {
+    "TableInstruction": "Reference ranges from Quest Diagnostics LC/MS assay (liquid chromatography/tandem mass spectroscopy).",
+    "TableReference": "For preterm infants or infants born small for gestational age, see Olgemöller B, Roscher AA, Liebl B, et al. Screening for congenital adrenal hyperplasia: adjustment of 17-hydroxyprogesterone cut-off values to both age and birth weight markedly improves the predictive value. J Clin Endocrinol Metab. 2003;88:5790-5794."
+  }
+]
+
+[
+  {
+    "TableName": "ESTIMATED GROWTH VELOCITY IN CHILDREN BASED ON AGE",
+    "Age": "Birth to 1 year old",
+    "Growth (cm/yr)": "25 cm/yr"
+  },
+  {
+    "Age": "1 year old to 4 years old",
+    "Growth (cm/yr)": "10 cm/yr"
+  },
+  {
+    "Age": "4 years old to 8 years old",
+    "Growth (cm/yr)": "5 cm/yr"
+  },
+  {
+    "Age": "8 years old to 12 years old",
+    "Growth (cm/yr)": "5 cm/yr*"
+  },
+  {
+    "TableInstruction": "*Rates may be considerably higher at later end of this age range when individuals have entered their pubertal growth spurt."
+  }
+]
+
+[
+  {
+    "TableName": "INSULIN-LIKE GROWTH FACTOR 1 (IGF-1)*",
+    "Age (years)": "<1",
+    "Male (ng/mL)": "≤142",
+    "Females (ng/mL)": "≤185"
+  },
+  {
+    "Age (years)": "1–1.9",
+    "Male (ng/mL)": "≤134",
+    "Females (ng/mL)": "≤175"
+  },
+  {
+    "Age (years)": "2–2.9",
+    "Male (ng/mL)": "≤135",
+    "Females (ng/mL)": "≤178"
+  },
+  {
+    "Age (years)": "3–3.9",
+    "Male (ng/mL)": "30–155",
+    "Females (ng/mL)": "38–214"
+  },
+  {
+    "Age (years)": "4–4.9",
+    "Male (ng/mL)": "28–181",
+    "Females (ng/mL)": "34–238"
+  },
+  {
+    "Age (years)": "5–5.9",
+    "Male (ng/mL)": "31–214",
+    "Females (ng/mL)": "37–272"
+  },
+  {
+    "Age (years)": "6–6.9",
+    "Male (ng/mL)": "38–253",
+    "Females (ng/mL)": "45–316"
+  },
+  {
+    "Age (years)": "7–7.9",
+    "Male (ng/mL)": "48–298",
+    "Females (ng/mL)": "58–367"
+  },
+  {
+    "Age (years)": "8–8.9",
+    "Male (ng/mL)": "62–347",
+    "Females (ng/mL)": "76–424"
+  },
+  {
+    "Age (years)": "9–9.9",
+    "Male (ng/mL)": "80–398",
+    "Females (ng/mL)": "99–483"
+  },
+  {
+    "Age (years)": "10–10.9",
+    "Male (ng/mL)": "100–449",
+    "Females (ng/mL)": "125–541"
+  },
+  {
+    "Age (years)": "11–11.9",
+    "Male (ng/mL)": "123–497",
+    "Females (ng/mL)": "152–593"
+  },
+  {
+    "Age (years)": "12–12.9",
+    "Male (ng/mL)": "146–541",
+    "Females (ng/mL)": "178–636"
+  },
+  {
+    "Age (years)": "13–13.9",
+    "Male (ng/mL)": "168–576",
+    "Females (ng/mL)": "200–664"
+  },
+  {
+    "Age (years)": "14–14.9",
+    "Male (ng/mL)": "187–599",
+    "Females (ng/mL)": "214–673"
+  },
+  {
+    "Age (years)": "15–15.9",
+    "Male (ng/mL)": "201–609",
+    "Females (ng/mL)": "218–659"
+  },
+  {
+    "Age (years)": "16–16.9",
+    "Male (ng/mL)": "209–602",
+    "Females (ng/mL)": "208–619"
+  },
+  {
+    "Age (years)": "17–17.9",
+    "Male (ng/mL)": "207–576",
+    "Females (ng/mL)": "185–551"
+  },
+  {
+    "TableInstruction": "*A clearly normal IGF-1 level argues against growth hormone (GH) deficiency, except in young children in whom there is considerable overlap between normals and those with GH deficiency.",
+    "TableReference": "Reference ranges from Quest Diagnostics LC/MS (liquid chromatography/tandem mass spectrometry) assay."
+  }
+]
+
+[
+  {
+    "TableName": "LUTEINIZING HORMONE",
+    "Age": "0–2 yr",
+    "Males (mIU/mL)": "Not established",
+    "Females (mIU/mL)": "Not established"
+  },
+  {
+    "Age": "3–7 yr",
+    "Males (mIU/mL)": "≤0.26",
+    "Females (mIU/mL)": "≤0.26"
+  },
+  {
+    "Age": "8–9 yr",
+    "Males (mIU/mL)": "≤0.46",
+    "Females (mIU/mL)": "≤0.69"
+  },
+  {
+    "Age": "10–11 yr",
+    "Males (mIU/mL)": "≤3.13",
+    "Females (mIU/mL)": "≤4.38"
+  },
+  {
+    "Age": "12–14 yr",
+    "Males (mIU/mL)": "0.23–4.41",
+    "Females (mIU/mL)": "0.04–10.80"
+  },
+  {
+    "Age": "15–17 yr",
+    "Males (mIU/mL)": "0.29–4.77",
+    "Females (mIU/mL)": "0.97–14.70"
+  },
+  {
+    "Tanner Stages": "I",
+    "Males (mIU/mL)": "≤0.52",
+    "Females (mIU/mL)": "≤0.15"
+  },
+  {
+    "Tanner Stages": "II",
+    "Males (mIU/mL)": "≤1.76",
+    "Females (mIU/mL)": "≤2.91"
+  },
+  {
+    "Tanner Stages": "III",
+    "Males (mIU/mL)": "≤4.06",
+    "Females (mIU/mL)": "≤7.01"
+  },
+  {
+    "Tanner Stages": "IV–V",
+    "Males (mIU/mL)": "0.06–4.77",
+    "Females (mIU/mL)": "0.10–14.70"
+  },
+  {
+    "TableReference": "Data from Quest Diagnostics immunoassay. For more information, see www.questdiagnostics.com."
+  }
+]
+
+[
+  {
+    "TableName": "ESTRADIOL*",
+    "Age": "Prepubertal children",
+    "Level (pg/mL)": "<25"
+  },
+  {
+    "Age": "Men",
+    "Level (pg/mL)": "6–44"
+  },
+  {
+    "Age": "Women",
+    "Subgroups": [
+      {
+        "Phase": "Luteal phase",
+        "Level (pg/mL)": "26–165"
+      },
+      {
+        "Phase": "Follicular phase",
+        "Level (pg/mL)": "None detected–266"
+      },
+      {
+        "Phase": "Midcycle",
+        "Level (pg/mL)": "118–355"
+      },
+      {
+        "Phase": "Adult women on OCP",
+        "Level (pg/mL)": "None detected–102"
+      }
+    ]
+  },
+  {
+    "TableInstruction": "*Normal infants have elevated estradiol at birth, which decreases to prepubertal values during the first week of life. Estradiol levels increase again between age 1 and 2 months and return to prepubertal values by age 6–12 months. OCP, oral contraceptive pill.",
+    "TableReference": "Data from JHH Laboratories."
+  }
+]
+
+[
+  {
+    "TableName": "FOLLICLE-STIMULATING HORMONE",
+    "Age": "0–4 yr",
+    "Male (mIU/mL)": "Not established",
+    "Female (mIU/mL)": "Not established"
+  },
+  {
+    "Age": "5–9 yr",
+    "Male (mIU/mL)": "0.21–4.33",
+    "Female (mIU/mL)": "0.72–5.33"
+  },
+  {
+    "Age": "10–13 yr",
+    "Male (mIU/mL)": "0.53–4.92",
+    "Female (mIU/mL)": "0.87–9.16"
+  },
+  {
+    "Age": "14–17 yr",
+    "Male (mIU/mL)": "0.85–8.74",
+    "Female (mIU/mL)": "0.64–10.98"
+  },
+  {
+    "TableReference": "Data from Quest Diagnostics immunoassay. For more information, see www.questdiagnostics.com."
+  }
+]
+
+[
+  {
+    "TableName": "TESTOSTERONE, TOTAL SERUM*",
+    "Age": "Cord blood",
+    "Male (ng/dL)": "17–61",
+    "Female (ng/dL)": "16–44"
+  },
+  {
+    "Age": "1–10 days",
+    "Male (ng/dL)": "≤187",
+    "Female (ng/dL)": "≤24"
+  },
+  {
+    "Age": "1–3 mo",
+    "Male (ng/dL)": "72–344",
+    "Female (ng/dL)": "≤17"
+  },
+  {
+    "Age": "3–5 mo",
+    "Male (ng/dL)": "≤201",
+    "Female (ng/dL)": "≤12"
+  },
+  {
+    "Age": "5–7 mo",
+    "Male (ng/dL)": "≤59",
+    "Female (ng/dL)": "≤13"
+  },
+  {
+    "Age": "7–12 mo",
+    "Male (ng/dL)": "≤16",
+    "Female (ng/dL)": "≤11"
+  },
+  {
+    "Age": "1–5.9 yr",
+    "Male (ng/dL)": "≤5",
+    "Female (ng/dL)": "≤8"
+  },
+  {
+    "Age": "6–7.9 yr",
+    "Male (ng/dL)": "≤25",
+    "Female (ng/dL)": "≤20"
+  },
+  {
+    "Age": "8–10.9 yr",
+    "Male (ng/dL)": "≤42",
+    "Female (ng/dL)": "≤35"
+  },
+  {
+    "Age": "11–11.9 yr",
+    "Male (ng/dL)": "≤260",
+    "Female (ng/dL)": "≤40"
+  },
+  {
+    "Age": "12–13.9 yr",
+    "Male (ng/dL)": "≤420",
+    "Female (ng/dL)": "≤40"
+  },
+  {
+    "Age": "14–17.9 yr",
+    "Male (ng/dL)": "≤1000",
+    "Female (ng/dL)": "≤40"
+  },
+  {
+    "Age": "≥18 (adult)",
+    "Male (ng/dL)": "250–1100",
+    "Female (ng/dL)": "2–45"
+  },
+  {
+    "Tanner Stage": "Stage I",
+    "Male (ng/dL)": "≤5",
+    "Female (ng/dL)": "≤8"
+  },
+  {
+    "Tanner Stage": "Stage II",
+    "Male (ng/dL)": "≤167",
+    "Female (ng/dL)": "≤24"
+  },
+  {
+    "Tanner Stage": "Stage III",
+    "Male (ng/dL)": "21–719",
+    "Female (ng/dL)": "≤28"
+  },
+  {
+    "Tanner Stage": "Stage IV",
+    "Male (ng/dL)": "25–912",
+    "Female (ng/dL)": "≤31"
+  },
+  {
+    "Tanner Stage": "Stage V",
+    "Male (ng/dL)": "110–975",
+    "Female (ng/dL)": "≤33"
+  },
+  {
+    "TableInstruction": "*Normal testosterone/dihydrotestosterone (T/DHT) ratio is <18 in adults and older children, and <10 in neonates. A T/DHT ratio >20 suggests 5-alpha-reductase deficiency or androgen insensitivity syndrome.",
+    "TableReference": "Data from Quest Diagnostics LC/MS (liquid chromatography/tandem mass spectrometry) assay."
+  }
+]
+
+[
+  {
+    "TableName": "TESTOSTERONE, FREE",
+    "Age": "5.9–9 yr",
+    "Male (pg/mL)": "≤5.3",
+    "Female (pg/mL)": "0.2–5.0"
+  },
+  {
+    "Age": "10–13.9 yr",
+    "Male (pg/mL)": "0.7–52",
+    "Female (pg/mL)": "0.1–7.4"
+  },
+  {
+    "Age": "14–17.9 yr",
+    "Male (pg/mL)": "18–111",
+    "Female (pg/mL)": "0.5–3.9"
+  },
+  {
+    "Age": "18–69 yr",
+    "Male (pg/mL)": "35–155",
+    "Female (pg/mL)": "0.1–6.4",
+    "TableReference": "Data from Quest Diagnostics LC/MS (liquid chromatography/tandem mass spectrometry) assay."
+  }
+]
+
+[
+  {
+    "TableName": "DEHYDROEPIANDROSTERONE (DHEA), UNCONJUGATED",
+    "Age": "1–5 yr",
+    "ng/dL": "≤377"
+  },
+  {
+    "Age": "6–9 yr",
+    "ng/dL": "19–592"
+  },
+  {
+    "Age": "10–13 yr",
+    "ng/dL": "42–1067"
+  },
+  {
+    "Age": "14–17 yr",
+    "ng/dL": "137–1489"
+  },
+  {
+    "Age": "Adult male",
+    "ng/dL": "61–1636"
+  },
+  {
+    "Age": "Adult female",
+    "ng/dL": "102–1185",
+    "TableReference": "Data from Quest Diagnostics LC/MS (liquid chromatography/tandem mass spectrometry) assay."
+  }
+]
+
+[
+  {
+    "TableName": "DEHYDROEPIANDROSTERONE SULFATE (DHEA-S)",
+    "Age": "<1 mo",
+    "Male (mcg/dL)": "≤316",
+    "Female (mcg/dL)": "15–261"
+  },
+  {
+    "Age": "1–6 mo",
+    "Male (mcg/dL)": "≤58",
+    "Female (mcg/dL)": "≤74"
+  },
+  {
+    "Age": "7–11 mo",
+    "Male (mcg/dL)": "≤26",
+    "Female (mcg/dL)": "≤26"
+  },
+  {
+    "Age": "1–3 yr",
+    "Male (mcg/dL)": "≤15",
+    "Female (mcg/dL)": "≤22"
+  },
+  {
+    "Age": "4–6 yr",
+    "Male (mcg/dL)": "≤27",
+    "Female (mcg/dL)": "≤34"
+  },
+  {
+    "Age": "7–9 yr",
+    "Male (mcg/dL)": "≤91",
+    "Female (mcg/dL)": "≤92"
+  },
+  {
+    "Age": "10–13 yr",
+    "Male (mcg/dL)": "≤138",
+    "Female (mcg/dL)": "≤148"
+  },
+  {
+    "Age": "14–17 yr",
+    "Male (mcg/dL)": "38–340",
+    "Female (mcg/dL)": "37–307"
+  },
+  {
+    "Subgroup": "TANNER STAGES (AGES 7–17)",
+    "Tanner Stage": "I",
+    "Male (mcg/dL)": "≤49",
+    "Female (mcg/dL)": "≤46"
+  },
+  {
+    "Tanner Stage": "II",
+    "Male (mcg/dL)": "≤81",
+    "Female (mcg/dL)": "15–133"
+  },
+  {
+    "Tanner Stage": "III",
+    "Male (mcg/dL)": "22–126",
+    "Female (mcg/dL)": "42–126"
+  },
+  {
+    "Tanner Stage": "IV",
+    "Male (mcg/dL)": "33–177",
+    "Female (mcg/dL)": "42–241"
+  },
+  {
+    "Tanner Stage": "V",
+    "Male (mcg/dL)": "110–370",
+    "Female (mcg/dL)": "45–320",
+    "TableReference": "Data from Quest Diagnostics assay. For more information see www.questdiagnostics.com."
+  }
+]
+
+[
+  {
+    "TableName": "TESTICULAR SIZE",
+    "Tanner Stage (Genital)": "I",
+    "Length (cm) (Mean ± SD)": "2.0 ± 0.5",
+    "Volume (mL)": "2"
+  },
+  {
+    "Tanner Stage (Genital)": "II",
+    "Length (cm) (Mean ± SD)": "2.7 ± 0.7",
+    "Volume (mL)": "5"
+  },
+  {
+    "Tanner Stage (Genital)": "III",
+    "Length (cm) (Mean ± SD)": "3.4 ± 0.8",
+    "Volume (mL)": "10"
+  },
+  {
+    "Tanner Stage (Genital)": "IV",
+    "Length (cm) (Mean ± SD)": "4.1 ± 1.0",
+    "Volume (mL)": "20"
+  },
+  {
+    "Tanner Stage (Genital)": "V",
+    "Length (cm) (Mean ± SD)": "5.0 ± 0.5",
+    "Volume (mL)": "29",
+    "TableInstruction": "*Testicular volume of >4 mL or a long axis of >2.5 cm is evidence that pubertal testicular growth has begun. SD, standard deviation"
+  }
+]
+
+[
+  {
+    "TableName": "DIHYDROTESTOSTERONE (DHT)",
+    "Age": "Cord blood",
+    "Males (ng/dL)": "<2–8",
+    "Females (ng/dL)": "<2–5"
+  },
+  {
+    "Age": "1–6 mo",
+    "Males (ng/dL)": "12–85",
+    "Females (ng/dL)": "<5"
+  },
+  {
+    "Age": "Prepubertal",
+    "Males (ng/dL)": "<5",
+    "Females (ng/dL)": "<5"
+  },
+  {
+    "Age": "Tanner stage II–III",
+    "Males (ng/dL)": "3–33",
+    "Females (ng/dL)": "5–19"
+  },
+  {
+    "Age": "Tanner stage IV–V",
+    "Males (ng/dL)": "22–75",
+    "Females (ng/dL)": "3–30",
+    "TableReference": "Data from Quest Diagnostics RIA (radioimmunoassay)."
+  }
+]
+
+[
+  {
+    "TableName": "CATECHOLAMINES, URINE",
+    "Compound": "Dopamine (mcg/24 hr)",
+    "3–8 years": "80–378",
+    "9–12 years": "51–474",
+    "13–17 years": "51–645",
+    "Adults": "52–480"
+  },
+  {
+    "Compound": "Epinephrine (mcg/24 hr)",
+    "3–8 years": "1–7",
+    "9–12 years": "≤8",
+    "13–17 years": "≤11",
+    "Adults": "2–14"
+  },
+  {
+    "Compound": "Norepinephrine (mcg/24 hr)",
+    "3–8 years": "5–41",
+    "9–12 years": "5–50",
+    "13–17 years": "12–88",
+    "Adults": "15–100"
+  },
+  {
+    "Compound": "Homovanillic acid (mg/24 hr)",
+    "3–8 years": "0.5–6.7",
+    "9–12 years": "1.1–6.8",
+    "13–17 years": "1.4–7.2",
+    "Adults": "1.6–7.5"
+  },
+  {
+    "Compound": "Vanillyl mandelic acid (g/24 hr)",
+    "3–8 years": "≤2.3",
+    "9–12 years": "≤3.4",
+    "13–17 years": "≤3.9",
+    "Adults": "≤6.0"
+  },
+  {
+    "Subgroup": "Metanephrines/Normetanephrines",
+    "Compound": "Metanephrines (mcg/24 hr)",
+    "3 mo–4 year": "25–117",
+    "5–9 years": "11–139",
+    "10–13 years": "51–275",
+    "14–17 years": "40–189",
+    "18–29 years": "25–222"
+  },
+  {
+    "Compound": "Normetanephrines (mcg/24 hr)",
+    "3 mo–4 year": "54–249",
+    "5–9 years": "31–398",
+    "10–13 years": "67–503",
+    "14–17 years": "69–531",
+    "18–29 years": "40–412",
+    "TableInstruction": "*Catecholamines are elevated in a variety of tumors, including neuroblastoma, ganglioneuroma, ganglioblastoma, and pheochromocytoma.",
+    "TableReference": "Data from JHH laboratories."
+  }
+]
+
+[
+  {
+    "TableName": "CATECHOLAMINES, PLASMA",
+    "Subgroup": "Epinephrine",
+    "Age": "3–15 yr",
+    "Supine (pg/mL)": "≤464",
+    "Sitting (pg/mL)": "Not determined"
+  },
+  {
+    "Age": "Adult",
+    "Supine (pg/mL)": "≤50",
+    "Sitting (pg/mL)": "≤95"
+  },
+  {
+    "Subgroup": "Norepinephrine",
+    "Age": "3–15 yr",
+    "Supine (pg/mL)": "≤1251",
+    "Sitting (pg/mL)": "Not determined"
+  },
+  {
+    "Age": "Adult",
+    "Supine (pg/mL)": "112–658",
+    "Sitting (pg/mL)": "217–1109"
+  },
+  {
+    "Subgroup": "Dopamine",
+    "Age": "3–15 yr",
+    "Supine (pg/mL)": "≤60",
+    "Sitting (pg/mL)": "Not determined"
+  },
+  {
+    "Age": "Adult",
+    "Supine (pg/mL)": "≤30",
+    "Sitting (pg/mL)": "≤30",
+    "TableReference": "Data from Blondell R, Foster MB, Dave KC. Disorders of puberty. Am Family Phys. 1999;60:209-218; and JHH Laboratories."
+  }
+]
+
+[
+  {
+    "TableName": "INSULIN-LIKE GROWTH FACTOR–BINDING PROTEIN (IGF-BP3)",
+    "Age": "0–7 days",
+    "mg/L": "≤0.7",
+    "Tanner Stage": "Tanner I",
+    "Female mg/L": "1.2–6.4",
+    "Male mg/L": "1.4–5.2"
+  },
+  {
+    "Age": "8–15 days",
+    "mg/L": "0.5–1.4",
+    "Tanner Stage": "Tanner II",
+    "Female mg/L": "2.8–6.9",
+    "Male mg/L": "2.3–6.3"
+  },
+  {
+    "Age": "16 days–1 yr",
+    "mg/L": "0.7–3.6",
+    "Tanner Stage": "Tanner III",
+    "Female mg/L": "3.9–9.4",
+    "Male mg/L": "3.2–8.9"
+  },
+  {
+    "Age": "2 yr",
+    "mg/L": "0.8–3.9",
+    "Tanner Stage": "Tanner IV",
+    "Female mg/L": "3.3–8.1",
+    "Male mg/L": "3.7–8.7"
+  },
+  {
+    "Age": "3 yr",
+    "mg/L": "0.9–4.3",
+    "Tanner Stage": "Tanner V",
+    "Female mg/L": "2.7–9.1",
+    "Male mg/L": "2.6–8.6"
+  },
+  {
+    "Age": "4 yr",
+    "mg/L": "1.0–4.7",
+    "Tanner Stage": null,
+    "Female mg/L": null,
+    "Male mg/L": null
+  },
+  {
+    "Age": "5 yr",
+    "mg/L": "1.1–5.2",
+    "Tanner Stage": null,
+    "Female mg/L": null,
+    "Male mg/L": null
+  },
+  {
+    "Age": "6 yr",
+    "mg/L": "1.3–5.6",
+    "Tanner Stage": null,
+    "Female mg/L": null,
+    "Male mg/L": null
+  },
+  {
+    "Age": "7 yr",
+    "mg/L": "1.4–6.1",
+    "Tanner Stage": null,
+    "Female mg/L": null,
+    "Male mg/L": null
+  },
+  {
+    "Age": "8 yr",
+    "mg/L": "1.6–6.5",
+    "Tanner Stage": null,
+    "Female mg/L": null,
+    "Male mg/L": null
+  },
+  {
+    "Age": "9 yr",
+    "mg/L": "1.8–7.1",
+    "Tanner Stage": null,
+    "Female mg/L": null,
+    "Male mg/L": null
+  },
+  {
+    "Age": "10 yr",
+    "mg/L": "2.1–7.7",
+    "Tanner Stage": null,
+    "Female mg/L": null,
+    "Male mg/L": null
+  },
+  {
+    "Age": "11 yr",
+    "mg/L": "2.4–8.4",
+    "Tanner Stage": null,
+    "Female mg/L": null,
+    "Male mg/L": null
+  },
+  {
+    "Age": "12 yr",
+    "mg/L": "2.7–8.9",
+    "Tanner Stage": null,
+    "Female mg/L": null,
+    "Male mg/L": null
+  },
+  {
+    "Age": "13 yr",
+    "mg/L": "3.1–9.5",
+    "Tanner Stage": null,
+    "Female mg/L": null,
+    "Male mg/L": null
+  },
+  {
+    "Age": "14 yr",
+    "mg/L": "3.3–10.0",
+    "Tanner Stage": null,
+    "Female mg/L": null,
+    "Male mg/L": null
+  },
+  {
+    "Age": "15 yr",
+    "mg/L": "3.5–10.0",
+    "Tanner Stage": null,
+    "Female mg/L": null,
+    "Male mg/L": null
+  },
+  {
+    "Age": "16 yr",
+    "mg/L": "3.4–9.5",
+    "Tanner Stage": null,
+    "Female mg/L": null,
+    "Male mg/L": null
+  },
+  {
+    "Age": "17 yr",
+    "mg/L": "3.2–8.7",
+    "Tanner Stage": null,
+    "Female mg/L": null,
+    "Male mg/L": null
+  },
+  {
+    "Age": "18 yr",
+    "mg/L": "3.1–7.9",
+    "Tanner Stage": null,
+    "Female mg/L": null,
+    "Male mg/L": null
+  },
+  {
+    "Age": "19 yr",
+    "mg/L": "2.9–7.3",
+    "Tanner Stage": null,
+    "Female mg/L": null,
+    "Male mg/L": null
+  },
+  {
+    "Age": "Adults continue to vary by age",
+    "mg/L": null,
+    "Tanner Stage": null,
+    "Female mg/L": null,
+    "Male mg/L": null,
+    "TableInstruction": "*Levels below the 5th percentile suggest growth hormone deficiency. This test may have greater discrimination than the IGF-1 test in younger patients.",
+    "TableReference": "Data from Quest Diagnostics immunochemiluminometric assay (ICMA)."
+  }
+]
+
+[
+  {
+    "TableName": "MEAN STRETCHED PENILE LENGTH (CM)",
+    "Subgroup": "Birth",
+    "Age": "30 wk gestation",
+    "Mean ± SD": "2.5 ± 0.4",
+    "–2.5 SD": "1.5"
+  },
+  {
+    "Age": "34 wk gestation",
+    "Mean ± SD": "3.0 ± 0.4",
+    "–2.5 SD": "2.0"
+  },
+  {
+    "Age": "Full term",
+    "Mean ± SD": "3.5 ± 0.4",
+    "–2.5 SD": "2.5"
+  },
+  {
+    "Age": "0–5 mo",
+    "Mean ± SD": "3.9 ± 0.8",
+    "–2.5 SD": "1.9"
+  },
+  {
+    "Age": "6–12 mo",
+    "Mean ± SD": "4.3 ± 0.8",
+    "–2.5 SD": "2.3"
+  },
+  {
+    "Age": "1–2 yr",
+    "Mean ± SD": "4.7 ± 0.8",
+    "–2.5 SD": "2.6"
+  },
+  {
+    "Age": "2–3 yr",
+    "Mean ± SD": "5.1 ± 0.9",
+    "–2.5 SD": "2.9"
+  },
+  {
+    "Age": "3–4 yr",
+    "Mean ± SD": "5.5 ± 0.9",
+    "–2.5 SD": "3.3"
+  },
+  {
+    "Age": "4–5 yr",
+    "Mean ± SD": "5.7 ± 0.9",
+    "–2.5 SD": "3.5"
+  },
+  {
+    "Age": "5–6 yr",
+    "Mean ± SD": "6.0 ± 0.9",
+    "–2.5 SD": "3.8"
+  },
+  {
+    "Age": "6–7 yr",
+    "Mean ± SD": "6.1 ± 0.9",
+    "–2.5 SD": "3.9"
+  },
+  {
+    "Age": "7–8 yr",
+    "Mean ± SD": "6.2 ± 1.0",
+    "–2.5 SD": "3.7"
+  },
+  {
+    "Age": "8–9 yr",
+    "Mean ± SD": "6.3 ± 1.0",
+    "–2.5 SD": "3.8"
+  },
+  {
+    "Age": "9–10 yr",
+    "Mean ± SD": "6.3 ± 1.0",
+    "–2.5 SD": "3.8"
+  },
+  {
+    "Age": "10–11 yr",
+    "Mean ± SD": "6.4 ± 1.1",
+    "–2.5 SD": "3.7"
+  },
+  {
+    "Age": "Adult",
+    "Mean ± SD": "13.3 ± 1.6",
+    "–2.5 SD": "9.3",
+    "TableInstruction": "*Measured from the pubic ramus to the tip of the glans while traction is applied along the length of the phallus to the point of increased resistance. SD, standard deviation",
+    "TableReference": "Data from Feldman KW, Smith DW. Fetal phallic growth and penile standards for newborn male infants. J Pediatr. 1975;86:395."
+  }
+]
+
+[
+  {
+    "TableName": "ANDROSTENEDIONE, SERUM",
+    "Age": "Premature (31–35 wk)",
+    "Males (ng/dL)": "≤480",
+    "Females (ng/dL)": "≤480"
+  },
+  {
+    "Age": "Full-term infants",
+    "Males (ng/dL)": "≤290",
+    "Females (ng/dL)": "≤290"
+  },
+  {
+    "Age": "1–12 mo",
+    "Males (ng/dL)": "6–78",
+    "Females (ng/dL)": "6–78"
+  },
+  {
+    "Age": "1–4 yr",
+    "Males (ng/dL)": "5–51",
+    "Females (ng/dL)": "5–51"
+  },
+  {
+    "Age": "5–9 yr",
+    "Males (ng/dL)": "6–115",
+    "Females (ng/dL)": "6–115"
+  },
+  {
+    "Age": "10–13 yr",
+    "Males (ng/dL)": "12–221",
+    "Females (ng/dL)": "12–221"
+  },
+  {
+    "Age": "14–17 yr",
+    "Males (ng/dL)": "22–225",
+    "Females (ng/dL)": "22–225"
+  },
+  {
+    "Age": "Tanner stage II–III",
+    "Males (ng/dL)": "17–82",
+    "Females (ng/dL)": "43–180"
+  },
+  {
+    "Age": "Tanner stage IV–V",
+    "Males (ng/dL)": "57–150",
+    "Females (ng/dL)": "73–220"
+  },
+  {
+    "Age": "Adult male (18–30 yr)",
+    "Males (ng/dL)": "50–220",
+    "Females (ng/dL)": null
+  },
+  {
+    "Age": "Female follicular phase",
+    "Males (ng/dL)": null,
+    "Females (ng/dL)": "35–250"
+  },
+  {
+    "Age": "Female luteal phase",
+    "Males (ng/dL)": null,
+    "Females (ng/dL)": "30–235",
+    "TableReference": "Data from Quest Diagnostics LC/MS (liquid chromatography/tandem mass spectrometry) analysis."
+  }
+]
+
+[
+  {
+    "TableName": "HOLLIDAY-SEGAR METHOD",
+    "Body Weight": "First 10 kg",
+    "mL/kg/day": "100",
+    "mL/kg/hr": "≈4"
+  },
+  {
+    "Body Weight": "Second 10 kg",
+    "mL/kg/day": "50",
+    "mL/kg/hr": "≈2"
+  },
+  {
+    "Body Weight": "Each additional kg",
+    "mL/kg/day": "20",
+    "mL/kg/hr": "≈1",
+    "TableInstruction": "To calculate needed electrolytes: Na⁺ 3 mEq/100 mL H₂O; Cl⁻ 2 mEq/100 mL H₂O; K⁺ 2 mEq/100 mL H₂O."
+  }
+]
+
+[
+  {
+    "TableName": "INTRACELLULAR AND EXTRACELLULAR FLUID COMPOSITION",
+    "Ion/Parameter": "Na⁺",
+    "Intracellular (mEq/L)": "20",
+    "Extracellular (mEq/L)": "133–145"
+  },
+  {
+    "Ion/Parameter": "K⁺",
+    "Intracellular (mEq/L)": "150",
+    "Extracellular (mEq/L)": "3–5"
+  },
+  {
+    "Ion/Parameter": "Cl⁻",
+    "Intracellular (mEq/L)": null,
+    "Extracellular (mEq/L)": "98–110"
+  },
+  {
+    "Ion/Parameter": "HCO₃⁻",
+    "Intracellular (mEq/L)": "10",
+    "Extracellular (mEq/L)": "20–25"
+  },
+  {
+    "Ion/Parameter": "PO₄³⁻",
+    "Intracellular (mEq/L)": "110–115",
+    "Extracellular (mEq/L)": "5"
+  },
+  {
+    "Ion/Parameter": "Protein",
+    "Intracellular (mEq/L)": "75",
+    "Extracellular (mEq/L)": "10"
+  },
+  {
+    "Ion/Parameter": "% Body weight",
+    "Intracellular (mEq/L)": "80",
+    "Extracellular (mEq/L)": "15 (interstitial), 5 (intravascular)"
+  }
+]
+
+[
+  {
+    "TableName": "ELECTROLYTE COMPOSITION OF VARIOUS BODY FLUIDS",
+    "Fluid": "Gastric",
+    "Na⁺ (mEq/L)": "20–80",
+    "K⁺ (mEq/L)": "5–20",
+    "Cl⁻ (mEq/L)": "100–150",
+    "Replacement Fluid": "½ NS"
+  },
+  {
+    "Fluid": "Pancreatic",
+    "Na⁺ (mEq/L)": "120–140",
+    "K⁺ (mEq/L)": "5–15",
+    "Cl⁻ (mEq/L)": "90–120",
+    "Replacement Fluid": "NS"
+  },
+  {
+    "Fluid": "Small bowel",
+    "Na⁺ (mEq/L)": "100–140",
+    "K⁺ (mEq/L)": "5–15",
+    "Cl⁻ (mEq/L)": "90–130",
+    "Replacement Fluid": "NS"
+  },
+  {
+    "Fluid": "Bile",
+    "Na⁺ (mEq/L)": "120–140",
+    "K⁺ (mEq/L)": "5–15",
+    "Cl⁻ (mEq/L)": "80–120",
+    "Replacement Fluid": "NS"
+  },
+  {
+    "Fluid": "Ileostomy",
+    "Na⁺ (mEq/L)": "45–135",
+    "K⁺ (mEq/L)": "3–15",
+    "Cl⁻ (mEq/L)": "20–115",
+    "Replacement Fluid": "½ NS or NS"
+  },
+  {
+    "Fluid": "Diarrhea",
+    "Na⁺ (mEq/L)": "10–90",
+    "K⁺ (mEq/L)": "10–80",
+    "Cl⁻ (mEq/L)": "10–110",
+    "Replacement Fluid": "½ NS"
+  },
+  {
+    "Fluid": "Burns*",
+    "Na⁺ (mEq/L)": "140",
+    "K⁺ (mEq/L)": "5",
+    "Cl⁻ (mEq/L)": "110",
+    "Replacement Fluid": "NS or LR"
+  },
+  {
+    "Subgroup": "Sweat",
+    "Fluid": "Normal",
+    "Na⁺ (mEq/L)": "10–30",
+    "K⁺ (mEq/L)": "3–10",
+    "Cl⁻ (mEq/L)": "10–35",
+    "Replacement Fluid": "½ NS"
+  },
+  {
+    "Fluid": "Cystic fibrosis†",
+    "Na⁺ (mEq/L)": "50–130",
+    "K⁺ (mEq/L)": "5–25",
+    "Cl⁻ (mEq/L)": "50–110",
+    "Replacement Fluid": null,
+    "TableInstruction": "LR, lactated Ringer solution; NS, normal saline. *3–5 g/dL of protein may be lost in fluid from burn wounds. †Replacement fluid dependent on sodium content.",
+    "TableReference": "Modified from Kliegman RM, Stanton B, St. Gene J, et al. Nelson Textbook of Pediatrics. 19th ed. Philadelphia: Saunders; 2011."
+  }
+]
+
+[
+  {
+    "TableName": "EVALUATION OF LIVER FUNCTION TESTS",
+    "Enzyme": "AST/ALT",
+    "Source": "Liver, heart, skeletal muscle, pancreas, RBCs, kidney",
+    "Increased": "Hepatocellular injury, rhabdomyolysis, muscular dystrophy, hemolysis, liver cancer",
+    "Decreased": "Vitamin B6 deficiency, uremia",
+    "Comments": "ALT more specific than AST for liver, AST > ALT in hemolysis, AST/ALT >2 in 90% of alcohol disorders in adults"
+  },
+  {
+    "Enzyme": "Alkaline phosphatase",
+    "Source": "Osteoblasts, liver, small intestine, kidney, placenta",
+    "Increased": "Hepatocellular injury, bone growth, disease, trauma, pregnancy, familial",
+    "Decreased": "Low phosphate, Wilson disease, zinc deficiency, hypothyroidism, pernicious anemia",
+    "Comments": "Highest in cholestatic conditions; must be differentiated from bone source"
+  },
+  {
+    "Enzyme": "GGT",
+    "Source": "Renal tubules, bile ducts, pancreas, small intestine, brain",
+    "Increased": "Cholestasis, newborn period, induced by drugs",
+    "Decreased": "Estrogen therapy, artificially low in hyperbilirubinemia",
+    "Comments": "Not found in bone, increased in 90% of primary liver disease, specific for hepatobiliary disease in nonpregnant patient"
+  },
+  {
+    "Enzyme": "5'–NT",
+    "Source": "Intestine, liver cell membrane, brain, heart, pancreas",
+    "Increased": "Cholestasis",
+    "Decreased": null,
+    "Comments": "Specific for hepatobiliary disease in nonpregnant patient"
+  },
+  {
+    "Enzyme": "NH3",
+    "Source": "Bowel flora, protein metabolism",
+    "Increased": "Hepatic disease secondary to urea cycle dysfunction, hemodialysis, valproic acid therapy, urea cycle enzyme deficiency, organic acidemia and carnitine deficiency",
+    "Decreased": null,
+    "Comments": "Converted to urea in liver",
+    "TableInstruction": "AST/ALT, Aspartate aminotransferase/alanine aminotransferase; 5'–NT, 5'–nucleotidase; GGT, γ-glutamyl transpeptidase; RBCs, red blood cells"
+  }
+]
+
+[
+  {
+    "TableName": "INTERPRETATION OF THE SEROLOGIC MARKERS OF HEPATITIS B IN COMMON SITUATIONS",
+    "HBsAg": "–",
+    "Total HBcAb": "–",
+    "IgM HBcAb": "–",
+    "HBsAb": "–",
+    "Interpretation": "No prior infection, not immune"
+  },
+  {
+    "HBsAg": "–",
+    "Total HBcAb": "–",
+    "IgM HBcAb": "–",
+    "HBsAb": "+",
+    "Interpretation": "Immune after hepatitis B vaccination (if concentration ≥ 10 IU/mL or passive immunization from HBIG administration)"
+  },
+  {
+    "HBsAg": "–",
+    "Total HBcAb": "+",
+    "IgM HBcAb": "–",
+    "HBsAb": "+",
+    "Interpretation": "Immune after recovery from HBV infection"
+  },
+  {
+    "HBsAg": "+",
+    "Total HBcAb": "+",
+    "IgM HBcAb": "+",
+    "HBsAb": "–",
+    "Interpretation": "Acute HBV infection"
+  },
+  {
+    "HBsAg": "+",
+    "Total HBcAb": "+",
+    "IgM HBcAb": "–",
+    "HBsAb": "–",
+    "Interpretation": "Chronic HBV infection",
+    "TableInstruction": "HBsAg, Hepatitis B surface antigen; HBcAb, antibody to hepatitis B core antigen; HBsAb, antibody to hepatitis B surface antigen; HBIG, hepatitis B immune globulin; HBV, hepatitis B virus; IgM, immunoglobulin M",
+    "TableReference": "From Davis AR, Rosenthal P. Hepatitis B in Children. Pediatr Rev. 2008;29(4):111-120."
+  }
+]
+
+[
+  {
+    "TableName": "AGE-SPECIFIC BLOOD CELL INDICES",
+    "Age": "26–30 wk gestation‡",
+    "Hb (g/dL)*": "13.4 (11)",
+    "HCT (%)*": "41.5 (34.9)",
+    "MCV (fL)*": "118.2 (106.7)",
+    "MCHC (g/dL RBC)*": "37.9 (30.6)",
+    "Reticulocytes": "—",
+    "WBCs (×10³/mL)†": "4.4 (2.7)",
+    "Platelets (10³/mL)†": "254 (180–327)"
+  },
+  {
+    "Age": "28 wk",
+    "Hb (g/dL)*": "14.5",
+    "HCT (%)*": "45",
+    "MCV (fL)*": "120",
+    "MCHC (g/dL RBC)*": "31.0",
+    "Reticulocytes": "(5–10)",
+    "WBCs (×10³/mL)†": "—",
+    "Platelets (10³/mL)†": "275"
+  },
+  {
+    "Age": "32 wk",
+    "Hb (g/dL)*": "15.0",
+    "HCT (%)*": "47",
+    "MCV (fL)*": "118",
+    "MCHC (g/dL RBC)*": "32.0",
+    "Reticulocytes": "(3–10)",
+    "WBCs (×10³/mL)†": "—",
+    "Platelets (10³/mL)†": "290"
+  },
+  {
+    "Age": "Term§ (cord)",
+    "Hb (g/dL)*": "16.5 (13.5)",
+    "HCT (%)*": "51 (42)",
+    "MCV (fL)*": "108 (98)",
+    "MCHC (g/dL RBC)*": "33.0 (30.0)",
+    "Reticulocytes": "(3–7)",
+    "WBCs (×10³/mL)†": "18.1 (9–30)||",
+    "Platelets (10³/mL)†": "290"
+  },
+  {
+    "Age": "1–3 days",
+    "Hb (g/dL)*": "18.5 (14.5)",
+    "HCT (%)*": "56 (45)",
+    "MCV (fL)*": "108 (95)",
+    "MCHC (g/dL RBC)*": "33.0 (29.0)",
+    "Reticulocytes": "1.8–4.6",
+    "WBCs (×10³/mL)†": "18.9 (9.4–34)",
+    "Platelets (10³/mL)†": "192"
+  },
+  {
+    "Age": "2 wk",
+    "Hb (g/dL)*": "16.6 (13.4)",
+    "HCT (%)*": "53 (41)",
+    "MCV (fL)*": "105 (88)",
+    "MCHC (g/dL RBC)*": "31.4 (28.1)",
+    "Reticulocytes": "—",
+    "WBCs (×10³/mL)†": "11.4 (5–20)",
+    "Platelets (10³/mL)†": "252"
+  },
+  {
+    "Age": "1 mo",
+    "Hb (g/dL)*": "13.9 (10.7)",
+    "HCT (%)*": "44 (33)",
+    "MCV (fL)*": "101 (91)",
+    "MCHC (g/dL RBC)*": "31.8 (28.1)",
+    "Reticulocytes": "(0.1–1.7)",
+    "WBCs (×10³/mL)†": "10.8 (4–19.5)",
+    "Platelets (10³/mL)†": "—"
+  },
+  {
+    "Age": "2 mo",
+    "Hb (g/dL)*": "11.2 (9.4)",
+    "HCT (%)*": "35 (28)",
+    "MCV (fL)*": "95 (84)",
+    "MCHC (g/dL RBC)*": "31.8 (28.3)",
+    "Reticulocytes": "—",
+    "WBCs (×10³/mL)†": "—",
+    "Platelets (10³/mL)†": "—"
+  },
+  {
+    "Age": "6 mo",
+    "Hb (g/dL)*": "12.6 (11.1)",
+    "HCT (%)*": "36 (31)",
+    "MCV (fL)*": "76 (68)",
+    "MCHC (g/dL RBC)*": "35.0 (32.7)",
+    "Reticulocytes": "(0.7–2.3)",
+    "WBCs (×10³/mL)†": "11.9 (6–17.5)",
+    "Platelets (10³/mL)†": "—"
+  },
+  {
+    "Age": "6 mo–2 yr",
+    "Hb (g/dL)*": "12.0 (10.5)",
+    "HCT (%)*": "36 (33)",
+    "MCV (fL)*": "78 (70)",
+    "MCHC (g/dL RBC)*": "33.0 (30.0)",
+    "Reticulocytes": "—",
+    "WBCs (×10³/mL)†": "10.6 (6–17)",
+    "Platelets (10³/mL)†": "(150–350)"
+  },
+  {
+    "Age": "2–6 yr",
+    "Hb (g/dL)*": "12.5 (11.5)",
+    "HCT (%)*": "37 (34)",
+    "MCV (fL)*": "81 (75)",
+    "MCHC (g/dL RBC)*": "34.0 (31.0)",
+    "Reticulocytes": "(0.5–1.0)",
+    "WBCs (×10³/mL)†": "8.5 (5–15.5)",
+    "Platelets (10³/mL)†": "(150–350)"
+  },
+  {
+    "Age": "6–12 yr",
+    "Hb (g/dL)*": "13.5 (11.5)",
+    "HCT (%)*": "40 (35)",
+    "MCV (fL)*": "86 (77)",
+    "MCHC (g/dL RBC)*": "34.0 (31.0)",
+    "Reticulocytes": "(0.5–1.0)",
+    "WBCs (×10³/mL)†": "8.1 (4.5–13.5)",
+    "Platelets (10³/mL)†": "(150–350)"
+  },
+  {
+    "Subgroup": "12–18 YR",
+    "Age": "Male",
+    "Hb (g/dL)*": "14.5 (13)",
+    "HCT (%)*": "43 (36)",
+    "MCV (fL)*": "88 (78)",
+    "MCHC (g/dL RBC)*": "34.0 (31.0)",
+    "Reticulocytes": "(0.5–1.0)",
+    "WBCs (×10³/mL)†": "7.8 (4.5–13.5)",
+    "Platelets (10³/mL)†": "(150–350)"
+  },
+  {
+    "Age": "Female",
+    "Hb (g/dL)*": "14.0 (12)",
+    "HCT (%)*": "41 (37)",
+    "MCV (fL)*": "90 (78)",
+    "MCHC (g/dL RBC)*": "34.0 (31.0)",
+    "Reticulocytes": "(0.5–1.0)",
+    "WBCs (×10³/mL)†": "7.8 (4.5–13.5)",
+    "Platelets (10³/mL)†": "(150–350)"
+  },
+  {
+    "Subgroup": "ADULT",
+    "Age": "Male",
+    "Hb (g/dL)*": "15.5 (13.5)",
+    "HCT (%)*": "47 (41)",
+    "MCV (fL)*": "90 (80)",
+    "MCHC (g/dL RBC)*": "34.0 (31.0)",
+    "Reticulocytes": "(0.8–2.5)",
+    "WBCs (×10³/mL)†": "7.4 (4.5–11)",
+    "Platelets (10³/mL)†": "(150–350)"
+  },
+  {
+    "Age": "Female",
+    "Hb (g/dL)*": "14.0 (12)",
+    "HCT (%)*": "41 (36)",
+    "MCV (fL)*": "90 (80)",
+    "MCHC (g/dL RBC)*": "34.0 (31.0)",
+    "Reticulocytes": "(0.8–4.1)",
+    "WBCs (×10³/mL)†": "7.4 (4.5–11)",
+    "Platelets (10³/mL)†": "(150–350)",
+    "TableInstruction": "Hb, Hemoglobin; HCT, hematocrit; MCHC, mean cell hemoglobin concentration; MCV, mean corpuscular volume; RBC, red blood cell; WBC, white blood cell. *Data are mean (–2 SD). †Data are mean (±2 SD). ‡Values are from fetal samplings. §1 mo, capillary hemoglobin exceeds venous: 1 hr: 3.6-g difference; 5 day: 2.2-g difference; 3 wk: 1.1-g difference. ||Mean (95% confidence limits)",
+    "TableReference": "Data from Forestier F, Daffos F, Galacteros F, et al. Hematologic values of 163 normal fetuses between 18 and 30 weeks of gestation. Pediatr Res. 1986;20:342; Oski FA, Naiman JL. Hematological Problems in the Newborn Infant. Philadelphia: WB Saunders; 1982; Nathan D, Oski FA. Hematology of Infancy and Childhood. Philadelphia: WB Saunders; 1998; Matoth Y, Zaizor K, Varsano I, et al. Postnatal changes in some red cell parameters. Acta Paediatr Scand. 1971;60:317; and Wintrobe MM. Clinical Hematology. Baltimore: Williams & Wilkins; 1999."
+  }
+]
+
+[
+  {
+    "TableName": "AGE-SPECIFIC LEUKOCYTE DIFFERENTIAL",
+    "Age": "Birth",
+    "Total Leukocytes Mean (Range)": "18.1 (9–30)",
+    "Neutrophils Mean (Range)": "11 (6–26)",
+    "Neutrophils %": 61,
+    "Lymphocytes Mean (Range)": "5.5 (2–11)",
+    "Lymphocytes %": 31,
+    "Monocytes Mean": 1.1,
+    "Monocytes %": 6,
+    "Eosinophils Mean": 0.4,
+    "Eosinophils %": 2
+  },
+  {
+    "Age": "12 hr",
+    "Total Leukocytes Mean (Range)": "22.8 (13–38)",
+    "Neutrophils Mean (Range)": "15.5 (6–28)",
+    "Neutrophils %": 68,
+    "Lymphocytes Mean (Range)": "5.5 (2–11)",
+    "Lymphocytes %": 24,
+    "Monocytes Mean": 1.2,
+    "Monocytes %": 5,
+    "Eosinophils Mean": 0.5,
+    "Eosinophils %": 2
+  },
+  {
+    "Age": "24 hr",
+    "Total Leukocytes Mean (Range)": "18.9 (9.4–34)",
+    "Neutrophils Mean (Range)": "11.5 (5–21)",
+    "Neutrophils %": 61,
+    "Lymphocytes Mean (Range)": "5.8 (2–11.5)",
+    "Lymphocytes %": 31,
+    "Monocytes Mean": 1.1,
+    "Monocytes %": 6,
+    "Eosinophils Mean": 0.5,
+    "Eosinophils %": 2
+  },
+  {
+    "Age": "1 wk",
+    "Total Leukocytes Mean (Range)": "12.2 (5–21)",
+    "Neutrophils Mean (Range)": "5.5 (1.5–10)",
+    "Neutrophils %": 45,
+    "Lymphocytes Mean (Range)": "5.0 (2–17)",
+    "Lymphocytes %": 41,
+    "Monocytes Mean": 1.1,
+    "Monocytes %": 9,
+    "Eosinophils Mean": 0.5,
+    "Eosinophils %": 4
+  },
+  {
+    "Age": "2 wk",
+    "Total Leukocytes Mean (Range)": "11.4 (5–20)",
+    "Neutrophils Mean (Range)": "4.5 (1–9.5)",
+    "Neutrophils %": 40,
+    "Lymphocytes Mean (Range)": "5.5 (2–17)",
+    "Lymphocytes %": 48,
+    "Monocytes Mean": 1.0,
+    "Monocytes %": 9,
+    "Eosinophils Mean": 0.4,
+    "Eosinophils %": 3
+  },
+  {
+    "Age": "1 mo",
+    "Total Leukocytes Mean (Range)": "10.8 (5–19.5)",
+    "Neutrophils Mean (Range)": "3.8 (1–8.5)",
+    "Neutrophils %": 35,
+    "Lymphocytes Mean (Range)": "6.0 (2.5–16.5)",
+    "Lymphocytes %": 56,
+    "Monocytes Mean": 0.7,
+    "Monocytes %": 7,
+    "Eosinophils Mean": 0.3,
+    "Eosinophils %": 3
+  },
+  {
+    "Age": "6 mo",
+    "Total Leukocytes Mean (Range)": "11.9 (6–17.5)",
+    "Neutrophils Mean (Range)": "3.8 (1–8.5)",
+    "Neutrophils %": 32,
+    "Lymphocytes Mean (Range)": "7.3 (4–13.5)",
+    "Lymphocytes %": 61,
+    "Monocytes Mean": 0.6,
+    "Monocytes %": 5,
+    "Eosinophils Mean": 0.3,
+    "Eosinophils %": 3
+  },
+  {
+    "Age": "1 yr",
+    "Total Leukocytes Mean (Range)": "11.4 (6–17.5)",
+    "Neutrophils Mean (Range)": "3.5 (1.5–8.5)",
+    "Neutrophils %": 31,
+    "Lymphocytes Mean (Range)": "7.0 (4–10.5)",
+    "Lymphocytes %": 61,
+    "Monocytes Mean": 0.6,
+    "Monocytes %": 5,
+    "Eosinophils Mean": 0.3,
+    "Eosinophils %": 3
+  },
+  {
+    "Age": "2 yr",
+    "Total Leukocytes Mean (Range)": "10.6 (6–17)",
+    "Neutrophils Mean (Range)": "3.5 (1.5–8.5)",
+    "Neutrophils %": 33,
+    "Lymphocytes Mean (Range)": "6.3 (3–9.5)",
+    "Lymphocytes %": 59,
+    "Monocytes Mean": 0.5,
+    "Monocytes %": 5,
+    "Eosinophils Mean": 0.3,
+    "Eosinophils %": 3
+  },
+  {
+    "Age": "4 yr",
+    "Total Leukocytes Mean (Range)": "9.1 (5.5–15.5)",
+    "Neutrophils Mean (Range)": "3.8 (1.5–8.5)",
+    "Neutrophils %": 42,
+    "Lymphocytes Mean (Range)": "4.5 (2–8)",
+    "Lymphocytes %": 50,
+    "Monocytes Mean": 0.5,
+    "Monocytes %": 5,
+    "Eosinophils Mean": 0.3,
+    "Eosinophils %": 3
+  },
+  {
+    "Age": "6 yr",
+    "Total Leukocytes Mean (Range)": "8.5 (5–14.5)",
+    "Neutrophils Mean (Range)": "4.3 (1.5–8)",
+    "Neutrophils %": 51,
+    "Lymphocytes Mean (Range)": "3.5 (1.5–7)",
+    "Lymphocytes %": 42,
+    "Monocytes Mean": 0.4,
+    "Monocytes %": 5,
+    "Eosinophils Mean": 0.2,
+    "Eosinophils %": 3
+  },
+  {
+    "Age": "8 yr",
+    "Total Leukocytes Mean (Range)": "8.3 (4.5–13.5)",
+    "Neutrophils Mean (Range)": "4.4 (1.5–8)",
+    "Neutrophils %": 53,
+    "Lymphocytes Mean (Range)": "3.3 (1.5–6.8)",
+    "Lymphocytes %": 39,
+    "Monocytes Mean": 0.4,
+    "Monocytes %": 4,
+    "Eosinophils Mean": 0.2,
+    "Eosinophils %": 2
+  },
+  {
+    "Age": "10 yr",
+    "Total Leukocytes Mean (Range)": "8.1 (4.5–13.5)",
+    "Neutrophils Mean (Range)": "4.4 (1.5–8.5)",
+    "Neutrophils %": 54,
+    "Lymphocytes Mean (Range)": "3.1 (1.5–6.5)",
+    "Lymphocytes %": 38,
+    "Monocytes Mean": 0.4,
+    "Monocytes %": 4,
+    "Eosinophils Mean": 0.2,
+    "Eosinophils %": 2
+  },
+  {
+    "Age": "16 yr",
+    "Total Leukocytes Mean (Range)": "7.8 (4.5–13.0)",
+    "Neutrophils Mean (Range)": "4.4 (1.8–8)",
+    "Neutrophils %": 57,
+    "Lymphocytes Mean (Range)": "2.8 (1.2–5.2)",
+    "Lymphocytes %": 35,
+    "Monocytes Mean": 0.4,
+    "Monocytes %": 5,
+    "Eosinophils Mean": 0.2,
+    "Eosinophils %": 3
+  },
+  {
+    "Age": "21 yr",
+    "Total Leukocytes Mean (Range)": "7.4 (4.5–11.0)",
+    "Neutrophils Mean (Range)": "4.4 (1.8–7.7)",
+    "Neutrophils %": 59,
+    "Lymphocytes Mean (Range)": "2.5 (1–4.8)",
+    "Lymphocytes %": 34,
+    "Monocytes Mean": 0.3,
+    "Monocytes %": 4,
+    "Eosinophils Mean": 0.2,
+    "Eosinophils %": 3,
+    "TableInstruction": "*Numbers of leukocytes are x10^3/µL; ranges are estimates of 95% confidence limits; percentages refer to differential counts. †Neutrophils include band cells at all ages and a small number of metamyelocytes and myelocytes in the first few days of life.",
+    "TableReference": "Adapted from Cairo MS, Brauho F. Blood and blood-forming tissues. In: Randolph AM, ed. Pediatrics. 21st ed. New York: McGraw-Hill; 2003."
+  }
+]
+
+[
+  {
+    "TableName": "AGE-SPECIFIC COAGULATION VALUES",
+    "Data": [
+      {
+        "Coagulation Test": "PT (s)",
+        "Preterm Infant (30–36 wk), Day of Life 1": "13.0 (10.6–16.2)",
+        "Term Infant, Day of Life 1": "15.6 (14.4–16.4)",
+        "Day of Life 3": "14.9 (13.5–16.4)",
+        "1 mo–1 yr": "13.1 (11.5–15.3)",
+        "1–5 yr": "13.3 (12.1–14.5)",
+        "6–10 yr": "13.4 (11.7–15.1)",
+        "11–16 yr": "13.8 (12.7–16.1)",
+        "Adult": "13.0 (11.5–14.5)"
+      },
+      {
+        "Coagulation Test": "INR",
+        "Preterm Infant (30–36 wk), Day of Life 1": null,
+        "Term Infant, Day of Life 1": "1.26 (1.15–1.35)",
+        "Day of Life 3": "1.20 (1.05–1.35)",
+        "1 mo–1 yr": "1.00 (0.86–1.22)",
+        "1–5 yr": "1.03 (0.92–1.14)",
+        "6–10 yr": "1.04 (0.87–1.20)",
+        "11–16 yr": "1.08 (0.97–1.30)",
+        "Adult": "1.00 (0.80–1.20)"
+      },
+      {
+        "Coagulation Test": "aPTT (s)",
+        "Preterm Infant (30–36 wk), Day of Life 1": "53.6 (27.5–79.4)",
+        "Term Infant, Day of Life 1": "38.7 (34.3–44.8)",
+        "Day of Life 3": "36.3 (29.5–42.2)",
+        "1 mo–1 yr": "39.3 (35.1–46.3)",
+        "1–5 yr": "37.7 (33.6–43.8)",
+        "6–10 yr": "37.3 (31.8–43.7)",
+        "11–16 yr": "39.5 (33.9–46.1)",
+        "Adult": "33.2 (28.6–38.2)"
+      },
+      {
+        "Coagulation Test": "Fibrinogen (g/L)",
+        "Preterm Infant (30–36 wk), Day of Life 1": "2.43 (1.50–3.73)",
+        "Term Infant, Day of Life 1": "2.80 (1.92–3.74)",
+        "Day of Life 3": "3.30 (2.83–4.01)",
+        "1 mo–1 yr": "2.42 (0.82–3.83)",
+        "1–5 yr": "2.82 (1.62–4.01)",
+        "6–10 yr": "3.04 (1.99–4.09)",
+        "11–16 yr": "3.15 (2.12–4.33)",
+        "Adult": "3.1 (1.9–4.3)"
+      },
+      {
+        "Coagulation Test": "Bleeding time (min)",
+        "Preterm Infant (30–36 wk), Day of Life 1": null,
+        "Term Infant, Day of Life 1": null,
+        "Day of Life 3": null,
+        "1 mo–1 yr": null,
+        "1–5 yr": "6 (2.5–10)",
+        "6–10 yr": "7 (2.5–13)",
+        "11–16 yr": "5 (3–8)",
+        "Adult": "4 (1–7)"
+      },
+      {
+        "Coagulation Test": "Thrombin time (s)",
+        "Preterm Infant (30–36 wk), Day of Life 1": "14 (11–17)",
+        "Term Infant, Day of Life 1": "12 (10–16)",
+        "Day of Life 3": null,
+        "1 mo–1 yr": "17.1 (16.3–17.6)",
+        "1–5 yr": "17.5 (16.5–18.2)",
+        "6–10 yr": "17.1 (16.1–18.5)",
+        "11–16 yr": "16.9 (16.2–17.6)",
+        "Adult": "16.6 (16.2–17.2)"
+      },
+      {
+        "Coagulation Test": "Factor II (U/mL)",
+        "Preterm Infant (30–36 wk), Day of Life 1": "0.45 (0.20–0.77)",
+        "Term Infant, Day of Life 1": "0.54 (0.41–0.69)",
+        "Day of Life 3": "0.62 (0.50–0.73)",
+        "1 mo–1 yr": "0.90 (0.62–1.03)",
+        "1–5 yr": "0.89 (0.70–1.09)",
+        "6–10 yr": "0.89 (0.67–1.10)",
+        "11–16 yr": "0.90 (0.61–1.07)",
+        "Adult": "1.10 (0.78–1.38)"
+      },
+      {
+        "Coagulation Test": "Factor V (U/mL)",
+        "Preterm Infant (30–36 wk), Day of Life 1": "0.88 (0.41–1.44)",
+        "Term Infant, Day of Life 1": "0.81 (0.64–1.03)",
+        "Day of Life 3": "1.22 (0.92–1.54)",
+        "1 mo–1 yr": "1.13 (0.94–1.41)",
+        "1–5 yr": "0.97 (0.67–1.27)",
+        "6–10 yr": "0.99 (0.56–1.41)",
+        "11–16 yr": "0.89 (0.67–1.41)",
+        "Adult": "1.18 (0.78–1.52)"
+      },
+      {
+        "Coagulation Test": "Factor VII (U/mL)",
+        "Preterm Infant (30–36 wk), Day of Life 1": "0.67 (0.21–1.13)",
+        "Term Infant, Day of Life 1": "0.70 (0.52–0.88)",
+        "Day of Life 3": "0.86 (0.67–1.07)",
+        "1 mo–1 yr": "1.28 (0.83–1.60)",
+        "1–5 yr": "1.11 (0.72–1.50)",
+        "6–10 yr": "1.13 (0.70–1.56)",
+        "11–16 yr": "1.18 (0.69–2.00)",
+        "Adult": "1.29 (0.61–1.99)"
+      },
+      {
+        "Coagulation Test": "Factor VIII (U/mL)",
+        "Preterm Infant (30–36 wk), Day of Life 1": "1.11 (0.50–2.13)",
+        "Term Infant, Day of Life 1": "1.82 (1.05–3.29)",
+        "Day of Life 3": "1.59 (0.83–2.74)",
+        "1 mo–1 yr": "0.94 (0.54–1.45)",
+        "1–5 yr": "1.10 (0.36–1.85)",
+        "6–10 yr": "1.17 (0.52–1.82)",
+        "11–16 yr": "1.20 (0.59–2.00)",
+        "Adult": "1.60 (0.52–2.90)"
+      },
+      {
+        "Coagulation Test": "vWF (U/mL)",
+        "Preterm Infant (30–36 wk), Day of Life 1": "1.36 (0.78–2.10)",
+        "Term Infant, Day of Life 1": "1.53 (0.50–2.87)",
+        "Day of Life 3": null,
+        "1 mo–1 yr": null,
+        "1–5 yr": "0.82 (0.47–1.04)",
+        "6–10 yr": "0.95 (0.44–1.44)",
+        "11–16 yr": "1.00 (0.46–1.53)",
+        "Adult": "0.92 (0.5–1.58)"
+      },
+      {
+        "Coagulation Test": "Factor IX (U/mL)",
+        "Preterm Infant (30–36 wk), Day of Life 1": "0.35 (0.19–0.65)",
+        "Term Infant, Day of Life 1": "0.48 (0.35–0.56)",
+        "Day of Life 3": "0.72 (0.44–0.97)",
+        "1 mo–1 yr": "0.71 (0.43–1.21)",
+        "1–5 yr": "0.85 (0.44–1.27)",
+        "6–10 yr": "0.96 (0.48–1.45)",
+        "11–16 yr": "1.11 (0.64–2.16)",
+        "Adult": "1.30 (0.59–2.54)"
+      },
+      {
+        "Coagulation Test": "Factor X (U/mL)",
+        "Preterm Infant (30–36 wk), Day of Life 1": "0.41 (0.11–0.71)",
+        "Term Infant, Day of Life 1": "0.55 (0.46–0.67)",
+        "Day of Life 3": "0.60 (0.46–0.75)",
+        "1 mo–1 yr": "0.95 (0.77–1.22)",
+        "1–5 yr": "0.98 (0.72–1.25)",
+        "6–10 yr": "0.97 (0.68–1.25)",
+        "11–16 yr": "0.91 (0.53–1.22)",
+        "Adult": "1.24 (0.96–1.71)"
+      },
+      {
+        "Coagulation Test": "D-dimer",
+        "Preterm Infant (30–36 wk), Day of Life 1": null,
+        "Term Infant, Day of Life 1": "1.47 (0.41–2.47)",
+        "Day of Life 3": "1.34 (0.58–2.74)",
+        "1 mo–1 yr": "0.22 (0.11–0.42)",
+        "1–5 yr": "0.25 (0.09–0.53)",
+        "6–10 yr": "0.26 (0.10–0.56)",
+        "11–16 yr": "0.27 (0.16–0.39)",
+        "Adult": "0.18 (0.05–0.42)"
+      }
+    ]
+  },
+  {
+    "TableName": "COAGULATION INHIBITORS",
+    "Data": [
+      {
+        "Test": "ATIII (U/mL)",
+        "Preterm Infant (30–36 wk), Day of Life 1": "0.38 (0.14–0.62)",
+        "Term Infant, Day of Life 1": "0.63 (0.39–0.97)",
+        "1–5 yr": "1.11 (0.82–1.39)",
+        "6–10 yr": "1.11 (0.90–1.31)",
+        "11–16 yr": "1.05 (0.77–1.32)",
+        "Adult": "1.0 (0.74–1.26)"
+      },
+      {
+        "Test": "Protein C (U/mL)",
+        "Preterm Infant (30–36 wk), Day of Life 1": "0.28 (0.12–0.44)",
+        "Term Infant, Day of Life 1": "0.32 (0.24–0.40)",
+        "Day of Life 3": "0.33 (0.24–0.51)",
+        "1 mo–1 yr": "0.77 (0.28–1.24)",
+        "1–5 yr": "0.94 (0.50–1.34)",
+        "6–10 yr": "0.94 (0.64–1.25)",
+        "11–16 yr": "0.88 (0.59–1.12)",
+        "Adult": "1.03 (0.54–1.66)"
+      }
+    ]
+  },
+  {
+    "TableName": "FIBRINOLYTIC SYSTEM",
+    "Data": [
+      {
+        "Test": "Plasminogen (U/mL)",
+        "Preterm Infant (30–36 wk), Day of Life 1": "1.70 (1.12–2.48)",
+        "Term Infant, Day of Life 1": "1.95 (1.60–2.30)",
+        "1–5 yr": "0.98 (0.78–1.18)",
+        "6–10 yr": "0.92 (0.75–1.08)",
+        "11–16 yr": "0.86 (0.68–1.03)",
+        "Adult": "0.99 (0.7–1.22)"
+      }
+    ]
+  },
+  {
+    "TableInstruction": "FDPs: Borderline titer = 1:25–1:50; Positive titer <1:50. aPTT values may vary depending on reagent.",
+    "TableReference": "Data from Andrew M et al. Blood (1987, 1988, 1992); Adapted from Monagle P et al. Thromb Haemost. 2006;95:362–372."
+  }
+]
+
+[
+  {
+    "TableName": "SERUM IMMUNOGLOBULIN LEVELS",
+    "Data": [
+      {"Age": "Cord blood (term)", "IgG (mg/dL)": "1121 (636–1606)", "IgM (mg/dL)": "13 (6.3–25)", "IgA (mg/dL)": "2.3 (1.4–3.6)", "IgE (IU/ml)": "0.22 (0.04–1.28)"},
+      {"Age": "1 mo", "IgG (mg/dL)": "503 (251–906)", "IgM (mg/dL)": "45 (20–87)", "IgA (mg/dL)": "13 (1.3–53)", "IgE (IU/ml)": null},
+      {"Age": "6 wk", "IgG (mg/dL)": null, "IgM (mg/dL)": null, "IgA (mg/dL)": null, "IgE (IU/ml)": "0.69 (0.08–6.12)"},
+      {"Age": "2 mo", "IgG (mg/dL)": "365 (206–601)", "IgM (mg/dL)": "46 (17–105)", "IgA (mg/dL)": "15 (2.8–47)", "IgE (IU/ml)": null},
+      {"Age": "3 mo", "IgG (mg/dL)": "334 (176–581)", "IgM (mg/dL)": "49 (24–89)", "IgA (mg/dL)": "17 (4.6–46)", "IgE (IU/ml)": "0.82 (0.18–3.76)"},
+      {"Age": "4 mo", "IgG (mg/dL)": "343 (196–558)", "IgM (mg/dL)": "55 (27–101)", "IgA (mg/dL)": "23 (4.4–73)", "IgE (IU/ml)": null},
+      {"Age": "5 mo", "IgG (mg/dL)": "403 (172–814)", "IgM (mg/dL)": "62 (33–108)", "IgA (mg/dL)": "31 (8.1–84)", "IgE (IU/ml)": null},
+      {"Age": "6 mo", "IgG (mg/dL)": "407 (215–704)", "IgM (mg/dL)": "62 (35–102)", "IgA (mg/dL)": "25 (8.1–68)", "IgE (IU/ml)": "2.68 (0.44–16.3)"},
+      {"Age": "7–9 mo", "IgG (mg/dL)": "475 (217–904)", "IgM (mg/dL)": "80 (34–126)", "IgA (mg/dL)": "36 (11–90)", "IgE (IU/ml)": "2.36 (0.76–7.31)"},
+      {"Age": "10–12 mo", "IgG (mg/dL)": "594 (294–1069)", "IgM (mg/dL)": "82 (41–149)", "IgA (mg/dL)": "40 (16–84)", "IgE (IU/ml)": null},
+      {"Age": "1 yr", "IgG (mg/dL)": "679 (345–1213)", "IgM (mg/dL)": "93 (43–173)", "IgA (mg/dL)": "44 (14–106)", "IgE (IU/ml)": "3.49 (0.80–15.2)"},
+      {"Age": "2 yr", "IgG (mg/dL)": "685 (424–1051)", "IgM (mg/dL)": "95 (48–168)", "IgA (mg/dL)": "47 (14–123)", "IgE (IU/ml)": "3.03 (0.31–29.5)"},
+      {"Age": "3 yr", "IgG (mg/dL)": "728 (441–1135)", "IgM (mg/dL)": "104 (47–200)", "IgA (mg/dL)": "66 (22–159)", "IgE (IU/ml)": "1.80 (0.19–16.9)"},
+      {"Age": "4–5 yr", "IgG (mg/dL)": "780 (463–1236)", "IgM (mg/dL)": "99 (43–196)", "IgA (mg/dL)": "68 (25–154)", "IgE (IU/ml)": "8.58 (1.07–68.9)"},
+      {"Age": "6–8 yr", "IgG (mg/dL)": "915 (633–1280)", "IgM (mg/dL)": "107 (48–207)", "IgA (mg/dL)": "90 (33–202)", "IgE (IU/ml)": "12.89 (1.03–161.3)"},
+      {"Age": "9–10 yr", "IgG (mg/dL)": "1007 (608–1572)", "IgM (mg/dL)": "121 (52–242)", "IgA (mg/dL)": "113 (45–236)", "IgE (IU/ml)": "23.6 (0.98–570.6)"},
+      {"Age": "14 yr", "IgG (mg/dL)": null, "IgM (mg/dL)": null, "IgA (mg/dL)": null, "IgE (IU/ml)": "20.07 (2.06–195.2)"},
+      {"Age": "Adult", "IgG (mg/dL)": "994 (639–1349)", "IgM (mg/dL)": "156 (56–352)", "IgA (mg/dL)": "171 (70–312)", "IgE (IU/ml)": "13.2 (1.53–114)"}
+    ]
+  },
+  {
+    "TableInstruction": "Numbers in parentheses are the 95% confidence intervals (CIs). IgE data for 4 yr, 7 yr, and 10 yr.",
+    "TableReference": "Data from Kjellman NM et al. Clin Allergy. 1976; Jolliff CR et al. Clin Chem. 1982; Zetterström O et al. Allergy. 1981."
+  }
+]
+
+[
+  {
+    "TableName": "SERUM IMMUNOGLOBULIN LEVELS FOR LOW BIRTH WEIGHT PRETERM INFANTS",
+    "Data": [
+      {"Age (mo)": "0.25", "25–28 wk IgG": "251 (114–552)", "25–28 wk IgM": "7.6 (1.3–43.3)", "25–28 wk IgA": "1.2 (0.07–20.8)", "29–32 wk IgG": "368 (186–728)", "29–32 wk IgM": "9.1 (2.1–39.4)", "29–32 wk IgA": "0.6 (0.04–1.0)"},
+      {"Age (mo)": "0.5", "25–28 wk IgG": "202 (91–446)", "25–28 wk IgM": "14.1 (3.5–56.1)", "25–28 wk IgA": "3.1 (0.09–10.7)", "29–32 wk IgG": "275 (119–637)", "29–32 wk IgM": "13.9 (4.7–41)", "29–32 wk IgA": "0.9 (0.01–7.5)"},
+      {"Age (mo)": "1.0", "25–28 wk IgG": "158 (57–437)", "25–28 wk IgM": "12.7 (3.0–53.3)", "25–28 wk IgA": "4.5 (0.65–30.9)", "29–32 wk IgG": "209 (97–452)", "29–32 wk IgM": "14.4 (6.3–33)", "29–32 wk IgA": "1.9 (0.3–12.0)"},
+      {"Age (mo)": "1.5", "25–28 wk IgG": "134 (59–307)", "25–28 wk IgM": "16.2 (4.4–59.2)", "25–28 wk IgA": "4.3 (0.9–20.9)", "29–32 wk IgG": "156 (69–352)", "29–32 wk IgM": "15.4 (5.5–43.2)", "29–32 wk IgA": "2.2 (0.7–6.5)"},
+      {"Age (mo)": "2.0", "25–28 wk IgG": "89 (58–136)", "25–28 wk IgM": "16.0 (5.3–48.9)", "25–28 wk IgA": "4.1 (1.5–11.1)", "29–32 wk IgG": "123 (64–237)", "29–32 wk IgM": "15.2 (4.9–46.7)", "29–32 wk IgA": "3.0 (1.1–8.3)"},
+      {"Age (mo)": "3", "25–28 wk IgG": "60 (23–156)", "25–28 wk IgM": "13.8 (5.3–36.1)", "25–28 wk IgA": "3.0 (0.6–15.6)", "29–32 wk IgG": "104 (41–268)", "29–32 wk IgM": "16.3 (7.1–37.2)", "29–32 wk IgA": "3.6 (0.8–15.4)"},
+      {"Age (mo)": "4", "25–28 wk IgG": "82 (32–210)", "25–28 wk IgM": "22.2 (11.2–43.9)", "25–28 wk IgA": "6.8 (1.0–47.8)", "29–32 wk IgG": "128 (39–425)", "29–32 wk IgM": "26.5 (7.7–91.2)", "29–32 wk IgA": "9.8 (2.5–39.3)"},
+      {"Age (mo)": "6", "25–28 wk IgG": "159 (56–455)", "25–28 wk IgM": "41.3 (8.3–205)", "25–28 wk IgA": "9.7 (3.0–31.2)", "29–32 wk IgG": "179 (51–634)", "29–32 wk IgM": "29.3 (10.5–81.5)", "29–32 wk IgA": "12.3 (2.7–57.1)"},
+      {"Age (mo)": "8–10", "25–28 wk IgG": "273 (94–794)", "25–28 wk IgM": "41.8 (31.1–56.1)", "25–28 wk IgA": "9.5 (0.9–98.6)", "29–32 wk IgG": "280 (140–561)", "29–32 wk IgM": "34.7 (17–70.8)", "29–32 wk IgA": "20.9 (8.3–53)"}
+    ]
+  },
+  {
+    "TableInstruction": "Geometric mean. Numbers in parentheses are ±2 SD.",
+    "TableReference": "From Ballow M et al. Pediatr Res. 1986;9:899–904."
+  }
+]
+
+[
+  {
+    "TableName": "T AND B LYMPHOCYTES IN PERIPHERAL BLOOD",
+    "Data": [
+      {"Age": "0–3 mo", "CD3 Count (%)": "2.50–5.50 (53–84)", "CD4 Count (%)": "1.60–4.00 (35–64)", "CD8 Count (%)": "0.56–1.70 (12–28)", "CD19 Count (%)": "0.30–2.00 (6–32)"},
+      {"Age": "3–6 mo", "CD3 Count (%)": "2.50–5.60 (51–77)", "CD4 Count (%)": "1.80–4.00 (35–56)", "CD8 Count (%)": "0.59–1.60 (12–23)", "CD19 Count (%)": "0.43–3.00 (11–41)"},
+      {"Age": "6–12 mo", "CD3 Count (%)": "1.90–5.90 (49–76)", "CD4 Count (%)": "1.40–4.30 (31–56)", "CD8 Count (%)": "0.50–1.70 (12–24)", "CD19 Count (%)": "0.61–2.60 (14–37)"},
+      {"Age": "1–2 yr", "CD3 Count (%)": "2.10–6.20 (53–75)", "CD4 Count (%)": "1.30–3.40 (32–51)", "CD8 Count (%)": "0.62–2.00 (14–30)", "CD19 Count (%)": "0.72–2.60 (16–35)"},
+      {"Age": "2–6 yr", "CD3 Count (%)": "1.40–3.70 (56–75)", "CD4 Count (%)": "0.70–2.20 (28–47)", "CD8 Count (%)": "0.49–1.30 (16–30)", "CD19 Count (%)": "0.39–1.40 (14–33)"},
+      {"Age": "6–12 yr", "CD3 Count (%)": "1.20–2.60 (60–76)", "CD4 Count (%)": "0.65–1.50 (31–47)", "CD8 Count (%)": "0.37–1.10 (18–35)", "CD19 Count (%)": "0.27–0.86 (13–27)"},
+      {"Age": "12–18 yr", "CD3 Count (%)": "1.00–2.20 (56–84)", "CD4 Count (%)": "0.53–1.30 (31–52)", "CD8 Count (%)": "0.33–0.92 (18–35)", "CD19 Count (%)": "0.11–0.57 (6–23)"},
+      {"Age": "Adult", "CD3 Count (%)": "0.70–2.10 (55–83)", "CD4 Count (%)": "0.30–1.40 (28–57)", "CD8 Count (%)": "0.20–0.90 (10–39)", "CD19 Count (%)": null}
+    ]
+  },
+  {
+    "TableInstruction": "Absolute counts (number of cells per microliter ×10^3). Normal values (10th to 90th percentile).",
+    "TableReference": "From Comans-Bitter WM et al. J Pediatr. 1997; Shearer WT et al. J Allergy Clin Immunol. 2003."
+  }
+]
+
+[
+  {
+    "TableName": "SERUM COMPLEMENT LEVELS",
+    "Data": [
+      {"Age": "Cord blood (term)", "C3 (mg/dL)": "83 (57–116)", "C4 (mg/dL)": "13 (6.6–23)"},
+      {"Age": "1 mo", "C3 (mg/dL)": "83 (53–124)", "C4 (mg/dL)": "14 (7.0–25)"},
+      {"Age": "2 mo", "C3 (mg/dL)": "96 (59–149)", "C4 (mg/dL)": "15 (7.4–28)"},
+      {"Age": "3 mo", "C3 (mg/dL)": "94 (64–131)", "C4 (mg/dL)": "16 (8.7–27)"},
+      {"Age": "4 mo", "C3 (mg/dL)": "107 (62–175)", "C4 (mg/dL)": "19 (8.3–38)"},
+      {"Age": "5 mo", "C3 (mg/dL)": "107 (64–167)", "C4 (mg/dL)": "18 (7.1–36)"},
+      {"Age": "6 mo", "C3 (mg/dL)": "115 (74–171)", "C4 (mg/dL)": "21 (8.6–42)"},
+      {"Age": "7–9 mo", "C3 (mg/dL)": "113 (75–166)", "C4 (mg/dL)": "20 (9.5–37)"},
+      {"Age": "10–12 mo", "C3 (mg/dL)": "126 (73–180)", "C4 (mg/dL)": "22 (12–39)"},
+      {"Age": "1 yr", "C3 (mg/dL)": "129 (84–174)", "C4 (mg/dL)": "23 (12–40)"},
+      {"Age": "2 yr", "C3 (mg/dL)": "120 (81–170)", "C4 (mg/dL)": "19 (9.2–34)"},
+      {"Age": "3 yr", "C3 (mg/dL)": "117 (77–171)", "C4 (mg/dL)": "20 (9.7–36)"},
+      {"Age": "4–5 yr", "C3 (mg/dL)": "121 (86–166)", "C4 (mg/dL)": "21 (13–32)"},
+      {"Age": "6–8 yr", "C3 (mg/dL)": "118 (88–155)", "C4 (mg/dL)": "20 (12–32)"},
+      {"Age": "9–10 yr", "C3 (mg/dL)": "134 (89–195)", "C4 (mg/dL)": "22 (10–40)"},
+      {"Age": "Adult", "C3 (mg/dL)": "125 (83–177)", "C4 (mg/dL)": "28 (15–45)"}
+    ]
+  },
+  {
+    "TableInstruction": "Numbers in parentheses are the 95% confidence intervals (CIs).",
+    "TableReference": "Modified from Jolliff CR et al. Clin Chem. 1982."
+  }
+]
+
+[
+  {
+    "TableName": "INSENSIBLE WATER LOSS IN PRETERM INFANTS",
+    "Data": [
+      {"Body Weight (g)": "<1000", "Insensible Water Loss (mL/kg/day)": "60–70"},
+      {"Body Weight (g)": "1000–1250", "Insensible Water Loss (mL/kg/day)": "60–65"},
+      {"Body Weight (g)": "1251–1500", "Insensible Water Loss (mL/kg/day)": "30–45"},
+      {"Body Weight (g)": "1501–1750", "Insensible Water Loss (mL/kg/day)": "15–30"},
+      {"Body Weight (g)": "1751–2000", "Insensible Water Loss (mL/kg/day)": "15–20"}
+    ]
+  },
+  {
+    "TableInstruction": "Estimates of insensible water loss at different body weights during the first few days of life.",
+    "TableReference": "Data from Veille JC. Clin Perinatol. 1988;15:851–862."
+  }
+]
+
+[
+  {
+    "TableName": "WATER REQUIREMENTS OF NEWBORNS",
+    "Data": [
+      {"Birth Weight (g)": "<750", "1–2 Days (mL/kg/24 hr)": "100–250", "3–7 Days (mL/kg/24 hr)": "150–300", "7–30 Days (mL/kg/24 hr)": "120–180"},
+      {"Birth Weight (g)": "750–1000", "1–2 Days (mL/kg/24 hr)": "80–150", "3–7 Days (mL/kg/24 hr)": "100–150", "7–30 Days (mL/kg/24 hr)": "120–180"},
+      {"Birth Weight (g)": "1000–1500", "1–2 Days (mL/kg/24 hr)": "60–100", "3–7 Days (mL/kg/24 hr)": "80–150", "7–30 Days (mL/kg/24 hr)": "120–180"},
+      {"Birth Weight (g)": ">1500", "1–2 Days (mL/kg/24 hr)": "60–80", "3–7 Days (mL/kg/24 hr)": "100–150", "7–30 Days (mL/kg/24 hr)": "120–180"}
+    ]
+  },
+  {
+    "TableReference": "Data from Taeusch HW, Ballard RA, eds. Schaeffer and Avery’s Diseases of the Newborn. 7th ed. Philadelphia: WB Saunders; 1998."
+  }
+]
+
+[
+  {
+    "TableName": "NORMAL VALUES OF GLOMERULAR FILTRATION RATE",
+    "Data": [
+      {"Age": "Neonates <34 wk gestational age, 2–8 days", "GFR (Mean) (mL/min/1.73 m²)": "11", "Range (mL/min/1.73 m²)": "11–15"},
+      {"Age": "Neonates <34 wk gestational age, 4–28 days", "GFR (Mean) (mL/min/1.73 m²)": "20", "Range (mL/min/1.73 m²)": "15–28"},
+      {"Age": "Neonates <34 wk gestational age, 30–90 days", "GFR (Mean) (mL/min/1.73 m²)": "50", "Range (mL/min/1.73 m²)": "40–65"},
+      {"Age": "Neonates >34 wk gestational age, 2–8 days", "GFR (Mean) (mL/min/1.73 m²)": "39", "Range (mL/min/1.73 m²)": "17–60"},
+      {"Age": "Neonates >34 wk gestational age, 4–28 days", "GFR (Mean) (mL/min/1.73 m²)": "47", "Range (mL/min/1.73 m²)": "26–68"},
+      {"Age": "Neonates >34 wk gestational age, 30–90 days", "GFR (Mean) (mL/min/1.73 m²)": "58", "Range (mL/min/1.73 m²)": "30–86"},
+      {"Age": "1–6 mo", "GFR (Mean) (mL/min/1.73 m²)": "77", "Range (mL/min/1.73 m²)": "39–114"},
+      {"Age": "6–12 mo", "GFR (Mean) (mL/min/1.73 m²)": "103", "Range (mL/min/1.73 m²)": "49–157"},
+      {"Age": "12–19 mo", "GFR (Mean) (mL/min/1.73 m²)": "127", "Range (mL/min/1.73 m²)": "62–191"},
+      {"Age": "2 yr–adult", "GFR (Mean) (mL/min/1.73 m²)": "127", "Range (mL/min/1.73 m²)": "89–165"}
+    ]
+  },
+  {
+    "TableReference": "From Holliday MA, Barratt TM. Pediatric Nephrology. Williams & Wilkins; 1994:1306."
+  }
+]
+
+[
+  {
+    "TableName": "PROPORTIONALITY CONSTANT FOR CALCULATING GLOMERULAR FILTRATION RATE",
+    "Data": [
+      {"Age": "Low birth weight during first year of life", "k Values": "0.33"},
+      {"Age": "Term AGA during first year of life", "k Values": "0.45"},
+      {"Age": "Children and adolescent girls", "k Values": "0.55"},
+      {"Age": "Adolescent boys", "k Values": "0.70"}
+    ]
+  },
+  {
+    "TableInstruction": "AGA: appropriate for gestational age.",
+    "TableReference": "Data from Schwartz GJ et al. Pediatr Clin North Am. 1987;34:571."
+  }
+]
+
+[
+  {
+    "TableName": "AGE-ADJUSTED CALCIUM/CREATININE RATIOS",
+    "Data": [
+      {"Age": "<7 mo", "Ca2+/Cr Ratio (mg/mg) (95th Percentile for Age)": "0.86"},
+      {"Age": "7–18 mo", "Ca2+/Cr Ratio (mg/mg) (95th Percentile for Age)": "0.60"},
+      {"Age": "19 mo–6 yr", "Ca2+/Cr Ratio (mg/mg) (95th Percentile for Age)": "0.42"},
+      {"Age": "Adults", "Ca2+/Cr Ratio (mg/mg) (95th Percentile for Age)": "0.22"}
+    ]
+  },
+  {
+    "TableReference": "From Sargent JD et al. J Pediatr. 1993;123:393."
+  }
+]
+
+[
+  {
+    "TableName": "LABORATORY DIFFERENTIATION OF OLIGURIA",
+    "Data": [
+      {"Test": "FENa", "Prerenal": "≤1%", "Renal": ">3%"},
+      {"Test": "BUN/Cr ratio", "Prerenal": ">20:1", "Renal": "<10:1"},
+      {"Test": "Urine specific gravity", "Prerenal": ">1.015", "Renal": "<1.010"}
+    ]
+  }
+]
+
+[
+  {
+    "TableName": "SAMPLE ESTIMATED ENERGY REQUIREMENTS FOR HEALTHY BOYS AND GIRLS OF MEDIAN WEIGHT AND HEIGHT",
+    "Data": [
+      {"Age": "0–2 mo", "Boys EER (kcal/kg/day)": "107", "Girls EER (kcal/kg/day)": "104"},
+      {"Age": "3 mo", "Boys EER (kcal/kg/day)": "95", "Girls EER (kcal/kg/day)": "95"},
+      {"Age": "4–35 mo", "Boys EER (kcal/kg/day)": "82", "Girls EER (kcal/kg/day)": "82"},
+
+      {"Age": "3 yr", "Boys Median Weight (kg)": "14.3", "Boys Sedentary (kcal/kg/d)": "80", "Boys Active (kcal/kg/d)": "104", "Girls Median Weight (kg)": "13.9", "Girls Sedentary (kcal/kg/d)": "76", "Girls Active (kcal/kg/d)": "100"},
+      {"Age": "4 yr", "Boys Median Weight (kg)": "16.2", "Boys Sedentary (kcal/kg/d)": "74", "Boys Active (kcal/kg/d)": "97", "Girls Median Weight (kg)": "15.8", "Girls Sedentary (kcal/kg/d)": "70", "Girls Active (kcal/kg/d)": "93"},
+      {"Age": "5 yr", "Boys Median Weight (kg)": "18.4", "Boys Sedentary (kcal/kg/d)": "68", "Boys Active (kcal/kg/d)": "90", "Girls Median Weight (kg)": "17.9", "Girls Sedentary (kcal/kg/d)": "65", "Girls Active (kcal/kg/d)": "87"},
+      {"Age": "6 yr", "Boys Median Weight (kg)": "20.7", "Boys Sedentary (kcal/kg/d)": "63", "Boys Active (kcal/kg/d)": "84", "Girls Median Weight (kg)": "20.2", "Girls Sedentary (kcal/kg/d)": "61", "Girls Active (kcal/kg/d)": "81"},
+      {"Age": "7 yr", "Boys Median Weight (kg)": "23.1", "Boys Sedentary (kcal/kg/d)": "59", "Boys Active (kcal/kg/d)": "80", "Girls Median Weight (kg)": "22.8", "Girls Sedentary (kcal/kg/d)": "56", "Girls Active (kcal/kg/d)": "75"},
+      {"Age": "8 yr", "Boys Median Weight (kg)": "25.6", "Boys Sedentary (kcal/kg/d)": "56", "Boys Active (kcal/kg/d)": "75", "Girls Median Weight (kg)": "25.6", "Girls Sedentary (kcal/kg/d)": "52", "Girls Active (kcal/kg/d)": "71"},
+      {"Age": "9 yr", "Boys Median Weight (kg)": "28.6", "Boys Sedentary (kcal/kg/d)": "53", "Boys Active (kcal/kg/d)": "71", "Girls Median Weight (kg)": "29.0", "Girls Sedentary (kcal/kg/d)": "48", "Girls Active (kcal/kg/d)": "65"},
+      {"Age": "10 yr", "Boys Median Weight (kg)": "31.9", "Boys Sedentary (kcal/kg/d)": "49", "Boys Active (kcal/kg/d)": "67", "Girls Median Weight (kg)": "32.9", "Girls Sedentary (kcal/kg/d)": "44", "Girls Active (kcal/kg/d)": "60"},
+      {"Age": "11 yr", "Boys Median Weight (kg)": "35.9", "Boys Sedentary (kcal/kg/d)": "46", "Boys Active (kcal/kg/d)": "63", "Girls Median Weight (kg)": "37.2", "Girls Sedentary (kcal/kg/d)": "41", "Girls Active (kcal/kg/d)": "56"},
+      {"Age": "12 yr", "Boys Median Weight (kg)": "40.5", "Boys Sedentary (kcal/kg/d)": "44", "Boys Active (kcal/kg/d)": "60", "Girls Median Weight (kg)": "41.6", "Girls Sedentary (kcal/kg/d)": "38", "Girls Active (kcal/kg/d)": "52"},
+      {"Age": "13 yr", "Boys Median Weight (kg)": "45.6", "Boys Sedentary (kcal/kg/d)": "42", "Boys Active (kcal/kg/d)": "57", "Girls Median Weight (kg)": "45.8", "Girls Sedentary (kcal/kg/d)": "36", "Girls Active (kcal/kg/d)": "50"},
+      {"Age": "14 yr", "Boys Median Weight (kg)": "51.0", "Boys Sedentary (kcal/kg/d)": "40", "Boys Active (kcal/kg/d)": "55", "Girls Median Weight (kg)": "49.4", "Girls Sedentary (kcal/kg/d)": "34", "Girls Active (kcal/kg/d)": "47"},
+      {"Age": "15 yr", "Boys Median Weight (kg)": "56.3", "Boys Sedentary (kcal/kg/d)": "39", "Boys Active (kcal/kg/d)": "54", "Girls Median Weight (kg)": "52.0", "Girls Sedentary (kcal/kg/d)": "33", "Girls Active (kcal/kg/d)": "45"},
+      {"Age": "16 yr", "Boys Median Weight (kg)": "60.9", "Boys Sedentary (kcal/kg/d)": "38", "Boys Active (kcal/kg/d)": "52", "Girls Median Weight (kg)": "53.9", "Girls Sedentary (kcal/kg/d)": "32", "Girls Active (kcal/kg/d)": "44"},
+      {"Age": "17 yr", "Boys Median Weight (kg)": "64.6", "Boys Sedentary (kcal/kg/d)": "36", "Boys Active (kcal/kg/d)": "50", "Girls Median Weight (kg)": "55.1", "Girls Sedentary (kcal/kg/d)": "31", "Girls Active (kcal/kg/d)": "43"},
+      {"Age": "18 yr", "Boys Median Weight (kg)": "67.2", "Boys Sedentary (kcal/kg/d)": "35", "Boys Active (kcal/kg/d)": "49", "Girls Median Weight (kg)": "56.2", "Girls Sedentary (kcal/kg/d)": "30", "Girls Active (kcal/kg/d)": "42"}
+    ]
+  },
+  {
+    "TableInstruction": "Weight and height for age at 50th percentile. See definition of sedentary and active PAL for further information. EER = estimated energy requirements; PAL = physical activity level.",
+    "TableReference": "From Otten JJ, Hellwig JP, Meyers LD, eds. Dietary Reference Intakes: The Essential Guide to Nutrient Requirements. National Academies Press; 2006."
+  }
+]
+
+[
+  {
+    "TableName": "PROTEIN REQUIREMENTS",
+    "Data": [
+      {"Age": "0–6 mo", "RDA (g/kg/day)": "1.52 (AI)"},
+      {"Age": "7–12 mo", "RDA (g/kg/day)": "1.2"},
+      {"Age": "1–3 yr", "RDA (g/kg/day)": "1.05"},
+      {"Age": "4–8 yr", "RDA (g/kg/day)": "0.95"},
+      {"Age": "9–13 yr", "RDA (g/kg/day)": "0.95"},
+      {"Age": "14–18 yr", "RDA (g/kg/day)": "0.85"},
+      {"Age": "Pregnancy (first half)", "RDA (g/kg/day)": "Unchanged"},
+      {"Age": "Pregnancy (second half)", "RDA (g/kg/day)": "1.1"},
+      {"Age": "Lactation", "RDA (g/kg/day)": "1.3"}
+    ]
+  },
+  {
+    "TableInstruction": "If sufficient scientific evidence is not available to establish RDA, an AI (adequate intake) is used. For healthy breast-fed infants, AI is the mean intake.",
+    "TableReference": "From Otten JJ, Hellwig JP, Meyers LD, eds. Dietary Reference Intakes: The Essential Guide to Nutrient Requirements. National Academies Press; 2006."
+  }
+]
+
+[
+  {
+    "TableName": "FAT REQUIREMENTS: ADEQUATE INTAKE",
+    "Data": [
+      {"Age": "0–6 mo", "Total Fat (g/day)": "31", "Linoleic Acid (g/day)": "4.4 (n-6 PUFA)", "α-Linolenic Acid (g/day)": "0.5 (n-3 PUFA)"},
+      {"Age": "7–12 mo", "Total Fat (g/day)": "30", "Linoleic Acid (g/day)": "4.6 (n-6 PUFA)", "α-Linolenic Acid (g/day)": "0.5 (n-3 PUFA)"},
+      {"Age": "1–3 yr", "Total Fat (g/day)": null, "Linoleic Acid (g/day)": "7", "α-Linolenic Acid (g/day)": "0.7"},
+      {"Age": "4–8 yr", "Total Fat (g/day)": null, "Linoleic Acid (g/day)": "10", "α-Linolenic Acid (g/day)": "0.9"},
+      {"Age": "9–13 yr, boys", "Total Fat (g/day)": null, "Linoleic Acid (g/day)": "12", "α-Linolenic Acid (g/day)": "1.2"},
+      {"Age": "9–13 yr, girls", "Total Fat (g/day)": null, "Linoleic Acid (g/day)": "10", "α-Linolenic Acid (g/day)": "1.0"},
+      {"Age": "14–18 yr, boys", "Total Fat (g/day)": null, "Linoleic Acid (g/day)": "16", "α-Linolenic Acid (g/day)": "1.6"},
+      {"Age": "14–18 yr, girls", "Total Fat (g/day)": null, "Linoleic Acid (g/day)": "11", "α-Linolenic Acid (g/day)": "1.1"},
+      {"Age": "Pregnancy", "Total Fat (g/day)": null, "Linoleic Acid (g/day)": "13", "α-Linolenic Acid (g/day)": "1.4"},
+      {"Age": "Lactation", "Total Fat (g/day)": null, "Linoleic Acid (g/day)": "13", "α-Linolenic Acid (g/day)": "1.3"}
+    ]
+  },
+  {
+    "TableInstruction": "AI used where RDA not established. PUFA = polyunsaturated fatty acid.",
+    "TableReference": "From Otten JJ et al. Dietary Reference Intakes. National Academies Press; 2006."
+  }
+]
+
+[
+  {
+    "TableName": "DIETARY REFERENCE INTAKES: RECOMMENDED INTAKES FOR INDIVIDUALS—VITAMINS",
+    "Data": [
+      {"Life Stage": "0–6 mo", "Vit A (IU)": "1333", "Vit C (mg/day)": "40", "Vit D (IU)": "400", "Vit E (IU)": "4", "Vit K (mcg/day)": "2.0", "Thiamin (mg/day)": "0.2", "Riboflavin (mg/day)": "0.3", "Niacin (mg/day)": "2", "Vit B6 (mg/day)": "0.1", "Folate (mcg/day)": "65", "Vit B12 (mcg/day)": "0.4", "Pantothenic Acid (mg/day)": "1.7", "Biotin (mcg/day)": "5", "Choline (mg/day)": "125"},
+      {"Life Stage": "7–12 mo", "Vit A (IU)": "1666", "Vit C (mg/day)": "50", "Vit D (IU)": "400", "Vit E (IU)": "5", "Vit K (mcg/day)": "2.5", "Thiamin (mg/day)": "0.3", "Riboflavin (mg/day)": "0.4", "Niacin (mg/day)": "4", "Vit B6 (mg/day)": "0.3", "Folate (mcg/day)": "80", "Vit B12 (mcg/day)": "0.5", "Pantothenic Acid (mg/day)": "1.8", "Biotin (mcg/day)": "6", "Choline (mg/day)": "150"}
+    ]
+  },
+  {
+    "TableInstruction": "RDAs in bold, AIs marked with asterisk. 1 IU = 0.3 mcg retinol equivalent; 1 mcg cholecalciferol = 40 IU vitamin D.",
+    "TableReference": "Dietary Reference Intakes reports, National Academies."
+  }
+]
+
+[
+  {
+    "TableName": "DIETARY REFERENCE INTAKES: RECOMMENDED INTAKES—ELEMENTS",
+    "Data": [
+      {"Life Stage": "0–6 mo", "Calcium (mg/day)": "200", "Chromium (mcg/day)": "0.2", "Copper (mcg/day)": "200", "Fluoride (mg/day)": "0.01", "Iodine (mcg/day)": "110", "Iron (mg/day)": "0.27", "Magnesium (mg/day)": "30", "Manganese (mg/day)": "0.003", "Molybdenum (mcg/day)": "2", "Phosphorus (mg/day)": "100", "Selenium (mcg/day)": "15", "Zinc (mg/day)": "2"},
+      {"Life Stage": "7–12 mo", "Calcium (mg/day)": "260", "Chromium (mcg/day)": "5.5", "Copper (mcg/day)": "220", "Fluoride (mg/day)": "0.5", "Iodine (mcg/day)": "130", "Iron (mg/day)": "11", "Magnesium (mg/day)": "75", "Manganese (mg/day)": "0.6", "Molybdenum (mcg/day)": "3", "Phosphorus (mg/day)": "275", "Selenium (mcg/day)": "20", "Zinc (mg/day)": "3"}
+    ]
+  },
+  {
+    "TableInstruction": "RDAs in bold, AIs marked with asterisk.",
+    "TableReference": "Dietary Reference Intakes reports, National Academies."
+  }
+]
+
+[
+  {
+    "TableName": "FIBER REQUIREMENTS: ADEQUATE INTAKE",
+    "Data": [
+      {"Age": "0–12 mo", "Total Fiber (g/day)": "Not determined"},
+      {"Age": "1–3 yr", "Total Fiber (g/day)": "19"},
+      {"Age": "4–8 yr", "Total Fiber (g/day)": "25"},
+      {"Age": "9–13 yr, boys", "Total Fiber (g/day)": "31"},
+      {"Age": "9–13 yr, girls", "Total Fiber (g/day)": "26"},
+      {"Age": "14–18 yr, boys", "Total Fiber (g/day)": "38"},
+      {"Age": "14–18 yr, girls", "Total Fiber (g/day)": "26"},
+      {"Age": "Pregnancy", "Total Fiber (g/day)": "28"},
+      {"Age": "Lactation", "Total Fiber (g/day)": "29"}
+    ]
+  },
+  {
+    "TableInstruction": "AI used where RDA not established.",
+    "TableReference": "From Otten JJ et al. Dietary Reference Intakes. National Academies Press; 2006."
+  }
+]
+
+[
+  {
+    "TableName": "NORMAL RESPIRATORY RATES IN CHILDREN",
+    "Data": [
+      {"Age (yr)": "0–1", "Respiratory Rate (breaths/min)": "24–38"},
+      {"Age (yr)": "1–3", "Respiratory Rate (breaths/min)": "22–30"},
+      {"Age (yr)": "4–6", "Respiratory Rate (breaths/min)": "20–24"},
+      {"Age (yr)": "7–9", "Respiratory Rate (breaths/min)": "18–24"},
+      {"Age (yr)": "10–14", "Respiratory Rate (breaths/min)": "16–22"},
+      {"Age (yr)": "14–18", "Respiratory Rate (breaths/min)": "14–20"}
+    ]
+  },
+  {
+    "TableInstruction": "Slightly higher respiratory rates (40–50 breaths/min) in the neonatal period may be normal in the absence of other signs and symptoms.",
+    "TableReference": "Data from Bardella U. Am Fam Physician. 1999;60:1743–1750."
+  }
+]
+
+[
+  {
+    "TableName": "PREDICTED AVERAGE PEAK EXPIRATORY FLOW RATES FOR NORMAL CHILDREN",
+    "Data": [
+      {"Height Inches (cm)": "43 (109)", "PEFR (L/min)": "147"},
+      {"Height Inches (cm)": "44 (112)", "PEFR (L/min)": "160"},
+      {"Height Inches (cm)": "45 (114)", "PEFR (L/min)": "173"},
+      {"Height Inches (cm)": "46 (117)", "PEFR (L/min)": "187"},
+      {"Height Inches (cm)": "47 (119)", "PEFR (L/min)": "200"},
+      {"Height Inches (cm)": "48 (122)", "PEFR (L/min)": "214"},
+      {"Height Inches (cm)": "49 (124)", "PEFR (L/min)": "227"},
+      {"Height Inches (cm)": "50 (127)", "PEFR (L/min)": "240"},
+      {"Height Inches (cm)": "51 (130)", "PEFR (L/min)": "254"},
+      {"Height Inches (cm)": "52 (132)", "PEFR (L/min)": "267"},
+      {"Height Inches (cm)": "53 (135)", "PEFR (L/min)": "280"},
+      {"Height Inches (cm)": "54 (137)", "PEFR (L/min)": "293"},
+      {"Height Inches (cm)": "55 (140)", "PEFR (L/min)": "307"},
+      {"Height Inches (cm)": "56 (142)", "PEFR (L/min)": "320"},
+      {"Height Inches (cm)": "57 (145)", "PEFR (L/min)": "334"},
+      {"Height Inches (cm)": "58 (147)", "PEFR (L/min)": "347"},
+      {"Height Inches (cm)": "59 (150)", "PEFR (L/min)": "360"},
+      {"Height Inches (cm)": "60 (152)", "PEFR (L/min)": "373"},
+      {"Height Inches (cm)": "61 (155)", "PEFR (L/min)": "387"},
+      {"Height Inches (cm)": "62 (157)", "PEFR (L/min)": "400"},
+      {"Height Inches (cm)": "63 (160)", "PEFR (L/min)": "413"},
+      {"Height Inches (cm)": "64 (163)", "PEFR (L/min)": "427"},
+      {"Height Inches (cm)": "65 (165)", "PEFR (L/min)": "440"},
+      {"Height Inches (cm)": "66 (168)", "PEFR (L/min)": "454"},
+      {"Height Inches (cm)": "67 (170)", "PEFR (L/min)": "467"}
+    ]
+  },
+  {
+    "TableInstruction": "PEFR = peak expiratory flow rate.",
+    "TableReference": "Data from Voter KZ. Pediatr Rev. 1996;17:53–63."
+  }
+]
+
+[
+  {
+    "TableName": "ALANINE AMINOTRANSFERASE (ALT)",
+    "Data": [
+      {"Age": "Infant aged <12 mo", "Conventional Units": "13–45 U/L", "SI Units": "13–45 U/L"},
+      {"Age": "1–3 yr", "Conventional Units": "5–45 U/L", "SI Units": "5–45 U/L"},
+      {"Age": "4–6 yr", "Conventional Units": "10–25 U/L", "SI Units": "10–25 U/L"},
+      {"Age": "7–9 yr", "Conventional Units": "10–35 U/L", "SI Units": "10–35 U/L"},
+      {"Age": "10–11 yr, Female", "Conventional Units": "10–30 U/L", "SI Units": "10–30 U/L"},
+      {"Age": "10–11 yr, Male", "Conventional Units": "10–35 U/L", "SI Units": "10–35 U/L"},
+      {"Age": "12–13 yr, Female", "Conventional Units": "10–30 U/L", "SI Units": "10–30 U/L"},
+      {"Age": "12–13 yr, Male", "Conventional Units": "10–55 U/L", "SI Units": "10–55 U/L"},
+      {"Age": "14–15 yr, Female", "Conventional Units": "5–30 U/L", "SI Units": "5–30 U/L"},
+      {"Age": "14–15 yr, Male", "Conventional Units": "10–45 U/L", "SI Units": "10–45 U/L"},
+      {"Age": ">16 yr, Female", "Conventional Units": "5–35 U/L", "SI Units": "5–35 U/L"},
+      {"Age": ">16 yr, Male", "Conventional Units": "10–40 U/L", "SI Units": "10–40 U/L"}
+    ]
+  }
+]
+
+[
+  {
+    "TableName": "ALDOLASE",
+    "Data": [
+      {"Age": "10–24 mo", "Conventional Units": "3.4–11.8 U/L", "SI Units": "3.4–11.8 U/L"},
+      {"Age": "2–16 yr", "Conventional Units": "1.2–8.8 U/L", "SI Units": "1.2–8.8 U/L"},
+      {"Age": "Adult", "Conventional Units": "1.7–4.9 U/L", "SI Units": "1.7–4.9 U/L"}
+    ]
+  }
+]
+
+[
+  {
+    "TableName": "ALKALINE PHOSPHATASE",
+    "Data": [
+      {"Age": "Infant", "Conventional Units": "150–420 U/L", "SI Units": "150–420 U/L"},
+      {"Age": "2–10 yr", "Conventional Units": "100–320 U/L", "SI Units": "100–320 U/L"},
+      {"Age": "Adolescent male", "Conventional Units": "100–390 U/L", "SI Units": "100–390 U/L"},
+      {"Age": "Adolescent female", "Conventional Units": "100–320 U/L", "SI Units": "100–320 U/L"},
+      {"Age": "Adult", "Conventional Units": "30–120 U/L", "SI Units": "30–120 U/L"}
+    ]
+  }
+]
+
+[
+  {
+    "TableName": "AMMONIA",
+    "Data": [
+      {"Age": "Newborn", "Conventional Units": "90–150 mcg/dL", "SI Units": "64–107 µmol/L"},
+      {"Age": "0–2 wk", "Conventional Units": "79–129 mcg/dL", "SI Units": "56–92 µmol/L"},
+      {"Age": "Infant/child", "Conventional Units": "29–70 mcg/dL", "SI Units": "21–50 µmol/L"},
+      {"Age": "Adult", "Conventional Units": "15–45 mcg/dL", "SI Units": "11–32 µmol/L"}
+    ]
+  },
+  {
+    "TableInstruction": "Heparinized venous specimens on ice, analyzed within 30 min."
+  }
+]
+
+[
+  {
+    "TableName": "AMYLASE",
+    "Data": [
+      {"Age": "0–14 days", "Conventional Units": "3–10 U/L", "SI Units": "3–10 U/L"},
+      {"Age": "15 days–13 wk", "Conventional Units": "2–22 U/L", "SI Units": "2–22 U/L"},
+      {"Age": "13 wk–1 yr", "Conventional Units": "3–50 U/L", "SI Units": "3–50 U/L"},
+      {"Age": ">1 yr", "Conventional Units": "25–101 U/L", "SI Units": "25–101 U/L"}
+    ]
+  }
+]
+
+[
+  {
+    "TableName": "ANTINUCLEAR ANTIBODY (ANA) IMMUNOFLUORESCENCE ASSAY (IFA)",
+    "Data": [
+      {"Result": "Negative", "Conventional Units": "<1:40", "SI Units": null}
+    ]
+  },
+  {
+    "TableInstruction": "Patterns with clinical correlation: Centromere: CREST; Nucleolar: Scleroderma; Homogeneous: Systemic lupus erythematosus."
+  }
+]
+
+[
+  {
+    "TableName": "ANTISTREPTOLYSIN O TITER",
+    "Data": [
+      {"Age": "Newborn", "Conventional Units": "Similar to mother's value", "SI Units": null},
+      {"Age": "6–24 mo", "Conventional Units": "≤50 Todd units/mL", "SI Units": null},
+      {"Age": "2–4 yr", "Conventional Units": "≤160 Todd units/mL", "SI Units": null},
+      {"Age": "≥5 yr", "Conventional Units": "≤330 Todd units/mL", "SI Units": null}
+    ]
+  },
+  {
+    "TableInstruction": "Fourfold rise in paired serial specimens is significant."
+  }
+]
+
+[
+  {
+    "TableName": "ASPARTATE AMINOTRANSFERASE (AST)",
+    "Data": [
+      {"Age": "0–10 days", "Conventional Units": "47–150 U/L", "SI Units": "47–150 U/L"},
+      {"Age": "10 days–24 mo", "Conventional Units": "9–80 U/L", "SI Units": "9–80 U/L"},
+      {"Age": ">24 mo, Female", "Conventional Units": "13–35 U/L", "SI Units": "13–35 U/L"},
+      {"Age": ">24 mo, Male", "Conventional Units": "15–40 U/L", "SI Units": "15–40 U/L"}
+    ]
+  }
+]
+
+[
+  {
+    "TableName": "BICARBONATE",
+    "Data": [
+      {"Age": "Newborn", "Conventional Units": "17–24 mEq/L", "SI Units": "17–24 mmol/L"},
+      {"Age": "Infant", "Conventional Units": "19–24 mEq/L", "SI Units": "19–24 mmol/L"},
+      {"Age": "2 mo–2 yr", "Conventional Units": "16–24 mEq/L", "SI Units": "16–24 mmol/L"},
+      {"Age": ">2 yr", "Conventional Units": "22–26 mEq/L", "SI Units": "22–26 mmol/L"}
+    ]
+  }
+]
+
+[
+  {
+    "TableName": "BILIRUBIN (TOTAL)",
+    "Data": [
+      {"Age": "Cord: Term and preterm", "Conventional Units": "<2 mg/dL", "SI Units": "<34 µmol/L"},
+      {"Age": "0–1 days: Term and preterm", "Conventional Units": "<8 mg/dL", "SI Units": "<137 µmol/L"},
+      {"Age": "1–2 days: Preterm", "Conventional Units": "<12 mg/dL", "SI Units": "<205 µmol/L"},
+      {"Age": "1–2 days: Term", "Conventional Units": "<11.5 mg/dL", "SI Units": "<197 µmol/L"},
+      {"Age": "3–5 days: Preterm", "Conventional Units": "<16 mg/dL", "SI Units": "<274 µmol/L"},
+      {"Age": "3–5 days: Term", "Conventional Units": "<12 mg/dL", "SI Units": "<205 µmol/L"},
+      {"Age": "Older infant: Preterm", "Conventional Units": "<2 mg/dL", "SI Units": "<34 µmol/L"},
+      {"Age": "Older infant: Term", "Conventional Units": "<1.2 mg/dL", "SI Units": "<21 µmol/L"},
+      {"Age": "Adult", "Conventional Units": "<1.5 mg/dL", "SI Units": "<20.5 µmol/L"}
+    ]
+  },
+  {
+    "TableInstruction": "Refer to neonatal hyperbilirubinemia guidelines for clinical interpretation."
+  }
+]
+
+[
+  {
+    "TableName": "BILIRUBIN (CONJUGATED)",
+    "Data": [
+      {"Age": "Neonate", "Conventional Units": "<0.6 mg/dL", "SI Units": "<10 µmol/L"},
+      {"Age": "Infants/children", "Conventional Units": "<0.2 mg/dL", "SI Units": "<3.4 µmol/L"}
+    ]
+  }
+]
+
+[
+  {
+    "TableName": "BLOOD GAS, ARTERIAL (BREATHING ROOM AIR)",
+    "Data": [
+      {"Age": "Cord blood", "pH": "7.28 ± 0.05", "PaO2 (mmHg)": "18.0 ± 6.2", "PaCO2 (mmHg)": "49.2 ± 8.4", "HCO3− (mEq/L)": "14–22"},
+      {"Age": "Newborn (birth)", "pH": "7.11–7.36", "PaO2 (mmHg)": "8–24", "PaCO2 (mmHg)": "27–40", "HCO3− (mEq/L)": "13–22"},
+      {"Age": "5–10 min", "pH": "7.09–7.30", "PaO2 (mmHg)": "33–75", "PaCO2 (mmHg)": "27–40", "HCO3− (mEq/L)": "13–22"},
+      {"Age": "30 min", "pH": "7.21–7.38", "PaO2 (mmHg)": "31–85", "PaCO2 (mmHg)": "27–40", "HCO3− (mEq/L)": "13–22"},
+      {"Age": "60 min", "pH": "7.26–7.49", "PaO2 (mmHg)": "55–80", "PaCO2 (mmHg)": "27–40", "HCO3− (mEq/L)": "13–22"},
+      {"Age": "1 day", "pH": "7.29–7.45", "PaO2 (mmHg)": "54–95", "PaCO2 (mmHg)": "27–40", "HCO3− (mEq/L)": "13–22"},
+      {"Age": "Child/adult", "pH": "7.35–7.45", "PaO2 (mmHg)": "83–108", "PaCO2 (mmHg)": "32–48", "HCO3− (mEq/L)": "20–28"}
+    ]
+  },
+  {
+    "TableInstruction": "Venous blood gases assess acid-base status, not oxygenation. Peripheral venous samples correlate best with arterial pH; capillary samples correlate moderately with PaCO2."
+  }
+]
+
+[
+  {
+    "TableName": "C-REACTIVE PROTEIN",
+    "Data": [
+      {"Parameter": "CRP", "Conventional Units": "0–0.5 mg/dL", "SI Units": null}
+    ]
+  }
+]
+
+[
+  {
+    "TableName": "CALCIUM (TOTAL)",
+    "Data": [
+      {"Age": "Premature neonate", "Conventional Units": "6.2–11 mg/dL", "SI Units": "1.55–2.75 mmol/L"},
+      {"Age": "0–10 days", "Conventional Units": "7.6–10.4 mg/dL", "SI Units": "1.9–2.6 mmol/L"},
+      {"Age": "10 days–24 mo", "Conventional Units": "9–11 mg/dL", "SI Units": "2.25–2.75 mmol/L"},
+      {"Age": "24 mo–12 yr", "Conventional Units": "8.8–10.8 mg/dL", "SI Units": "2.2–2.7 mmol/L"},
+      {"Age": "12–18 yr", "Conventional Units": "8.4–10.2 mg/dL", "SI Units": "2.1–2.55 mmol/L"}
+    ]
+  }
+]
+
+[
+  {
+    "TableName": "CALCIUM (IONIZED)",
+    "Data": [
+      {"Age": "0–1 mo", "Conventional Units": "3.9–6.0 mg/dL", "SI Units": "1.0–1.5 mmol/L"},
+      {"Age": "1–6 mo", "Conventional Units": "3.7–5.9 mg/dL", "SI Units": "0.95–1.5 mmol/L"},
+      {"Age": "1–18 yr", "Conventional Units": "4.0–5.5 mg/dL", "SI Units": "1.22–1.37 mmol/L"},
+      {"Age": "Adult", "Conventional Units": "4.75–5.3 mg/dL", "SI Units": "1.18–1.32 mmol/L"}
+    ]
+  }
+]
+
+[
+  {
+    "TableName": "CARBON MONOXIDE (CARBOXYHEMOGLOBIN)",
+    "Data": [
+      {"Category": "Nonsmoker", "Value": "0.5%–1.5% of total hemoglobin"},
+      {"Category": "Smoker", "Value": "4%–9% of total hemoglobin"},
+      {"Category": "Toxic", "Value": "20%–50% of total hemoglobin"},
+      {"Category": "Lethal", "Value": ">50% of total hemoglobin"}
+    ]
+  }
+]
+
+[
+  {
+    "TableName": "CHLORIDE (SERUM)",
+    "Data": [
+      {"Age": "0–6 mo", "Conventional Units": "97–108 mEq/L", "SI Units": "97–108 mmol/L"},
+      {"Age": "6–12 mo", "Conventional Units": "97–106 mEq/L", "SI Units": "97–106 mmol/L"},
+      {"Age": "Child/adult", "Conventional Units": "97–107 mEq/L", "SI Units": "97–107 mmol/L"}
+    ]
+  }
+]
+
+[
+  {
+    "TableName": "CREATINE KINASE (CREATINE PHOSPHOKINASE)",
+    "Data": [
+      {"Age": "Newborn", "Conventional Units": "145–1578 U/L", "SI Units": "145–1578 U/L"},
+      {"Age": ">6 wk–adult male", "Conventional Units": "20–200 U/L", "SI Units": "20–200 U/L"},
+      {"Age": ">6 wk–adult female", "Conventional Units": "20–180 U/L", "SI Units": "20–180 U/L"}
+    ]
+  }
+]
+
+[
+  {
+    "TableName": "CREATININE (SERUM) (ENZYMATIC)",
+    "Data": [
+      {"Age": "Cord", "Conventional Units": "0.6–1.2 mg/dL", "SI Units": "53–106 µmol/L"},
+      {"Age": "Newborn", "Conventional Units": "0.3–1.0 mg/dL", "SI Units": "27–88 µmol/L"},
+      {"Age": "Infant", "Conventional Units": "0.2–0.4 mg/dL", "SI Units": "18–35 µmol/L"},
+      {"Age": "Child", "Conventional Units": "0.3–0.7 mg/dL", "SI Units": "27–62 µmol/L"},
+      {"Age": "Adolescent", "Conventional Units": "0.5–1.0 mg/dL", "SI Units": "44–88 µmol/L"},
+      {"Age": "Adult male", "Conventional Units": "0.9–1.3 mg/dL", "SI Units": "80–115 µmol/L"},
+      {"Age": "Adult female", "Conventional Units": "0.6–1.1 mg/dL", "SI Units": "53–97 µmol/L"}
+    ]
+  }
+]
+
+[
+  {
+    "TableName": "ERYTHROCYTE SEDIMENTATION RATE (ESR)",
+    "Data": [
+      {"Age": "Child", "Value": "0–10 mm/hr"},
+      {"Age": "Adult male", "Value": "0–15 mm/hr"},
+      {"Age": "Adult female", "Value": "0–20 mm/hr"}
+    ]
+  }
+]
+
+[
+  {
+    "TableName": "FERRITIN",
+    "Data": [
+      {"Age": "Newborn", "Conventional Units": "25–200 ng/mL", "SI Units": "56–450 pmol/L"},
+      {"Age": "1 mo", "Conventional Units": "200–600 ng/mL", "SI Units": "450–1350 pmol/L"},
+      {"Age": "2–5 mo", "Conventional Units": "50–200 ng/mL", "SI Units": "112–450 pmol/L"},
+      {"Age": "6 mo–15 yr", "Conventional Units": "7–140 ng/mL", "SI Units": "16–315 pmol/L"},
+      {"Age": "Adult male", "Conventional Units": "20–250 ng/mL", "SI Units": "45–562 pmol/L"},
+      {"Age": "Adult female", "Conventional Units": "10–120 ng/mL", "SI Units": "22–270 pmol/L"}
+    ]
+  }
+]
+
+[
+  {
+    "TableName": "FOLATE (SERUM)",
+    "Data": [
+      {"Age": "Newborn", "Conventional Units": "16–72 ng/mL", "SI Units": "16–72 nmol/L"},
+      {"Age": "Child", "Conventional Units": "4–20 ng/mL", "SI Units": "4–20 nmol/L"},
+      {"Age": "Adult", "Conventional Units": "10–63 ng/mL", "SI Units": "10–63 nmol/L"}
+    ]
+  }
+]
+
+[
+  {
+    "TableName": "FOLATE (RBC)",
+    "Data": [
+      {"Age": "Newborn", "Conventional Units": "150–200 ng/mL", "SI Units": "340–453 nmol/L"},
+      {"Age": "Infant", "Conventional Units": "74–995 ng/mL", "SI Units": "168–2254 nmol/L"},
+      {"Age": "2–16 yr", "Conventional Units": ">160 ng/mL", "SI Units": ">362 nmol/L"},
+      {"Age": ">16 yr", "Conventional Units": "140–628 ng/mL", "SI Units": "317–1422 nmol/L"}
+    ]
+  }
+]
+
+[
+  {
+    "TableName": "GALACTOSE",
+    "Data": [
+      {"Age": "Newborn", "Conventional Units": "0–20 mg/dL", "SI Units": "0–1.11 mmol/L"},
+      {"Age": "Older child", "Conventional Units": "<5 mg/dL", "SI Units": "<0.28 mmol/L"}
+    ]
+  }
+]
+
+[
+  {
+    "TableName": "GAMMA-GLUTAMYL TRANSFERASE (GGT)",
+    "Data": [
+      {"Age": "Cord", "Conventional Units": "37–193 U/L", "SI Units": "37–193 U/L"},
+      {"Age": "0–1 mo", "Conventional Units": "13–147 U/L", "SI Units": "13–147 U/L"},
+      {"Age": "1–2 mo", "Conventional Units": "12–123 U/L", "SI Units": "12–123 U/L"},
+      {"Age": "2–4 mo", "Conventional Units": "8–90 U/L", "SI Units": "8–90 U/L"},
+      {"Age": "4 mo–10 yr", "Conventional Units": "5–32 U/L", "SI Units": "5–32 U/L"},
+      {"Age": "10–15 yr", "Conventional Units": "5–24 U/L", "SI Units": "5–24 U/L"},
+      {"Age": "Adult male", "Conventional Units": "11–49 U/L", "SI Units": "11–49 U/L"},
+      {"Age": "Adult female", "Conventional Units": "7–32 U/L", "SI Units": "7–32 U/L"}
+    ]
+  }
+]
+
+[
+  {
+    "TableName": "GLUCOSE (SERUM)",
+    "Data": [
+      {"Age": "Preterm", "Conventional Units": "20–60 mg/dL", "SI Units": "1.1–3.3 mmol/L"},
+      {"Age": "Newborn, <1 day", "Conventional Units": "40–60 mg/dL", "SI Units": "2.2–3.3 mmol/L"},
+      {"Age": "Newborn, >1 day", "Conventional Units": "50–90 mg/dL", "SI Units": "2.8–5.0 mmol/L"},
+      {"Age": "Child", "Conventional Units": "60–100 mg/dL", "SI Units": "3.3–5.5 mmol/L"},
+      {"Age": ">16 yr", "Conventional Units": "70–105 mg/dL", "SI Units": "3.9–5.8 mmol/L"}
+    ]
+  },
+
+
+  {
+    "TableName": "HAPTOGLOBIN",
+    "Data": [
+      {"Age": "Newborn", "Conventional Units": "5–48 mg/dL", "SI Units": "50–480 mg/L"},
+      {"Age": ">30 days", "Conventional Units": "26–185 mg/dL", "SI Units": "260–1850 mg/L"}
+    ]
+  },
+
+
+  {
+    "TableName": "HEMOGLOBIN A1C",
+    "Data": [
+      {"Category": "Normal", "Value": "4.5%–5.6%"},
+      {"Category": "At risk for diabetes", "Value": "5.7%–6.4%"},
+      {"Category": "Diabetes mellitus", "Value": "≥6.5%"}
+    ]
+  },
+
+
+  {
+    "TableName": "HEMOGLOBIN F, % TOTAL HEMOGLOBIN (MEAN (SD))",
+    "Data": [
+      {"Age": "1 day", "Value": "77.0 (7.3)"},
+      {"Age": "5 days", "Value": "76.8 (5.8)"},
+      {"Age": "3 wk", "Value": "70.0 (7.3)"},
+      {"Age": "6–9 wk", "Value": "52.9 (11)"},
+      {"Age": "3–4 mo", "Value": "23.2 (16)"},
+      {"Age": "6 mo", "Value": "4.7 (2.2)"},
+      {"Age": "8–11 mo", "Value": "1.6 (1.0)"},
+      {"Age": "Adult", "Value": "<2.0"}
+    ]
+  },
+
+
+  {
+    "TableName": "IRON",
+    "Data": [
+      {"Age": "Newborn", "Conventional Units": "100–250 mcg/dL", "SI Units": "17.9–44.8 µmol/L"},
+      {"Age": "Infant", "Conventional Units": "40–100 mcg/dL", "SI Units": "7.2–17.9 µmol/L"},
+      {"Age": "Child", "Conventional Units": "50–120 mcg/dL", "SI Units": "9.0–21.5 µmol/L"},
+      {"Age": "Adult male", "Conventional Units": "65–175 mcg/dL", "SI Units": "11.6–31.3 µmol/L"},
+      {"Age": "Adult female", "Conventional Units": "50–170 mcg/dL", "SI Units": "9.0–30.4 µmol/L"}
+    ]
+  },
+
+
+  {
+    "TableName": "LACTATE",
+    "Data": [
+      {"Sample": "Capillary blood, 0–90 days", "Conventional Units": "9–32 mg/dL", "SI Units": "1.1–3.5 mmol/L"},
+      {"Sample": "Capillary blood, 3–24 mo", "Conventional Units": "9–30 mg/dL", "SI Units": "1.0–3.3 mmol/L"},
+      {"Sample": "Capillary blood, 2–18 yr", "Conventional Units": "9–22 mg/dL", "SI Units": "1.0–2.4 mmol/L"},
+      {"Sample": "Venous", "Conventional Units": "4.5–19.8 mg/dL", "SI Units": "0.5–2.2 mmol/L"},
+      {"Sample": "Arterial", "Conventional Units": "4.5–14.4 mg/dL", "SI Units": "0.5–1.6 mmol/L"}
+    ]
+  },
+
+
+  {
+    "TableName": "LACTATE DEHYDROGENASE (AT 37°C)",
+    "Data": [
+      {"Age": "0–4 days", "Conventional Units": "290–775 U/L", "SI Units": "290–775 U/L"},
+      {"Age": "4–10 days", "Conventional Units": "545–2000 U/L", "SI Units": "545–2000 U/L"},
+      {"Age": "10 days–24 mo", "Conventional Units": "180–430 U/L", "SI Units": "180–430 U/L"},
+      {"Age": "24 mo–12 yr", "Conventional Units": "110–295 U/L", "SI Units": "110–295 U/L"},
+      {"Age": ">12 yr", "Conventional Units": "100–190 U/L", "SI Units": "100–190 U/L"}
+    ]
+  },
+
+
+  {
+    "TableName": "LEAD",
+    "Data": [
+      {"Age": "Child", "Conventional Units": "<5 mcg/dL", "SI Units": "<0.24 µmol/L"}
+    ]
+  },
+
+
+  {
+    "TableName": "LIPASE",
+    "Data": [
+      {"Age": "0–30 days", "Conventional Units": "6–55 U/L", "SI Units": "6–55 U/L"},
+      {"Age": "1–6 mo", "Conventional Units": "4–29 U/L", "SI Units": "4–29 U/L"},
+      {"Age": "6–12 mo", "Conventional Units": "4–23 U/L", "SI Units": "4–23 U/L"},
+      {"Age": ">1 yr", "Conventional Units": "3–32 U/L", "SI Units": "3–32 U/L"}
+    ]
+  },
+
+
+  {
+    "TableName": "MAGNESIUM",
+    "Data": [
+      {"Age": "All", "Conventional Units": "1.6–2.4 mg/dL", "SI Units": "0.63–1.05 mmol/L"}
+    ]
+  },
+
+
+  {
+    "TableName": "METHEMOGLOBIN",
+    "Data": [
+      {"Value": "0.78% (±0.37%) of total hemoglobin"}
+    ]
+  },
+
+
+  {
+    "TableName": "OSMOLALITY",
+    "Data": [
+      {"Value": "275–295 mOsm/kg (neonates as low as 266)", "SI Units": "275–295 mmol/kg"}
+    ]
+  },
+
+
+  {
+    "TableName": "PHENYLALANINE",
+    "Data": [
+      {"Age": "Preterm", "Conventional Units": "2.0–7.5 mg/dL", "SI Units": "121–454 µmol/L"},
+      {"Age": "Newborn", "Conventional Units": "1.2–3.4 mg/dL", "SI Units": "73–206 µmol/L"},
+      {"Age": "Adult", "Conventional Units": "0.8–1.8 mg/dL", "SI Units": "48–109 µmol/L"}
+    ]
+  },
+
+
+  {
+    "TableName": "PHOSPHORUS",
+    "Data": [
+      {"Age": "0–9 days", "Conventional Units": "4.5–9.0 mg/dL", "SI Units": "1.45–2.91 mmol/L"},
+      {"Age": "10 days–24 mo", "Conventional Units": "4–6.5 mg/dL", "SI Units": "1.29–2.10 mmol/L"},
+      {"Age": "3–9 yr", "Conventional Units": "3.2–5.8 mg/dL", "SI Units": "1.03–1.87 mmol/L"},
+      {"Age": "10–15 yr", "Conventional Units": "3.3–5.4 mg/dL", "SI Units": "1.07–1.74 mmol/L"},
+      {"Age": ">15 yr", "Conventional Units": "2.4–4.4 mg/dL", "SI Units": "0.78–1.42 mmol/L"}
+    ]
+  },
+
+
+  {
+    "TableName": "PORCELAIN",
+    "Data": [
+      {"Value": "0.930–6.0 mg/dL", "SI Units": "1.2–10.15 mmol/L"}
+    ]
+  },
+
+
+  {
+    "TableName": "POTASSIUM",
+    "Data": [
+      {"Age": "Preterm", "Conventional Units": "3.0–6.0 mEq/L", "SI Units": "3.0–6.0 mmol/L"},
+      {"Age": "Newborn", "Conventional Units": "3.7–5.9 mEq/L", "SI Units": "3.7–5.9 mmol/L"},
+      {"Age": "Infant", "Conventional Units": "4.1–5.3 mEq/L", "SI Units": "4.1–5.3 mmol/L"},
+      {"Age": "Child", "Conventional Units": "3.4–4.7 mEq/L", "SI Units": "3.4–4.7 mmol/L"},
+      {"Age": "Adult", "Conventional Units": "3.5–5.1 mEq/L", "SI Units": "3.5–5.1 mmol/L"}
+    ]
+  },
+
+
+  {
+    "TableName": "PREALBUMIN",
+    "Data": [
+      {"Age": "Newborn", "Conventional Units": "7–39 mg/dL"},
+      {"Age": "1–6 mo", "Conventional Units": "8–34 mg/dL"},
+      {"Age": "6 mo–4 yr", "Conventional Units": "12–36 mg/dL"},
+      {"Age": "4–6 yr", "Conventional Units": "12–30 mg/dL"},
+      {"Age": "6–19 yr", "Conventional Units": "12–42 mg/dL"}
+    ]
+  },
+
+
+  {
+    "TableName": "PROTEIN ELECTROPHORESIS",
+    "Data": [
+      {"Age": "0–15 day", "Total Protein": "4.4–7.6", "Albumin": "3.0–3.9", "α1": "0.1–0.3", "α2": "0.3–0.6", "β": "0.4–0.6", "γ": "0.7–1.4"},
+      {"Age": "15 day–1 yr", "Total Protein": "5.1–7.3", "Albumin": "2.2–4.8", "α1": "0.1–0.3", "α2": "0.5–0.9", "β": "0.5–0.9", "γ": "0.5–1.3"},
+      {"Age": "1–2 yr", "Total Protein": "5.6–7.5", "Albumin": "3.6–5.2", "α1": "0.1–0.4", "α2": "0.5–1.2", "β": "0.5–1.1", "γ": "0.5–1.7"},
+      {"Age": "3–16 yr", "Total Protein": "6.0–8.0", "Albumin": "3.6–5.2", "α1": "0.1–0.4", "α2": "0.5–1.2", "β": "0.5–1.1", "γ": "0.5–1.7"},
+      {"Age": ">16 yr", "Total Protein": "6.0–8.3", "Albumin": "3.9–5.1", "α1": "0.2–0.4", "α2": "0.4–0.8", "β": "0.5–1.0", "γ": "0.6–1.2"}
+    ]
+  },
+
+
+  {
+    "TableName": "PYRUVATE",
+    "Data": [
+      {"Conventional Units": "0.7–1.32 mg/dL", "SI Units": "0.08–0.15 mmol/L"}
+    ]
+  },
+
+
+  {
+    "TableName": "RHEUMATOID FACTOR",
+    "Data": [
+      {"Value": "<30 U/mL"}
+    ]
+  },
+
+
+  {
+    "TableName": "SODIUM",
+    "Data": [
+      {"Age": "<1 yr", "Conventional Units": "130–145 mEq/L", "SI Units": "130–145 mmol/L"},
+      {"Age": ">1 yr", "Conventional Units": "135–147 mEq/L", "SI Units": "135–147 mmol/L"}
+    ]
+  },
+
+
+  {
+    "TableName": "TOTAL IRON-BINDING CAPACITY (TIBC)",
+    "Data": [
+      {"Age": "Infant", "Conventional Units": "100–400 mcg/dL", "SI Units": "17.9–71.6 µmol/L"},
+      {"Age": "Adult", "Conventional Units": "250–425 mcg/dL", "SI Units": "44.8–76.1 µmol/L"}
+    ]
+  },
+
+
+  {
+    "TableName": "TRANSFERRIN",
+    "Data": [
+      {"Age": "Newborn", "Conventional Units": "130–275 mg/dL", "SI Units": "1.30–2.75 g/L"},
+      {"Age": "3 mo–16 yr", "Conventional Units": "203–360 mg/dL", "SI Units": "2.03–3.6 g/L"},
+      {"Age": "Adult", "Conventional Units": "215–380 mg/dL", "SI Units": "2.15–3.8 g/L"}
+    ]
+  },
+
+
+  {
+    "TableName": "TOTAL TRIGLYCERIDE",
+    "Data": [
+      {"Age": "0–7 days", "Male (mg/dL)": "21–182", "Female (mg/dL)": "28–166", "Male (mmol/L)": "0.24–2.06", "Female (mmol/L)": "0.32–1.88"},
+      {"Age": "8–30 days", "Male (mg/dL)": "30–184", "Female (mg/dL)": "30–165", "Male (mmol/L)": "0.34–2.08", "Female (mmol/L)": "0.34–1.86"},
+      {"Age": "31–90 days", "Male (mg/dL)": "40–175", "Female (mg/dL)": "35–282", "Male (mmol/L)": "0.45–1.98", "Female (mmol/L)": "0.4–3.19"},
+      {"Age": "91–180 days", "Male (mg/dL)": "45–291", "Female (mg/dL)": "50–355", "Male (mmol/L)": "0.51–3.29", "Female (mmol/L)": "0.57–4.01"},
+      {"Age": "181–365 days", "Male (mg/dL)": "45–501", "Female (mg/dL)": "36–431", "Male (mmol/L)": "0.51–5.66", "Female (mmol/L)": "0.41–4.87"},
+      {"Age": "1–3 yr", "Male (mg/dL)": "27–125", "Female (mg/dL)": "27–125", "Male (mmol/L)": "0.31–1.41", "Female (mmol/L)": "0.31–1.41"},
+      {"Age": "4–6 yr", "Male (mg/dL)": "32–116", "Female (mg/dL)": "32–116", "Male (mmol/L)": "0.36–1.31", "Female (mmol/L)": "0.36–1.31"},
+      {"Age": "7–9 yr", "Male (mg/dL)": "28–129", "Female (mg/dL)": "28–129", "Male (mmol/L)": "0.32–1.46", "Female (mmol/L)": "0.32–1.46"},
+      {"Age": "10–19 yr", "Male (mg/dL)": "24–145", "Female (mg/dL)": "37–140", "Male (mmol/L)": "0.27–1.64", "Female (mmol/L)": "0.42–1.58"}
+    ]
+  },
+
+
+  {
+    "TableName": "UREA NITROGEN",
+    "Data": [
+      {"Age": "Premature (<1 wk)", "Conventional Units": "3–25 mg/dL", "SI Units": "1.1–8.9 mmol/L"},
+      {"Age": "Newborn", "Conventional Units": "2–19 mg/dL", "SI Units": "0.7–6.7 mmol/L"},
+      {"Age": "Infant/child", "Conventional Units": "5–18 mg/dL", "SI Units": "1.8–6.4 mmol/L"},
+      {"Age": "Adult", "Conventional Units": "6–20 mg/dL", "SI Units": "2.1–7.1 mmol/L"}
+    ]
+  },
+
+
+  {
+    "TableName": "URIC ACID",
+    "Data": [
+      {"Age": "0–30 days", "Conventional Units": "1.0–4.6 mg/dL", "SI Units": "0.059–0.271 mmol/L"},
+      {"Age": "1–12 mo", "Conventional Units": "1.1–5.6 mg/dL", "SI Units": "0.065–0.33 mmol/L"},
+      {"Age": "1–5 yr", "Conventional Units": "1.7–5.8 mg/dL", "SI Units": "0.1–0.35 mmol/L"},
+      {"Age": "6–11 yr", "Conventional Units": "2.2–6.6 mg/dL", "SI Units": "0.13–0.39 mmol/L"},
+      {"Age": "Male 12–19 yr", "Conventional Units": "3.0–7.7 mg/dL", "SI Units": "0.18–0.46 mmol/L"},
+      {"Age": "Female 12–19 yr", "Conventional Units": "2.7–5.7 mg/dL", "SI Units": "0.16–0.34 mmol/L"}
+    ]
+  },
+
+
+  {
+    "TableName": "VITAMIN A (RETINOL)",
+    "Data": [
+      {"Age": "Preterm", "Conventional Units": "13–46 mcg/dL", "SI Units": "0.46–1.61 µmol/L"},
+      {"Age": "Full term", "Conventional Units": "18–50 mcg/dL", "SI Units": "0.63–1.75 µmol/L"},
+      {"Age": "1–6 yr", "Conventional Units": "20–43 mcg/dL", "SI Units": "0.7–1.5 µmol/L"},
+      {"Age": "7–12 yr", "Conventional Units": "20–49 mcg/dL", "SI Units": "0.9–1.7 µmol/L"},
+      {"Age": "13–19 yr", "Conventional Units": "26–72 mcg/dL", "SI Units": "0.9–2.5 µmol/L"}
+    ]
+  },
+
+
+  {
+    "TableName": "VITAMIN B1 (THIAMINE)",
+    "Data": [
+      {"Value": "4.5–10.3 mcg/dL", "SI Units": "106–242 µmol/L"}
+    ]
+  },
+
+
+  {
+    "TableName": "VITAMIN B2 (RIBOFLAVIN)",
+    "Data": [
+      {"Value": "4–24 mcg/dL", "SI Units": "106–638 nmol/L"}
+    ]
+  },
+
+
+  {
+    "TableName": "VITAMIN B12 (COBALAMIN)",
+    "Data": [
+      {"Age": "Newborn", "Conventional Units": "160–1300 pg/mL", "SI Units": "118–959 pmol/L"},
+      {"Age": "Child/adult", "Conventional Units": "200–835 pg/mL", "SI Units": "148–616 pmol/L"}
+    ]
+  },
+
+
+  {
+    "TableName": "VITAMIN C (ASCORBIC ACID)",
+    "Data": [
+      {"Value": "0.4–2.0 mg/dL", "SI Units": "23–114 µmol/L"}
+    ]
+  },
+
+
+  {
+    "TableName": "VITAMIN D (1,25-DIHYDROXY-VITAMIN D)",
+    "Data": [
+      {"Value": "16–65 pg/mL", "SI Units": "42–169 pmol/L"}
+    ]
+  },
+
+
+  {
+    "TableName": "VITAMIN D (25-HYDROXY-VITAMIN D)",
+    "Data": [
+      {"Category": "Deficiency", "Value": "<12 ng/mL", "SI Units": "<30 nmol/L"},
+      {"Category": "Insufficiency", "Value": "12–20 ng/mL", "SI Units": "30–50 nmol/L"},
+      {"Category": "Sufficient", "Value": "≥20 ng/mL", "SI Units": "≥50 nmol/L"}
+    ]
+  },
+
+
+  {
+    "TableName": "VITAMIN E",
+    "Data": [
+      {"Age": "Preterm", "Conventional Units": "0.5–3.5 mg/L", "SI Units": "1–8 µmol/L"},
+      {"Age": "Full term", "Conventional Units": "1.0–3.5 mg/L", "SI Units": "2–8 µmol/L"},
+      {"Age": "1–12 yr", "Conventional Units": "3.0–9.0 mg/L", "SI Units": "7–21 µmol/L"},
+      {"Age": "13–19 yr", "Conventional Units": "6.0–10.0 mg/L", "SI Units": "14–23 µmol/L"}
+    ]
+  },
+
+
+  {
+    "TableName": "ZINC",
+    "Data": [
+      {"Value": "70–120 mcg/dL", "SI Units": "10.7–18.4 µmol/L"}
+    ]
+  }
+]
+

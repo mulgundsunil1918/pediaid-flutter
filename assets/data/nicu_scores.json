@@ -1,0 +1,298 @@
+{
+  "category": "Neonatal Scores",
+  "description": "Standard neonatal clinical scoring systems used in NICU and postnatal care",
+  "scores": [
+    {
+      "name": "Apgar Score",
+      "parameters": [
+        {"parameter": "Heart rate", "0": "Absent", "1": "<100/min", "2": "≥100/min"},
+        {"parameter": "Respiration", "0": "Absent", "1": "Slow/irregular", "2": "Good cry"},
+        {"parameter": "Muscle tone", "0": "Flaccid", "1": "Some flexion", "2": "Active movement"},
+        {"parameter": "Reflex irritability", "0": "No response", "1": "Grimace", "2": "Cry/cough"},
+        {"parameter": "Color", "0": "Blue/pale", "1": "Body pink, extremities blue", "2": "Completely pink"}
+      ],
+      "interpretation": [
+        {"score": "7-10", "meaning": "Normal"},
+        {"score": "4-6", "meaning": "Moderate depression"},
+        {"score": "0-3", "meaning": "Severe depression"}
+      ],
+      "reference": "AAP Neonatal Resuscitation Program (NRP Guidelines)"
+    },
+    {
+      "name": "Combined Apgar Score",
+      "parameters": [],
+      "subsections": [
+        {
+          "title": "Apgar Score — 0 to 10 points (5 parameters × 0/1/2)",
+          "parameters": [
+            {"parameter": "Heart rate", "0": "Absent", "1": "<100/min", "2": "≥100/min"},
+            {"parameter": "Respiration", "0": "Absent", "1": "Slow/irregular", "2": "Good cry"},
+            {"parameter": "Muscle tone", "0": "Flaccid", "1": "Some flexion", "2": "Active movement"},
+            {"parameter": "Reflex irritability", "0": "No response", "1": "Grimace", "2": "Cry/cough"},
+            {"parameter": "Color", "0": "Blue/pale", "1": "Body pink, extremities blue", "2": "Completely pink"}
+          ]
+        },
+        {
+          "title": "COMBED Interventions — 0 to 7 points (Yes = 1, No = 0)",
+          "parameters": [
+            {"code": "C", "intervention": "Continuous Positive Airway Pressure (CPAP)"},
+            {"code": "O", "intervention": "Oxygen administration"},
+            {"code": "M", "intervention": "Mask and Bag ventilation"},
+            {"code": "I", "intervention": "Intubation and ventilation"},
+            {"code": "N", "intervention": "Neonatal chest compressions"},
+            {"code": "E", "intervention": "Exogenous surfactant"},
+            {"code": "D", "intervention": "Drugs (e.g. Epinephrine)"}
+          ]
+        }
+      ],
+      "interpretation": [
+        {"score": "10–17", "category": "Normal / Reassuring", "meaning": "The baby is adapting well. Higher scores mean fewer medical interventions were needed."},
+        {"score": "5–9", "category": "Moderately Depressed", "meaning": "The baby is struggling. This score is a strong predictor of the need for NICU admission."},
+        {"score": "0–4", "category": "Severely Depressed", "meaning": "High risk for serious complications, including mortality or long-term neurological issues."}
+      ],
+      "reference": "AAP Committee Opinion on Expanded Apgar Scoring; COMBED acronym — Carbajal & Texier 1997"
+    },
+    {
+      "name": "Downes Score",
+      "parameters": [
+        {"parameter": "Respiratory rate", "0": "<60", "1": "60-80", "2": ">80"},
+        {"parameter": "Cyanosis", "0": "None", "1": "Room air", "2": "With oxygen"},
+        {"parameter": "Air entry", "0": "Good", "1": "Decreased", "2": "Barely audible"},
+        {"parameter": "Retractions", "0": "None", "1": "Mild", "2": "Severe"},
+        {"parameter": "Grunting", "0": "None", "1": "Stethoscope only", "2": "Audible"}
+      ],
+      "interpretation": [
+        {"score": "<4", "meaning": "Mild distress"},
+        {"score": "4-6", "meaning": "Moderate distress"},
+        {"score": ">6", "meaning": "Severe distress"}
+      ],
+      "reference": "Downes JJ et al., Pediatrics 1970"
+    },
+    {
+      "name": "Silverman Anderson Score",
+      "parameters": [
+        {"parameter": "Upper chest movement", "0": "Synchronized", "1": "Lag", "2": "See-saw"},
+        {"parameter": "Lower chest retractions", "0": "None", "1": "Visible", "2": "Marked"},
+        {"parameter": "Xiphoid retractions", "0": "None", "1": "Visible", "2": "Marked"},
+        {"parameter": "Nasal flaring", "0": "None", "1": "Minimal", "2": "Marked"},
+        {"parameter": "Expiratory grunt", "0": "None", "1": "Stethoscope", "2": "Audible"}
+      ],
+      "interpretation": [
+        {"score": "0", "meaning": "No distress"},
+        {"score": "1-3", "meaning": "Mild distress"},
+        {"score": "4-6", "meaning": "Moderate distress"},
+        {"score": "7-10", "meaning": "Severe distress"}
+      ],
+      "reference": "Silverman WA, Anderson DH, Pediatrics 1956"
+    },
+    {
+      "name": "Levene Staging (HIE)",
+      "parameters": [],
+      "subsections": [
+        {
+          "title": "General",
+          "parameters": [
+            {"parameter": "Level of consciousness", "Mild HIE (I)": "Hyperalert",    "Moderate HIE (II)": "Lethargic",        "Severe HIE (III)": "Stuporose"},
+            {"parameter": "Muscle tone",            "Mild HIE (I)": "Normal",        "Moderate HIE (II)": "Mild hypotonia",   "Severe HIE (III)": "Flaccid"}
+          ]
+        },
+        {
+          "title": "Complex Reflexes",
+          "parameters": [
+            {"parameter": "Suck", "Mild HIE (I)": "Normal/Weak",  "Moderate HIE (II)": "Weak/Absent",       "Severe HIE (III)": "Absent"},
+            {"parameter": "Moro", "Mild HIE (I)": "Strong",       "Moderate HIE (II)": "Weak/Incomplete",   "Severe HIE (III)": "Absent"}
+          ]
+        },
+        {
+          "title": "Seizures",
+          "parameters": [
+            {"parameter": "Seizures", "Mild HIE (I)": "Absent", "Moderate HIE (II)": "Common", "Severe HIE (III)": "Frequent/difficult to control"}
+          ]
+        }
+      ],
+      "interpretation": [
+        {"stage": "Stage I — Mild",     "meaning": "Good prognosis. Most infants recover fully with no or minimal neurological sequelae."},
+        {"stage": "Stage II — Moderate","meaning": "Variable outcome. Significant risk of neurodevelopmental impairment. Therapeutic hypothermia indicated if criteria met."},
+        {"stage": "Stage III — Severe", "meaning": "Poor prognosis. High risk of death or major neurodevelopmental disability."}
+      ],
+      "reference": "Levene MI et al., Arch Dis Child 1985; HIE clinical staging based on neurological assessment"
+    },
+    {
+      "name": "IVH Grading (Papile & Volpe)",
+      "parameters": [
+        {
+          "grade": "I",
+          "papile": "Unilateral/bilateral germinal matrix hemorrhage",
+          "volpe": "Germinal matrix hemorrhage with no IVH or IVH occupying <10% of the ventricular area on parasagittal view"
+        },
+        {
+          "grade": "II",
+          "papile": "IVH without ventricular dilatation",
+          "volpe": "IVH occupying 10–50% of the ventricular area on parasagittal view"
+        },
+        {
+          "grade": "III",
+          "papile": "IVH with ventricular dilatation",
+          "volpe": "IVH occupying >50% of the ventricular area on parasagittal view ± periventricular echodensities"
+        },
+        {
+          "grade": "IV",
+          "papile": "IVH extending into adjacent brain parenchyma",
+          "volpe": "Periventricular venous hemorrhagic infarction (PVHI); cystic periventricular leukomalacia"
+        }
+      ],
+      "interpretation": [
+        {"grade": "I–II",  "meaning": "Mild. Generally good prognosis; low risk of post-hemorrhagic hydrocephalus or neurodevelopmental sequelae."},
+        {"grade": "III",   "meaning": "Moderate. Significant risk of post-hemorrhagic hydrocephalus; close neurodevelopmental follow-up required."},
+        {"grade": "IV",    "meaning": "Severe. High risk of neurological disability and mortality; associated with periventricular venous infarction and leukomalacia."}
+      ],
+      "reference": "Papile LA et al., J Pediatr 1978; Volpe JJ, Neurology of the Newborn 5th ed.",
+      "phvd": {
+        "title": "Post-Hemorrhagic Ventricular Dilatation (PHVD) — Management Zones",
+        "zones": [
+          {
+            "name": "Green Zone",
+            "ventricular_header": "Ventricular size with the following",
+            "ventricular_criteria": ["VI ≤97th percentile", "AHW ≤6 mm"],
+            "ventricular_connector": "&",
+            "clinical_header": "And",
+            "clinical_note": "Absence of the following clinical criteria:",
+            "clinical_criteria": [
+              "HC growth >2 cm per week",
+              "Separated sutures",
+              "Bulging fontanelles"
+            ],
+            "management": [
+              "Observation in NICU",
+              "cUS twice a week until stable for 2 weeks then every 1-2 weeks till 34 weeks PMA",
+              "MRI at Term Equivalent"
+            ]
+          },
+          {
+            "name": "Yellow Zone",
+            "ventricular_header": "Ventricular size with the following",
+            "ventricular_criteria": ["VI >97th percentile", "AHW >6 mm &/or TOD >25 mm"],
+            "ventricular_connector": "&",
+            "clinical_header": "And",
+            "clinical_note": "Absence of the following clinical criteria:",
+            "clinical_criteria": [
+              "HC growth >2 cm per week",
+              "Separated sutures",
+              "Bulging fontanelles"
+            ],
+            "management": [
+              "Referral to a regional center for neurosurgical review",
+              "Consider LP 2-3 times",
+              "cUS 2-3X a week until stable for 2 weeks then every 1-2 weeks till 34 weeks PMA",
+              "Neurosurgical intervention when no stabilization occurs",
+              "MRI at Term Equivalent"
+            ]
+          },
+          {
+            "name": "Red Zone",
+            "ventricular_header": "Ventricular size with the following",
+            "ventricular_criteria": ["VI >97th percentile + 4mm", "AHW >10 mm &/or TOD >25 mm"],
+            "ventricular_connector": "&",
+            "clinical_header": "Or",
+            "clinical_note": "Any of the following clinical criteria:",
+            "clinical_criteria": [
+              "HC growth >2 cm per week",
+              "Separated sutures",
+              "Bulging fontanelles"
+            ],
+            "management": [
+              "Consider LP 2-3 times",
+              "Neurosurgical intervention including either temporizing measures or VP shunt",
+              "MRI at Term Equivalent"
+            ]
+          }
+        ],
+        "footer": "Consider alterations in NIRS (ie decrease cerebral oxygenation) or Doppler US (ie Increase in Resistive Index) as additional information that may suggest impairment in cerebral perfusion and more urgent need for intervention.",
+        "reference": "El-Dib, M., Limbrick, D. D., Jr, Inder, T., Whitelaw, A., Kulkarni, A. V., Warf, B., Volpe, J. J., & de Vries, L. S. (2020). Management of Post-hemorrhagic Ventricular Dilatation in the Infant Born Preterm. The Journal of Pediatrics, 226, 16–27.e3."
+      }
+    },
+    {
+      "name": "Modified Sarnat Staging (HIE)",
+      "parameters": [],
+      "subsections": [
+        {
+          "title": "Consciousness & Activity",
+          "parameters": [
+            {"parameter": "Level of consciousness", "mild": "Hyperalert", "moderate": "Lethargic / Obtunded", "severe": "Stupor or coma"},
+            {"parameter": "Activity",               "mild": "Normal",     "moderate": "Decreased",            "severe": "Absent"}
+          ]
+        },
+        {
+          "title": "Neuromuscular Control",
+          "parameters": [
+            {"parameter": "Muscle tone",      "mild": "Normal",              "moderate": "Mild hypotonia/hypertonia", "severe": "Flaccid/rigid"},
+            {"parameter": "Posture",          "mild": "Mild distal flexion", "moderate": "Strong distal flexion",     "severe": "Intermittent decerebration"},
+            {"parameter": "Tendon reflexes",  "mild": "Overactive",          "moderate": "Overactive",                "severe": "Decreased or Absent"}
+          ]
+        },
+        {
+          "title": "Complex Reflexes",
+          "parameters": [
+            {"parameter": "Suck",        "mild": "Weak",                    "moderate": "Weak/absent",                              "severe": "Absent"},
+            {"parameter": "Moro",        "mild": "Strong, low threshold",   "moderate": "Weak, incomplete, high threshold",         "severe": "Absent"},
+            {"parameter": "Tonic neck*", "mild": "Slight",                  "moderate": "Strong",                                   "severe": "Weak or absent"}
+          ]
+        },
+        {
+          "title": "Autonomic Nervous System",
+          "parameters": [
+            {"parameter": "Pupils",           "mild": "Dilated pupil",  "moderate": "Constricted pupil",   "severe": "Variable: often unequal, poor light reflex, fixed, dilated"},
+            {"parameter": "Heart rate",       "mild": "Tachycardia",    "moderate": "Bradycardia",          "severe": "Variable"},
+            {"parameter": "Respiratory rate", "mild": "Regular",        "moderate": "Periodic breathing",  "severe": "Apnoea"}
+          ]
+        },
+        {
+          "title": "Seizure",
+          "parameters": [
+            {"parameter": "Seizure", "mild": "None", "moderate": "Common; focal or multifocal", "severe": "Uncommon (excluding decerebration)"}
+          ]
+        }
+      ],
+      "interpretation": [
+        {"stage": "Stage 1 — Mild",     "meaning": "Full recovery expected. Hypoxic-ischaemic episode usually transient. No or minimal long-term sequelae."},
+        {"stage": "Stage 2 — Moderate", "meaning": "Variable outcome. Significant risk of neurodevelopmental disability. Therapeutic hypothermia (cooling) indicated if criteria met."},
+        {"stage": "Stage 3 — Severe",   "meaning": "Poor prognosis. High mortality. Survivors at high risk of major neurodevelopmental disability including cerebral palsy."}
+      ],
+      "reference": "Sarnat HB & Sarnat MS, Arch Neurol 1976; Modified by Levene et al. * Tonic neck reflex: elicited by rotating head to one side — ipsilateral arm/leg extend, contralateral flex (\"fencing\" posture)."
+    },
+    {
+      "name": "Thompson Score (HIE)",
+      "parameters": [
+        {"sign": "Tone",          "0": "Normal", "1": "Hypertonia",       "2": "Hypotonia",           "3": "Flaccid"},
+        {"sign": "Consciousness", "0": "Normal", "1": "Hyperalert, stare","2": "Lethargic",           "3": "Comatosed"},
+        {"sign": "Fits",          "0": "Normal", "1": "Infrequent <3/day","2": "Frequent >2/day",     "3": "—"},
+        {"sign": "Posture",       "0": "Normal", "1": "Fisting / cycling","2": "Strong, distal flexion","3": "Decerebrate"},
+        {"sign": "Moro",          "0": "Normal", "1": "Partial",          "2": "Absent",              "3": "—"},
+        {"sign": "Grasp",         "0": "Normal", "1": "Poor",             "2": "Absent",              "3": "—"},
+        {"sign": "Suck",          "0": "Normal", "1": "Poor",             "2": "Absent ± bites",      "3": "—"},
+        {"sign": "Respiration",   "0": "Normal", "1": "Hyperventilation", "2": "Brief apnea",         "3": "Apnoea"},
+        {"sign": "Fontanelle",    "0": "Normal", "1": "Full not tense",   "2": "Tense",               "3": "—"}
+      ],
+      "interpretation": [
+        {"score": "0–10", "meaning": "Mild HIE"},
+        {"score": "11–14", "meaning": "Moderate HIE"},
+        {"score": "≥15", "meaning": "Severe HIE"}
+      ],
+      "reference": "Thompson CM et al., Acta Paediatrica 1997. Maximum score: 22 (scoring 0–3 per sign; Fits, Moro, Grasp, Suck, Fontanelle max 2)"
+    },
+    {
+      "name": "LATCH Score (Breastfeeding)",
+      "parameters": [
+        {"parameter": "Latch", "0": "Too sleepy", "1": "Repeated attempts", "2": "Good latch"},
+        {"parameter": "Audible swallowing", "0": "None", "1": "Occasional", "2": "Frequent"},
+        {"parameter": "Type of nipple", "0": "Inverted", "1": "Flat", "2": "Everted"},
+        {"parameter": "Comfort", "0": "Engorged/cracked", "1": "Mild discomfort", "2": "Comfortable"},
+        {"parameter": "Hold", "0": "Full assist", "1": "Minimal assist", "2": "No assist"}
+      ],
+      "interpretation": [
+        {"score": "0-10", "meaning": "Higher score = better breastfeeding effectiveness"}
+      ],
+      "reference": "Jensen D et al., J Obstet Gynecol Neonatal Nurs 1994"
+    }
+  ]
+}

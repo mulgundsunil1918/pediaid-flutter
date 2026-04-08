@@ -1,0 +1,228 @@
+[
+  {
+    "system": "Cardiology",
+    "labs": [
+      "CREATINE KINASE (CREATINE PHOSPHOKINASE)"
+    ],
+    "guides": [
+      "TABLE 7.4: NORMAL PEDIATRIC ELECTROCARDIOGRAM (ECG) PARAMETERS",
+      "NORMAL T-WAVE AXIS",
+      "VENTRICULAR HYPERTROPHY CRITERIA",
+      "MAJOR SYNDROMES ASSOCIATED WITH CARDIAC DEFECTS",
+      "CARDIAC CONDITIONS FOR WHICH ANTIBIOTIC PROPHYLAXIS IS RECOMMENDED FOR DENTAL, RESPIRATORY TRACT, INFECTED SKIN, SKIN STRUCTURES, OR MUSCULOSKELETAL TISSUE PROCEDURES",
+      "PROPHYLACTIC REGIMENS FOR DENTAL AND RESPIRATORY TRACT PROCEDURES",
+      "GUIDELINES FOR DIAGNOSIS OF INITIAL ATTACK OF RHEUMATIC FEVER (JONES CRITERIA)"
+    ]
+  },
+  {
+    "system": "Endocrinology",
+    "labs": [
+      "AGE-BASED NORMAL VALUES FOR ROUTINE THYROID FUNCTION TESTS",
+      "17-HYDROXYPROGESTERONE, SERUM",
+      "INSULIN-LIKE GROWTH FACTOR 1 (IGF-1)*",
+      "LUTEINIZING HORMONE",
+      "ESTRADIOL*",
+      "FOLLICLE-STIMULATING HORMONE",
+      "TESTOSTERONE, TOTAL SERUM*",
+      "TESTOSTERONE, FREE",
+      "DEHYDROEPIANDROSTERONE (DHEA), UNCONJUGATED",
+      "DEHYDROEPIANDROSTERONE SULFATE (DHEA-S)",
+      "DIHYDROTESTOSTERONE (DHT)",
+      "CATECHOLAMINES, URINE",
+      "CATECHOLAMINES, PLASMA",
+      "INSULIN-LIKE GROWTH FACTOR–BINDING PROTEIN (IGF-BP3)",
+      "ANDROSTENEDIONE, SERUM",
+      "GLUCOSE (SERUM)"
+    ],
+    "guides": [
+      "THYROID FUNCTION TESTS: INTERPRETATION",
+      "CORTISOL, 8 AM",
+      "ESTIMATED GROWTH VELOCITY IN CHILDREN BASED ON AGE",
+      "TESTICULAR SIZE",
+      "MEAN STRETCHED PENILE LENGTH (CM)",
+      "HEMOGLOBIN A1C"
+    ]
+  },
+  {
+    "system": "Fluids & Electrolytes",
+    "labs": [
+      "BICARBONATE",
+      "CHLORIDE (SERUM)",
+      "POTASSIUM",
+      "SODIUM",
+      "OSMOLALITY",
+      "MAGNESIUM",
+      "PHOSPHORUS",
+      "CALCIUM (TOTAL)",
+      "CALCIUM (IONIZED)"
+    ],
+    "guides": [
+      "HOLLIDAY-SEGAR METHOD",
+      "INTRACELLULAR AND EXTRACELLULAR FLUID COMPOSITION",
+      "ELECTROLYTE COMPOSITION OF VARIOUS BODY FLUIDS"
+    ]
+  },
+  {
+    "system": "Gastroenterology",
+    "labs": [
+      "ALANINE AMINOTRANSFERASE (ALT)",
+      "ALKALINE PHOSPHATASE",
+      "AMMONIA",
+      "AMYLASE",
+      "ASPARTATE AMINOTRANSFERASE (AST)",
+      "BILIRUBIN (TOTAL)",
+      "BILIRUBIN (CONJUGATED)",
+      "GAMMA-GLUTAMYL TRANSFERASE (GGT)",
+      "LIPASE"
+    ],
+    "guides": [
+      "EVALUATION OF LIVER FUNCTION TESTS",
+      "INTERPRETATION OF THE SEROLOGIC MARKERS OF HEPATITIS B IN COMMON SITUATIONS"
+    ]
+  },
+  {
+    "system": "Genetics",
+    "labs": [
+      "GALACTOSE",
+      "PHENYLALANINE"
+    ],
+    "guides": []
+  },
+  {
+    "system": "Hematology",
+    "labs": [
+      "AGE-SPECIFIC BLOOD CELL INDICES",
+      "AGE-SPECIFIC LEUKOCYTE DIFFERENTIAL",
+      "AGE-SPECIFIC COAGULATION VALUES",
+      "COAGULATION INHIBITORS",
+      "FIBRINOLYTIC SYSTEM",
+      "ERYTHROCYTE SEDIMENTATION RATE (ESR)",
+      "FERRITIN",
+      "FOLATE (SERUM)",
+      "FOLATE (RBC)",
+      "HAPTOGLOBIN",
+      "HEMOGLOBIN F, % TOTAL HEMOGLOBIN (MEAN (SD))",
+      "IRON",
+      "TOTAL IRON-BINDING CAPACITY (TIBC)",
+      "TRANSFERRIN"
+    ],
+    "guides": []
+  },
+  {
+    "system": "Immunology & Allergy",
+    "labs": [
+      "SERUM IMMUNOGLOBULIN LEVELS",
+      "SERUM IMMUNOGLOBULIN LEVELS FOR LOW BIRTH WEIGHT PRETERM INFANTS",
+      "T AND B LYMPHOCYTES IN PERIPHERAL BLOOD",
+      "SERUM COMPLEMENT LEVELS"
+    ],
+    "guides": []
+  },
+  {
+    "system": "Microbiology & Infectious Disease",
+    "labs": [
+      "ANTISTREPTOLYSIN O TITER"
+    ],
+    "guides": []
+  },
+  {
+    "system": "Neonatology",
+    "labs": [
+      "MEAN TSH AND T4 OF PRETERM AND TERM INFANTS 0–28 DAYS"
+    ],
+    "guides": [
+      "INSENSIBLE WATER LOSS IN PRETERM INFANTS",
+      "WATER REQUIREMENTS OF NEWBORNS"
+    ]
+  },
+  {
+    "system": "Nephrology",
+    "labs": [
+      "CREATININE (SERUM) (ENZYMATIC)",
+      "UREA NITROGEN",
+      "URIC ACID"
+    ],
+    "guides": [
+      "NORMAL VALUES OF GLOMERULAR FILTRATION RATE",
+      "PROPORTIONALITY CONSTANT FOR CALCULATING GLOMERULAR FILTRATION RATE",
+      "AGE-ADJUSTED CALCIUM/CREATININE RATIOS",
+      "LABORATORY DIFFERENTIATION OF OLIGURIA"
+    ]
+  },
+  {
+    "system": "Nutrition & Growth",
+    "labs": [
+      "PREALBUMIN",
+      "TOTAL TRIGLYCERIDE",
+      "VITAMIN A (RETINOL)",
+      "VITAMIN B1 (THIAMINE)",
+      "VITAMIN B2 (RIBOFLAVIN)",
+      "VITAMIN B12 (COBALAMIN)",
+      "VITAMIN C (ASCORBIC ACID)",
+      "VITAMIN D (1,25-DIHYDROXY-VITAMIN D)",
+      "VITAMIN E",
+      "ZINC"
+    ],
+    "guides": [
+      "VITAMIN D, 25-HYDROXY VITAMIN D",
+      "SAMPLE ESTIMATED ENERGY REQUIREMENTS FOR HEALTHY BOYS AND GIRLS OF MEDIAN WEIGHT AND HEIGHT",
+      "PROTEIN REQUIREMENTS",
+      "FAT REQUIREMENTS: ADEQUATE INTAKE",
+      "DIETARY REFERENCE INTAKES: RECOMMENDED INTAKES FOR INDIVIDUALS—VITAMINS",
+      "DIETARY REFERENCE INTAKES: RECOMMENDED INTAKES—ELEMENTS",
+      "FIBER REQUIREMENTS: ADEQUATE INTAKE",
+      "VITAMIN D (25-HYDROXY-VITAMIN D)"
+    ]
+  },
+  {
+    "system": "Oncology",
+    "labs": [
+      "PORCELAIN",
+      "LACTATE DEHYDROGENASE (AT 37°C)"
+    ],
+    "guides": []
+  },
+  {
+    "system": "Poisonings",
+    "labs": [
+      "CARBON MONOXIDE (CARBOXYHEMOGLOBIN)",
+      "LEAD",
+      "METHEMOGLOBIN"
+    ],
+    "guides": []
+  },
+  {
+    "system": "Pulmonology",
+    "labs": [],
+    "guides": [
+      "NORMAL RESPIRATORY RATES IN CHILDREN",
+      "PREDICTED AVERAGE PEAK EXPIRATORY FLOW RATES FOR NORMAL CHILDREN"
+    ]
+  },
+  {
+    "system": "Rheumatology",
+    "labs": [
+      "ANTINUCLEAR ANTIBODY (ANA) IMMUNOFLUORESCENCE ASSAY (IFA)",
+      "C-REACTIVE PROTEIN",
+      "RHEUMATOID FACTOR"
+    ],
+    "guides": []
+  },
+  {
+    "system": "Trauma & Critical Care",
+    "labs": [
+      "BLOOD GAS, ARTERIAL (BREATHING ROOM AIR)",
+      "LACTATE"
+    ],
+    "guides": []
+  },
+  {
+    "system": "General",
+    "labs": [
+      "ALDOLASE",
+      "PROTEIN ELECTROPHORESIS",
+      "PYRUVATE"
+    ],
+    "guides": []
+  }
+]

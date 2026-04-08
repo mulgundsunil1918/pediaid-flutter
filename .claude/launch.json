@@ -1,0 +1,23 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "neoapp-frontend",
+      "runtimeExecutable": "cmd",
+      "runtimeArgs": ["/c", "cd", "../neoapp_frontend", "&&", "npm", "run", "dev"],
+      "port": 5173
+    },
+    {
+      "name": "Flutter Web — localhost:8080",
+      "runtimeExecutable": "cmd",
+      "runtimeArgs": ["/c", "flutter", "run", "-d", "web-server", "--web-port=8080"],
+      "port": 8080
+    },
+    {
+      "name": "Flutter Web — all interfaces :8081",
+      "runtimeExecutable": "cmd",
+      "runtimeArgs": ["/c", "flutter", "run", "-d", "web-server", "--web-port=8081", "--web-hostname=0.0.0.0"],
+      "port": 8081
+    }
+  ]
+}

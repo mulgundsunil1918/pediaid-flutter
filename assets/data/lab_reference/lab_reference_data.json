@@ -1,0 +1,1322 @@
+{
+  "lab_references": [
+    {
+      "test": "Haemoglobin",
+      "category": "Haematology",
+      "unit": "g/dL",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 14",
+      "ranges": [
+        { "age_group": "Cord blood", "sex": "Both", "range": "13.5–20.0", "si_range": "13.5–20.0" },
+        { "age_group": "1–3 days", "sex": "Both", "range": "14.5–22.5", "si_range": "14.5–22.5" },
+        { "age_group": "1 week", "sex": "Both", "range": "13.5–21.5", "si_range": "13.5–21.5" },
+        { "age_group": "2 weeks", "sex": "Both", "range": "12.5–20.5", "si_range": "12.5–20.5" },
+        { "age_group": "1 month", "sex": "Both", "range": "10.0–18.0", "si_range": "10.0–18.0" },
+        { "age_group": "2 months", "sex": "Both", "range": "9.0–14.0", "si_range": "9.0–14.0" },
+        { "age_group": "3–6 months", "sex": "Both", "range": "9.5–13.5", "si_range": "9.5–13.5" },
+        { "age_group": "6–24 months", "sex": "Both", "range": "10.5–13.5", "si_range": "10.5–13.5" },
+        { "age_group": "2–6 years", "sex": "Both", "range": "11.5–13.5", "si_range": "11.5–13.5" },
+        { "age_group": "6–12 years", "sex": "Both", "range": "11.5–15.5", "si_range": "11.5–15.5" },
+        { "age_group": "12–18 years", "sex": "M", "range": "13.0–16.0", "si_range": "13.0–16.0" },
+        { "age_group": "12–18 years", "sex": "F", "range": "12.0–16.0", "si_range": "12.0–16.0" },
+        { "age_group": "Adults", "sex": "M", "range": "13.5–17.5", "si_range": "13.5–17.5" },
+        { "age_group": "Adults", "sex": "F", "range": "12.0–16.0", "si_range": "12.0–16.0" }
+      ]
+    },
+    {
+      "test": "Haematocrit",
+      "category": "Haematology",
+      "unit": "%",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 14",
+      "ranges": [
+        { "age_group": "Cord blood", "sex": "Both", "range": "42–60", "si_range": "42–60" },
+        { "age_group": "1–3 days", "sex": "Both", "range": "45–67", "si_range": "45–67" },
+        { "age_group": "2 weeks", "sex": "Both", "range": "39–63", "si_range": "39–63" },
+        { "age_group": "1 month", "sex": "Both", "range": "31–55", "si_range": "31–55" },
+        { "age_group": "2 months", "sex": "Both", "range": "28–42", "si_range": "28–42" },
+        { "age_group": "3–6 months", "sex": "Both", "range": "29–41", "si_range": "29–41" },
+        { "age_group": "6 months–2 years", "sex": "Both", "range": "33–39", "si_range": "33–39" },
+        { "age_group": "2–6 years", "sex": "Both", "range": "34–40", "si_range": "34–40" },
+        { "age_group": "6–12 years", "sex": "Both", "range": "35–45", "si_range": "35–45" },
+        { "age_group": "12–18 years", "sex": "M", "range": "37–49", "si_range": "37–49" },
+        { "age_group": "12–18 years", "sex": "F", "range": "36–46", "si_range": "36–46" }
+      ]
+    },
+    {
+      "test": "MCV",
+      "category": "Haematology",
+      "unit": "fL",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 14",
+      "ranges": [
+        { "age_group": "1–3 days", "sex": "Both", "range": "95–121", "si_range": "95–121" },
+        { "age_group": "1 week", "sex": "Both", "range": "88–126", "si_range": "88–126" },
+        { "age_group": "1 month", "sex": "Both", "range": "85–123", "si_range": "85–123" },
+        { "age_group": "2 months", "sex": "Both", "range": "77–115", "si_range": "77–115" },
+        { "age_group": "3–6 months", "sex": "Both", "range": "68–104", "si_range": "68–104" },
+        { "age_group": "6 months–2 years", "sex": "Both", "range": "70–86", "si_range": "70–86" },
+        { "age_group": "2–6 years", "sex": "Both", "range": "72–88", "si_range": "72–88" },
+        { "age_group": "6–12 years", "sex": "Both", "range": "76–90", "si_range": "76–90" },
+        { "age_group": "12–18 years", "sex": "Both", "range": "78–95", "si_range": "78–95" }
+      ]
+    },
+    {
+      "test": "MCHC",
+      "category": "Haematology",
+      "unit": "g/dL",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 14",
+      "ranges": [
+        { "age_group": "Newborn–2 months", "sex": "Both", "range": "28–36", "si_range": "28–36" },
+        { "age_group": "3 months–2 years", "sex": "Both", "range": "29–37", "si_range": "29–37" },
+        { "age_group": "2–18 years", "sex": "Both", "range": "31–37", "si_range": "31–37" }
+      ]
+    },
+    {
+      "test": "White Blood Cell Count",
+      "category": "Haematology",
+      "unit": "×10³/µL",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 14",
+      "ranges": [
+        { "age_group": "Birth", "sex": "Both", "range": "9–30", "si_range": "9–30" },
+        { "age_group": "12 hours", "sex": "Both", "range": "13–38", "si_range": "13–38" },
+        { "age_group": "24 hours", "sex": "Both", "range": "9.4–34", "si_range": "9.4–34" },
+        { "age_group": "1 week", "sex": "Both", "range": "5–21", "si_range": "5–21" },
+        { "age_group": "2 weeks", "sex": "Both", "range": "5–20", "si_range": "5–20" },
+        { "age_group": "1 month", "sex": "Both", "range": "5–19.5", "si_range": "5–19.5" },
+        { "age_group": "6 months", "sex": "Both", "range": "6–17.5", "si_range": "6–17.5" },
+        { "age_group": "1 year", "sex": "Both", "range": "6–17.5", "si_range": "6–17.5" },
+        { "age_group": "2 years", "sex": "Both", "range": "6–17", "si_range": "6–17" },
+        { "age_group": "4 years", "sex": "Both", "range": "5.5–15.5", "si_range": "5.5–15.5" },
+        { "age_group": "6 years", "sex": "Both", "range": "5–14.5", "si_range": "5–14.5" },
+        { "age_group": "8–12 years", "sex": "Both", "range": "4.5–13.5", "si_range": "4.5–13.5" },
+        { "age_group": "Adults", "sex": "Both", "range": "4.5–11.0", "si_range": "4.5–11.0" }
+      ]
+    },
+    {
+      "test": "Platelets",
+      "category": "Haematology",
+      "unit": "×10³/µL",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 14",
+      "notes": "Values <150 considered thrombocytopenic",
+      "ranges": [
+        { "age_group": "Newborn", "sex": "Both", "range": "150–400", "si_range": "150–400" },
+        { "age_group": "Infant–Adult", "sex": "Both", "range": "150–400", "si_range": "150–400" }
+      ]
+    },
+    {
+      "test": "Reticulocytes",
+      "category": "Haematology",
+      "unit": "%",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 14",
+      "ranges": [
+        { "age_group": "Cord blood", "sex": "Both", "range": "3–7", "si_range": "3–7" },
+        { "age_group": "1–2 weeks", "sex": "Both", "range": "0.1–1.7", "si_range": "0.1–1.7" },
+        { "age_group": "3 months", "sex": "Both", "range": "0.2–2.0", "si_range": "0.2–2.0" },
+        { "age_group": "Adults", "sex": "M", "range": "0.5–1.5", "si_range": "0.5–1.5" },
+        { "age_group": "Adults", "sex": "F", "range": "0.5–2.5", "si_range": "0.5–2.5" }
+      ]
+    },
+    {
+      "test": "Neutrophils",
+      "category": "Haematology",
+      "unit": "%",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 14",
+      "ranges": [
+        { "age_group": "Birth", "sex": "Both", "range": "52–78", "si_range": "52–78" },
+        { "age_group": "12 hours", "sex": "Both", "range": "60–85", "si_range": "60–85" },
+        { "age_group": "24 hours", "sex": "Both", "range": "52–80", "si_range": "52–80" },
+        { "age_group": "1 month", "sex": "Both", "range": "23–48", "si_range": "23–48" },
+        { "age_group": "1 year", "sex": "Both", "range": "23–45", "si_range": "23–45" },
+        { "age_group": "2–4 years", "sex": "Both", "range": "23–45", "si_range": "23–45" },
+        { "age_group": "5–6 years", "sex": "Both", "range": "40–60", "si_range": "40–60" },
+        { "age_group": "7–12 years", "sex": "Both", "range": "40–70", "si_range": "40–70" },
+        { "age_group": "Adults", "sex": "Both", "range": "50–70", "si_range": "50–70" }
+      ]
+    },
+    {
+      "test": "Lymphocytes",
+      "category": "Haematology",
+      "unit": "%",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 14",
+      "ranges": [
+        { "age_group": "Birth", "sex": "Both", "range": "26–36", "si_range": "26–36" },
+        { "age_group": "12 hours", "sex": "Both", "range": "17–33", "si_range": "17–33" },
+        { "age_group": "24 hours", "sex": "Both", "range": "19–29", "si_range": "19–29" },
+        { "age_group": "1 month", "sex": "Both", "range": "40–76", "si_range": "40–76" },
+        { "age_group": "1 year", "sex": "Both", "range": "48–73", "si_range": "48–73" },
+        { "age_group": "2–4 years", "sex": "Both", "range": "44–66", "si_range": "44–66" },
+        { "age_group": "5–6 years", "sex": "Both", "range": "28–48", "si_range": "28–48" },
+        { "age_group": "7–12 years", "sex": "Both", "range": "25–45", "si_range": "25–45" },
+        { "age_group": "Adults", "sex": "Both", "range": "20–40", "si_range": "20–40" }
+      ]
+    },
+    {
+      "test": "Eosinophils",
+      "category": "Haematology",
+      "unit": "%",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 14",
+      "ranges": [
+        { "age_group": "All ages", "sex": "Both", "range": "1–3", "si_range": "1–3" }
+      ]
+    },
+    {
+      "test": "Monocytes",
+      "category": "Haematology",
+      "unit": "%",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 14",
+      "ranges": [
+        { "age_group": "All ages", "sex": "Both", "range": "4–9", "si_range": "4–9" }
+      ]
+    },
+    {
+      "test": "PT",
+      "category": "Haematology",
+      "unit": "seconds",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 14",
+      "ranges": [
+        { "age_group": "Premature (30–36 wk)", "sex": "Both", "range": "10.6–16.2", "si_range": "10.6–16.2" },
+        { "age_group": "Fullterm newborn", "sex": "Both", "range": "10.1–15.9", "si_range": "10.1–15.9" },
+        { "age_group": "1–6 months", "sex": "Both", "range": "10.0–14.7", "si_range": "10.0–14.7" },
+        { "age_group": "6 months–2 years", "sex": "Both", "range": "10.6–13.3", "si_range": "10.6–13.3" },
+        { "age_group": "2–6 years", "sex": "Both", "range": "10.1–12.7", "si_range": "10.1–12.7" },
+        { "age_group": "6–10 years", "sex": "Both", "range": "10.1–13.3", "si_range": "10.1–13.3" },
+        { "age_group": "11–16 years", "sex": "Both", "range": "11.2–13.2", "si_range": "11.2–13.2" },
+        { "age_group": "Adults", "sex": "Both", "range": "10.8–13.9", "si_range": "10.8–13.9" }
+      ]
+    },
+    {
+      "test": "INR",
+      "category": "Haematology",
+      "unit": "ratio",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 14",
+      "ranges": [
+        { "age_group": "Newborn", "sex": "Both", "range": "1.0–1.6", "si_range": "1.0–1.6" },
+        { "age_group": "All ages", "sex": "Both", "range": "0.9–1.1", "si_range": "0.9–1.1" }
+      ]
+    },
+    {
+      "test": "aPTT",
+      "category": "Haematology",
+      "unit": "seconds",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 14",
+      "ranges": [
+        { "age_group": "Premature (30–36 wk)", "sex": "Both", "range": "27.5–79.4", "si_range": "27.5–79.4" },
+        { "age_group": "Fullterm newborn", "sex": "Both", "range": "24.3–53.4", "si_range": "24.3–53.4" },
+        { "age_group": "1–6 months", "sex": "Both", "range": "24.3–55.9", "si_range": "24.3–55.9" },
+        { "age_group": "6 months–2 years", "sex": "Both", "range": "25.7–44.9", "si_range": "25.7–44.9" },
+        { "age_group": "2–6 years", "sex": "Both", "range": "24.9–41.5", "si_range": "24.9–41.5" },
+        { "age_group": "6–10 years", "sex": "Both", "range": "27.0–42.5", "si_range": "27.0–42.5" },
+        { "age_group": "11–16 years", "sex": "Both", "range": "26.4–40.3", "si_range": "26.4–40.3" },
+        { "age_group": "Adults", "sex": "Both", "range": "26.9–38.1", "si_range": "26.9–38.1" }
+      ]
+    },
+    {
+      "test": "Fibrinogen",
+      "category": "Haematology",
+      "unit": "g/L",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 14",
+      "ranges": [
+        { "age_group": "Premature", "sex": "Both", "range": "1.50–3.73", "si_range": "1.50–3.73" },
+        { "age_group": "Fullterm newborn", "sex": "Both", "range": "1.67–3.99", "si_range": "1.67–3.99" },
+        { "age_group": "1–6 months", "sex": "Both", "range": "1.62–3.52", "si_range": "1.62–3.52" },
+        { "age_group": "6 months–2 years", "sex": "Both", "range": "1.50–3.79", "si_range": "1.50–3.79" },
+        { "age_group": "2–16 years", "sex": "Both", "range": "1.70–4.05", "si_range": "1.70–4.05" },
+        { "age_group": "Adults", "sex": "Both", "range": "2.0–4.0", "si_range": "2.0–4.0" }
+      ]
+    },
+    {
+      "test": "D-Dimer",
+      "category": "Haematology",
+      "unit": "µg/mL FEU",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 14",
+      "ranges": [
+        { "age_group": "Newborn", "sex": "Both", "range": "0.00–2.80", "si_range": "0.00–2.80" },
+        { "age_group": "Infant", "sex": "Both", "range": "0.00–0.70", "si_range": "0.00–0.70" },
+        { "age_group": "Child", "sex": "Both", "range": "0.00–0.50", "si_range": "0.00–0.50" },
+        { "age_group": "Adults", "sex": "Both", "range": "0.00–0.50", "si_range": "0.00–0.50" }
+      ]
+    },
+    {
+      "test": "Protein C",
+      "category": "Haematology",
+      "unit": "U/mL",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 14",
+      "ranges": [
+        { "age_group": "Premature (30–36 wk)", "sex": "Both", "range": "0.14–0.42", "si_range": "0.14–0.42" },
+        { "age_group": "Fullterm newborn", "sex": "Both", "range": "0.17–0.53", "si_range": "0.17–0.53" },
+        { "age_group": "1–6 months", "sex": "Both", "range": "0.20–0.64", "si_range": "0.20–0.64" },
+        { "age_group": "6 months–2 years", "sex": "Both", "range": "0.40–0.92", "si_range": "0.40–0.92" },
+        { "age_group": "2–11 years", "sex": "Both", "range": "0.66–1.60", "si_range": "0.66–1.60" },
+        { "age_group": "Adults", "sex": "Both", "range": "0.70–1.40", "si_range": "0.70–1.40" }
+      ]
+    },
+    {
+      "test": "Protein S",
+      "category": "Haematology",
+      "unit": "U/mL",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 14",
+      "ranges": [
+        { "age_group": "Premature (30–36 wk)", "sex": "Both", "range": "0.12–0.44", "si_range": "0.12–0.44" },
+        { "age_group": "Fullterm newborn", "sex": "Both", "range": "0.26–0.78", "si_range": "0.26–0.78" },
+        { "age_group": "1–3 months", "sex": "Both", "range": "0.19–0.55", "si_range": "0.19–0.55" },
+        { "age_group": "3–6 months", "sex": "Both", "range": "0.23–0.87", "si_range": "0.23–0.87" },
+        { "age_group": "6 months–2 years", "sex": "Both", "range": "0.47–1.13", "si_range": "0.47–1.13" },
+        { "age_group": "2–11 years", "sex": "Both", "range": "0.77–1.63", "si_range": "0.77–1.63" },
+        { "age_group": "Adults", "sex": "Both", "range": "0.60–1.40", "si_range": "0.60–1.40" }
+      ]
+    },
+    {
+      "test": "Antithrombin III",
+      "category": "Haematology",
+      "unit": "U/mL",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 14",
+      "ranges": [
+        { "age_group": "Premature (30–36 wk)", "sex": "Both", "range": "0.31–0.55", "si_range": "0.31–0.55" },
+        { "age_group": "Fullterm newborn", "sex": "Both", "range": "0.41–0.93", "si_range": "0.41–0.93" },
+        { "age_group": "1–3 months", "sex": "Both", "range": "0.48–1.08", "si_range": "0.48–1.08" },
+        { "age_group": "3–6 months", "sex": "Both", "range": "0.73–1.21", "si_range": "0.73–1.21" },
+        { "age_group": "6 months–2 years", "sex": "Both", "range": "0.84–1.24", "si_range": "0.84–1.24" },
+        { "age_group": "2–16 years", "sex": "Both", "range": "0.82–1.39", "si_range": "0.82–1.39" },
+        { "age_group": "Adults", "sex": "Both", "range": "0.80–1.20", "si_range": "0.80–1.20" }
+      ]
+    },
+    {
+      "test": "TSH",
+      "category": "Endocrinology",
+      "unit": "mIU/L",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 10",
+      "ranges": [
+        { "age_group": "Cord blood", "sex": "Both", "range": "1–39", "si_range": "1–39" },
+        { "age_group": "1–3 days", "sex": "Both", "range": "2–49", "si_range": "2–49" },
+        { "age_group": "1 week", "sex": "Both", "range": "1.7–9.1", "si_range": "1.7–9.1" },
+        { "age_group": "1–12 months", "sex": "Both", "range": "0.8–8.2", "si_range": "0.8–8.2" },
+        { "age_group": "1–5 years", "sex": "Both", "range": "0.7–5.7", "si_range": "0.7–5.7" },
+        { "age_group": "5–14 years", "sex": "Both", "range": "0.7–5.7", "si_range": "0.7–5.7" },
+        { "age_group": "14–20 years", "sex": "Both", "range": "0.5–4.3", "si_range": "0.5–4.3" }
+      ]
+    },
+    {
+      "test": "Free T4",
+      "category": "Endocrinology",
+      "unit": "ng/dL",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 10",
+      "ranges": [
+        { "age_group": "1–3 days", "sex": "Both", "range": "2.0–5.0", "si_range": "2.0–5.0" },
+        { "age_group": "1–4 weeks", "sex": "Both", "range": "0.7–2.0", "si_range": "0.7–2.0" },
+        { "age_group": "1–12 months", "sex": "Both", "range": "0.8–1.8", "si_range": "0.8–1.8" },
+        { "age_group": "1–5 years", "sex": "Both", "range": "0.8–1.5", "si_range": "0.8–1.5" },
+        { "age_group": "5–14 years", "sex": "Both", "range": "0.8–1.5", "si_range": "0.8–1.5" },
+        { "age_group": ">14 years", "sex": "Both", "range": "0.8–1.8", "si_range": "0.8–1.8" }
+      ]
+    },
+    {
+      "test": "Total T4",
+      "category": "Endocrinology",
+      "unit": "µg/dL",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 10",
+      "ranges": [
+        { "age_group": "1–3 days", "sex": "Both", "range": "11.0–22.0", "si_range": "11.0–22.0" },
+        { "age_group": "1 week", "sex": "Both", "range": "9.9–17.5", "si_range": "9.9–17.5" },
+        { "age_group": "1–12 months", "sex": "Both", "range": "7.2–15.6", "si_range": "7.2–15.6" },
+        { "age_group": "1–5 years", "sex": "Both", "range": "7.3–15.0", "si_range": "7.3–15.0" },
+        { "age_group": "5–10 years", "sex": "Both", "range": "6.4–13.3", "si_range": "6.4–13.3" },
+        { "age_group": "10–15 years", "sex": "Both", "range": "5.6–11.7", "si_range": "5.6–11.7" },
+        { "age_group": "Adults", "sex": "Both", "range": "5.0–12.0", "si_range": "5.0–12.0" }
+      ]
+    },
+    {
+      "test": "Total T3",
+      "category": "Endocrinology",
+      "unit": "ng/dL",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 10",
+      "ranges": [
+        { "age_group": "1–3 days", "sex": "Both", "range": "100–380", "si_range": "100–380" },
+        { "age_group": "1 week", "sex": "Both", "range": "91–300", "si_range": "91–300" },
+        { "age_group": "1–12 months", "sex": "Both", "range": "105–245", "si_range": "105–245" },
+        { "age_group": "1–5 years", "sex": "Both", "range": "105–269", "si_range": "105–269" },
+        { "age_group": "5–10 years", "sex": "Both", "range": "94–241", "si_range": "94–241" },
+        { "age_group": "10–15 years", "sex": "Both", "range": "83–213", "si_range": "83–213" },
+        { "age_group": "Adults", "sex": "Both", "range": "80–200", "si_range": "80–200" }
+      ]
+    },
+    {
+      "test": "Reverse T3",
+      "category": "Endocrinology",
+      "unit": "ng/dL",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 10",
+      "ranges": [
+        { "age_group": "Cord blood", "sex": "Both", "range": "130–300", "si_range": "130–300" },
+        { "age_group": "1–3 days", "sex": "Both", "range": "83–194", "si_range": "83–194" },
+        { "age_group": "1–4 weeks", "sex": "Both", "range": "43–103", "si_range": "43–103" },
+        { "age_group": "1–4 months", "sex": "Both", "range": "24–65", "si_range": "24–65" },
+        { "age_group": "2–20 years", "sex": "Both", "range": "10–40", "si_range": "10–40" }
+      ]
+    },
+    {
+      "test": "TBG",
+      "category": "Endocrinology",
+      "unit": "µg/mL",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 10",
+      "ranges": [
+        { "age_group": "1–4 weeks", "sex": "Both", "range": "22–48", "si_range": "22–48" },
+        { "age_group": "1–12 months", "sex": "Both", "range": "16–36", "si_range": "16–36" },
+        { "age_group": "1–5 years", "sex": "Both", "range": "17–36", "si_range": "17–36" },
+        { "age_group": "5–15 years", "sex": "Both", "range": "14–30", "si_range": "14–30" },
+        { "age_group": "Adults", "sex": "Both", "range": "14–30", "si_range": "14–30" }
+      ]
+    },
+    {
+      "test": "Cortisol AM 8AM",
+      "category": "Endocrinology",
+      "unit": "µg/dL",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 10",
+      "notes": "AM cortisol 8AM; PM value 2–15",
+      "ranges": [
+        { "age_group": "All ages (8AM)", "sex": "Both", "range": "3–21", "si_range": "3–21" }
+      ]
+    },
+    {
+      "test": "DHEA-S",
+      "category": "Endocrinology",
+      "unit": "µg/dL",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 10",
+      "ranges": [
+        { "age_group": "Adults", "sex": "M", "range": "88–483", "si_range": "88–483" },
+        { "age_group": "Adults", "sex": "F", "range": "35–430", "si_range": "35–430" }
+      ],
+      "ranges_by_tanner": [
+        { "stage": "Tanner I", "sex": "M", "range": "5–111", "si_range": "5–111" },
+        { "stage": "Tanner II", "sex": "M", "range": "17–167", "si_range": "17–167" },
+        { "stage": "Tanner III", "sex": "M", "range": "38–238", "si_range": "38–238" },
+        { "stage": "Tanner IV–V", "sex": "M", "range": "88–360", "si_range": "88–360" },
+        { "stage": "Tanner I", "sex": "F", "range": "5–126", "si_range": "5–126" },
+        { "stage": "Tanner II", "sex": "F", "range": "15–150", "si_range": "15–150" },
+        { "stage": "Tanner III", "sex": "F", "range": "22–300", "si_range": "22–300" },
+        { "stage": "Tanner IV–V", "sex": "F", "range": "60–380", "si_range": "60–380" }
+      ]
+    },
+    {
+      "test": "DHEA unconjugated",
+      "category": "Endocrinology",
+      "unit": "ng/mL",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 10",
+      "ranges": [],
+      "ranges_by_tanner": [
+        { "stage": "Tanner I", "sex": "Both", "range": "0.1–0.6", "si_range": "0.1–0.6" },
+        { "stage": "Tanner II", "sex": "Both", "range": "0.3–2.8", "si_range": "0.3–2.8" },
+        { "stage": "Tanner III", "sex": "Both", "range": "0.5–4.4", "si_range": "0.5–4.4" },
+        { "stage": "Tanner IV–V", "sex": "Both", "range": "1.0–8.0", "si_range": "1.0–8.0" }
+      ]
+    },
+    {
+      "test": "Androstenedione",
+      "category": "Endocrinology",
+      "unit": "ng/dL",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 10",
+      "ranges": [],
+      "ranges_by_tanner": [
+        { "stage": "Tanner I", "sex": "M", "range": "10–50", "si_range": "10–50" },
+        { "stage": "Tanner II–III", "sex": "M", "range": "20–85", "si_range": "20–85" },
+        { "stage": "Tanner IV–V", "sex": "M", "range": "50–200", "si_range": "50–200" },
+        { "stage": "Tanner I", "sex": "F", "range": "10–55", "si_range": "10–55" },
+        { "stage": "Tanner II–III", "sex": "F", "range": "20–100", "si_range": "20–100" },
+        { "stage": "Tanner IV–V", "sex": "F", "range": "50–200", "si_range": "50–200" }
+      ]
+    },
+    {
+      "test": "Testosterone Total",
+      "category": "Endocrinology",
+      "unit": "ng/dL",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 10",
+      "ranges": [
+        { "age_group": "Adults", "sex": "M", "range": "280–1080", "si_range": "280–1080" },
+        { "age_group": "Adults", "sex": "F", "range": "15–70", "si_range": "15–70" }
+      ],
+      "ranges_by_tanner": [
+        { "stage": "Tanner I", "sex": "M", "range": "2–23", "si_range": "2–23" },
+        { "stage": "Tanner II", "sex": "M", "range": "5–70", "si_range": "5–70" },
+        { "stage": "Tanner III", "sex": "M", "range": "15–280", "si_range": "15–280" },
+        { "stage": "Tanner IV", "sex": "M", "range": "105–545", "si_range": "105–545" },
+        { "stage": "Tanner V", "sex": "M", "range": "265–800", "si_range": "265–800" },
+        { "stage": "Tanner I", "sex": "F", "range": "2–10", "si_range": "2–10" },
+        { "stage": "Tanner II", "sex": "F", "range": "5–30", "si_range": "5–30" },
+        { "stage": "Tanner III", "sex": "F", "range": "10–30", "si_range": "10–30" },
+        { "stage": "Tanner IV", "sex": "F", "range": "15–40", "si_range": "15–40" },
+        { "stage": "Tanner V", "sex": "F", "range": "10–40", "si_range": "10–40" }
+      ]
+    },
+    {
+      "test": "Testosterone Free",
+      "category": "Endocrinology",
+      "unit": "pg/mL",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 10",
+      "ranges": [
+        { "age_group": "Adults", "sex": "M", "range": "9–30", "si_range": "9–30" }
+      ],
+      "ranges_by_tanner": [
+        { "stage": "Tanner I", "sex": "M", "range": "0.15–0.6", "si_range": "0.15–0.6" },
+        { "stage": "Tanner II", "sex": "M", "range": "0.5–7.0", "si_range": "0.5–7.0" },
+        { "stage": "Tanner III", "sex": "M", "range": "1.5–33", "si_range": "1.5–33" },
+        { "stage": "Tanner IV", "sex": "M", "range": "5.0–49", "si_range": "5.0–49" },
+        { "stage": "Tanner V", "sex": "M", "range": "13–61", "si_range": "13–61" },
+        { "stage": "All Tanner", "sex": "F", "range": "0.1–2.0", "si_range": "0.1–2.0" }
+      ]
+    },
+    {
+      "test": "Estradiol",
+      "category": "Endocrinology",
+      "unit": "pg/mL",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 10",
+      "ranges": [
+        { "age_group": "Follicular (F adult)", "sex": "F", "range": "20–160", "si_range": "20–160" },
+        { "age_group": "Luteal (F adult)", "sex": "F", "range": "60–400", "si_range": "60–400" }
+      ],
+      "ranges_by_tanner": [
+        { "stage": "Tanner I", "sex": "M", "range": "3–15", "si_range": "3–15" },
+        { "stage": "Tanner II–III", "sex": "M", "range": "5–20", "si_range": "5–20" },
+        { "stage": "Tanner IV–V", "sex": "M", "range": "10–35", "si_range": "10–35" },
+        { "stage": "Tanner I", "sex": "F", "range": "3–15", "si_range": "3–15" },
+        { "stage": "Tanner II", "sex": "F", "range": "8–40", "si_range": "8–40" },
+        { "stage": "Tanner III", "sex": "F", "range": "10–60", "si_range": "10–60" },
+        { "stage": "Tanner IV–V", "sex": "F", "range": "20–250", "si_range": "20–250" }
+      ]
+    },
+    {
+      "test": "LH",
+      "category": "Endocrinology",
+      "unit": "IU/L",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 10",
+      "ranges": [],
+      "ranges_by_tanner": [
+        { "stage": "Tanner I", "sex": "M", "range": "0.02–0.3", "si_range": "0.02–0.3" },
+        { "stage": "Tanner II", "sex": "M", "range": "0.2–4.9", "si_range": "0.2–4.9" },
+        { "stage": "Tanner III", "sex": "M", "range": "0.5–7.6", "si_range": "0.5–7.6" },
+        { "stage": "Tanner IV–V", "sex": "M", "range": "2.0–11.0", "si_range": "2.0–11.0" },
+        { "stage": "Tanner I", "sex": "F", "range": "0.02–0.3", "si_range": "0.02–0.3" },
+        { "stage": "Tanner II", "sex": "F", "range": "0.2–4.7", "si_range": "0.2–4.7" },
+        { "stage": "Tanner III", "sex": "F", "range": "0.3–6.1", "si_range": "0.3–6.1" },
+        { "stage": "Tanner IV–V", "sex": "F", "range": "1.0–14.7", "si_range": "1.0–14.7" }
+      ]
+    },
+    {
+      "test": "FSH",
+      "category": "Endocrinology",
+      "unit": "IU/L",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 10",
+      "ranges": [],
+      "ranges_by_tanner": [
+        { "stage": "Tanner I", "sex": "M", "range": "0.16–3.0", "si_range": "0.16–3.0" },
+        { "stage": "Tanner II", "sex": "M", "range": "0.5–4.5", "si_range": "0.5–4.5" },
+        { "stage": "Tanner III", "sex": "M", "range": "0.8–6.0", "si_range": "0.8–6.0" },
+        { "stage": "Tanner IV–V", "sex": "M", "range": "1.5–8.0", "si_range": "1.5–8.0" },
+        { "stage": "Tanner I", "sex": "F", "range": "0.16–5.6", "si_range": "0.16–5.6" },
+        { "stage": "Tanner II", "sex": "F", "range": "0.5–6.2", "si_range": "0.5–6.2" },
+        { "stage": "Tanner III", "sex": "F", "range": "0.8–8.0", "si_range": "0.8–8.0" },
+        { "stage": "Tanner IV–V", "sex": "F", "range": "1.0–10.0", "si_range": "1.0–10.0" }
+      ]
+    },
+    {
+      "test": "IGF-BP3",
+      "category": "Endocrinology",
+      "unit": "mg/L",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 10",
+      "ranges": [
+        { "age_group": "0–1 year", "sex": "Both", "range": "0.5–2.0", "si_range": "0.5–2.0" },
+        { "age_group": "1–3 years", "sex": "Both", "range": "0.7–3.0", "si_range": "0.7–3.0" },
+        { "age_group": "3–6 years", "sex": "Both", "range": "1.0–3.5", "si_range": "1.0–3.5" },
+        { "age_group": "6–9 years", "sex": "Both", "range": "1.5–5.0", "si_range": "1.5–5.0" },
+        { "age_group": "Tanner II–III", "sex": "M", "range": "2.0–5.5", "si_range": "2.0–5.5" },
+        { "age_group": "Tanner IV–V", "sex": "M", "range": "2.5–6.5", "si_range": "2.5–6.5" },
+        { "age_group": "Adults", "sex": "M", "range": "2.0–6.0", "si_range": "2.0–6.0" },
+        { "age_group": "Tanner II–III", "sex": "F", "range": "2.5–6.0", "si_range": "2.5–6.0" },
+        { "age_group": "Tanner IV–V", "sex": "F", "range": "3.0–7.0", "si_range": "3.0–7.0" },
+        { "age_group": "Adults", "sex": "F", "range": "2.5–7.0", "si_range": "2.5–7.0" }
+      ]
+    },
+    {
+      "test": "Vitamin D 25-OH",
+      "category": "Endocrinology",
+      "unit": "ng/mL",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 10",
+      "ranges": [],
+      "interpretation_bands": [
+        { "label": "Deficient", "range": "< 12 ng/mL", "color": "red" },
+        { "label": "Insufficient", "range": "12–19 ng/mL", "color": "orange" },
+        { "label": "Sufficient", "range": "20–50 ng/mL", "color": "green" },
+        { "label": "High", "range": "> 50 ng/mL", "color": "amber" }
+      ]
+    },
+    {
+      "test": "Urine Dopamine",
+      "category": "Catecholamines",
+      "unit": "µg/g Cr",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 10",
+      "ranges": [
+        { "age_group": "< 1 year", "sex": "Both", "range": "10–490", "si_range": "10–490" },
+        { "age_group": "1–2 years", "sex": "Both", "range": "40–260", "si_range": "40–260" },
+        { "age_group": "2–4 years", "sex": "Both", "range": "40–260", "si_range": "40–260" },
+        { "age_group": "4–10 years", "sex": "Both", "range": "65–400", "si_range": "65–400" },
+        { "age_group": ">10 years", "sex": "Both", "range": "65–400", "si_range": "65–400" }
+      ]
+    },
+    {
+      "test": "Urine Epinephrine",
+      "category": "Catecholamines",
+      "unit": "µg/g Cr",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 10",
+      "ranges": [
+        { "age_group": "< 1 year", "sex": "Both", "range": "0–3.5", "si_range": "0–3.5" },
+        { "age_group": "1–2 years", "sex": "Both", "range": "0–3.5", "si_range": "0–3.5" },
+        { "age_group": "2–4 years", "sex": "Both", "range": "0–6.0", "si_range": "0–6.0" },
+        { "age_group": "4–10 years", "sex": "Both", "range": "0–6.0", "si_range": "0–6.0" },
+        { "age_group": ">10 years", "sex": "Both", "range": "0–15", "si_range": "0–15" }
+      ]
+    },
+    {
+      "test": "Urine Norepinephrine",
+      "category": "Catecholamines",
+      "unit": "µg/g Cr",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 10",
+      "ranges": [
+        { "age_group": "< 1 year", "sex": "Both", "range": "0–10", "si_range": "0–10" },
+        { "age_group": "1–2 years", "sex": "Both", "range": "0–17", "si_range": "0–17" },
+        { "age_group": "2–4 years", "sex": "Both", "range": "4–29", "si_range": "4–29" },
+        { "age_group": "4–10 years", "sex": "Both", "range": "8–45", "si_range": "8–45" },
+        { "age_group": ">10 years", "sex": "Both", "range": "15–80", "si_range": "15–80" }
+      ]
+    },
+    {
+      "test": "Urine HVA",
+      "category": "Catecholamines",
+      "unit": "µg/g Cr",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 10",
+      "ranges": [
+        { "age_group": "< 1 year", "sex": "Both", "range": "2.0–42", "si_range": "2.0–42" },
+        { "age_group": "1–2 years", "sex": "Both", "range": "2.0–23", "si_range": "2.0–23" },
+        { "age_group": "2–4 years", "sex": "Both", "range": "0.5–14", "si_range": "0.5–14" },
+        { "age_group": "4–10 years", "sex": "Both", "range": "0.5–14", "si_range": "0.5–14" },
+        { "age_group": ">10 years", "sex": "Both", "range": "0.5–12", "si_range": "0.5–12" }
+      ]
+    },
+    {
+      "test": "Urine VMA",
+      "category": "Catecholamines",
+      "unit": "µg/g Cr",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 10",
+      "ranges": [
+        { "age_group": "< 1 year", "sex": "Both", "range": "1.0–35", "si_range": "1.0–35" },
+        { "age_group": "1–2 years", "sex": "Both", "range": "1.0–25", "si_range": "1.0–25" },
+        { "age_group": "2–4 years", "sex": "Both", "range": "1.0–15", "si_range": "1.0–15" },
+        { "age_group": "4–10 years", "sex": "Both", "range": "1.0–14", "si_range": "1.0–14" },
+        { "age_group": ">10 years", "sex": "Both", "range": "1.0–10", "si_range": "1.0–10" }
+      ]
+    },
+    {
+      "test": "Urine Metanephrines",
+      "category": "Catecholamines",
+      "unit": "µg/g Cr",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 10",
+      "ranges": [
+        { "age_group": "< 1 year", "sex": "Both", "range": "40–1090", "si_range": "40–1090" },
+        { "age_group": "1–2 years", "sex": "Both", "range": "40–480", "si_range": "40–480" },
+        { "age_group": "2–4 years", "sex": "Both", "range": "30–300", "si_range": "30–300" },
+        { "age_group": "4–10 years", "sex": "Both", "range": "50–200", "si_range": "50–200" },
+        { "age_group": ">10 years", "sex": "Both", "range": "30–180", "si_range": "30–180" }
+      ]
+    },
+    {
+      "test": "Urine Normetanephrines",
+      "category": "Catecholamines",
+      "unit": "µg/g Cr",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 10",
+      "ranges": [
+        { "age_group": "< 1 year", "sex": "Both", "range": "50–1400", "si_range": "50–1400" },
+        { "age_group": "1–2 years", "sex": "Both", "range": "70–710", "si_range": "70–710" },
+        { "age_group": "2–4 years", "sex": "Both", "range": "100–590", "si_range": "100–590" },
+        { "age_group": "4–10 years", "sex": "Both", "range": "90–430", "si_range": "90–430" },
+        { "age_group": ">10 years", "sex": "Both", "range": "50–290", "si_range": "50–290" }
+      ]
+    },
+    {
+      "test": "Plasma Epinephrine",
+      "category": "Catecholamines",
+      "unit": "pg/mL",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 10",
+      "ranges": [
+        { "age_group": "Supine (all ages)", "sex": "Both", "range": "< 110", "si_range": "< 110" }
+      ]
+    },
+    {
+      "test": "Plasma Norepinephrine",
+      "category": "Catecholamines",
+      "unit": "pg/mL",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 10",
+      "ranges": [
+        { "age_group": "Supine (all ages)", "sex": "Both", "range": "70–750", "si_range": "70–750" }
+      ]
+    },
+    {
+      "test": "Plasma Dopamine",
+      "category": "Catecholamines",
+      "unit": "pg/mL",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 10",
+      "ranges": [
+        { "age_group": "Supine (all ages)", "sex": "Both", "range": "< 30", "si_range": "< 30" }
+      ]
+    },
+    {
+      "test": "Holliday-Segar Fluid Requirements",
+      "category": "Fluids & Electrolytes",
+      "unit": "mL/kg/day",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 11",
+      "notes": "Standard maintenance fluids; reduce in SIADH, increase in fever/losses",
+      "ranges": [
+        { "age_group": "0–10 kg", "sex": "Both", "range": "100 mL/kg/day", "si_range": "100 mL/kg/day" },
+        { "age_group": "10–20 kg", "sex": "Both", "range": "1000 mL + 50 mL/kg above 10", "si_range": "1000 mL + 50 mL/kg above 10" },
+        { "age_group": ">20 kg", "sex": "Both", "range": "1500 mL + 20 mL/kg above 20", "si_range": "1500 mL + 20 mL/kg above 20" }
+      ]
+    },
+    {
+      "test": "CSF Electrolytes",
+      "category": "Fluids & Electrolytes",
+      "unit": "mEq/L",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 11",
+      "ranges": [
+        { "age_group": "Na — All ages", "sex": "Both", "range": "136–150 mEq/L", "si_range": "136–150 mEq/L" },
+        { "age_group": "K — All ages", "sex": "Both", "range": "2.7–3.9 mEq/L", "si_range": "2.7–3.9 mEq/L" },
+        { "age_group": "Cl — All ages", "sex": "Both", "range": "116–127 mEq/L", "si_range": "116–127 mEq/L" },
+        { "age_group": "Glucose — All ages", "sex": "Both", "range": "40–80 mg/dL", "si_range": "40–80 mg/dL" },
+        { "age_group": "Protein — Neonate", "sex": "Both", "range": "15–100 mg/dL", "si_range": "15–100 mg/dL" },
+        { "age_group": "Protein — Child/Adult", "sex": "Both", "range": "15–45 mg/dL", "si_range": "15–45 mg/dL" }
+      ]
+    },
+    {
+      "test": "Sweat Electrolytes (Sweat Chloride)",
+      "category": "Fluids & Electrolytes",
+      "unit": "mEq/L",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 11",
+      "ranges": [
+        { "age_group": "Normal", "sex": "Both", "range": "< 40", "si_range": "< 40" },
+        { "age_group": "Borderline", "sex": "Both", "range": "40–60", "si_range": "40–60" },
+        { "age_group": "Cystic Fibrosis", "sex": "Both", "range": "> 60", "si_range": "> 60" }
+      ]
+    },
+    {
+      "test": "Gastric Fluid Electrolytes",
+      "category": "Fluids & Electrolytes",
+      "unit": "mEq/L",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 11",
+      "ranges": [
+        { "age_group": "Na", "sex": "Both", "range": "20–80 mEq/L", "si_range": "20–80 mEq/L" },
+        { "age_group": "K", "sex": "Both", "range": "5–20 mEq/L", "si_range": "5–20 mEq/L" },
+        { "age_group": "Cl", "sex": "Both", "range": "100–150 mEq/L", "si_range": "100–150 mEq/L" },
+        { "age_group": "H+", "sex": "Both", "range": "60–90 mEq/L", "si_range": "60–90 mEq/L" }
+      ]
+    },
+    {
+      "test": "Small Bowel Fluid Electrolytes",
+      "category": "Fluids & Electrolytes",
+      "unit": "mEq/L",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 11",
+      "ranges": [
+        { "age_group": "Na", "sex": "Both", "range": "100–140 mEq/L", "si_range": "100–140 mEq/L" },
+        { "age_group": "K", "sex": "Both", "range": "5–15 mEq/L", "si_range": "5–15 mEq/L" },
+        { "age_group": "Cl", "sex": "Both", "range": "90–130 mEq/L", "si_range": "90–130 mEq/L" },
+        { "age_group": "HCO3", "sex": "Both", "range": "20–40 mEq/L", "si_range": "20–40 mEq/L" }
+      ]
+    },
+    {
+      "test": "Diarrhoeal Fluid Electrolytes",
+      "category": "Fluids & Electrolytes",
+      "unit": "mEq/L",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 11",
+      "ranges": [
+        { "age_group": "Na", "sex": "Both", "range": "50–100 mEq/L", "si_range": "50–100 mEq/L" },
+        { "age_group": "K", "sex": "Both", "range": "10–50 mEq/L", "si_range": "10–50 mEq/L" },
+        { "age_group": "Cl", "sex": "Both", "range": "30–120 mEq/L", "si_range": "30–120 mEq/L" },
+        { "age_group": "HCO3", "sex": "Both", "range": "20–40 mEq/L", "si_range": "20–40 mEq/L" }
+      ]
+    },
+    {
+      "test": "ECG — Heart Rate",
+      "category": "Cardiology",
+      "unit": "bpm",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 7",
+      "ranges": [
+        { "age_group": "Newborn (0–3 days)", "sex": "Both", "range": "85–205", "si_range": "85–205" },
+        { "age_group": "1 week–3 months", "sex": "Both", "range": "100–180", "si_range": "100–180" },
+        { "age_group": "3–6 months", "sex": "Both", "range": "100–180", "si_range": "100–180" },
+        { "age_group": "6–12 months", "sex": "Both", "range": "100–169", "si_range": "100–169" },
+        { "age_group": "1–3 years", "sex": "Both", "range": "98–163", "si_range": "98–163" },
+        { "age_group": "3–5 years", "sex": "Both", "range": "65–132", "si_range": "65–132" },
+        { "age_group": "5–8 years", "sex": "Both", "range": "65–130", "si_range": "65–130" },
+        { "age_group": "8–12 years", "sex": "Both", "range": "55–107", "si_range": "55–107" },
+        { "age_group": "12–16 years", "sex": "Both", "range": "55–102", "si_range": "55–102" }
+      ]
+    },
+    {
+      "test": "ECG — PR Interval",
+      "category": "Cardiology",
+      "unit": "ms",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 7",
+      "ranges": [
+        { "age_group": "Newborn–6 months", "sex": "Both", "range": "80–130", "si_range": "80–130" },
+        { "age_group": "6 months–1 year", "sex": "Both", "range": "80–135", "si_range": "80–135" },
+        { "age_group": "1–3 years", "sex": "Both", "range": "80–140", "si_range": "80–140" },
+        { "age_group": "3–8 years", "sex": "Both", "range": "90–150", "si_range": "90–150" },
+        { "age_group": "8–12 years", "sex": "Both", "range": "90–170", "si_range": "90–170" },
+        { "age_group": "12–16 years", "sex": "Both", "range": "100–180", "si_range": "100–180" },
+        { "age_group": "Adults", "sex": "Both", "range": "120–200", "si_range": "120–200" }
+      ]
+    },
+    {
+      "test": "ECG — QRS Duration",
+      "category": "Cardiology",
+      "unit": "ms",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 7",
+      "ranges": [
+        { "age_group": "Newborn–3 months", "sex": "Both", "range": "< 80", "si_range": "< 80" },
+        { "age_group": "3 months–1 year", "sex": "Both", "range": "< 85", "si_range": "< 85" },
+        { "age_group": "1–3 years", "sex": "Both", "range": "< 90", "si_range": "< 90" },
+        { "age_group": "3–8 years", "sex": "Both", "range": "< 90", "si_range": "< 90" },
+        { "age_group": "8–16 years", "sex": "Both", "range": "< 100", "si_range": "< 100" },
+        { "age_group": "Adults", "sex": "Both", "range": "< 120", "si_range": "< 120" }
+      ]
+    },
+    {
+      "test": "ECG — QTc Interval",
+      "category": "Cardiology",
+      "unit": "ms",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 7",
+      "notes": "Bazett formula (QT/sqrtRR); use Fridericia in tachycardia",
+      "ranges": [
+        { "age_group": "All ages (normal)", "sex": "Both", "range": "< 440", "si_range": "< 440" },
+        { "age_group": "Borderline", "sex": "Both", "range": "440–460", "si_range": "440–460" },
+        { "age_group": "Prolonged", "sex": "Both", "range": "> 460", "si_range": "> 460" }
+      ]
+    },
+    {
+      "test": "ECG — T-wave Axis",
+      "category": "Cardiology",
+      "unit": "degrees",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 7",
+      "ranges": [
+        { "age_group": "Newborn", "sex": "Both", "range": "60–180", "si_range": "60–180" },
+        { "age_group": "1 month–1 year", "sex": "Both", "range": "10–90", "si_range": "10–90" },
+        { "age_group": "1–3 years", "sex": "Both", "range": "0–90", "si_range": "0–90" },
+        { "age_group": "3–8 years", "sex": "Both", "range": "0–90", "si_range": "0–90" },
+        { "age_group": ">8 years", "sex": "Both", "range": "0–70", "si_range": "0–70" }
+      ]
+    },
+    {
+      "test": "Stretched Penile Length",
+      "category": "Growth & Development",
+      "unit": "cm",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 10",
+      "notes": "Microphallus defined as < 2.5 cm in newborns",
+      "ranges": [
+        { "age_group": "0–5 months", "sex": "M", "range": "2.5–5.0 (mean 3.9)", "si_range": "2.5–5.0" },
+        { "age_group": "6–11 months", "sex": "M", "range": "2.5–5.4 (mean 3.9)", "si_range": "2.5–5.4" },
+        { "age_group": "1–2 years", "sex": "M", "range": "2.5–5.5 (mean 4.0)", "si_range": "2.5–5.5" },
+        { "age_group": "2–3 years", "sex": "M", "range": "2.5–6.0 (mean 4.2)", "si_range": "2.5–6.0" },
+        { "age_group": "3–4 years", "sex": "M", "range": "3.0–6.0 (mean 4.4)", "si_range": "3.0–6.0" },
+        { "age_group": "4–5 years", "sex": "M", "range": "3.0–6.5 (mean 4.7)", "si_range": "3.0–6.5" },
+        { "age_group": "Adult", "sex": "M", "range": "9–16 (mean 12.5)", "si_range": "9–16" }
+      ]
+    },
+    {
+      "test": "Testicular Volume — Tanner Stages",
+      "category": "Growth & Development",
+      "unit": "mL",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 10",
+      "notes": "Orchidometer (Prader) used for measurement",
+      "ranges": [],
+      "ranges_by_tanner": [
+        { "stage": "Tanner I", "sex": "M", "range": "< 3 mL", "si_range": "< 3 mL" },
+        { "stage": "Tanner II", "sex": "M", "range": "3–6 mL", "si_range": "3–6 mL" },
+        { "stage": "Tanner III", "sex": "M", "range": "6–12 mL", "si_range": "6–12 mL" },
+        { "stage": "Tanner IV", "sex": "M", "range": "12–20 mL", "si_range": "12–20 mL" },
+        { "stage": "Tanner V", "sex": "M", "range": "> 20 mL", "si_range": "> 20 mL" }
+      ]
+    },
+    {
+      "test": "Heparin Initiation — Unfractionated (UFH)",
+      "category": "Clinical Protocols",
+      "unit": "units/kg",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 14",
+      "notes": "Adjust per nomogram; platelet monitoring required",
+      "ranges": [
+        { "age_group": "Loading dose", "sex": "Both", "range": "75 units/kg IV over 10 min (max 5000 units)", "si_range": "75 units/kg IV over 10 min" },
+        { "age_group": "Maintenance < 1 year", "sex": "Both", "range": "28 units/kg/hr", "si_range": "28 units/kg/hr" },
+        { "age_group": "Maintenance > 1 year", "sex": "Both", "range": "20 units/kg/hr", "si_range": "20 units/kg/hr" },
+        { "age_group": "Target aPTT", "sex": "Both", "range": "60–85 seconds (anti-Xa 0.35–0.70 IU/mL)", "si_range": "60–85 seconds" },
+        { "age_group": "Check aPTT", "sex": "Both", "range": "4 hours after loading and 4 hours after each rate change", "si_range": "4 hours after loading" }
+      ]
+    },
+    {
+      "test": "Heparin Adjustment Nomogram",
+      "category": "Clinical Protocols",
+      "unit": "adjustment %",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 14",
+      "ranges": [
+        { "age_group": "aPTT < 50 sec", "sex": "Both", "range": "Increase by 10%", "si_range": "Increase by 10%" },
+        { "age_group": "aPTT 50–59 sec", "sex": "Both", "range": "Increase by 10%", "si_range": "Increase by 10%" },
+        { "age_group": "aPTT 60–85 sec", "sex": "Both", "range": "No change (therapeutic)", "si_range": "No change (therapeutic)" },
+        { "age_group": "aPTT 86–95 sec", "sex": "Both", "range": "Decrease by 10%", "si_range": "Decrease by 10%" },
+        { "age_group": "aPTT 96–120 sec", "sex": "Both", "range": "Hold 30 min, decrease by 10%", "si_range": "Hold 30 min, decrease by 10%" },
+        { "age_group": "aPTT > 120 sec", "sex": "Both", "range": "Hold 1 hour, decrease by 15%", "si_range": "Hold 1 hour, decrease by 15%" }
+      ]
+    },
+    {
+      "test": "Factor VIII Replacement (Haemophilia A)",
+      "category": "Clinical Protocols",
+      "unit": "IU/kg",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 14",
+      "ranges": [
+        { "age_group": "Minor bleed target", "sex": "Both", "range": "30–50%; dose = kg × %desired × 0.5", "si_range": "30–50%" },
+        { "age_group": "Major bleed target", "sex": "Both", "range": "80–100%; dose = kg × %desired × 0.5", "si_range": "80–100%" },
+        { "age_group": "Half-life", "sex": "Both", "range": "8–12 hours", "si_range": "8–12 hours" },
+        { "age_group": "Frequency", "sex": "Both", "range": "Every 8–12 hours", "si_range": "Every 8–12 hours" }
+      ]
+    },
+    {
+      "test": "Factor IX Replacement (Haemophilia B)",
+      "category": "Clinical Protocols",
+      "unit": "IU/kg",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 14",
+      "ranges": [
+        { "age_group": "Minor bleed target", "sex": "Both", "range": "30–50%; dose = kg × %desired × 1.0", "si_range": "30–50%" },
+        { "age_group": "Major bleed target", "sex": "Both", "range": "80–100%; dose = kg × %desired × 1.0", "si_range": "80–100%" },
+        { "age_group": "Half-life", "sex": "Both", "range": "18–24 hours", "si_range": "18–24 hours" },
+        { "age_group": "Frequency", "sex": "Both", "range": "Every 18–24 hours", "si_range": "Every 18–24 hours" }
+      ]
+    },
+    {
+      "test": "ALT",
+      "category": "Blood Chemistries",
+      "unit": "U/L",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 27",
+      "ranges": [
+        { "age_group": "0–3 months", "sex": "Both", "range": "6–52", "si_range": "6–52" },
+        { "age_group": "3–12 months", "sex": "Both", "range": "6–50", "si_range": "6–50" },
+        { "age_group": "1–3 years", "sex": "Both", "range": "6–45", "si_range": "6–45" },
+        { "age_group": "3–6 years", "sex": "Both", "range": "6–40", "si_range": "6–40" },
+        { "age_group": "6–12 years", "sex": "Both", "range": "10–50", "si_range": "10–50" },
+        { "age_group": "12–18 years", "sex": "M", "range": "10–60", "si_range": "10–60" },
+        { "age_group": "12–18 years", "sex": "F", "range": "10–45", "si_range": "10–45" },
+        { "age_group": "Adults", "sex": "Both", "range": "7–56", "si_range": "7–56" }
+      ]
+    },
+    {
+      "test": "AST",
+      "category": "Blood Chemistries",
+      "unit": "U/L",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 27",
+      "ranges": [
+        { "age_group": "0–3 months", "sex": "Both", "range": "20–80", "si_range": "20–80" },
+        { "age_group": "3–12 months", "sex": "Both", "range": "20–75", "si_range": "20–75" },
+        { "age_group": "1–3 years", "sex": "Both", "range": "20–75", "si_range": "20–75" },
+        { "age_group": "3–6 years", "sex": "Both", "range": "15–55", "si_range": "15–55" },
+        { "age_group": "6–12 years", "sex": "Both", "range": "15–50", "si_range": "15–50" },
+        { "age_group": "12–18 years", "sex": "Both", "range": "10–50", "si_range": "10–50" },
+        { "age_group": "Adults", "sex": "Both", "range": "10–40", "si_range": "10–40" }
+      ]
+    },
+    {
+      "test": "ALP",
+      "category": "Blood Chemistries",
+      "unit": "U/L",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 27",
+      "ranges": [
+        { "age_group": "0–1 month", "sex": "Both", "range": "60–300", "si_range": "60–300" },
+        { "age_group": "1–12 months", "sex": "Both", "range": "100–400", "si_range": "100–400" },
+        { "age_group": "1–3 years", "sex": "Both", "range": "150–500", "si_range": "150–500" },
+        { "age_group": "3–10 years", "sex": "Both", "range": "150–500", "si_range": "150–500" },
+        { "age_group": "10–13 years", "sex": "M", "range": "200–700", "si_range": "200–700" },
+        { "age_group": "10–13 years", "sex": "F", "range": "200–600", "si_range": "200–600" },
+        { "age_group": "13–15 years", "sex": "M", "range": "130–700", "si_range": "130–700" },
+        { "age_group": "13–15 years", "sex": "F", "range": "70–400", "si_range": "70–400" },
+        { "age_group": ">15 years", "sex": "M", "range": "50–200", "si_range": "50–200" },
+        { "age_group": ">15 years", "sex": "F", "range": "50–150", "si_range": "50–150" }
+      ]
+    },
+    {
+      "test": "GGT",
+      "category": "Blood Chemistries",
+      "unit": "U/L",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 27",
+      "ranges": [
+        { "age_group": "0–3 months", "sex": "Both", "range": "12–230", "si_range": "12–230" },
+        { "age_group": "3–12 months", "sex": "Both", "range": "3–30", "si_range": "3–30" },
+        { "age_group": "1–15 years", "sex": "Both", "range": "3–22", "si_range": "3–22" },
+        { "age_group": ">15 years", "sex": "M", "range": "7–64", "si_range": "7–64" },
+        { "age_group": ">15 years", "sex": "F", "range": "5–36", "si_range": "5–36" }
+      ]
+    },
+    {
+      "test": "Total Bilirubin",
+      "category": "Blood Chemistries",
+      "unit": "mg/dL",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 27",
+      "ranges": [
+        { "age_group": "Preterm day 1", "sex": "Both", "range": "< 8.0", "si_range": "< 8.0" },
+        { "age_group": "Preterm day 3", "sex": "Both", "range": "< 15.0", "si_range": "< 15.0" },
+        { "age_group": "Term day 1", "sex": "Both", "range": "< 6.0", "si_range": "< 6.0" },
+        { "age_group": "Term day 3", "sex": "Both", "range": "< 12.0", "si_range": "< 12.0" },
+        { "age_group": "Term day 5", "sex": "Both", "range": "< 14.0", "si_range": "< 14.0" },
+        { "age_group": ">1 month", "sex": "Both", "range": "< 1.0", "si_range": "< 1.0" },
+        { "age_group": "Adults", "sex": "Both", "range": "0.2–1.2", "si_range": "0.2–1.2" }
+      ]
+    },
+    {
+      "test": "Direct Bilirubin",
+      "category": "Blood Chemistries",
+      "unit": "mg/dL",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 27",
+      "ranges": [
+        { "age_group": "All ages", "sex": "Both", "range": "< 0.3 (or < 15% total bilirubin)", "si_range": "< 0.3" }
+      ]
+    },
+    {
+      "test": "LDH",
+      "category": "Blood Chemistries",
+      "unit": "U/L",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 27",
+      "ranges": [
+        { "age_group": "0–3 months", "sex": "Both", "range": "125–675", "si_range": "125–675" },
+        { "age_group": "3–12 months", "sex": "Both", "range": "130–600", "si_range": "130–600" },
+        { "age_group": "1–3 years", "sex": "Both", "range": "180–430", "si_range": "180–430" },
+        { "age_group": "3–9 years", "sex": "Both", "range": "180–430", "si_range": "180–430" },
+        { "age_group": "9–15 years", "sex": "Both", "range": "160–370", "si_range": "160–370" },
+        { "age_group": ">15 years", "sex": "Both", "range": "120–250", "si_range": "120–250" }
+      ]
+    },
+    {
+      "test": "Creatinine",
+      "category": "Blood Chemistries",
+      "unit": "mg/dL",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 27",
+      "ranges": [
+        { "age_group": "Cord blood", "sex": "Both", "range": "0.6–1.2", "si_range": "0.6–1.2" },
+        { "age_group": "Newborn", "sex": "Both", "range": "0.3–1.0", "si_range": "0.3–1.0" },
+        { "age_group": "2 weeks–1 year", "sex": "Both", "range": "0.1–0.4", "si_range": "0.1–0.4" },
+        { "age_group": "1–6 years", "sex": "Both", "range": "0.2–0.5", "si_range": "0.2–0.5" },
+        { "age_group": "6–10 years", "sex": "Both", "range": "0.3–0.6", "si_range": "0.3–0.6" },
+        { "age_group": "10–14 years", "sex": "Both", "range": "0.4–0.8", "si_range": "0.4–0.8" },
+        { "age_group": "14–18 years", "sex": "M", "range": "0.6–1.2", "si_range": "0.6–1.2" },
+        { "age_group": "14–18 years", "sex": "F", "range": "0.5–1.0", "si_range": "0.5–1.0" },
+        { "age_group": "Adults", "sex": "M", "range": "0.7–1.3", "si_range": "0.7–1.3" },
+        { "age_group": "Adults", "sex": "F", "range": "0.5–1.1", "si_range": "0.5–1.1" }
+      ]
+    },
+    {
+      "test": "BUN",
+      "category": "Blood Chemistries",
+      "unit": "mg/dL",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 27",
+      "ranges": [
+        { "age_group": "< 1 year", "sex": "Both", "range": "5–15", "si_range": "5–15" },
+        { "age_group": "1–5 years", "sex": "Both", "range": "5–18", "si_range": "5–18" },
+        { "age_group": "5–17 years", "sex": "Both", "range": "7–20", "si_range": "7–20" },
+        { "age_group": "Adults", "sex": "Both", "range": "8–25", "si_range": "8–25" }
+      ]
+    },
+    {
+      "test": "Uric Acid",
+      "category": "Blood Chemistries",
+      "unit": "mg/dL",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 27",
+      "ranges": [
+        { "age_group": "0–2 years", "sex": "Both", "range": "2.0–6.0", "si_range": "2.0–6.0" },
+        { "age_group": "2–12 years", "sex": "Both", "range": "2.0–6.5", "si_range": "2.0–6.5" },
+        { "age_group": "12–18 years", "sex": "M", "range": "3.0–8.5", "si_range": "3.0–8.5" },
+        { "age_group": "12–18 years", "sex": "F", "range": "2.0–7.5", "si_range": "2.0–7.5" },
+        { "age_group": "Adults", "sex": "M", "range": "3.5–8.5", "si_range": "3.5–8.5" },
+        { "age_group": "Adults", "sex": "F", "range": "2.5–7.5", "si_range": "2.5–7.5" }
+      ]
+    },
+    {
+      "test": "Glucose",
+      "category": "Blood Chemistries",
+      "unit": "mg/dL",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 27",
+      "ranges": [
+        { "age_group": "Newborn (term) 1st day", "sex": "Both", "range": "40–80", "si_range": "40–80" },
+        { "age_group": "Newborn (term) after 1st day", "sex": "Both", "range": "50–90", "si_range": "50–90" },
+        { "age_group": "Infant/Child", "sex": "Both", "range": "60–100", "si_range": "60–100" },
+        { "age_group": "Adults (fasting)", "sex": "Both", "range": "70–100", "si_range": "70–100" }
+      ]
+    },
+    {
+      "test": "HbA1c",
+      "category": "Blood Chemistries",
+      "unit": "%",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 27",
+      "ranges": [],
+      "interpretation_bands": [
+        { "label": "Normal (non-diabetic)", "range": "< 5.7%", "color": "green" },
+        { "label": "Pre-diabetic", "range": "5.7–6.4%", "color": "orange" },
+        { "label": "Diabetic", "range": ">= 6.5%", "color": "red" },
+        { "label": "Therapeutic target (T1DM <13 yrs)", "range": "< 7.5%", "color": "amber" },
+        { "label": "Therapeutic target (T1DM >13 yrs)", "range": "< 7.0%", "color": "green" }
+      ]
+    },
+    {
+      "test": "CRP",
+      "category": "Blood Chemistries",
+      "unit": "mg/L",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 27",
+      "ranges": [
+        { "age_group": "Normal", "sex": "Both", "range": "< 1.0", "si_range": "< 1.0" },
+        { "age_group": "Mild elevation", "sex": "Both", "range": "1–10", "si_range": "1–10" },
+        { "age_group": "Significant inflammation", "sex": "Both", "range": "> 10", "si_range": "> 10" },
+        { "age_group": "Severe", "sex": "Both", "range": "> 100", "si_range": "> 100" }
+      ]
+    },
+    {
+      "test": "ESR",
+      "category": "Blood Chemistries",
+      "unit": "mm/hr",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 27",
+      "notes": "Westergren method",
+      "ranges": [
+        { "age_group": "Child", "sex": "M", "range": "0–10", "si_range": "0–10" },
+        { "age_group": "Child", "sex": "F", "range": "0–13", "si_range": "0–13" },
+        { "age_group": "Adults", "sex": "M", "range": "0–15", "si_range": "0–15" },
+        { "age_group": "Adults", "sex": "F", "range": "0–20", "si_range": "0–20" }
+      ]
+    },
+    {
+      "test": "Ferritin",
+      "category": "Blood Chemistries",
+      "unit": "ng/mL",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 27",
+      "ranges": [
+        { "age_group": "1 month", "sex": "Both", "range": "200–600", "si_range": "200–600" },
+        { "age_group": "2–5 months", "sex": "Both", "range": "50–200", "si_range": "50–200" },
+        { "age_group": "6 months–15 years", "sex": "Both", "range": "7–140", "si_range": "7–140" },
+        { "age_group": "Adults", "sex": "M", "range": "12–300", "si_range": "12–300" },
+        { "age_group": "Adults", "sex": "F", "range": "12–150", "si_range": "12–150" }
+      ]
+    },
+    {
+      "test": "Iron",
+      "category": "Blood Chemistries",
+      "unit": "µg/dL",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 27",
+      "ranges": [
+        { "age_group": "< 1 month", "sex": "Both", "range": "100–250", "si_range": "100–250" },
+        { "age_group": "1–12 months", "sex": "Both", "range": "40–100", "si_range": "40–100" },
+        { "age_group": "1–12 years", "sex": "Both", "range": "50–120", "si_range": "50–120" },
+        { "age_group": "Adults", "sex": "M", "range": "65–175", "si_range": "65–175" },
+        { "age_group": "Adults", "sex": "F", "range": "50–170", "si_range": "50–170" }
+      ]
+    },
+    {
+      "test": "TIBC",
+      "category": "Blood Chemistries",
+      "unit": "µg/dL",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 27",
+      "ranges": [
+        { "age_group": "All ages", "sex": "Both", "range": "250–450", "si_range": "250–450" }
+      ]
+    },
+    {
+      "test": "Sodium",
+      "category": "Blood Chemistries",
+      "unit": "mEq/L",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 27",
+      "ranges": [
+        { "age_group": "All ages", "sex": "Both", "range": "136–145", "si_range": "136–145" }
+      ]
+    },
+    {
+      "test": "Potassium",
+      "category": "Blood Chemistries",
+      "unit": "mEq/L",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 27",
+      "ranges": [
+        { "age_group": "Newborn", "sex": "Both", "range": "3.7–5.9", "si_range": "3.7–5.9" },
+        { "age_group": "Infant", "sex": "Both", "range": "4.1–5.3", "si_range": "4.1–5.3" },
+        { "age_group": "Child", "sex": "Both", "range": "3.4–4.7", "si_range": "3.4–4.7" },
+        { "age_group": "Adults", "sex": "Both", "range": "3.5–5.0", "si_range": "3.5–5.0" }
+      ]
+    },
+    {
+      "test": "Chloride",
+      "category": "Blood Chemistries",
+      "unit": "mEq/L",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 27",
+      "ranges": [
+        { "age_group": "All ages", "sex": "Both", "range": "98–107", "si_range": "98–107" }
+      ]
+    },
+    {
+      "test": "Total Calcium",
+      "category": "Blood Chemistries",
+      "unit": "mg/dL",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 27",
+      "ranges": [
+        { "age_group": "Newborn (3–24 hr)", "sex": "Both", "range": "7.3–11.8", "si_range": "7.3–11.8" },
+        { "age_group": "24–48 hr", "sex": "Both", "range": "7.8–11.5", "si_range": "7.8–11.5" },
+        { "age_group": "4–7 days", "sex": "Both", "range": "9.0–10.9", "si_range": "9.0–10.9" },
+        { "age_group": "Child", "sex": "Both", "range": "8.8–11.2", "si_range": "8.8–11.2" },
+        { "age_group": "Adults", "sex": "Both", "range": "8.5–10.5", "si_range": "8.5–10.5" }
+      ]
+    },
+    {
+      "test": "Magnesium",
+      "category": "Blood Chemistries",
+      "unit": "mEq/L",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 27",
+      "ranges": [
+        { "age_group": "All ages", "sex": "Both", "range": "1.5–2.5", "si_range": "1.5–2.5" }
+      ]
+    },
+    {
+      "test": "Phosphate",
+      "category": "Blood Chemistries",
+      "unit": "mg/dL",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 27",
+      "ranges": [
+        { "age_group": "0–5 days", "sex": "Both", "range": "4.8–8.2", "si_range": "4.8–8.2" },
+        { "age_group": "1–3 years", "sex": "Both", "range": "3.8–6.5", "si_range": "3.8–6.5" },
+        { "age_group": "4–11 years", "sex": "Both", "range": "3.7–5.6", "si_range": "3.7–5.6" },
+        { "age_group": "12–15 years", "sex": "Both", "range": "2.9–5.4", "si_range": "2.9–5.4" },
+        { "age_group": "16–19 years", "sex": "Both", "range": "2.7–4.7", "si_range": "2.7–4.7" },
+        { "age_group": "Adults", "sex": "Both", "range": "2.5–4.5", "si_range": "2.5–4.5" }
+      ]
+    },
+    {
+      "test": "Ammonia",
+      "category": "Blood Chemistries",
+      "unit": "µmol/L",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 27",
+      "ranges": [
+        { "age_group": "Newborn", "sex": "Both", "range": "90–150", "si_range": "90–150" },
+        { "age_group": "Child", "sex": "Both", "range": "40–80", "si_range": "40–80" },
+        { "age_group": "Adults", "sex": "Both", "range": "11–35", "si_range": "11–35" }
+      ]
+    },
+    {
+      "test": "Lactate",
+      "category": "Blood Chemistries",
+      "unit": "mmol/L",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 27",
+      "ranges": [
+        { "age_group": "Venous", "sex": "Both", "range": "0.5–2.2", "si_range": "0.5–2.2" },
+        { "age_group": "Arterial", "sex": "Both", "range": "0.5–1.6", "si_range": "0.5–1.6" }
+      ]
+    },
+    {
+      "test": "Total Cholesterol",
+      "category": "Blood Chemistries",
+      "unit": "mg/dL",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 27",
+      "ranges": [
+        { "age_group": "0–4 years (desirable)", "sex": "Both", "range": "< 185", "si_range": "< 185" },
+        { "age_group": "5–19 years (desirable)", "sex": "Both", "range": "< 170", "si_range": "< 170" },
+        { "age_group": "5–19 years (borderline)", "sex": "Both", "range": "170–199", "si_range": "170–199" },
+        { "age_group": "5–19 years (high)", "sex": "Both", "range": ">= 200", "si_range": ">= 200" },
+        { "age_group": "Adults (desirable)", "sex": "Both", "range": "< 200", "si_range": "< 200" },
+        { "age_group": "Adults (borderline)", "sex": "Both", "range": "200–239", "si_range": "200–239" },
+        { "age_group": "Adults (high)", "sex": "Both", "range": ">= 240", "si_range": ">= 240" }
+      ]
+    },
+    {
+      "test": "LDL Cholesterol",
+      "category": "Blood Chemistries",
+      "unit": "mg/dL",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 27",
+      "ranges": [
+        { "age_group": "2–19 years (acceptable)", "sex": "Both", "range": "< 110", "si_range": "< 110" },
+        { "age_group": "2–19 years (borderline)", "sex": "Both", "range": "110–129", "si_range": "110–129" },
+        { "age_group": "2–19 years (high)", "sex": "Both", "range": ">= 130", "si_range": ">= 130" },
+        { "age_group": "Adults (optimal)", "sex": "Both", "range": "< 100", "si_range": "< 100" },
+        { "age_group": "Adults (desirable)", "sex": "Both", "range": "< 130", "si_range": "< 130" },
+        { "age_group": "Adults (high)", "sex": "Both", "range": ">= 160", "si_range": ">= 160" }
+      ]
+    },
+    {
+      "test": "HDL Cholesterol",
+      "category": "Blood Chemistries",
+      "unit": "mg/dL",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 27",
+      "ranges": [
+        { "age_group": "2–19 years (acceptable)", "sex": "Both", "range": "> 45", "si_range": "> 45" },
+        { "age_group": "2–19 years (borderline)", "sex": "Both", "range": "40–45", "si_range": "40–45" },
+        { "age_group": "2–19 years (low)", "sex": "Both", "range": "< 40", "si_range": "< 40" },
+        { "age_group": "Adults", "sex": "M", "range": "> 40", "si_range": "> 40" },
+        { "age_group": "Adults", "sex": "F", "range": "> 50", "si_range": "> 50" }
+      ]
+    },
+    {
+      "test": "Triglycerides",
+      "category": "Blood Chemistries",
+      "unit": "mg/dL",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 27",
+      "ranges": [
+        { "age_group": "0–9 years (normal)", "sex": "Both", "range": "< 100", "si_range": "< 100" },
+        { "age_group": "10–19 years (normal)", "sex": "Both", "range": "< 130", "si_range": "< 130" },
+        { "age_group": "Adults (normal)", "sex": "Both", "range": "< 150", "si_range": "< 150" },
+        { "age_group": "Adults (borderline)", "sex": "Both", "range": "150–199", "si_range": "150–199" },
+        { "age_group": "Adults (high)", "sex": "Both", "range": "200–499", "si_range": "200–499" },
+        { "age_group": "Adults (very high)", "sex": "Both", "range": ">= 500", "si_range": ">= 500" }
+      ]
+    },
+    {
+      "test": "Amylase",
+      "category": "Blood Chemistries",
+      "unit": "U/L",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 27",
+      "ranges": [
+        { "age_group": "0–1 year", "sex": "Both", "range": "0–30", "si_range": "0–30" },
+        { "age_group": "1–5 years", "sex": "Both", "range": "10–55", "si_range": "10–55" },
+        { "age_group": "5–12 years", "sex": "Both", "range": "16–69", "si_range": "16–69" },
+        { "age_group": ">12 years", "sex": "Both", "range": "25–125", "si_range": "25–125" },
+        { "age_group": "Adults", "sex": "Both", "range": "30–110", "si_range": "30–110" }
+      ]
+    },
+    {
+      "test": "Lipase",
+      "category": "Blood Chemistries",
+      "unit": "U/L",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 27",
+      "ranges": [
+        { "age_group": "Children", "sex": "Both", "range": "20–140", "si_range": "20–140" },
+        { "age_group": "Adults", "sex": "Both", "range": "23–300", "si_range": "23–300" }
+      ]
+    },
+    {
+      "test": "CSF Cell Count",
+      "category": "Blood Chemistries",
+      "unit": "WBC/µL",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 27",
+      "ranges": [
+        { "age_group": "Newborn", "sex": "Both", "range": "0–30 (up to 5 polys acceptable)", "si_range": "0–30" },
+        { "age_group": "Infant", "sex": "Both", "range": "0–10", "si_range": "0–10" },
+        { "age_group": "Child/Adult", "sex": "Both", "range": "0–5", "si_range": "0–5" }
+      ]
+    },
+    {
+      "test": "CSF Protein",
+      "category": "Blood Chemistries",
+      "unit": "mg/dL",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 27",
+      "ranges": [
+        { "age_group": "Newborn (term)", "sex": "Both", "range": "20–170", "si_range": "20–170" },
+        { "age_group": "Infant < 3 months", "sex": "Both", "range": "20–170", "si_range": "20–170" },
+        { "age_group": "Child", "sex": "Both", "range": "5–40", "si_range": "5–40" },
+        { "age_group": "Adults", "sex": "Both", "range": "15–45", "si_range": "15–45" }
+      ]
+    },
+    {
+      "test": "CSF Glucose",
+      "category": "Blood Chemistries",
+      "unit": "mg/dL",
+      "source_table": "Harriet Lane 22nd Ed, Ch. 27",
+      "notes": "CSF glucose should be >= 60% of simultaneous serum glucose",
+      "ranges": [
+        { "age_group": "All ages", "sex": "Both", "range": "40–80 (CSF:serum ratio 0.6–0.8)", "si_range": "40–80" }
+      ]
+    }
+  ]
+}
