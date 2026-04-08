@@ -22,6 +22,7 @@ import '../guides/guides_screen.dart';
 import '../cme/cme_screen.dart';
 import '../shared/suggest_feature_sheet.dart';
 import '../../academics/academics_screen.dart';
+import '../../academics/academics_web_screen.dart';
 import 'app_search_delegate.dart';
 
 // ── All available quick-access items ─────────────────────────────────────────
@@ -337,7 +338,7 @@ class _HomeScreenState extends State<HomeScreen> {
       _FeatureDef('Lab Reference',       'Harriet Lane values',        Icons.biotech_rounded,        const Color(0xFF00838F), () => Navigator.push(context, MaterialPageRoute(builder: (_) => const LabReferenceScreen()))),
       _FeatureDef('Guides',              'Fetal Dev · Protocols',      Icons.menu_book_outlined,     const Color(0xFF6D4C41), () => Navigator.push(context, MaterialPageRoute(builder: (_) => const GuidesScreen()))),
       _FeatureDef('CME & Webinars',       'Conferences · Webinars',     Icons.event_note_rounded,     const Color(0xFF7B1FA2), () => Navigator.push(context, MaterialPageRoute(builder: (_) => const CmeScreen()))),
-      _FeatureDef('Academics',           'Nelson · Chapters · TOC',    Icons.auto_stories_rounded,   const Color(0xFF283593), () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AcademicsScreen()))),
+      _FeatureDef('Academics',           'Peer-reviewed content',       Icons.auto_stories_rounded,   const Color(0xFF283593), () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AcademicsWebScreen(path: '/academics')))),
     ];
 
     return GridView.builder(

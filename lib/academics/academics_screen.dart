@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../theme/app_theme.dart';
-import 'nelson_chapters_screen.dart';
 import 'academics_web_screen.dart';
 
 class AcademicsScreen extends StatelessWidget {
@@ -35,20 +34,6 @@ class AcademicsScreen extends StatelessWidget {
               context,
               MaterialPageRoute(
                   builder: (_) => const AcademicsWebScreen(path: '/academics')),
-            ),
-          ),
-          const SizedBox(height: 12),
-          // ── Paediatrics Index (TOC browser) ────────────────────────────
-          _AcademicTile(
-            isDark: isDark,
-            icon: Icons.menu_book_rounded,
-            color: const Color(0xFF00695C),
-            title: 'Paediatrics Index',
-            subtitle:
-                'Browse 35 parts, 416 chapters & subchapters — full table of contents',
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const NelsonChaptersScreen()),
             ),
           ),
           const SizedBox(height: 12),
