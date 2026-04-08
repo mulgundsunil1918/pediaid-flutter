@@ -1,0 +1,4098 @@
+{
+  "neofax": [
+    {
+      "name": "Acetaminophen",
+      "name_lower": "acetaminophen",
+      "page": 8,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "AcetaZOLAMIDE",
+      "name_lower": "acetazolamide",
+      "page": 14,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Acetylcysteine",
+      "name_lower": "acetylcysteine",
+      "page": 19,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Acyclovir",
+      "name_lower": "acyclovir",
+      "page": 27,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Adenosine",
+      "name_lower": "adenosine",
+      "page": 34,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Albumin (Human)",
+      "name_lower": "albumin (human)",
+      "page": 37,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Albuterol",
+      "name_lower": "albuterol",
+      "page": 45,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Alprostadil",
+      "name_lower": "alprostadil",
+      "page": 50,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Alteplase",
+      "name_lower": "alteplase",
+      "page": 54,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Amikacin",
+      "name_lower": "amikacin",
+      "page": 59,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Aminocaproic Acid",
+      "name_lower": "aminocaproic acid",
+      "page": 68,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Aminophylline",
+      "name_lower": "aminophylline",
+      "page": 73,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Amiodarone",
+      "name_lower": "amiodarone",
+      "page": 76,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Amoxicillin",
+      "name_lower": "amoxicillin",
+      "page": 84,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Amphotericin B",
+      "name_lower": "amphotericin b",
+      "page": 98,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Amphotericin B Lipid Complex",
+      "name_lower": "amphotericin b lipid complex",
+      "page": 89,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Amphotericin B Liposome",
+      "name_lower": "amphotericin b liposome",
+      "page": 93,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Ampicillin",
+      "name_lower": "ampicillin",
+      "page": 104,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Anidulafungin",
+      "name_lower": "anidulafungin",
+      "page": 114,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Arginine",
+      "name_lower": "arginine",
+      "page": 120,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Ascorbic Acid",
+      "name_lower": "ascorbic acid",
+      "page": 123,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Aspirin",
+      "name_lower": "aspirin",
+      "page": 126,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Atropine",
+      "name_lower": "atropine",
+      "page": 129,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Azithromycin",
+      "name_lower": "azithromycin",
+      "page": 134,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Aztreonam",
+      "name_lower": "aztreonam",
+      "page": 139,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Beractant",
+      "name_lower": "beractant",
+      "page": 142,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Bevacizumab",
+      "name_lower": "bevacizumab",
+      "page": 146,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Bumetanide",
+      "name_lower": "bumetanide",
+      "page": 152,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Bupivacaine",
+      "name_lower": "bupivacaine",
+      "page": 156,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Buprenorphine",
+      "name_lower": "buprenorphine",
+      "page": 164,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Caffeine Citrate",
+      "name_lower": "caffeine citrate",
+      "page": 171,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Calcium - Oral",
+      "name_lower": "calcium - oral",
+      "page": 177,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Calcium Chloride",
+      "name_lower": "calcium chloride",
+      "page": 179,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Calcium Gluconate",
+      "name_lower": "calcium gluconate",
+      "page": 184,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Calfactant",
+      "name_lower": "calfactant",
+      "page": 189,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Captopril",
+      "name_lower": "captopril",
+      "page": 193,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Carglumic Acid",
+      "name_lower": "carglumic acid",
+      "page": 196,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Caspofungin",
+      "name_lower": "caspofungin",
+      "page": 200,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "CeFAZolin",
+      "name_lower": "cefazolin",
+      "page": 205,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Cefepime",
+      "name_lower": "cefepime",
+      "page": 210,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Cefotaxime",
+      "name_lower": "cefotaxime",
+      "page": 216,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "CefOXitin",
+      "name_lower": "cefoxitin",
+      "page": 223,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "CefTAZidime",
+      "name_lower": "ceftazidime",
+      "page": 226,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "CefTRIAXone",
+      "name_lower": "ceftriaxone",
+      "page": 232,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Chloral hydrate",
+      "name_lower": "chloral hydrate",
+      "page": 240,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Chloramphenicol",
+      "name_lower": "chloramphenicol",
+      "page": 242,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Chlorothiazide",
+      "name_lower": "chlorothiazide",
+      "page": 245,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Cimetidine",
+      "name_lower": "cimetidine",
+      "page": 248,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Clindamycin",
+      "name_lower": "clindamycin",
+      "page": 252,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "CloNIDine",
+      "name_lower": "clonidine",
+      "page": 260,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Clopidogrel",
+      "name_lower": "clopidogrel",
+      "page": 265,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Colistin",
+      "name_lower": "colistin",
+      "page": 269,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Cosyntropin",
+      "name_lower": "cosyntropin",
+      "page": 275,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Cyclopentolate (Ophthalmic)",
+      "name_lower": "cyclopentolate (ophthalmic)",
+      "page": 278,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Dexamethasone",
+      "name_lower": "dexamethasone",
+      "page": 280,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Dextrose",
+      "name_lower": "dextrose",
+      "page": 286,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Diazoxide",
+      "name_lower": "diazoxide",
+      "page": 290,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Didanosine",
+      "name_lower": "didanosine",
+      "page": 294,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Digoxin",
+      "name_lower": "digoxin",
+      "page": 303,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Digoxin Immune Fab (Ovine)",
+      "name_lower": "digoxin immune fab (ovine)",
+      "page": 300,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "DOBUTamine",
+      "name_lower": "dobutamine",
+      "page": 307,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "DOPamine",
+      "name_lower": "dopamine",
+      "page": 312,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Dornase alfa",
+      "name_lower": "dornase alfa",
+      "page": 317,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Doxycycline",
+      "name_lower": "doxycycline",
+      "page": 319,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Electrolytes/Minerals",
+      "name_lower": "electrolytes/minerals",
+      "page": 325,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Emtricitabine",
+      "name_lower": "emtricitabine",
+      "page": 326,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Enalapril maleate",
+      "name_lower": "enalapril maleate",
+      "page": 335,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Enalaprilat",
+      "name_lower": "enalaprilat",
+      "page": 338,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Enoxaparin",
+      "name_lower": "enoxaparin",
+      "page": 341,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "EPINEPHrine (Adrenaline)",
+      "name_lower": "epinephrine (adrenaline)",
+      "page": 347,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Epoetin alfa",
+      "name_lower": "epoetin alfa",
+      "page": 355,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Erythromycin",
+      "name_lower": "erythromycin",
+      "page": 360,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Esmolol",
+      "name_lower": "esmolol",
+      "page": 365,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Factor IX (Recombinant), Fc Fusion Protein",
+      "name_lower": "factor ix (recombinant), fc fusion protein",
+      "page": 368,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Factor VIIa, recombinant",
+      "name_lower": "factor viia, recombinant",
+      "page": 375,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Factor X Human",
+      "name_lower": "factor x human",
+      "page": 379,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Factor XIII Concentrate, Human",
+      "name_lower": "factor xiii concentrate, human",
+      "page": 383,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Famotidine",
+      "name_lower": "famotidine",
+      "page": 386,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Fat Emulsion",
+      "name_lower": "fat emulsion",
+      "page": 390,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "FentaNYL",
+      "name_lower": "fentanyl",
+      "page": 401,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Ferrous sulfate",
+      "name_lower": "ferrous sulfate",
+      "page": 408,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Flecainide",
+      "name_lower": "flecainide",
+      "page": 410,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Fluconazole",
+      "name_lower": "fluconazole",
+      "page": 413,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Flucytosine",
+      "name_lower": "flucytosine",
+      "page": 420,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Flumazenil",
+      "name_lower": "flumazenil",
+      "page": 423,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Folic Acid",
+      "name_lower": "folic acid",
+      "page": 426,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Fosphenytoin",
+      "name_lower": "fosphenytoin",
+      "page": 431,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Furosemide",
+      "name_lower": "furosemide",
+      "page": 439,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Ganciclovir",
+      "name_lower": "ganciclovir",
+      "page": 444,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Gentamicin",
+      "name_lower": "gentamicin",
+      "page": 448,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Glucagon",
+      "name_lower": "glucagon",
+      "page": 457,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Heparin",
+      "name_lower": "heparin",
+      "page": 460,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Hepatitis B Immune Globulin (Human)",
+      "name_lower": "hepatitis b immune globulin (human)",
+      "page": 464,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Hepatitis B Vaccine (Recombinant)",
+      "name_lower": "hepatitis b vaccine (recombinant)",
+      "page": 466,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Hib Conjugate/Hepatitis B Combination Vaccine",
+      "name_lower": "hib conjugate/hepatitis b combination vaccine",
+      "page": 469,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Hyaluronidase",
+      "name_lower": "hyaluronidase",
+      "page": 471,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "HydrALAZINE",
+      "name_lower": "hydralazine",
+      "page": 475,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "HydroCHLOROthiazide",
+      "name_lower": "hydrochlorothiazide",
+      "page": 478,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Hydrocortisone",
+      "name_lower": "hydrocortisone",
+      "page": 480,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Ibuprofen",
+      "name_lower": "ibuprofen",
+      "page": 489,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Imipenem/Cilastatin",
+      "name_lower": "imipenem/cilastatin",
+      "page": 496,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Immune Globulin (Human)",
+      "name_lower": "immune globulin (human)",
+      "page": 501,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Indomethacin",
+      "name_lower": "indomethacin",
+      "page": 511,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "INFUVITE Pediatric",
+      "name_lower": "infuvite pediatric",
+      "page": 516,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Insulin Human Regular",
+      "name_lower": "insulin human regular",
+      "page": 520,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Ipratropium",
+      "name_lower": "ipratropium",
+      "page": 524,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Iron Dextran",
+      "name_lower": "iron dextran",
+      "page": 526,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Isoproterenol",
+      "name_lower": "isoproterenol",
+      "page": 528,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "LamiVUDine",
+      "name_lower": "lamivudine",
+      "page": 531,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Lansoprazole",
+      "name_lower": "lansoprazole",
+      "page": 544,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "LevETIRAcetam",
+      "name_lower": "levetiracetam",
+      "page": 548,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Levothyroxine",
+      "name_lower": "levothyroxine",
+      "page": 553,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Lidocaine - Antiarrhythmic",
+      "name_lower": "lidocaine - antiarrhythmic",
+      "page": 558,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Lidocaine - CNS",
+      "name_lower": "lidocaine - cns",
+      "page": 562,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Lidocaine/Prilocaine",
+      "name_lower": "lidocaine/prilocaine",
+      "page": 566,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Linezolid",
+      "name_lower": "linezolid",
+      "page": 569,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Lopinavir/Ritonavir",
+      "name_lower": "lopinavir/ritonavir",
+      "page": 575,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "LORazepam",
+      "name_lower": "lorazepam",
+      "page": 585,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Lucinactant",
+      "name_lower": "lucinactant",
+      "page": 590,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Magnesium sulfate",
+      "name_lower": "magnesium sulfate",
+      "page": 594,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Mannitol",
+      "name_lower": "mannitol",
+      "page": 597,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "MCT Oil",
+      "name_lower": "mct oil",
+      "page": 601,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Meropenem",
+      "name_lower": "meropenem",
+      "page": 603,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Methadone",
+      "name_lower": "methadone",
+      "page": 609,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Metoclopramide",
+      "name_lower": "metoclopramide",
+      "page": 616,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "MetroNIDAZOLE",
+      "name_lower": "metronidazole",
+      "page": 620,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Micafungin",
+      "name_lower": "micafungin",
+      "page": 627,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Microlipid",
+      "name_lower": "microlipid",
+      "page": 634,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Midazolam",
+      "name_lower": "midazolam",
+      "page": 636,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Milrinone",
+      "name_lower": "milrinone",
+      "page": 641,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Morphine",
+      "name_lower": "morphine",
+      "page": 647,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Moxifloxacin",
+      "name_lower": "moxifloxacin",
+      "page": 656,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Multivitamin Drops",
+      "name_lower": "multivitamin drops",
+      "page": 924,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Mupirocin",
+      "name_lower": "mupirocin",
+      "page": 658,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Nafcillin",
+      "name_lower": "nafcillin",
+      "page": 660,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Naloxone",
+      "name_lower": "naloxone",
+      "page": 665,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Neostigmine",
+      "name_lower": "neostigmine",
+      "page": 672,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Netilmicin",
+      "name_lower": "netilmicin",
+      "page": 675,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Nevirapine",
+      "name_lower": "nevirapine",
+      "page": 678,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "NiCARdipine",
+      "name_lower": "nicardipine",
+      "page": 686,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Nitric Oxide",
+      "name_lower": "nitric oxide",
+      "page": 689,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Norepinephrine",
+      "name_lower": "norepinephrine",
+      "page": 694,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Nystatin",
+      "name_lower": "nystatin",
+      "page": 701,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Octreotide",
+      "name_lower": "octreotide",
+      "page": 704,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Omeprazole",
+      "name_lower": "omeprazole",
+      "page": 707,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Oseltamivir",
+      "name_lower": "oseltamivir",
+      "page": 711,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Oxacillin",
+      "name_lower": "oxacillin",
+      "page": 715,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Palivizumab",
+      "name_lower": "palivizumab",
+      "page": 720,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Pancuronium",
+      "name_lower": "pancuronium",
+      "page": 724,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Pantoprazole",
+      "name_lower": "pantoprazole",
+      "page": 727,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Papaverine",
+      "name_lower": "papaverine",
+      "page": 734,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Penicillin G",
+      "name_lower": "penicillin g",
+      "page": 743,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Penicillin G benzathine",
+      "name_lower": "penicillin g benzathine",
+      "page": 736,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Penicillin G procaine",
+      "name_lower": "penicillin g procaine",
+      "page": 740,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "PENTobarbital",
+      "name_lower": "pentobarbital",
+      "page": 753,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "PHENobarbital",
+      "name_lower": "phenobarbital",
+      "page": 756,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Phentolamine",
+      "name_lower": "phentolamine",
+      "page": 765,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Phenylephrine",
+      "name_lower": "phenylephrine",
+      "page": 767,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Phenytoin",
+      "name_lower": "phenytoin",
+      "page": 769,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Piperacillin",
+      "name_lower": "piperacillin",
+      "page": 776,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Piperacillin/Tazobactam",
+      "name_lower": "piperacillin/tazobactam",
+      "page": 779,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Poractant alfa",
+      "name_lower": "poractant alfa",
+      "page": 787,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Potassium chloride",
+      "name_lower": "potassium chloride",
+      "page": 791,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Potassium Iodide",
+      "name_lower": "potassium iodide",
+      "page": 794,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Procainamide",
+      "name_lower": "procainamide",
+      "page": 796,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Propranolol",
+      "name_lower": "propranolol",
+      "page": 799,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Protamine",
+      "name_lower": "protamine",
+      "page": 805,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Protein C Concentrate (Human)",
+      "name_lower": "protein c concentrate (human)",
+      "page": 808,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Pyridoxine",
+      "name_lower": "pyridoxine",
+      "page": 811,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Quinupristin/Dalfopristin",
+      "name_lower": "quinupristin/dalfopristin",
+      "page": 814,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Ranibizumab",
+      "name_lower": "ranibizumab",
+      "page": 817,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "RaNITIdine",
+      "name_lower": "ranitidine",
+      "page": 822,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "RifAMPin",
+      "name_lower": "rifampin",
+      "page": 826,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Rocuronium",
+      "name_lower": "rocuronium",
+      "page": 835,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Sildenafil",
+      "name_lower": "sildenafil",
+      "page": 839,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Simethicone",
+      "name_lower": "simethicone",
+      "page": 844,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Sodium Bicarbonate",
+      "name_lower": "sodium bicarbonate",
+      "page": 846,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Sodium Chloride",
+      "name_lower": "sodium chloride",
+      "page": 849,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Sodium Glycerophosphate",
+      "name_lower": "sodium glycerophosphate",
+      "page": 851,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Sodium Nitroprusside",
+      "name_lower": "sodium nitroprusside",
+      "page": 854,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Sodium phenylacetate/Sodium benzoate",
+      "name_lower": "sodium phenylacetate/sodium benzoate",
+      "page": 858,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Sotalol",
+      "name_lower": "sotalol",
+      "page": 862,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Spironolactone",
+      "name_lower": "spironolactone",
+      "page": 867,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Succinylcholine",
+      "name_lower": "succinylcholine",
+      "page": 871,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Sucrose",
+      "name_lower": "sucrose",
+      "page": 876,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "THAM acetate",
+      "name_lower": "tham acetate",
+      "page": 878,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Ticarcillin/Clavulanate",
+      "name_lower": "ticarcillin/clavulanate",
+      "page": 880,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Tobramycin",
+      "name_lower": "tobramycin",
+      "page": 883,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Topiramate",
+      "name_lower": "topiramate",
+      "page": 891,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Tropicamide (Ophthalmic)",
+      "name_lower": "tropicamide (ophthalmic)",
+      "page": 895,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Ursodiol",
+      "name_lower": "ursodiol",
+      "page": 897,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "ValGANciclovir",
+      "name_lower": "valganciclovir",
+      "page": 900,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Vancomycin",
+      "name_lower": "vancomycin",
+      "page": 905,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Varicella-zoster Immune Globulin",
+      "name_lower": "varicella-zoster immune globulin",
+      "page": 918,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Vecuronium",
+      "name_lower": "vecuronium",
+      "page": 921,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Vitamin D",
+      "name_lower": "vitamin d",
+      "page": 929,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Vitamin E",
+      "name_lower": "vitamin e",
+      "page": 932,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Vitamin K1",
+      "name_lower": "vitamin k1",
+      "page": 934,
+      "source": "Neofax 2024"
+    },
+    {
+      "name": "Zidovudine",
+      "name_lower": "zidovudine",
+      "page": 939,
+      "source": "Neofax 2024"
+    }
+  ],
+  "harriet_lane": [
+    {
+      "name": "A/C",
+      "name_lower": "a/c",
+      "page": 27,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "A/D",
+      "name_lower": "a/d",
+      "page": 73,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "A/X",
+      "name_lower": "a/x",
+      "page": 343,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Acetaminophen",
+      "name_lower": "acetaminophen",
+      "page": 1,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Acetazolamide",
+      "name_lower": "acetazolamide",
+      "page": 2,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Acetylcysteine",
+      "name_lower": "acetylcysteine",
+      "page": 3,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Acth",
+      "name_lower": "acth",
+      "page": 4,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Acyclovir",
+      "name_lower": "acyclovir",
+      "page": 4,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Adderall",
+      "name_lower": "adderall",
+      "page": 6,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Adenosine",
+      "name_lower": "adenosine",
+      "page": 6,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Adult",
+      "name_lower": "adult",
+      "page": 98,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Albumin, Human",
+      "name_lower": "albumin, human",
+      "page": 7,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Albuterol",
+      "name_lower": "albuterol",
+      "page": 7,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "All",
+      "name_lower": "all",
+      "page": 13,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Allopurinol",
+      "name_lower": "allopurinol",
+      "page": 8,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Almotriptan Malate",
+      "name_lower": "almotriptan malate",
+      "page": 9,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Alprostadil",
+      "name_lower": "alprostadil",
+      "page": 9,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Alteplase",
+      "name_lower": "alteplase",
+      "page": 10,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Aluminum Hydroxide",
+      "name_lower": "aluminum hydroxide",
+      "page": 11,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Aluminum Hydroxide With Magnesium",
+      "name_lower": "aluminum hydroxide with magnesium",
+      "page": 11,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Amantadine Hydrochloride",
+      "name_lower": "amantadine hydrochloride",
+      "page": 12,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Amikacin Sulfate",
+      "name_lower": "amikacin sulfate",
+      "page": 13,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Aminocaproic Acid",
+      "name_lower": "aminocaproic acid",
+      "page": 14,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Aminophylline",
+      "name_lower": "aminophylline",
+      "page": 14,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Amiodarone Hcl",
+      "name_lower": "amiodarone hcl",
+      "page": 15,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Amitriptyline",
+      "name_lower": "amitriptyline",
+      "page": 16,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Amlodipine",
+      "name_lower": "amlodipine",
+      "page": 17,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Ammonium Chloride",
+      "name_lower": "ammonium chloride",
+      "page": 18,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Ammonul",
+      "name_lower": "ammonul",
+      "page": 18,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Amoxicillin",
+      "name_lower": "amoxicillin",
+      "page": 18,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Amoxicillin-Clavulanic Acid",
+      "name_lower": "amoxicillin-clavulanic acid",
+      "page": 19,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Amphetamine",
+      "name_lower": "amphetamine",
+      "page": 20,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Amphotericin B (Conventional)",
+      "name_lower": "amphotericin b (conventional)",
+      "page": 21,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Amphotericin B Lipid Complex",
+      "name_lower": "amphotericin b lipid complex",
+      "page": 22,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Amphotericin B, Liposomal",
+      "name_lower": "amphotericin b, liposomal",
+      "page": 22,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Ampicillin",
+      "name_lower": "ampicillin",
+      "page": 23,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Ampicillin/Sulbactam",
+      "name_lower": "ampicillin/sulbactam",
+      "page": 24,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "And Sodium",
+      "name_lower": "and sodium",
+      "page": 253,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Antipyrine And Benzocaine (Otic)",
+      "name_lower": "antipyrine and benzocaine (otic)",
+      "page": 25,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Aripiprazole",
+      "name_lower": "aripiprazole",
+      "page": 26,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Arnuity Ellipta",
+      "name_lower": "arnuity ellipta",
+      "page": 27,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Ascorbic Acid",
+      "name_lower": "ascorbic acid",
+      "page": 27,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Aspirin",
+      "name_lower": "aspirin",
+      "page": 27,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Ast.",
+      "name_lower": "ast.",
+      "page": 206,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Atenolol",
+      "name_lower": "atenolol",
+      "page": 28,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Atomoxetine",
+      "name_lower": "atomoxetine",
+      "page": 29,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Atovaquone",
+      "name_lower": "atovaquone",
+      "page": 29,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Atropine Sulfate",
+      "name_lower": "atropine sulfate",
+      "page": 30,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Auralgan",
+      "name_lower": "auralgan",
+      "page": 31,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Azathioprine",
+      "name_lower": "azathioprine",
+      "page": 31,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Azelastine",
+      "name_lower": "azelastine",
+      "page": 32,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Azithromycin",
+      "name_lower": "azithromycin",
+      "page": 33,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Aztreonam",
+      "name_lower": "aztreonam",
+      "page": 34,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "B/C",
+      "name_lower": "b/c",
+      "page": 43,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "B/D",
+      "name_lower": "b/d",
+      "page": 157,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "B/X",
+      "name_lower": "b/x",
+      "page": 232,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Bacitracin",
+      "name_lower": "bacitracin",
+      "page": 36,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Baclofen",
+      "name_lower": "baclofen",
+      "page": 36,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Beclomethasone Dipropionate",
+      "name_lower": "beclomethasone dipropionate",
+      "page": 37,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Benzoyl Peroxide",
+      "name_lower": "benzoyl peroxide",
+      "page": 38,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Benztropine Mesylate",
+      "name_lower": "benztropine mesylate",
+      "page": 39,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Beractant",
+      "name_lower": "beractant",
+      "page": 39,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Betamethasone",
+      "name_lower": "betamethasone",
+      "page": 40,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Bicitra",
+      "name_lower": "bicitra",
+      "page": 41,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Bisacodyl",
+      "name_lower": "bisacodyl",
+      "page": 41,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Bismuth Subsalicylate",
+      "name_lower": "bismuth subsalicylate",
+      "page": 41,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Brompheniramine With Phenylephrine",
+      "name_lower": "brompheniramine with phenylephrine",
+      "page": 42,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Budesonide",
+      "name_lower": "budesonide",
+      "page": 43,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Budesonide And Formoterol",
+      "name_lower": "budesonide and formoterol",
+      "page": 45,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Bumetanide",
+      "name_lower": "bumetanide",
+      "page": 45,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Butorphanol",
+      "name_lower": "butorphanol",
+      "page": 46,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "C/B",
+      "name_lower": "c/b",
+      "page": 337,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "C/D",
+      "name_lower": "c/d",
+      "page": 68,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Caffeine Citrate",
+      "name_lower": "caffeine citrate",
+      "page": 46,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Calcitriol",
+      "name_lower": "calcitriol",
+      "page": 47,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Calcium Acetate",
+      "name_lower": "calcium acetate",
+      "page": 48,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Calcium Carbonate",
+      "name_lower": "calcium carbonate",
+      "page": 49,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Calcium Chloride",
+      "name_lower": "calcium chloride",
+      "page": 49,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Calcium Citrate",
+      "name_lower": "calcium citrate",
+      "page": 50,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Calcium Glubionate",
+      "name_lower": "calcium glubionate",
+      "page": 50,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Calcium Gluconate",
+      "name_lower": "calcium gluconate",
+      "page": 51,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Calcium Lactate",
+      "name_lower": "calcium lactate",
+      "page": 51,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Calcium Phosphate, Tribasic",
+      "name_lower": "calcium phosphate, tribasic",
+      "page": 52,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Calfactant",
+      "name_lower": "calfactant",
+      "page": 52,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Captopril",
+      "name_lower": "captopril",
+      "page": 52,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Carbamazepine",
+      "name_lower": "carbamazepine",
+      "page": 53,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Carbamide Peroxide",
+      "name_lower": "carbamide peroxide",
+      "page": 55,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Carbinoxamine",
+      "name_lower": "carbinoxamine",
+      "page": 55,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Carnitine",
+      "name_lower": "carnitine",
+      "page": 56,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Carvedilol",
+      "name_lower": "carvedilol",
+      "page": 56,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Caspofungin",
+      "name_lower": "caspofungin",
+      "page": 57,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Cefaclor",
+      "name_lower": "cefaclor",
+      "page": 58,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Cefadroxil",
+      "name_lower": "cefadroxil",
+      "page": 59,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Cefazolin",
+      "name_lower": "cefazolin",
+      "page": 59,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Cefdinir",
+      "name_lower": "cefdinir",
+      "page": 60,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Cefepime",
+      "name_lower": "cefepime",
+      "page": 60,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Cefixime",
+      "name_lower": "cefixime",
+      "page": 61,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Cefotaxime",
+      "name_lower": "cefotaxime",
+      "page": 61,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Cefotetan",
+      "name_lower": "cefotetan",
+      "page": 62,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Cefoxitin",
+      "name_lower": "cefoxitin",
+      "page": 63,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Cefpodoxime Proxetil",
+      "name_lower": "cefpodoxime proxetil",
+      "page": 63,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Cefprozil",
+      "name_lower": "cefprozil",
+      "page": 64,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Ceftaroline Fosamil",
+      "name_lower": "ceftaroline fosamil",
+      "page": 64,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Ceftazidime",
+      "name_lower": "ceftazidime",
+      "page": 65,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Ceftibuten",
+      "name_lower": "ceftibuten",
+      "page": 65,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Ceftriaxone",
+      "name_lower": "ceftriaxone",
+      "page": 66,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Cefuroxime (Iv, Im)/Cefuroxime Axetil (Po)",
+      "name_lower": "cefuroxime (iv, im)/cefuroxime axetil (po)",
+      "page": 67,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Celecoxib",
+      "name_lower": "celecoxib",
+      "page": 68,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Cephalexin",
+      "name_lower": "cephalexin",
+      "page": 68,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Charcoal, Activated",
+      "name_lower": "charcoal, activated",
+      "page": 70,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Chloramphenicol",
+      "name_lower": "chloramphenicol",
+      "page": 70,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Chloroquine Phosphate",
+      "name_lower": "chloroquine phosphate",
+      "page": 70,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Chlorothiazide",
+      "name_lower": "chlorothiazide",
+      "page": 71,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Chlorpheniramine Maleate",
+      "name_lower": "chlorpheniramine maleate",
+      "page": 72,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Chlorpromazine",
+      "name_lower": "chlorpromazine",
+      "page": 72,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Cholecalciferol",
+      "name_lower": "cholecalciferol",
+      "page": 73,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Cholestyramine",
+      "name_lower": "cholestyramine",
+      "page": 74,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Choline Magnesium Trisalicylate",
+      "name_lower": "choline magnesium trisalicylate",
+      "page": 74,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Ciclesonide",
+      "name_lower": "ciclesonide",
+      "page": 75,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Cidofovir",
+      "name_lower": "cidofovir",
+      "page": 76,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Cimetidine",
+      "name_lower": "cimetidine",
+      "page": 76,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Ciprofloxacin",
+      "name_lower": "ciprofloxacin",
+      "page": 77,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Citrate Mixtures",
+      "name_lower": "citrate mixtures",
+      "page": 79,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Clarithromycin",
+      "name_lower": "clarithromycin",
+      "page": 79,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Clindamycin",
+      "name_lower": "clindamycin",
+      "page": 80,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Clobazam",
+      "name_lower": "clobazam",
+      "page": 81,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Clonazepam",
+      "name_lower": "clonazepam",
+      "page": 82,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Clonidine",
+      "name_lower": "clonidine",
+      "page": 83,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Clotrimazole",
+      "name_lower": "clotrimazole",
+      "page": 84,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Co-Trimoxazole",
+      "name_lower": "co-trimoxazole",
+      "page": 85,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Corticotropin",
+      "name_lower": "corticotropin",
+      "page": 85,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Cortisone Acetate",
+      "name_lower": "cortisone acetate",
+      "page": 85,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Cromolyn",
+      "name_lower": "cromolyn",
+      "page": 86,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Cyclopentolate",
+      "name_lower": "cyclopentolate",
+      "page": 87,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Cyclopentolate With Phenylephrine",
+      "name_lower": "cyclopentolate with phenylephrine",
+      "page": 88,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Cyclosporine Modified",
+      "name_lower": "cyclosporine modified",
+      "page": 88,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Cyclosporine, Cyclosporine Microemulsion,",
+      "name_lower": "cyclosporine, cyclosporine microemulsion,",
+      "page": 88,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Cyclosporine, Cyclosporine Microemulsion, Cyclosporine",
+      "name_lower": "cyclosporine, cyclosporine microemulsion, cyclosporine",
+      "page": 89,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Cyproheptadine",
+      "name_lower": "cyproheptadine",
+      "page": 89,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "D/X",
+      "name_lower": "d/x",
+      "page": 106,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Dantrolene",
+      "name_lower": "dantrolene",
+      "page": 90,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Dapsone",
+      "name_lower": "dapsone",
+      "page": 91,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Darbepoetin Alfa",
+      "name_lower": "darbepoetin alfa",
+      "page": 92,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Deferoxamine Mesylate",
+      "name_lower": "deferoxamine mesylate",
+      "page": 94,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Desmopressin Acetate",
+      "name_lower": "desmopressin acetate",
+      "page": 94,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Dexamethasone",
+      "name_lower": "dexamethasone",
+      "page": 95,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Dexmedetomidine",
+      "name_lower": "dexmedetomidine",
+      "page": 96,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Dexmethylphenidate",
+      "name_lower": "dexmethylphenidate",
+      "page": 97,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Diazepam",
+      "name_lower": "diazepam",
+      "page": 99,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Diazoxide",
+      "name_lower": "diazoxide",
+      "page": 101,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Dicloxacillin Sodium",
+      "name_lower": "dicloxacillin sodium",
+      "page": 101,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Digoxin",
+      "name_lower": "digoxin",
+      "page": 101,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Digoxin Digitalizing And Maintenance Doses",
+      "name_lower": "digoxin digitalizing and maintenance doses",
+      "page": 102,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Digoxin Immune Fab (Ovine)",
+      "name_lower": "digoxin immune fab (ovine)",
+      "page": 103,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Diltiazem",
+      "name_lower": "diltiazem",
+      "page": 103,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Dimenhydrinate",
+      "name_lower": "dimenhydrinate",
+      "page": 104,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Dimercaprol",
+      "name_lower": "dimercaprol",
+      "page": 105,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Diphenhydramine",
+      "name_lower": "diphenhydramine",
+      "page": 105,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Divalproex Sodium",
+      "name_lower": "divalproex sodium",
+      "page": 106,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Dobutamine",
+      "name_lower": "dobutamine",
+      "page": 106,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Docusate",
+      "name_lower": "docusate",
+      "page": 107,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Dolasetron",
+      "name_lower": "dolasetron",
+      "page": 108,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Dopamine",
+      "name_lower": "dopamine",
+      "page": 108,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Dornase Alfa/Dnase",
+      "name_lower": "dornase alfa/dnase",
+      "page": 109,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Doxapram Hcl",
+      "name_lower": "doxapram hcl",
+      "page": 109,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Doxycycline",
+      "name_lower": "doxycycline",
+      "page": 110,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Dronabinol",
+      "name_lower": "dronabinol",
+      "page": 111,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Droperidol",
+      "name_lower": "droperidol",
+      "page": 111,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Edetate (Edta) Calcium Disodium",
+      "name_lower": "edetate (edta) calcium disodium",
+      "page": 112,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Edrophonium Chloride",
+      "name_lower": "edrophonium chloride",
+      "page": 112,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Edta",
+      "name_lower": "edta",
+      "page": 32,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Emla",
+      "name_lower": "emla",
+      "page": 113,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Enalapril Maleate (Po), Enalaprilat (Iv)",
+      "name_lower": "enalapril maleate (po), enalaprilat (iv)",
+      "page": 113,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Enoxaparin",
+      "name_lower": "enoxaparin",
+      "page": 114,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Epinephrine Hcl",
+      "name_lower": "epinephrine hcl",
+      "page": 116,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Epinephrine, Racemic",
+      "name_lower": "epinephrine, racemic",
+      "page": 117,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Epoetin Alfa",
+      "name_lower": "epoetin alfa",
+      "page": 117,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Ergocalciferol",
+      "name_lower": "ergocalciferol",
+      "page": 119,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Ergotamine Plus Caffeine",
+      "name_lower": "ergotamine plus caffeine",
+      "page": 120,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Ertapenem",
+      "name_lower": "ertapenem",
+      "page": 120,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Erythromycin Preparations",
+      "name_lower": "erythromycin preparations",
+      "page": 121,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Erythropoietin",
+      "name_lower": "erythropoietin",
+      "page": 122,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Escitalopram",
+      "name_lower": "escitalopram",
+      "page": 122,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Esmolol Hcl",
+      "name_lower": "esmolol hcl",
+      "page": 123,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Esomeprazole",
+      "name_lower": "esomeprazole",
+      "page": 124,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Etanercept",
+      "name_lower": "etanercept",
+      "page": 125,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Ethambutol Hcl",
+      "name_lower": "ethambutol hcl",
+      "page": 126,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Ethosuximide",
+      "name_lower": "ethosuximide",
+      "page": 126,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Famciclovir",
+      "name_lower": "famciclovir",
+      "page": 127,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Famotidine",
+      "name_lower": "famotidine",
+      "page": 128,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Felbamate",
+      "name_lower": "felbamate",
+      "page": 129,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Fentanyl",
+      "name_lower": "fentanyl",
+      "page": 129,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Ferric Gluconate",
+      "name_lower": "ferric gluconate",
+      "page": 131,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Ferrous Sulfate",
+      "name_lower": "ferrous sulfate",
+      "page": 131,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Filgrastim",
+      "name_lower": "filgrastim",
+      "page": 132,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Flecainide Acetate",
+      "name_lower": "flecainide acetate",
+      "page": 132,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Fluconazole",
+      "name_lower": "fluconazole",
+      "page": 133,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Flucytosine",
+      "name_lower": "flucytosine",
+      "page": 134,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Fludrocortisone Acetate",
+      "name_lower": "fludrocortisone acetate",
+      "page": 134,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Flumazenil",
+      "name_lower": "flumazenil",
+      "page": 135,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Flunisolide",
+      "name_lower": "flunisolide",
+      "page": 136,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Fluoride",
+      "name_lower": "fluoride",
+      "page": 136,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Fluoxetine Hydrochloride",
+      "name_lower": "fluoxetine hydrochloride",
+      "page": 137,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Fluticasone Furoate",
+      "name_lower": "fluticasone furoate",
+      "page": 139,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Fluticasone Preparations",
+      "name_lower": "fluticasone preparations",
+      "page": 138,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Fluticasone Propionate",
+      "name_lower": "fluticasone propionate",
+      "page": 138,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Fluticasone Propionate And Salmeterol",
+      "name_lower": "fluticasone propionate and salmeterol",
+      "page": 140,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Fluvoxamine",
+      "name_lower": "fluvoxamine",
+      "page": 141,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Folic Acid",
+      "name_lower": "folic acid",
+      "page": 142,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Fomepizole",
+      "name_lower": "fomepizole",
+      "page": 143,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Formoterol",
+      "name_lower": "formoterol",
+      "page": 143,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Foscarnet",
+      "name_lower": "foscarnet",
+      "page": 144,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Fosphenytoin",
+      "name_lower": "fosphenytoin",
+      "page": 145,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Furosemide",
+      "name_lower": "furosemide",
+      "page": 146,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Gabapentin",
+      "name_lower": "gabapentin",
+      "page": 147,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Ganciclovir",
+      "name_lower": "ganciclovir",
+      "page": 148,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Gatifloxacin",
+      "name_lower": "gatifloxacin",
+      "page": 149,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Gcsf",
+      "name_lower": "gcsf",
+      "page": 149,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Gentamicin",
+      "name_lower": "gentamicin",
+      "page": 149,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Glucagon Hcl",
+      "name_lower": "glucagon hcl",
+      "page": 150,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Glycerin",
+      "name_lower": "glycerin",
+      "page": 151,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Glycopyrrolate",
+      "name_lower": "glycopyrrolate",
+      "page": 151,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Granisetron",
+      "name_lower": "granisetron",
+      "page": 152,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Griseofulvin",
+      "name_lower": "griseofulvin",
+      "page": 153,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Guanfacine",
+      "name_lower": "guanfacine",
+      "page": 153,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Haloperidol",
+      "name_lower": "haloperidol",
+      "page": 154,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Heparin Sodium",
+      "name_lower": "heparin sodium",
+      "page": 155,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Hyaluronidase",
+      "name_lower": "hyaluronidase",
+      "page": 156,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Hydralazine Hydrochloride",
+      "name_lower": "hydralazine hydrochloride",
+      "page": 157,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Hydrochlorothiazide",
+      "name_lower": "hydrochlorothiazide",
+      "page": 157,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Hydrocortisone",
+      "name_lower": "hydrocortisone",
+      "page": 158,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Hydrocortisone Otic",
+      "name_lower": "hydrocortisone otic",
+      "page": 269,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Hydromorphone Hcl",
+      "name_lower": "hydromorphone hcl",
+      "page": 159,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Hydroxide",
+      "name_lower": "hydroxide",
+      "page": 11,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Hydroxychloroquine",
+      "name_lower": "hydroxychloroquine",
+      "page": 159,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Hydroxyzine",
+      "name_lower": "hydroxyzine",
+      "page": 160,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Ibuprofen",
+      "name_lower": "ibuprofen",
+      "page": 161,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Imipenem And Cilastatin",
+      "name_lower": "imipenem and cilastatin",
+      "page": 162,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Imipramine",
+      "name_lower": "imipramine",
+      "page": 163,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Immune Globulin",
+      "name_lower": "immune globulin",
+      "page": 164,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Indomethacin",
+      "name_lower": "indomethacin",
+      "page": 166,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Initial Dose",
+      "name_lower": "initial dose",
+      "page": 142,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Inr",
+      "name_lower": "inr",
+      "page": 347,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Insulin Preparations",
+      "name_lower": "insulin preparations",
+      "page": 166,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Iodide",
+      "name_lower": "iodide",
+      "page": 167,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Iohexol",
+      "name_lower": "iohexol",
+      "page": 167,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Iron Dextran",
+      "name_lower": "iron dextran",
+      "page": 169,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Iron Sucrose",
+      "name_lower": "iron sucrose",
+      "page": 169,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Isoniazid",
+      "name_lower": "isoniazid",
+      "page": 172,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Isoproterenol",
+      "name_lower": "isoproterenol",
+      "page": 173,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Isotretinoin",
+      "name_lower": "isotretinoin",
+      "page": 173,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Itraconazole",
+      "name_lower": "itraconazole",
+      "page": 174,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Iv/Im",
+      "name_lower": "iv/im",
+      "page": 102,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Ketamine",
+      "name_lower": "ketamine",
+      "page": 175,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Ketoconazole",
+      "name_lower": "ketoconazole",
+      "page": 175,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Ketorolac",
+      "name_lower": "ketorolac",
+      "page": 176,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Labetalol",
+      "name_lower": "labetalol",
+      "page": 177,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Lacosamide",
+      "name_lower": "lacosamide",
+      "page": 178,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Lactulose",
+      "name_lower": "lactulose",
+      "page": 179,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Lamivudine",
+      "name_lower": "lamivudine",
+      "page": 179,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Lamotrigine",
+      "name_lower": "lamotrigine",
+      "page": 180,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Lansoprazole",
+      "name_lower": "lansoprazole",
+      "page": 183,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Levalbuterol",
+      "name_lower": "levalbuterol",
+      "page": 184,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Levetiracetam",
+      "name_lower": "levetiracetam",
+      "page": 184,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Levocarnitine",
+      "name_lower": "levocarnitine",
+      "page": 185,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Levofloxacin",
+      "name_lower": "levofloxacin",
+      "page": 186,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Lidocaine",
+      "name_lower": "lidocaine",
+      "page": 188,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Lidocaine And Prilocaine",
+      "name_lower": "lidocaine and prilocaine",
+      "page": 189,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Lindane",
+      "name_lower": "lindane",
+      "page": 190,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Linezolid",
+      "name_lower": "linezolid",
+      "page": 190,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Lisdexamfetamine",
+      "name_lower": "lisdexamfetamine",
+      "page": 191,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Lisinopril",
+      "name_lower": "lisinopril",
+      "page": 192,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Lithium",
+      "name_lower": "lithium",
+      "page": 192,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Lodoxamide",
+      "name_lower": "lodoxamide",
+      "page": 193,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Loperamide",
+      "name_lower": "loperamide",
+      "page": 194,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Lorazepam",
+      "name_lower": "lorazepam",
+      "page": 195,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Losartan",
+      "name_lower": "losartan",
+      "page": 196,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Low Molecular Weight Heparin",
+      "name_lower": "low molecular weight heparin",
+      "page": 196,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Lucinactant",
+      "name_lower": "lucinactant",
+      "page": 196,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Magnesium Citrate",
+      "name_lower": "magnesium citrate",
+      "page": 197,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Magnesium Hydroxide",
+      "name_lower": "magnesium hydroxide",
+      "page": 197,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Magnesium Oxide",
+      "name_lower": "magnesium oxide",
+      "page": 198,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Magnesium Sulfate",
+      "name_lower": "magnesium sulfate",
+      "page": 198,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Maintenance",
+      "name_lower": "maintenance",
+      "page": 142,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Mannitol",
+      "name_lower": "mannitol",
+      "page": 199,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Mebendazole",
+      "name_lower": "mebendazole",
+      "page": 199,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Medroxyprogesterone",
+      "name_lower": "medroxyprogesterone",
+      "page": 200,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Mefloquine Hcl",
+      "name_lower": "mefloquine hcl",
+      "page": 200,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Meropenem",
+      "name_lower": "meropenem",
+      "page": 201,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Mesalamine",
+      "name_lower": "mesalamine",
+      "page": 202,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Metformin",
+      "name_lower": "metformin",
+      "page": 204,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Methadone Hcl",
+      "name_lower": "methadone hcl",
+      "page": 205,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Methimazole",
+      "name_lower": "methimazole",
+      "page": 205,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Methyldopa",
+      "name_lower": "methyldopa",
+      "page": 206,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Methylene Blue",
+      "name_lower": "methylene blue",
+      "page": 206,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Methylphenidate Hcl",
+      "name_lower": "methylphenidate hcl",
+      "page": 207,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Methylprednisolone",
+      "name_lower": "methylprednisolone",
+      "page": 209,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Metoclopramide",
+      "name_lower": "metoclopramide",
+      "page": 209,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Metolazone",
+      "name_lower": "metolazone",
+      "page": 210,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Metoprolol",
+      "name_lower": "metoprolol",
+      "page": 210,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Metronidazole",
+      "name_lower": "metronidazole",
+      "page": 211,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Micafungin Sodium",
+      "name_lower": "micafungin sodium",
+      "page": 213,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Miconazole",
+      "name_lower": "miconazole",
+      "page": 214,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Midazolam",
+      "name_lower": "midazolam",
+      "page": 215,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Milrinone",
+      "name_lower": "milrinone",
+      "page": 216,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Mineral Oil",
+      "name_lower": "mineral oil",
+      "page": 216,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Minocycline",
+      "name_lower": "minocycline",
+      "page": 217,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Minoxidil",
+      "name_lower": "minoxidil",
+      "page": 218,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Montelukast",
+      "name_lower": "montelukast",
+      "page": 220,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Morphine Sulfate",
+      "name_lower": "morphine sulfate",
+      "page": 220,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Mupirocin",
+      "name_lower": "mupirocin",
+      "page": 222,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Mycophenolate",
+      "name_lower": "mycophenolate",
+      "page": 222,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "N/A",
+      "name_lower": "n/a",
+      "page": 82,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Nafcillin",
+      "name_lower": "nafcillin",
+      "page": 223,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Naloxone",
+      "name_lower": "naloxone",
+      "page": 224,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Naproxen/Naproxen Sodium",
+      "name_lower": "naproxen/naproxen sodium",
+      "page": 225,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Neo-Polycin Hc",
+      "name_lower": "neo-polycin hc",
+      "page": 226,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Neo-Polymycin Ophthalmic Ointment",
+      "name_lower": "neo-polymycin ophthalmic ointment",
+      "page": 226,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Neomycin Sulfate",
+      "name_lower": "neomycin sulfate",
+      "page": 226,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Neomycin/Polymyxin B Ophthalmic Products",
+      "name_lower": "neomycin/polymyxin b ophthalmic products",
+      "page": 227,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Neosporin Ophthalmic Solution",
+      "name_lower": "neosporin ophthalmic solution",
+      "page": 228,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Neostigmine",
+      "name_lower": "neostigmine",
+      "page": 228,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Nevirapine",
+      "name_lower": "nevirapine",
+      "page": 229,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Nicardipine",
+      "name_lower": "nicardipine",
+      "page": 230,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Nifedipine",
+      "name_lower": "nifedipine",
+      "page": 231,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Nitrofurantoin",
+      "name_lower": "nitrofurantoin",
+      "page": 232,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Nitroglycerin",
+      "name_lower": "nitroglycerin",
+      "page": 233,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Nitroprusside",
+      "name_lower": "nitroprusside",
+      "page": 234,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Norepinephrine Bitartrate",
+      "name_lower": "norepinephrine bitartrate",
+      "page": 234,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Nortriptyline Hydrochloride",
+      "name_lower": "nortriptyline hydrochloride",
+      "page": 234,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Nystatin",
+      "name_lower": "nystatin",
+      "page": 235,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Octreotide Acetate",
+      "name_lower": "octreotide acetate",
+      "page": 235,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Ofloxacin",
+      "name_lower": "ofloxacin",
+      "page": 236,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Olanzapine",
+      "name_lower": "olanzapine",
+      "page": 237,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Olopatadine",
+      "name_lower": "olopatadine",
+      "page": 238,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Omeprazole",
+      "name_lower": "omeprazole",
+      "page": 239,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Omnipaque",
+      "name_lower": "omnipaque",
+      "page": 240,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Ondansetron",
+      "name_lower": "ondansetron",
+      "page": 240,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Oseltamivir Phosphate",
+      "name_lower": "oseltamivir phosphate",
+      "page": 241,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Oxacillin",
+      "name_lower": "oxacillin",
+      "page": 243,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Oxcarbazepine",
+      "name_lower": "oxcarbazepine",
+      "page": 243,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Oxybutynin Chloride",
+      "name_lower": "oxybutynin chloride",
+      "page": 245,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Oxycodone",
+      "name_lower": "oxycodone",
+      "page": 246,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Oxycodone And Acetaminophen",
+      "name_lower": "oxycodone and acetaminophen",
+      "page": 246,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Oxycodone And Aspirin",
+      "name_lower": "oxycodone and aspirin",
+      "page": 247,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Oxymetazoline",
+      "name_lower": "oxymetazoline",
+      "page": 247,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Palivizumab",
+      "name_lower": "palivizumab",
+      "page": 247,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Pancrelipase/Pancreatic Enzymes",
+      "name_lower": "pancrelipase/pancreatic enzymes",
+      "page": 248,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Pancuronium Bromide",
+      "name_lower": "pancuronium bromide",
+      "page": 250,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Pantoprazole",
+      "name_lower": "pantoprazole",
+      "page": 250,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Paromomycin Sulfate",
+      "name_lower": "paromomycin sulfate",
+      "page": 252,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Paroxetine",
+      "name_lower": "paroxetine",
+      "page": 252,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Penicillin G Procaine",
+      "name_lower": "penicillin g procaine",
+      "page": 255,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Penicillin V Potassium",
+      "name_lower": "penicillin v potassium",
+      "page": 256,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Pentamidine Isethionate",
+      "name_lower": "pentamidine isethionate",
+      "page": 257,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Pentobarbital",
+      "name_lower": "pentobarbital",
+      "page": 257,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Permethrin",
+      "name_lower": "permethrin",
+      "page": 258,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Phenazopyridine Hcl",
+      "name_lower": "phenazopyridine hcl",
+      "page": 259,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Phenobarbital",
+      "name_lower": "phenobarbital",
+      "page": 259,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Phentolamine Mesylate",
+      "name_lower": "phentolamine mesylate",
+      "page": 260,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Phenylephrine Hcl",
+      "name_lower": "phenylephrine hcl",
+      "page": 261,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Phenytoin",
+      "name_lower": "phenytoin",
+      "page": 262,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Phosphorus Supplements",
+      "name_lower": "phosphorus supplements",
+      "page": 263,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Physostigmine Salicylate",
+      "name_lower": "physostigmine salicylate",
+      "page": 264,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Pilocarpine Hcl",
+      "name_lower": "pilocarpine hcl",
+      "page": 265,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Pimecrolimus",
+      "name_lower": "pimecrolimus",
+      "page": 266,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Piperacillin With Tazobactam",
+      "name_lower": "piperacillin with tazobactam",
+      "page": 266,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Po Bid.",
+      "name_lower": "po bid.",
+      "page": 328,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Polycitra",
+      "name_lower": "polycitra",
+      "page": 267,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Polymyxin B Sulfate And Bacitracin",
+      "name_lower": "polymyxin b sulfate and bacitracin",
+      "page": 268,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Polymyxin B Sulfate And Trimethoprim Sulfate",
+      "name_lower": "polymyxin b sulfate and trimethoprim sulfate",
+      "page": 268,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Polymyxin B Sulfate, Neomycin Sulfate,",
+      "name_lower": "polymyxin b sulfate, neomycin sulfate,",
+      "page": 269,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Polysporin",
+      "name_lower": "polysporin",
+      "page": 269,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Polytrim Ophthalmic Solution",
+      "name_lower": "polytrim ophthalmic solution",
+      "page": 269,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Poractant Alfa",
+      "name_lower": "poractant alfa",
+      "page": 269,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Potassium Iodide",
+      "name_lower": "potassium iodide",
+      "page": 269,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Potassium Supplements",
+      "name_lower": "potassium supplements",
+      "page": 270,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Pralidoxime Chloride",
+      "name_lower": "pralidoxime chloride",
+      "page": 271,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Prednisolone",
+      "name_lower": "prednisolone",
+      "page": 272,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Prednisone",
+      "name_lower": "prednisone",
+      "page": 273,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Primaquine Phosphate",
+      "name_lower": "primaquine phosphate",
+      "page": 273,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Primidone",
+      "name_lower": "primidone",
+      "page": 274,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Prn",
+      "name_lower": "prn",
+      "page": 208,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Prn.",
+      "name_lower": "prn.",
+      "page": 320,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Probenecid",
+      "name_lower": "probenecid",
+      "page": 275,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Procainamide",
+      "name_lower": "procainamide",
+      "page": 275,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Prochlorperazine",
+      "name_lower": "prochlorperazine",
+      "page": 276,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Promethazine",
+      "name_lower": "promethazine",
+      "page": 277,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Propranolol",
+      "name_lower": "propranolol",
+      "page": 277,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Propylthiouracil",
+      "name_lower": "propylthiouracil",
+      "page": 279,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Protamine Sulfate",
+      "name_lower": "protamine sulfate",
+      "page": 279,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Pseudoephedrine",
+      "name_lower": "pseudoephedrine",
+      "page": 280,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Psyllium",
+      "name_lower": "psyllium",
+      "page": 281,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Pyrantel Pamoate",
+      "name_lower": "pyrantel pamoate",
+      "page": 281,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Pyrazinamide",
+      "name_lower": "pyrazinamide",
+      "page": 282,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Pyrethrins With Piperonyl Butoxide",
+      "name_lower": "pyrethrins with piperonyl butoxide",
+      "page": 282,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Pyridostigmine Bromide",
+      "name_lower": "pyridostigmine bromide",
+      "page": 282,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Pyridoxine",
+      "name_lower": "pyridoxine",
+      "page": 283,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Pyrimethamine",
+      "name_lower": "pyrimethamine",
+      "page": 284,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Qhs Po",
+      "name_lower": "qhs po",
+      "page": 163,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Quetiapine",
+      "name_lower": "quetiapine",
+      "page": 284,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Quinidine",
+      "name_lower": "quinidine",
+      "page": 287,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Quinupristin And Dalfopristin",
+      "name_lower": "quinupristin and dalfopristin",
+      "page": 288,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Ranitidine Hcl",
+      "name_lower": "ranitidine hcl",
+      "page": 289,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Rasburicase",
+      "name_lower": "rasburicase",
+      "page": 289,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Ribavirin",
+      "name_lower": "ribavirin",
+      "page": 291,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Riboflavin",
+      "name_lower": "riboflavin",
+      "page": 293,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Rifabutin",
+      "name_lower": "rifabutin",
+      "page": 293,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Rifampin",
+      "name_lower": "rifampin",
+      "page": 294,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Rimantadine",
+      "name_lower": "rimantadine",
+      "page": 295,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Risperidone",
+      "name_lower": "risperidone",
+      "page": 296,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Rizatriptan Benzoate",
+      "name_lower": "rizatriptan benzoate",
+      "page": 297,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Rocuronium",
+      "name_lower": "rocuronium",
+      "page": 298,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Rufinamide",
+      "name_lower": "rufinamide",
+      "page": 299,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Salmeterol",
+      "name_lower": "salmeterol",
+      "page": 299,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Sc/Iv",
+      "name_lower": "sc/iv",
+      "page": 92,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Scopolamine Hydrobromide",
+      "name_lower": "scopolamine hydrobromide",
+      "page": 300,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Selenium Sulfide",
+      "name_lower": "selenium sulfide",
+      "page": 301,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Senna/Sennosides",
+      "name_lower": "senna/sennosides",
+      "page": 301,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Sertraline Hcl",
+      "name_lower": "sertraline hcl",
+      "page": 302,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Sildenafil",
+      "name_lower": "sildenafil",
+      "page": 303,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Silver Sulfadiazine",
+      "name_lower": "silver sulfadiazine",
+      "page": 304,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Simethicone",
+      "name_lower": "simethicone",
+      "page": 304,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Sirolimus",
+      "name_lower": "sirolimus",
+      "page": 305,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Sodium Bicarbonate",
+      "name_lower": "sodium bicarbonate",
+      "page": 306,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Sodium Phenylacetate And Sodium Benzoate",
+      "name_lower": "sodium phenylacetate and sodium benzoate",
+      "page": 307,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Sodium Phosphate",
+      "name_lower": "sodium phosphate",
+      "page": 308,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Sodium Polystyrene Sulfonate",
+      "name_lower": "sodium polystyrene sulfonate",
+      "page": 308,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Spironolactone",
+      "name_lower": "spironolactone",
+      "page": 309,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Streptomycin Sulfate",
+      "name_lower": "streptomycin sulfate",
+      "page": 310,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Succimer",
+      "name_lower": "succimer",
+      "page": 310,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Succinylcholine",
+      "name_lower": "succinylcholine",
+      "page": 311,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Sucralfate",
+      "name_lower": "sucralfate",
+      "page": 312,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Sulfacetamide Sodium Ophthalmic",
+      "name_lower": "sulfacetamide sodium ophthalmic",
+      "page": 312,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Sulfadiazine",
+      "name_lower": "sulfadiazine",
+      "page": 313,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Sulfamethoxazole And Trimethoprim",
+      "name_lower": "sulfamethoxazole and trimethoprim",
+      "page": 313,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Sulfasalazine",
+      "name_lower": "sulfasalazine",
+      "page": 314,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Sumatriptan Succinate",
+      "name_lower": "sumatriptan succinate",
+      "page": 315,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Surfactant, Pulmonary/Beractant",
+      "name_lower": "surfactant, pulmonary/beractant",
+      "page": 316,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Surfactant, Pulmonary/Calfactant",
+      "name_lower": "surfactant, pulmonary/calfactant",
+      "page": 316,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Surfactant, Pulmonary/Poractant Alfa",
+      "name_lower": "surfactant, pulmonary/poractant alfa",
+      "page": 317,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Tacrolimus",
+      "name_lower": "tacrolimus",
+      "page": 318,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Tazarotene",
+      "name_lower": "tazarotene",
+      "page": 319,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Tdd",
+      "name_lower": "tdd",
+      "page": 102,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Terbutaline",
+      "name_lower": "terbutaline",
+      "page": 320,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Tetracycline Hcl",
+      "name_lower": "tetracycline hcl",
+      "page": 321,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Theophylline",
+      "name_lower": "theophylline",
+      "page": 321,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Theophylline Sustained-Release Products",
+      "name_lower": "theophylline sustained-release products",
+      "page": 322,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Thiamine",
+      "name_lower": "thiamine",
+      "page": 322,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Thioridazine",
+      "name_lower": "thioridazine",
+      "page": 323,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Tiagabine",
+      "name_lower": "tiagabine",
+      "page": 323,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Tiotropium",
+      "name_lower": "tiotropium",
+      "page": 324,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Tobramycin",
+      "name_lower": "tobramycin",
+      "page": 325,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Tolnaftate",
+      "name_lower": "tolnaftate",
+      "page": 327,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Topiramate",
+      "name_lower": "topiramate",
+      "page": 327,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Trazodone",
+      "name_lower": "trazodone",
+      "page": 328,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Triamcinolone",
+      "name_lower": "triamcinolone",
+      "page": 330,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Triamterene",
+      "name_lower": "triamterene",
+      "page": 331,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Trifluridine",
+      "name_lower": "trifluridine",
+      "page": 331,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Trilisate",
+      "name_lower": "trilisate",
+      "page": 332,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Trimethobenzamide Hcl",
+      "name_lower": "trimethobenzamide hcl",
+      "page": 332,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Trimethoprim And Sulfamethoxazole",
+      "name_lower": "trimethoprim and sulfamethoxazole",
+      "page": 332,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Ursodiol",
+      "name_lower": "ursodiol",
+      "page": 332,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Valacyclovir",
+      "name_lower": "valacyclovir",
+      "page": 333,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Valganciclovir",
+      "name_lower": "valganciclovir",
+      "page": 334,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Valproic Acid",
+      "name_lower": "valproic acid",
+      "page": 335,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Valsartan",
+      "name_lower": "valsartan",
+      "page": 337,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Vancomycin",
+      "name_lower": "vancomycin",
+      "page": 337,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Varicella-Zoster Immune Globulin (Human)",
+      "name_lower": "varicella-zoster immune globulin (human)",
+      "page": 339,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Vasopressin",
+      "name_lower": "vasopressin",
+      "page": 340,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Vecuronium Bromide",
+      "name_lower": "vecuronium bromide",
+      "page": 340,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Verapamil",
+      "name_lower": "verapamil",
+      "page": 341,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Vigabatrin",
+      "name_lower": "vigabatrin",
+      "page": 342,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Viokace",
+      "name_lower": "viokace",
+      "page": 249,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Vitamin A",
+      "name_lower": "vitamin a",
+      "page": 343,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Vitamin C",
+      "name_lower": "vitamin c",
+      "page": 344,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Vitamin K",
+      "name_lower": "vitamin k",
+      "page": 344,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Voriconazole",
+      "name_lower": "voriconazole",
+      "page": 345,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Warfarin",
+      "name_lower": "warfarin",
+      "page": 346,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Zidovudine",
+      "name_lower": "zidovudine",
+      "page": 348,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Zinc Salts, Systemic",
+      "name_lower": "zinc salts, systemic",
+      "page": 350,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Zolmitriptan",
+      "name_lower": "zolmitriptan",
+      "page": 350,
+      "source": "Harriet Lane 2023"
+    },
+    {
+      "name": "Zonisamide",
+      "name_lower": "zonisamide",
+      "page": 351,
+      "source": "Harriet Lane 2023"
+    }
+  ]
+}
