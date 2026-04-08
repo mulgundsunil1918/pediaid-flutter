@@ -18,6 +18,7 @@ import '../calculators/bp_hub_screen.dart';
 import '../calculators/jaundice_hub_screen.dart';
 import '../settings/settings_screen.dart';
 import '../lab_reference/lab_reference_screen.dart';
+import '../about_screen.dart';
 import '../guides/guides_screen.dart';
 import '../cme/cme_screen.dart';
 import '../shared/suggest_feature_sheet.dart';
@@ -696,7 +697,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 _DrawerItem(icon: Icons.event_note_rounded,   label: 'CME & Webinars',      onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const CmeScreen())); }),
                 _DrawerItem(icon: Icons.auto_stories_rounded, label: 'Academics',           onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const AcademicsScreen())); }),
                 _DrawerItem(icon: Icons.science_rounded,      label: 'Research',            onTap: () { Navigator.pop(context); _showComingSoon(context, 'Research'); }),
-                _DrawerItem(icon: Icons.info_outline_rounded, label: 'About',          onTap: () { Navigator.pop(context); _showAbout(context); }),
+                _DrawerItem(icon: Icons.info_outline_rounded, label: 'About',          onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const AboutScreen())); }),
                 Divider(indent: 16, endIndent: 16, color: cs.outline),
                 _DrawerItem(icon: Icons.settings_rounded,     label: 'Settings',       onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const SettingsScreen())); }),
               ],
@@ -760,30 +761,6 @@ class _HomeScreenState extends State<HomeScreen> {
     ));
   }
 
-  void _showAbout(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Text('About PediAid',
-            style: GoogleFonts.plusJakartaSans(color: cs.primary, fontWeight: FontWeight.w700)),
-        content: Text(
-          'PediAid is a paediatric & neonatal clinical reference tool.\n\n'
-          'Version: 1.0.0\nStandards: WHO 2006 Growth Standards\n\n'
-          'For educational and clinical decision support only.',
-          style: GoogleFonts.plusJakartaSans(height: 1.6, fontSize: 14),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('Close',
-                style: TextStyle(color: cs.primary, fontWeight: FontWeight.w600)),
-          ),
-        ],
-      ),
-    );
-  }
 }
 
 // ── Data classes ──────────────────────────────────────────────────────────────
