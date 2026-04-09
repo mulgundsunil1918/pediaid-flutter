@@ -46,6 +46,15 @@ class _SignupScreenState extends State<SignupScreen> {
         password: _passwordCtl.text,
         fullName: _nameCtl.text,
       );
+
+      // AuthService notifies _AuthGate, which rebuilds its child to
+      // HomeScreen — but SignupScreen was pushed ON TOP of the navigator
+      // stack, so the user would still see this screen until they tapped
+      // back. Pop everything above the root so the rebuilt _AuthGate child
+      // (HomeScreen) becomes visible immediately.
+      if (mounted) {
+        Navigator.of(context).popUntil((route) => route.isFirst);
+      }
     } on AuthException catch (e) {
       if (mounted) setState(() => _error = e.message);
     } catch (_) {

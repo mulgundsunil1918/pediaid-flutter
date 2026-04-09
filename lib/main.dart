@@ -7,6 +7,7 @@ import 'screens/home/home_screen.dart';
 import 'screens/auth/login_screen.dart';
 import 'services/lab_reference_service.dart';
 import 'services/auth_service.dart';
+import 'services/profile_store.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,6 +34,18 @@ void main() async {
     await AuthService.instance.loadFromStorage();
   } catch (e, st) {
     debugPrint('[boot] AuthService loadFromStorage failed: $e\n$st');
+  }
+
+  // Doctor profile (name, age, gender, emoji, qualifications, specialty)
+  // lives in SharedPreferences. Hydrate once at boot so the AccountScreen
+  // opens instantly. Uses the current auth user's name as the initial
+  // full-name fallback for brand-new profiles.
+  try {
+    await ProfileStore.instance.load(
+      fallbackFullName: AuthService.instance.currentUser?.fullName,
+    );
+  } catch (e) {
+    debugPrint('[boot] ProfileStore load failed: $e');
   }
 
   try {

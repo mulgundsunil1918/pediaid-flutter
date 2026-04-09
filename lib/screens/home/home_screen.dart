@@ -4,10 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../theme/theme_provider.dart';
 import '../../theme/app_theme.dart';
-import '../../services/auth_service.dart';
 import '../../widgets/notification_bell.dart';
 import '../calculators/calculators_screen.dart';
-import '../charts/charts_screen.dart';
 import '../calculators/gir_calculator.dart';
 import '../calculators/blood_gas_analyser.dart';
 import '../calculators/tpn_calculator.dart';
@@ -21,10 +19,10 @@ import '../calculators/jaundice_hub_screen.dart';
 import '../settings/settings_screen.dart';
 import '../lab_reference/lab_reference_screen.dart';
 import '../about_screen.dart';
+import '../account_screen.dart';
 import '../guides/guides_screen.dart';
 import '../cme/cme_screen.dart';
 import '../shared/suggest_feature_sheet.dart';
-import '../../academics/academics_screen.dart';
 import '../../academics/academics_web_screen.dart';
 import 'app_search_delegate.dart';
 
@@ -687,19 +685,14 @@ class _HomeScreenState extends State<HomeScreen> {
             child: ListView(
               padding: const EdgeInsets.symmetric(vertical: 8),
               children: [
-                _DrawerItem(icon: Icons.home_rounded,         label: 'Home',           onTap: () => Navigator.pop(context)),
-                _DrawerItem(icon: Icons.calculate_rounded,    label: 'Calculators & Tools', onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const CalculatorsScreen())); }),
-                _DrawerItem(icon: Icons.bar_chart_rounded,    label: 'Charts',         onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const ChartsScreen())); }),
-                _DrawerItem(icon: Icons.medication_rounded,   label: 'Drug Formulary', onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const FormularyScreen())); }),
-                _DrawerItem(icon: Icons.biotech_rounded,       label: 'Lab Reference',       onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const LabReferenceScreen())); }),
-                _DrawerItem(icon: Icons.menu_book_outlined,   label: 'Guides',              onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const GuidesScreen())); }),
-                _DrawerItem(icon: Icons.event_note_rounded,   label: 'CME & Webinars',      onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const CmeScreen())); }),
-                _DrawerItem(icon: Icons.auto_stories_rounded, label: 'Academics',           onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const AcademicsScreen())); }),
-                _DrawerItem(icon: Icons.science_rounded,      label: 'Research',            onTap: () { Navigator.pop(context); _showComingSoon(context, 'Research'); }),
-                _DrawerItem(icon: Icons.info_outline_rounded, label: 'About',          onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const AboutScreen())); }),
-                Divider(indent: 16, endIndent: 16, color: cs.outline),
-                _DrawerItem(icon: Icons.settings_rounded,     label: 'Settings',       onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const SettingsScreen())); }),
-                _DrawerItem(icon: Icons.logout_rounded,       label: 'Sign out',       onTap: () => _handleLogout(context)),
+                // Minimal drawer: the main features (calculators, charts,
+                // formulary, lab reference, guides, CME, academics) are the
+                // primary tiles on the home screen itself, so they've been
+                // removed from the drawer to keep it a quiet utility menu.
+                _DrawerItem(icon: Icons.home_rounded,         label: 'Home',     onTap: () => Navigator.pop(context)),
+                _DrawerItem(icon: Icons.settings_rounded,     label: 'Settings', onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const SettingsScreen())); }),
+                _DrawerItem(icon: Icons.info_outline_rounded, label: 'About me', onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const AboutScreen())); }),
+                _DrawerItem(icon: Icons.account_circle_outlined, label: 'Account',  onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const AccountScreen())); }),
               ],
             ),
           ),
@@ -717,48 +710,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // ── Helpers ───────────────────────────────────────────────────────────────
 
-  Future<void> _handleLogout(BuildContext context) async {
-    Navigator.pop(context); // close drawer
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Text('Sign out?',
-            style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700)),
-        content: Text(
-          "You'll need to sign in again to access calculators, charts, and academics.",
-          style: GoogleFonts.plusJakartaSans(fontSize: 14, height: 1.5),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(false),
-            child: Text('Cancel',
-                style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600)),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.of(ctx).pop(true),
-            child: Text('Sign out',
-                style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700)),
-          ),
-        ],
-      ),
-    );
-    if (confirmed == true) {
-      await AuthService.instance.logout();
-      // _AuthGate in main.dart listens to AuthService and rebuilds to the
-      // LoginScreen automatically — no manual navigation here.
-    }
-  }
+  // _handleLogout was removed from the drawer — Sign out now lives inside
+  // the AccountScreen which can be opened from the drawer's 'Account' entry.
 
-  void _showComingSoon(BuildContext context, String feature) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text('$feature — Coming Soon',
-          style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600)),
-      backgroundColor: Theme.of(context).colorScheme.primary,
-      behavior: SnackBarBehavior.floating,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-    ));
-  }
+  // _showComingSoon was removed along with the 'Research' drawer entry.
 
 }
 

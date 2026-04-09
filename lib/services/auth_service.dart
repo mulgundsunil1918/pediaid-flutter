@@ -188,11 +188,27 @@ class AuthService extends ChangeNotifier {
   // Logout
   // -------------------------------------------------------------------------
 
+  /// Sign out.
+  ///
+  /// Clears the in-memory session state FIRST and notifies listeners inside
+  /// a finally block so _AuthGate always rebuilds to LoginScreen — even if
+  /// flutter_secure_storage throws while wiping the persisted blob. A
+  /// previous version awaited the storage deletes before notifying, which
+  /// meant a flaky secure-storage backend could leave the user visibly
+  /// signed in until they restarted the app.
   Future<void> logout() async {
     _accessToken = null;
     _user = null;
-    await _storage.delete(key: _kAccessToken);
-    await _storage.delete(key: _kUserBlob);
+    try {
+      await _storage.delete(key: _kAccessToken);
+    } catch (e) {
+      debugPrint('[AuthService] logout: failed to delete access token: $e');
+    }
+    try {
+      await _storage.delete(key: _kUserBlob);
+    } catch (e) {
+      debugPrint('[AuthService] logout: failed to delete user blob: $e');
+    }
     notifyListeners();
   }
 
