@@ -1,219 +1,77 @@
-import 'dart:io';
-import 'package:flutter/foundation.dart' show kIsWeb;
+// =============================================================================
+// lib/screens/guides/pals/pals_pdf_viewer.dart
+//
+// PALS (Pediatric Advanced Life Support) PDF viewer. Rewritten to use
+// syncfusion_flutter_pdfviewer so the same widget works on web, mobile,
+// and desktop. The previous implementation used flutter_pdfview which
+// requires dart:io and is mobile-only — the web build just showed a
+// "Not supported on web" card.
+// =============================================================================
+
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_pdfview/flutter_pdfview.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class PalsPdfViewer extends StatefulWidget {
-  /// Algorithm name — shown in the AppBar title.
-  final String title;
-
-  /// 0-based page index to jump to on open.
-  final int initialPage;
-
   const PalsPdfViewer({
     super.key,
-    required this.title,
-    required this.initialPage,
+    this.title = 'PALS Algorithms',
+    this.initialPage = 0,
   });
+
+  final String title;
+  final int initialPage;
 
   @override
   State<PalsPdfViewer> createState() => _PalsPdfViewerState();
 }
 
 class _PalsPdfViewerState extends State<PalsPdfViewer> {
-  String? _localPath;
-  bool _isLoading = true;
-  bool _hasError  = false;
-  int  _currentPage = 0;
-  int  _totalPages  = 0;
-
+  final GlobalKey<SfPdfViewerState> _pdfViewerKey = GlobalKey();
+  late final PdfViewerController _controller;
 
   @override
   void initState() {
     super.initState();
-    if (!kIsWeb) _loadPdf();
-  }
-
-  Future<void> _loadPdf() async {
-    try {
-      final data  = await rootBundle.load('assets/pals/pals.pdf');
-      final bytes = data.buffer.asUint8List();
-      final dir   = await getTemporaryDirectory();
-      final file  = File('${dir.path}/pals.pdf');
-      await file.writeAsBytes(bytes, flush: true);
-      if (mounted) {
-        setState(() {
-          _localPath = file.path;
-          _isLoading = false;
-        });
-      }
-    } catch (_) {
-      if (mounted) setState(() { _isLoading = false; _hasError = true; });
-    }
+    _controller = PdfViewerController();
   }
 
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
-
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: Text(
           widget.title,
-          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
+          style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700),
         ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
-        actions: [
-          if (_totalPages > 0)
-            Padding(
-              padding: const EdgeInsets.only(right: 16),
-              child: Center(
-                child: Text(
-                  'Page ${_currentPage + 1} of $_totalPages',
-                  style: TextStyle(
-                    color: cs.onSurface.withValues(alpha: 0.7),
-                    fontSize: 13,
-                  ),
-                ),
-              ),
-            ),
-        ],
       ),
-      body: _buildBody(cs),
-    );
-  }
-
-  Widget _buildBody(ColorScheme cs) {
-    // ── Web: PDFView not supported ──────────────────────────────────────────
-    if (kIsWeb) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(32),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.open_in_browser_rounded, color: cs.primary, size: 52),
-              const SizedBox(height: 20),
-              Text(
-                'PDF viewer not available on web',
-                style: TextStyle(
-                  color: cs.onSurface,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Please use the Android or iOS app to view PALS Algorithms.',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: cs.onSurface.withValues(alpha: 0.6),
-                  fontSize: 13,
-                  height: 1.5,
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-
-    // ── Loading ─────────────────────────────────────────────────────────────
-    if (_isLoading) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircularProgressIndicator(color: cs.primary),
-            const SizedBox(height: 16),
-            Text(
-              'Loading ${widget.title}…',
-              style: TextStyle(
-                color: cs.onSurface.withValues(alpha: 0.6),
-                fontSize: 14,
+      body: SfPdfViewer.asset(
+        'assets/pals/pals.pdf',
+        key: _pdfViewerKey,
+        controller: _controller,
+        onDocumentLoaded: (_) {
+          // jumpToPage is 1-based in syncfusion
+          if (widget.initialPage > 0) {
+            _controller.jumpToPage(widget.initialPage + 1);
+          }
+        },
+        canShowScrollHead: true,
+        canShowScrollStatus: true,
+        enableDoubleTapZooming: true,
+        onDocumentLoadFailed: (details) {
+          if (!mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: cs.error,
+              content: Text(
+                'Failed to load PDF: ${details.description}',
+                style: const TextStyle(color: Colors.white),
               ),
             ),
-          ],
-        ),
-      );
-    }
-
-    // ── Error ───────────────────────────────────────────────────────────────
-    if (_hasError || _localPath == null) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(32),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: cs.error.withValues(alpha: 0.1),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(Icons.error_outline, color: cs.error, size: 44),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                'Failed to load PDF',
-                style: TextStyle(
-                  color: cs.onSurface,
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Place pals.pdf in assets/pals/\nand run flutter pub get.',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: cs.onSurface.withValues(alpha: 0.6),
-                  fontSize: 13,
-                  height: 1.5,
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-
-    // ── PDF viewer ──────────────────────────────────────────────────────────
-    return PDFView(
-      filePath: _localPath!,
-      enableSwipe: true,
-      swipeHorizontal: true,
-      autoSpacing: false,
-      pageFling: true,
-      defaultPage: widget.initialPage,
-      onViewCreated: (controller) {
-        if (widget.initialPage > 0) {
-          controller.setPage(widget.initialPage);
-        }
-      },
-      onRender: (pages) {
-        if (mounted) setState(() => _totalPages = pages ?? 0);
-      },
-      onPageChanged: (page, total) {
-        if (mounted) {
-          setState(() {
-            _currentPage = page ?? 0;
-            _totalPages  = total ?? 0;
-          });
-        }
-      },
-      onError: (_) {
-        if (mounted) setState(() => _hasError = true);
-      },
+          );
+        },
+      ),
     );
   }
 }

@@ -37,6 +37,8 @@ import '../cme/cme_screen.dart';
 import '../shared/suggest_feature_sheet.dart';
 import '../../academics/academics_web_screen.dart';
 import 'app_search_delegate.dart';
+import '../../services/auth_service.dart';
+import '../admin/admin_dashboard_screen.dart';
 
 // ── All available quick-access items ─────────────────────────────────────────
 
@@ -236,6 +238,11 @@ class _HomeScreenState extends State<HomeScreen> {
                               _buildDisclaimer(context, cs),
                               const SizedBox(height: 16),
                               _buildSuggestBanner(context, cs),
+                              if (AuthService.instance.currentUser?.role ==
+                                  'admin') ...[
+                                const SizedBox(height: 16),
+                                _buildAdminTile(context),
+                              ],
                             ],
                           ),
                         ),
@@ -701,6 +708,81 @@ class _HomeScreenState extends State<HomeScreen> {
     };
     final builder = routes[key];
     if (builder != null) Navigator.push(context, MaterialPageRoute(builder: (_) => builder()));
+  }
+
+  // ── Admin tile (only rendered when currentUser.role == 'admin') ──────────
+
+  Widget _buildAdminTile(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute(builder: (_) => const AdminDashboardScreen()),
+        ),
+        child: Container(
+          padding: const EdgeInsets.all(18),
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [Color(0xFFDC2626), Color(0xFF991B1B)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: const [
+              BoxShadow(
+                color: Color(0x33DC2626),
+                blurRadius: 12,
+                offset: Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 46,
+                height: 46,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.22),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Icon(
+                  Icons.admin_panel_settings_rounded,
+                  color: Colors.white,
+                  size: 24,
+                ),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Admin Dashboard',
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w800,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      'Review pending CMEs, chapters, and role requests',
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 12,
+                        color: Colors.white.withValues(alpha: 0.9),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(Icons.chevron_right_rounded, color: Colors.white),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   // ── Disclaimer ────────────────────────────────────────────────────────────
