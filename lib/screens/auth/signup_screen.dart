@@ -7,6 +7,7 @@
 // =============================================================================
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../services/auth_service.dart';
 
@@ -46,6 +47,10 @@ class _SignupScreenState extends State<SignupScreen> {
         password: _passwordCtl.text,
         fullName: _nameCtl.text,
       );
+      // Signal the browser password manager so Chrome / Safari offer to
+      // save the new credentials. Flutter's canvas-drawn text fields don't
+      // look like a real HTML <form> otherwise.
+      TextInput.finishAutofillContext();
 
       // AuthService notifies _AuthGate, which rebuilds its child to
       // HomeScreen — but SignupScreen was pushed ON TOP of the navigator
@@ -119,7 +124,11 @@ class _SignupScreenState extends State<SignupScreen> {
 
                   Form(
                     key: _formKey,
-                    child: Column(
+                    // AutofillGroup wraps the entire credential form so
+                    // browsers recognise it as a single form and offer to
+                    // save the email+password after submit.
+                    child: AutofillGroup(
+                      child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         TextFormField(
@@ -198,6 +207,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           ),
                         ),
                       ],
+                    ),
                     ),
                   ),
 

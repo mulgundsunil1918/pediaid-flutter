@@ -13,6 +13,17 @@ import '../calculators/tpn_calculator.dart';
 import '../calculators/cga_pma_calculator.dart';
 import '../calculators/ponderal_index_calculator.dart';
 import '../calculators/bsa_calculator.dart';
+import '../calculators/maintenance_fluid_calculator.dart';
+import '../calculators/burn_mortality_calculator.dart';
+import '../calculators/parkland_calculator_screen.dart';
+import '../calculators/lund_browder_screen.dart';
+import '../calculators/pet_calculator_screen.dart';
+import '../calculators/schwartz_egfr_calculator.dart';
+import '../calculators/gestational_age_calculator.dart';
+import '../calculators/ventilator_parameters.dart';
+import '../calculators/nutritional_audit_calculator.dart';
+import '../calculators/double_volume_exchange.dart';
+import '../calculators/neonatal_bp_calculator.dart';
 import '../charts/growth_charts_screen.dart';
 import '../formulary/formulary_screen.dart';
 import '../calculators/bp_hub_screen.dart';
@@ -32,15 +43,35 @@ import 'app_search_delegate.dart';
 const _kPrefKey = 'quick_access_keys';
 
 const List<_ChipDef> _allChips = [
-  _ChipDef('gir',     'GIR Calc',   Icons.water_drop_rounded),
-  _ChipDef('gas',     'Blood Gas',  Icons.air_rounded),
-  _ChipDef('tpn',     'TPN',        Icons.medical_services_rounded),
-  _ChipDef('cga',     'CGA / PMA',  Icons.calendar_month_rounded),
-  _ChipDef('growth',  'Growth',     Icons.show_chart_rounded),
-  _ChipDef('ponderal','Ponderal',   Icons.child_care_rounded),
-  _ChipDef('bsa',     'BSA',        Icons.person_rounded),
-  _ChipDef('bp',      'BP Calc',    Icons.favorite_rounded),
-  _ChipDef('bili',    'Bili Tool',  Icons.opacity_rounded),
+  // Calculators
+  _ChipDef('gir',        'GIR Calc',        Icons.water_drop_rounded),
+  _ChipDef('gas',        'Blood Gas',       Icons.air_rounded),
+  _ChipDef('tpn',        'TPN',             Icons.medical_services_rounded),
+  _ChipDef('cga',        'CGA / PMA',       Icons.calendar_month_rounded),
+  _ChipDef('ponderal',   'Ponderal',        Icons.child_care_rounded),
+  _ChipDef('bsa',        'BSA',             Icons.person_rounded),
+  _ChipDef('bp',         'BP Calc',         Icons.favorite_rounded),
+  _ChipDef('neobp',      'Neonatal BP',     Icons.monitor_heart_rounded),
+  _ChipDef('bili',       'Bili Tool',       Icons.opacity_rounded),
+  _ChipDef('fluid',      'Maint. Fluid',    Icons.water_rounded),
+  _ChipDef('burn',       'Burn Mortality',  Icons.local_fire_department_rounded),
+  _ChipDef('parkland',   'Parkland',        Icons.whatshot_rounded),
+  _ChipDef('lund',       'Lund-Browder',    Icons.accessibility_new_rounded),
+  _ChipDef('pet',        'PET Calc',        Icons.science_rounded),
+  _ChipDef('egfr',       'Schwartz eGFR',   Icons.bloodtype_rounded),
+  _ChipDef('ga',         'GA Calc',         Icons.date_range_rounded),
+  _ChipDef('vent',       'Ventilator',      Icons.air_rounded),
+  _ChipDef('nutri',      'Nutri Audit',     Icons.restaurant_rounded),
+  _ChipDef('dve',        'DVE',             Icons.sync_alt_rounded),
+  _ChipDef('allcalc',    'All Calculators', Icons.calculate_rounded),
+  // Charts
+  _ChipDef('growth',     'Growth Charts',   Icons.show_chart_rounded),
+  // References / library
+  _ChipDef('formulary',  'Formulary',       Icons.menu_book_rounded),
+  _ChipDef('labref',     'Lab Reference',   Icons.science_outlined),
+  _ChipDef('guides',     'Guides',          Icons.auto_stories_rounded),
+  _ChipDef('cme',        'CME & Webinars',  Icons.event_available_rounded),
+  _ChipDef('academics',  'Academics',       Icons.school_rounded),
 ];
 
 const _kDefaultKeys = ['gir', 'gas', 'tpn', 'cga', 'growth'];
@@ -640,16 +671,33 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _navigateChip(BuildContext context, String key) {
-    final routes = {
-      'gir':      () => const GIRCalculator(),
-      'gas':      () => const BloodGasAnalyser(),
-      'tpn':      () => const TpnCalculator(),
-      'cga':      () => const CGAPMACalculator(),
-      'growth':   () => const GrowthChartsScreen(),
-      'ponderal': () => const PonderalIndexCalculator(),
-      'bsa':      () => const BSACalculator(),
-      'bp':       () => const BPHubScreen(),
-      'bili':     () => const JaundiceHubScreen(),
+    final routes = <String, Widget Function()>{
+      'gir':       () => const GIRCalculator(),
+      'gas':       () => const BloodGasAnalyser(),
+      'tpn':       () => const TpnCalculator(),
+      'cga':       () => const CGAPMACalculator(),
+      'ponderal':  () => const PonderalIndexCalculator(),
+      'bsa':       () => const BSACalculator(),
+      'bp':        () => const BPHubScreen(),
+      'neobp':     () => const NeonatalBPCalculator(),
+      'bili':      () => const JaundiceHubScreen(),
+      'fluid':     () => const MaintenanceFluidCalculator(),
+      'burn':      () => const BurnMortalityCalculator(),
+      'parkland':  () => const ParklandCalculatorScreen(),
+      'lund':      () => const LundBrowderScreen(),
+      'pet':       () => const PETCalculatorScreen(),
+      'egfr':      () => const SchwartzEGFRCalculator(),
+      'ga':        () => const GestationalAgeCalculator(),
+      'vent':      () => const VentilatorParameters(),
+      'nutri':     () => const NutritionalAuditCalculator(),
+      'dve':       () => const DoubleVolumeExchange(),
+      'allcalc':   () => const CalculatorsScreen(),
+      'growth':    () => const GrowthChartsScreen(),
+      'formulary': () => const FormularyScreen(),
+      'labref':    () => const LabReferenceScreen(),
+      'guides':    () => const GuidesScreen(),
+      'cme':       () => const CmeScreen(),
+      'academics': () => const AcademicsWebScreen(),
     };
     final builder = routes[key];
     if (builder != null) Navigator.push(context, MaterialPageRoute(builder: (_) => builder()));

@@ -118,16 +118,29 @@ class _CmeScreenState extends State<CmeScreen>
         bottom: TabBar(
           controller: _tabController,
           isScrollable: true,
+          labelColor: Colors.white,
+          unselectedLabelColor: Colors.white70,
+          indicatorColor: Colors.white,
+          indicatorWeight: 3,
+          labelStyle: GoogleFonts.plusJakartaSans(
+            fontSize: 13,
+            fontWeight: FontWeight.w700,
+          ),
+          unselectedLabelStyle: GoogleFonts.plusJakartaSans(
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+          ),
           tabs: [
             for (final t in _eventTypeTabs)
               Tab(
-                icon: Icon(t.icon, size: 16),
+                icon: Icon(t.icon, size: 16, color: Colors.white),
                 text: t.label,
                 iconMargin: const EdgeInsets.only(bottom: 2),
               ),
             if (hasMyTab)
               const Tab(
-                icon: Icon(Icons.person_outline_rounded, size: 16),
+                icon: Icon(Icons.person_outline_rounded,
+                    size: 16, color: Colors.white),
                 text: 'My posts',
                 iconMargin: EdgeInsets.only(bottom: 2),
               ),

@@ -44,7 +44,7 @@ class AboutScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // ── Avatar + name card ──────────────────────────────────────
+            // ── Avatar + name + credentials card ────────────────────────
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
@@ -52,56 +52,61 @@ class AboutScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(color: cs.outlineVariant),
               ),
-              child: Row(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CircleAvatar(
-                    radius: 32,
-                    backgroundColor: cs.primary,
-                    child: Icon(
-                      Icons.medical_services_rounded,
-                      size: 30,
-                      color: cs.onPrimary,
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Dr. Sunil Mulgund',
-                          style: GoogleFonts.plusJakartaSans(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w800,
-                            color: cs.onSurface,
-                            height: 1.15,
-                          ),
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 32,
+                        backgroundColor: cs.primary,
+                        child: Icon(
+                          Icons.medical_services_rounded,
+                          size: 30,
+                          color: cs.onPrimary,
                         ),
-                        const SizedBox(height: 4),
-                        Text(
-                          'Paediatrician · Neonatologist · Developer of PediAid',
-                          style: GoogleFonts.plusJakartaSans(
-                            fontSize: 12,
-                            color: cs.onSurface.withValues(alpha: 0.7),
-                            height: 1.3,
-                          ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Dr. Sunil Mulgund',
+                              style: GoogleFonts.plusJakartaSans(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w800,
+                                color: cs.onSurface,
+                                height: 1.15,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'MBBS · MD (Paediatrics) · DNB (Paediatrics) · NNF Fellowship in Neonatology',
+                              style: GoogleFonts.plusJakartaSans(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: cs.primary,
+                                height: 1.35,
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              'Paediatrician · Neonatologist · Developer of PediAid',
+                              style: GoogleFonts.plusJakartaSans(
+                                fontSize: 11.5,
+                                color: cs.onSurface.withValues(alpha: 0.7),
+                                height: 1.3,
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ],
               ),
             ),
-
-            const SizedBox(height: 20),
-
-            // ── Credentials ─────────────────────────────────────────────
-            _SectionLabel(label: 'Credentials', color: cs.primary),
-            const SizedBox(height: 10),
-            _BulletRow(text: 'MBBS'),
-            _BulletRow(text: 'MD (Paediatrics)'),
-            _BulletRow(text: 'DNB (Paediatrics)'),
-            _BulletRow(text: 'NNF Fellowship in Neonatology'),
 
             const SizedBox(height: 24),
 
@@ -331,41 +336,3 @@ class _SectionLabel extends StatelessWidget {
   }
 }
 
-class _BulletRow extends StatelessWidget {
-  const _BulletRow({required this.text});
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 3),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 6, right: 10, left: 2),
-            child: Container(
-              width: 5,
-              height: 5,
-              decoration: BoxDecoration(
-                color: cs.primary,
-                shape: BoxShape.circle,
-              ),
-            ),
-          ),
-          Expanded(
-            child: Text(
-              text,
-              style: GoogleFonts.plusJakartaSans(
-                fontSize: 14,
-                color: cs.onSurface,
-                height: 1.5,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}

@@ -7,6 +7,7 @@
 // =============================================================================
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../services/auth_service.dart';
 import 'signup_screen.dart';
@@ -40,11 +41,18 @@ class _LoginScreenState extends State<LoginScreen> {
       _loading = true;
       _error = null;
     });
+
+    // Tell Flutter's AutofillGroup the credentials were successfully
+    // "committed" the moment login succeeds. This is the signal Chrome and
+    // Safari need to prompt "Save password?". Without this call, the
+    // password-save prompt never fires on Flutter web because the form
+    // widgets are drawn on canvas instead of being real HTML <input>s.
     try {
       await AuthService.instance.loginEmailPassword(
         _emailCtl.text,
         _passwordCtl.text,
       );
+      TextInput.finishAutofillContext();
       // _AuthGate listens to AuthService and will rebuild automatically.
     } on AuthException catch (e) {
       if (mounted) setState(() => _error = e.message);
@@ -122,13 +130,20 @@ class _LoginScreenState extends State<LoginScreen> {
 
                   Form(
                     key: _formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        TextFormField(
-                          controller: _emailCtl,
-                          keyboardType: TextInputType.emailAddress,
-                          autofillHints: const [AutofillHints.email],
+                    // AutofillGroup tells the browser's password manager
+                    // that the child TextFields are part of a single
+                    // credential form. Without this wrapper, Chrome and
+                    // Safari never offer to save or autofill the password
+                    // on Flutter web, because the canvas-drawn text fields
+                    // don't look like an HTML <form> to the heuristic.
+                    child: AutofillGroup(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          TextFormField(
+                            controller: _emailCtl,
+                            keyboardType: TextInputType.emailAddress,
+                            autofillHints: const [AutofillHints.username, AutofillHints.email],
                           decoration: const InputDecoration(
                             labelText: 'Email',
                             prefixIcon: Icon(Icons.email_outlined),
@@ -205,6 +220,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ],
                     ),
+                  ),
                   ),
 
                   const SizedBox(height: 22),
