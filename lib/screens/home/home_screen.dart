@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../theme/theme_provider.dart';
 import '../../theme/app_theme.dart';
+import '../../services/auth_service.dart';
+import '../../widgets/notification_bell.dart';
 import '../calculators/calculators_screen.dart';
 import '../charts/charts_screen.dart';
 import '../calculators/gir_calculator.dart';
@@ -150,10 +152,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-              IconButton(
-                icon: const Icon(Icons.notifications_outlined, color: Colors.white),
-                onPressed: () => _showNotifications(context),
-              ),
+              const NotificationBell(),
               const SizedBox(width: 4),
             ],
           ),
@@ -700,6 +699,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 _DrawerItem(icon: Icons.info_outline_rounded, label: 'About',          onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const AboutScreen())); }),
                 Divider(indent: 16, endIndent: 16, color: cs.outline),
                 _DrawerItem(icon: Icons.settings_rounded,     label: 'Settings',       onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const SettingsScreen())); }),
+                _DrawerItem(icon: Icons.logout_rounded,       label: 'Sign out',       onTap: () => _handleLogout(context)),
               ],
             ),
           ),
@@ -717,38 +717,37 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // ── Helpers ───────────────────────────────────────────────────────────────
 
-  void _showNotifications(BuildContext context) {
-    showModalBottomSheet(
+  Future<void> _handleLogout(BuildContext context) async {
+    Navigator.pop(context); // close drawer
+    final confirmed = await showDialog<bool>(
       context: context,
-      backgroundColor: Theme.of(context).cardColor,
-      shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
-      builder: (ctx) {
-        final cs = Theme.of(ctx).colorScheme;
-        return Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(mainAxisSize: MainAxisSize.min, children: [
-            Container(width: 36, height: 4,
-                decoration: BoxDecoration(color: cs.outline, borderRadius: BorderRadius.circular(2))),
-            const SizedBox(height: 20),
-            Row(children: [
-              Icon(Icons.notifications_outlined, color: cs.primary),
-              const SizedBox(width: 10),
-              Text('Notifications',
-                  style: GoogleFonts.plusJakartaSans(
-                      fontSize: 18, fontWeight: FontWeight.w700, color: cs.onSurface)),
-            ]),
-            const SizedBox(height: 32),
-            Icon(Icons.notifications_off_outlined, size: 44, color: cs.onSurface.withValues(alpha: 0.2)),
-            const SizedBox(height: 12),
-            Text('No new notifications',
-                style: GoogleFonts.plusJakartaSans(
-                    color: cs.onSurface.withValues(alpha: 0.45), fontSize: 15, fontWeight: FontWeight.w500)),
-            const SizedBox(height: 32),
-          ]),
-        );
-      },
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Text('Sign out?',
+            style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700)),
+        content: Text(
+          "You'll need to sign in again to access calculators, charts, and academics.",
+          style: GoogleFonts.plusJakartaSans(fontSize: 14, height: 1.5),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: Text('Cancel',
+                style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600)),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: Text('Sign out',
+                style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700)),
+          ),
+        ],
+      ),
     );
+    if (confirmed == true) {
+      await AuthService.instance.logout();
+      // _AuthGate in main.dart listens to AuthService and rebuilds to the
+      // LoginScreen automatically — no manual navigation here.
+    }
   }
 
   void _showComingSoon(BuildContext context, String feature) {
