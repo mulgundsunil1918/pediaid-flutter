@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../theme/theme_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/notification_bell.dart';
@@ -211,11 +212,139 @@ class _HomeScreenState extends State<HomeScreen> {
                     );
                   },
                 ),
+                _buildDonationFooter(context, isDark),
                 SizedBox(height: MediaQuery.of(context).padding.bottom + 16),
               ],
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  // ── Donation footer (bottom of the home scroll) ──────────────────────────
+  //
+  // PediAid is one person's side project — everything from the calculators
+  // to the peer-review pipeline is coded and paid for by Dr. Sunil. Servers,
+  // databases, and the domain all cost money every month. A lightweight
+  // "buy me a chai" card at the end of the home scroll makes it easy for
+  // happy users to chip in without being in their face about it.
+
+  Widget _buildDonationFooter(BuildContext context, bool isDark) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(18, 24, 18, 8),
+      child: Container(
+        padding: const EdgeInsets.all(18),
+        decoration: BoxDecoration(
+          color: isDark
+              ? const Color(0xFF1E1A12)
+              : const Color(0xFFFFFBEB),
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(
+            color: isDark
+                ? const Color(0xFF92400E).withValues(alpha: 0.4)
+                : const Color(0xFFFDE68A),
+            width: 1.5,
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Text('☕️', style: TextStyle(fontSize: 20)),
+                const SizedBox(width: 8),
+                Text(
+                  'Like PediAid? Buy me a chai.',
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w800,
+                    color: isDark
+                        ? const Color(0xFFFCD34D)
+                        : const Color(0xFF92400E),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(
+              "I've done the coding on my own — the app, the academics web, "
+              "the backend, everything. It costs me every month to keep the "
+              "servers running. If PediAid has saved you time on a shift, "
+              "consider donating. Every chai keeps the app alive.",
+              style: GoogleFonts.plusJakartaSans(
+                fontSize: 12.5,
+                height: 1.55,
+                color: (isDark
+                        ? const Color(0xFFFCD34D)
+                        : const Color(0xFF78350F))
+                    .withValues(alpha: 0.9),
+              ),
+            ),
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton.icon(
+                style: FilledButton.styleFrom(
+                  backgroundColor: const Color(0xFFF59E0B),
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                onPressed: () async {
+                  final uri = Uri.parse('https://www.chai4.me/mulgundsunil');
+                  try {
+                    await launchUrl(uri,
+                        mode: LaunchMode.externalApplication);
+                  } catch (_) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("Couldn't open the link.")),
+                      );
+                    }
+                  }
+                },
+                icon: const Icon(Icons.favorite_rounded, size: 16),
+                label: Text(
+                  'Buy me a chai',
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 4),
+            Center(
+              child: Text(
+                'Opens chai4.me — no account needed.',
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 10,
+                  color: (isDark
+                          ? const Color(0xFFFCD34D)
+                          : const Color(0xFF92400E))
+                      .withValues(alpha: 0.55),
+                ),
+              ),
+            ),
+            const SizedBox(height: 4),
+            Center(
+              child: Text(
+                '— Dr. Sunil Mulgund',
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 10,
+                  fontStyle: FontStyle.italic,
+                  color: (isDark
+                          ? const Color(0xFFFCD34D)
+                          : const Color(0xFF92400E))
+                      .withValues(alpha: 0.7),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -698,7 +827,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           Padding(
             padding: const EdgeInsets.all(16),
-            child: Text('PediAid v1.0.0 · WHO 2006 Standards',
+            child: Text('PediAid v1.0.0',
                 style: GoogleFonts.plusJakartaSans(
                     fontSize: 11, color: cs.onSurface.withValues(alpha: 0.4)),
                 textAlign: TextAlign.center),

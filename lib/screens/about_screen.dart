@@ -8,9 +8,25 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+const String kSupportDeveloperUrl = 'https://www.chai4.me/mulgundsunil';
 
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
+
+  Future<void> _openSupport(BuildContext context) async {
+    final uri = Uri.parse(kSupportDeveloperUrl);
+    try {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } catch (_) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Couldn't open the link.")),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,9 +114,48 @@ class AboutScreen extends StatelessWidget {
               "weight-based drug doses, growth charts, jaundice curves, lab "
               "ranges, quick reference to the latest guidelines — and every "
               "time I was fishing them out of a different app, a textbook, a "
-              "photocopy, or a saved PDF on my phone.\n\n"
+              "photocopy, or a saved PDF on my phone.",
+              style: GoogleFonts.plusJakartaSans(
+                fontSize: 14,
+                height: 1.65,
+                color: cs.onSurface,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Text(
               "I wanted to make life a little less miserable and a lot more "
-              "organised.",
+              "organised — one place where a paediatrician or paediatric "
+              "trainee can walk onto a shift and get to the answer in seconds. "
+              "Not ten tabs, not a group chat, not someone's printed 2017 "
+              "handbook. Just the dose, the chart, the reference, the score.",
+              style: GoogleFonts.plusJakartaSans(
+                fontSize: 14,
+                height: 1.65,
+                color: cs.onSurface,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              "PediAid is built and maintained single-handedly — every line "
+              "of the Flutter app, the React academics web, the Fastify "
+              "backend, and the Postgres schema. I'm not a full-time "
+              "developer. I built this because I wanted it to exist, and "
+              "because I hoped it would help other paediatricians and "
+              "students the way I wish it had helped me during my training.",
+              style: GoogleFonts.plusJakartaSans(
+                fontSize: 14,
+                height: 1.65,
+                color: cs.onSurface,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              "Academics is the next step: a peer-reviewed teaching library "
+              "where clinicians contribute chapters that other clinicians "
+              "actually read, and where CMEs and webinars from across India "
+              "can be shared in one place. If you're reading this and you've "
+              "used PediAid on a busy shift — thank you. That's the whole "
+              "reason this exists.",
               style: GoogleFonts.plusJakartaSans(
                 fontSize: 14,
                 height: 1.65,
@@ -150,6 +205,84 @@ class AboutScreen extends StatelessWidget {
                       fontSize: 13,
                       height: 1.6,
                       color: cs.onSurface,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 24),
+
+            // ── Support the developer ──────────────────────────────────
+            Container(
+              padding: const EdgeInsets.all(18),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFFFBEB),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: const Color(0xFFFDE68A), width: 1.5),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      const Text('☕️', style: TextStyle(fontSize: 22)),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Support the developer',
+                        style: GoogleFonts.plusJakartaSans(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w800,
+                          color: const Color(0xFF92400E),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    "I've built and maintain PediAid on my own — all the "
+                    "coding, the servers, the databases, the domain, the "
+                    "email infrastructure. It's free for every user and "
+                    "always will be, but servers cost money every month to "
+                    "keep running. If PediAid has saved you time on a "
+                    "shift, consider buying me a chai — it directly helps "
+                    "keep the app live and growing.",
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 12.5,
+                      height: 1.55,
+                      color: const Color(0xFF78350F),
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                  SizedBox(
+                    width: double.infinity,
+                    child: FilledButton.icon(
+                      onPressed: () => _openSupport(context),
+                      style: FilledButton.styleFrom(
+                        backgroundColor: const Color(0xFFF59E0B),
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                      ),
+                      icon: const Icon(Icons.favorite_rounded, size: 16),
+                      label: Text(
+                        'Buy me a chai',
+                        style: GoogleFonts.plusJakartaSans(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Opens chai4.me in your browser. No account needed.',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 10.5,
+                      color: const Color(0xFF92400E).withValues(alpha: 0.7),
                     ),
                   ),
                 ],

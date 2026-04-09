@@ -15,6 +15,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 // ---------------------------------------------------------------------------
 // Simple user model — only the fields the Flutter app actually displays.
@@ -78,6 +79,21 @@ class AuthService extends ChangeNotifier {
   );
 
   // Secure, on-device storage for the JWT + user blob.
+  //
+  // On mobile (Android/iOS) flutter_secure_storage uses the Keychain /
+  // EncryptedSharedPreferences and is rock-solid. On web it's backed by
+  // IndexedDB + WebCrypto — which is fine most of the time but CAN fail
+  // on first boot, in private browsing, or after the browser evicts
+  // storage for a GitHub Pages origin. When that happens, the user is
+  // silently signed out on every page reload, which is the exact bug the
+  // user reported.
+  //
+  // Fix: on WEB only, ALSO mirror the token + user blob into
+  // SharedPreferences (which is backed by plain localStorage on web).
+  // localStorage survives page reloads for the origin and is the standard
+  // choice for a long-lived token on the web. Mobile still uses
+  // flutter_secure_storage as its source of truth — SharedPreferences
+  // is only touched on kIsWeb.
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
   static const _kAccessToken = 'pediaid_access_token';
   static const _kUserBlob = 'pediaid_user_blob';
@@ -89,25 +105,31 @@ class AuthService extends ChangeNotifier {
   AuthUser? get currentUser => _user;
   bool get isLoggedIn => _accessToken != null && _user != null;
 
-  /// Load the cached session from secure storage (called on app boot).
-  ///
-  /// NOTE: flutter_secure_storage on the web plugin can throw at startup
-  /// (e.g. in private browsing, when the IndexedDB key isn't yet
-  /// initialised, or when WebCrypto isn't available). This whole method
-  /// must never throw — the caller in main() also wraps it in try/catch,
-  /// but catching inside here means a broken storage layer degrades to
-  /// "signed out" rather than crashing the whole app.
+  /// Load the cached session from persistent storage (called on app boot).
+  /// On web, falls back to SharedPreferences if FlutterSecureStorage returns
+  /// nothing, and also hydrates from it if the secure backend threw.
   Future<void> loadFromStorage() async {
     String? token;
     String? blob;
+
+    // First try flutter_secure_storage (works on mobile; sometimes works on web).
     try {
       token = await _storage.read(key: _kAccessToken);
       blob = await _storage.read(key: _kUserBlob);
     } catch (e) {
-      // Storage backend isn't available — stay signed out.
-      debugPrint('[AuthService] loadFromStorage read failed: $e');
-      notifyListeners();
-      return;
+      debugPrint('[AuthService] secure_storage read failed: $e');
+    }
+
+    // On web: if secure storage came back empty or failed, try the
+    // localStorage-backed SharedPreferences fallback.
+    if (kIsWeb && (token == null || token.isEmpty || blob == null)) {
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        token = prefs.getString(_kAccessToken);
+        blob = prefs.getString(_kUserBlob);
+      } catch (e) {
+        debugPrint('[AuthService] shared_prefs fallback read failed: $e');
+      }
     }
 
     if (token != null && token.isNotEmpty && blob != null) {
@@ -118,13 +140,45 @@ class AuthService extends ChangeNotifier {
         // Corrupted blob — wipe and stay signed out
         _accessToken = null;
         _user = null;
-        try {
-          await _storage.delete(key: _kAccessToken);
-          await _storage.delete(key: _kUserBlob);
-        } catch (_) {}
+        await _wipeStorage();
       }
     }
     notifyListeners();
+  }
+
+  /// Persist the token + user blob to every storage backend we use, so a
+  /// later boot via any one of them succeeds.
+  Future<void> _persistSession(String token, String userJsonStr) async {
+    // Fire-and-forget — don't block the UI on IO errors.
+    try {
+      await _storage.write(key: _kAccessToken, value: token);
+      await _storage.write(key: _kUserBlob, value: userJsonStr);
+    } catch (e) {
+      debugPrint('[AuthService] secure_storage write failed: $e');
+    }
+    if (kIsWeb) {
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString(_kAccessToken, token);
+        await prefs.setString(_kUserBlob, userJsonStr);
+      } catch (e) {
+        debugPrint('[AuthService] shared_prefs write failed: $e');
+      }
+    }
+  }
+
+  Future<void> _wipeStorage() async {
+    try {
+      await _storage.delete(key: _kAccessToken);
+      await _storage.delete(key: _kUserBlob);
+    } catch (_) {}
+    if (kIsWeb) {
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.remove(_kAccessToken);
+        await prefs.remove(_kUserBlob);
+      } catch (_) {}
+    }
   }
 
   // -------------------------------------------------------------------------
@@ -199,16 +253,9 @@ class AuthService extends ChangeNotifier {
   Future<void> logout() async {
     _accessToken = null;
     _user = null;
-    try {
-      await _storage.delete(key: _kAccessToken);
-    } catch (e) {
-      debugPrint('[AuthService] logout: failed to delete access token: $e');
-    }
-    try {
-      await _storage.delete(key: _kUserBlob);
-    } catch (e) {
-      debugPrint('[AuthService] logout: failed to delete user blob: $e');
-    }
+    // Wipe every backend so a lingering token in either doesn't silently
+    // sign the user back in on the next boot.
+    await _wipeStorage();
     notifyListeners();
   }
 
@@ -247,9 +294,10 @@ class AuthService extends ChangeNotifier {
     _accessToken = token;
     _user = AuthUser.fromJson(userJson);
 
-    // Persist fire-and-forget — don't block the UI on storage IO
-    _storage.write(key: _kAccessToken, value: token);
-    _storage.write(key: _kUserBlob, value: jsonEncode(userJson));
+    // Persist to every backend we use (secure_storage on mobile + both
+    // backends on web) so the next boot picks the session up no matter
+    // which storage layer happens to be working.
+    _persistSession(token, jsonEncode(userJson));
 
     notifyListeners();
   }
