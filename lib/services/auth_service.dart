@@ -90,19 +90,38 @@ class AuthService extends ChangeNotifier {
   bool get isLoggedIn => _accessToken != null && _user != null;
 
   /// Load the cached session from secure storage (called on app boot).
+  ///
+  /// NOTE: flutter_secure_storage on the web plugin can throw at startup
+  /// (e.g. in private browsing, when the IndexedDB key isn't yet
+  /// initialised, or when WebCrypto isn't available). This whole method
+  /// must never throw — the caller in main() also wraps it in try/catch,
+  /// but catching inside here means a broken storage layer degrades to
+  /// "signed out" rather than crashing the whole app.
   Future<void> loadFromStorage() async {
-    final token = await _storage.read(key: _kAccessToken);
-    final blob = await _storage.read(key: _kUserBlob);
+    String? token;
+    String? blob;
+    try {
+      token = await _storage.read(key: _kAccessToken);
+      blob = await _storage.read(key: _kUserBlob);
+    } catch (e) {
+      // Storage backend isn't available — stay signed out.
+      debugPrint('[AuthService] loadFromStorage read failed: $e');
+      notifyListeners();
+      return;
+    }
+
     if (token != null && token.isNotEmpty && blob != null) {
       try {
         _accessToken = token;
         _user = AuthUser.fromJson(jsonDecode(blob) as Map<String, dynamic>);
       } catch (_) {
         // Corrupted blob — wipe and stay signed out
-        await _storage.delete(key: _kAccessToken);
-        await _storage.delete(key: _kUserBlob);
         _accessToken = null;
         _user = null;
+        try {
+          await _storage.delete(key: _kAccessToken);
+          await _storage.delete(key: _kUserBlob);
+        } catch (_) {}
       }
     }
     notifyListeners();

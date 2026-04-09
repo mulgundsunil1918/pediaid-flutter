@@ -10,20 +10,43 @@ import 'services/auth_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await LabReferenceService().load();
+
+  // Each boot step is wrapped in try/catch so a single failing subsystem
+  // can NEVER blank out the whole app. Before hardening this, an exception
+  // in flutter_secure_storage on web (the auth-hydration step) was
+  // escaping main() and stopping runApp() from ever being called — the
+  // user saw a completely blank page. Now the worst case is a missed
+  // feature with an error on the debug console.
+
+  try {
+    await LabReferenceService().load();
+  } catch (e, st) {
+    debugPrint('[boot] LabReferenceService load failed: $e\n$st');
+  }
+
   // Hydrate the persisted JWT + user blob from secure storage BEFORE the
   // auth gate builds, so the app doesn't flash the login screen on a cold
-  // start for an already-signed-in user.
-  await AuthService.instance.loadFromStorage();
-  await SystemChrome.setEnabledSystemUIMode(
-    SystemUiMode.edgeToEdge,
-  );
-  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    statusBarColor: Colors.transparent,
-    systemNavigationBarColor: Colors.transparent,
-    systemNavigationBarContrastEnforced: false,
-    systemNavigationBarDividerColor: Colors.transparent,
-  ));
+  // start for an already-signed-in user. On web, flutter_secure_storage
+  // is backed by WebCrypto + localStorage and CAN throw on first boot
+  // (e.g. private browsing) — absolutely must not block main().
+  try {
+    await AuthService.instance.loadFromStorage();
+  } catch (e, st) {
+    debugPrint('[boot] AuthService loadFromStorage failed: $e\n$st');
+  }
+
+  try {
+    await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      systemNavigationBarColor: Colors.transparent,
+      systemNavigationBarContrastEnforced: false,
+      systemNavigationBarDividerColor: Colors.transparent,
+    ));
+  } catch (e) {
+    debugPrint('[boot] System UI config failed: $e');
+  }
+
   runApp(ChangeNotifierProvider(
     create: (_) => ThemeProvider(),
     child: const PediAidApp(),
