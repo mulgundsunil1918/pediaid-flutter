@@ -9,9 +9,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../services/auth_service.dart';
 import 'signup_screen.dart';
 import 'forgot_password_screen.dart';
+
+/// SharedPreferences key for the saved email used by the "Remember me on
+/// this device" checkbox on login. When set, the login screen pre-fills
+/// the email field on mount and pre-checks the box.
+const String _kSavedEmailKey = 'pediaid_saved_email';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -26,7 +32,32 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordCtl = TextEditingController();
   bool _obscure = true;
   bool _loading = false;
+  bool _rememberMe = false;
   String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSavedEmail();
+  }
+
+  /// Restores the saved email from SharedPreferences if the user previously
+  /// opted in to "Remember me on this device". Pre-checks the box so the
+  /// checkbox reflects the actual persisted state.
+  Future<void> _loadSavedEmail() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final saved = prefs.getString(_kSavedEmailKey);
+      if (saved != null && saved.isNotEmpty && mounted) {
+        setState(() {
+          _emailCtl.text = saved;
+          _rememberMe = true;
+        });
+      }
+    } catch (_) {
+      // Silently ignore — non-fatal
+    }
+  }
 
   @override
   void dispose() {
@@ -53,6 +84,21 @@ class _LoginScreenState extends State<LoginScreen> {
         _passwordCtl.text,
       );
       TextInput.finishAutofillContext();
+
+      // Persist (or clear) the saved email based on the checkbox. This
+      // only affects email prefill — the actual 30-day session lifetime
+      // is driven by the refresh token TTL on the backend.
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        if (_rememberMe) {
+          await prefs.setString(_kSavedEmailKey, _emailCtl.text.trim());
+        } else {
+          await prefs.remove(_kSavedEmailKey);
+        }
+      } catch (_) {
+        // Non-fatal — the login itself succeeded, so don't block.
+      }
+
       // _AuthGate listens to AuthService and will rebuild automatically.
     } on AuthException catch (e) {
       if (mounted) setState(() => _error = e.message);
@@ -174,7 +220,46 @@ class _LoginScreenState extends State<LoginScreen> {
                           },
                           onFieldSubmitted: (_) => _submit(),
                         ),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 4),
+                        // ── Remember me on this device ──────────────────
+                        InkWell(
+                          onTap: _loading
+                              ? null
+                              : () => setState(() => _rememberMe = !_rememberMe),
+                          borderRadius: BorderRadius.circular(8),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 6),
+                            child: Row(
+                              children: [
+                                SizedBox(
+                                  width: 22,
+                                  height: 22,
+                                  child: Checkbox(
+                                    value: _rememberMe,
+                                    onChanged: _loading
+                                        ? null
+                                        : (v) => setState(
+                                              () => _rememberMe = v ?? false,
+                                            ),
+                                    materialTapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
+                                    visualDensity: VisualDensity.compact,
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: Text(
+                                    'Remember me on this device',
+                                    style: GoogleFonts.plusJakartaSans(
+                                      fontSize: 13,
+                                      color: cs.onSurface,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                         Align(
                           alignment: Alignment.centerRight,
                           child: TextButton(
