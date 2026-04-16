@@ -1,0 +1,23 @@
+{
+  "source": "NICE CG98 Neonatal Jaundice. NICE clinical guideline 98. May 2010. Appendix D, pages 38-53.",
+  "units": "micromol/L",
+  "note": "Each line rises linearly from start at day 0 to plateau at plateau_day, then flat to day 14.",
+  "thresholds": {
+    "23": { "photo": { "start": 50,  "plateau_day": 3.0, "plateau": 130 }, "exchange": { "start": 100, "plateau_day": 3.0, "plateau": 230 } },
+    "24": { "photo": { "start": 50,  "plateau_day": 3.5, "plateau": 150 }, "exchange": { "start": 100, "plateau_day": 3.5, "plateau": 250 } },
+    "25": { "photo": { "start": 50,  "plateau_day": 4.5, "plateau": 150 }, "exchange": { "start": 100, "plateau_day": 4.5, "plateau": 250 } },
+    "26": { "photo": { "start": 50,  "plateau_day": 3.5, "plateau": 160 }, "exchange": { "start": 100, "plateau_day": 3.5, "plateau": 260 } },
+    "27": { "photo": { "start": 50,  "plateau_day": 3.0, "plateau": 170 }, "exchange": { "start": 100, "plateau_day": 3.0, "plateau": 280 } },
+    "28": { "photo": { "start": 50,  "plateau_day": 3.0, "plateau": 200 }, "exchange": { "start": 100, "plateau_day": 3.0, "plateau": 300 } },
+    "29": { "photo": { "start": 50,  "plateau_day": 3.0, "plateau": 200 }, "exchange": { "start": 100, "plateau_day": 3.0, "plateau": 300 } },
+    "30": { "photo": { "start": 50,  "plateau_day": 3.0, "plateau": 200 }, "exchange": { "start": 100, "plateau_day": 3.0, "plateau": 300 } },
+    "31": { "photo": { "start": 50,  "plateau_day": 3.0, "plateau": 220 }, "exchange": { "start": 100, "plateau_day": 3.0, "plateau": 300 } },
+    "32": { "photo": { "start": 50,  "plateau_day": 3.0, "plateau": 240 }, "exchange": { "start": 100, "plateau_day": 3.0, "plateau": 325 } },
+    "33": { "photo": { "start": 50,  "plateau_day": 3.0, "plateau": 240 }, "exchange": { "start": 100, "plateau_day": 3.0, "plateau": 340 } },
+    "34": { "photo": { "start": 50,  "plateau_day": 3.0, "plateau": 250 }, "exchange": { "start": 100, "plateau_day": 3.0, "plateau": 350 } },
+    "35": { "photo": { "start": 50,  "plateau_day": 3.5, "plateau": 260 }, "exchange": { "start": 100, "plateau_day": 3.5, "plateau": 350 } },
+    "36": { "photo": { "start": 50,  "plateau_day": 3.5, "plateau": 275 }, "exchange": { "start": 100, "plateau_day": 3.5, "plateau": 360 } },
+    "37": { "photo": { "start": 100, "plateau_day": 3.0, "plateau": 280 }, "exchange": { "start": 150, "plateau_day": 3.0, "plateau": 380 } },
+    "38plus": { "photo": { "start": 100, "plateau_day": 2.5, "plateau": 360 }, "exchange": { "start": 150, "plateau_day": 2.5, "plateau": 450 } }
+  }
+}
