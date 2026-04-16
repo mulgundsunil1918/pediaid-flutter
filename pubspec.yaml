@@ -50,6 +50,8 @@ dependencies:
   # Unified PediAid auth (shared with the React academics app):
   http: ^1.2.0
   flutter_secure_storage: ^9.2.2
+  uuid: ^4.5.3
+  timeago: ^3.7.1
 
 dev_dependencies:
   flutter_test:

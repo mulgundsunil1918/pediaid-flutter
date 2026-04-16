@@ -39,6 +39,7 @@ import '../../academics/academics_web_screen.dart';
 import 'app_search_delegate.dart';
 import '../../services/auth_service.dart';
 import '../admin/admin_dashboard_screen.dart';
+import '../never_again/never_again_screen.dart';
 
 // ── All available quick-access items ─────────────────────────────────────────
 
@@ -504,6 +505,7 @@ class _HomeScreenState extends State<HomeScreen> {
       _FeatureDef('Guides',              'Fetal Dev · Protocols',      Icons.menu_book_outlined,     const Color(0xFF6D4C41), () => Navigator.push(context, MaterialPageRoute(builder: (_) => const GuidesScreen()))),
       _FeatureDef('CME & Webinars',       'Conferences · Webinars',     Icons.event_note_rounded,     const Color(0xFF7B1FA2), () => Navigator.push(context, MaterialPageRoute(builder: (_) => const CmeScreen()))),
       _FeatureDef('Academics',           'Peer-reviewed content',       Icons.auto_stories_rounded,   const Color(0xFF283593), () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AcademicsWebScreen(path: '/academics')))),
+      _FeatureDef('Never Again',         'Learn from real mistakes',     Icons.auto_stories,           const Color(0xFF1A237E), () => Navigator.push(context, MaterialPageRoute(builder: (_) => const NeverAgainScreen()))),
     ];
 
     return GridView.builder(
