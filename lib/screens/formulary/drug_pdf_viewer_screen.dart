@@ -39,8 +39,8 @@ class _DrugPdfViewerScreenState extends State<DrugPdfViewerScreen> {
       _isHarrietLane ? const Color(0xFF53D2DC) : Theme.of(context).colorScheme.primary;
 
   String get _pdfAsset => _isHarrietLane
-      ? 'assets/data/formulary/harriet lane drug.pdf'
-      : 'assets/data/formulary/NEOFAX NOV. 2024.pdf';
+      ? 'assets/data/formulary/harriet-lane-drug.pdf'
+      : 'assets/data/formulary/neofax-nov-2024.pdf';
 
   @override
   void initState() {

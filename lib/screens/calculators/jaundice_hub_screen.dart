@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'bilirubin_calculator.dart';
+import 'nice_bilirubin_screen.dart';
 
 class JaundiceHubScreen extends StatelessWidget {
   const JaundiceHubScreen({super.key});
@@ -79,24 +80,18 @@ class JaundiceHubScreen extends StatelessWidget {
             const SizedBox(height: 14),
 
             _JaundiceOptionCard(
-              onTap: () => ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: const Text(
-                    'NICE Guidelines (<35 weeks) — Coming Soon',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  backgroundColor: cs.primary,
-                  behavior: SnackBarBehavior.floating,
-                ),
-              ),
-              isActive: false,
+              onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => const NiceBilirubinScreen())),
+              isActive: true,
               icon: Icons.baby_changing_station,
-              iconBgColor: Colors.grey,
+              iconBgColor: const Color(0xFF1565C0),
               title: '< 35 Weeks',
               subtitle: 'Preterm Infants',
-              description: 'NICE Guidelines\nNICE NG98 — Coming Soon',
-              tag: 'COMING SOON',
-              tagColor: Colors.grey,
+              description: 'NICE CG98 Guideline\nNICE Clinical Guideline 98, May 2010',
+              tag: 'NICE CG98',
+              tagColor: const Color(0xFF1565C0),
               details: const [
                 '📊 Gestation-specific thresholds',
                 '🔬 Phototherapy levels by week',
