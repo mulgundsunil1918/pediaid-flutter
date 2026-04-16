@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'fetal_development_screen.dart';
 import 'nrp_pdf_viewer.dart';
 import '../vaccines/vaccine_screen.dart';
 import 'neonatal_scores/neonatal_scores_screen.dart';
 import 'modified_ballard_screen.dart';
 import 'pals/pals_algorithms_screen.dart';
+import 'neonatal_echo_screen.dart';
 import '../tools/paediatric_parameters_screen.dart';
 import 'polycythemia_guide_screen.dart';
 import 'pofras_screen.dart';
@@ -94,18 +94,12 @@ class GuidesScreen extends StatelessWidget {
                     ),
                     _GuideCard(
                       title: 'Neonatal Echo',
-                      subtitle: 'TnECHO & Neonatal Hemodynamics — NeoCardioLab',
+                      subtitle: 'TnECHO & Neonatal Hemodynamics — 23 measurements',
                       icon: Icons.monitor_heart,
-                      onTap: () async {
-                        final uri = Uri.parse(
-                            'https://www.neocardiolab.com/tnecho-and-neonatal-hemodynamics');
-                        if (!await launchUrl(uri,
-                            mode: LaunchMode.externalApplication)) {
-                          if (context.mounted) {
-                            _showComingSoon(context, 'Could not open browser');
-                          }
-                        }
-                      },
+                      onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => const NeonatalEchoScreen())),
                     ),
                     _GuideCard(
                       title: 'Paediatric Parameters',
