@@ -183,6 +183,11 @@ class _NeverAgainScreenState extends State<NeverAgainScreen> {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         elevation: 0,
+        // Force white foreground for the title, subtitle, and action
+        // icons so they're readable on the blue AppBar regardless of
+        // the active Material theme.
+        foregroundColor: Colors.white,
+        iconTheme: const IconThemeData(color: Colors.white),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -191,13 +196,18 @@ class _NeverAgainScreenState extends State<NeverAgainScreen> {
               style: GoogleFonts.plusJakartaSans(
                 fontWeight: FontWeight.bold,
                 fontSize: 17,
+                color: Colors.white,
               ),
             ),
             Text(
               'Learn from real mistakes · Anonymous',
               style: GoogleFonts.plusJakartaSans(
                 fontSize: 11,
-                color: cs.onSurface.withValues(alpha: 0.55),
+                // AppBar is on a blue background — use white with reduced
+                // alpha so the subtitle is readable on every theme. Using
+                // onSurface here rendered dark grey on blue which was
+                // barely visible.
+                color: Colors.white.withValues(alpha: 0.80),
                 fontWeight: FontWeight.w400,
               ),
             ),
@@ -479,9 +489,13 @@ class _PostCardState extends State<_PostCard> {
                     overflow:
                         _expanded ? TextOverflow.visible : TextOverflow.ellipsis,
                     style: GoogleFonts.plusJakartaSans(
-                      fontSize: 13.5,
+                      fontSize: 14,
                       height: 1.5,
-                      color: cs.onSurface.withValues(alpha: 0.9),
+                      fontWeight: FontWeight.w500,
+                      // Full opacity for maximum readability — the
+                      // previous 0.9 alpha looked washed-out against
+                      // the card background on some themes.
+                      color: cs.onSurface,
                     ),
                   ),
                 ),
@@ -619,10 +633,12 @@ class _ExpandedSection extends StatelessWidget {
                   Text(
                     text,
                     style: GoogleFonts.plusJakartaSans(
-                      fontSize: 13,
+                      fontSize: 13.5,
                       height: 1.55,
-                      fontWeight: bold ? FontWeight.w600 : FontWeight.w400,
-                      color: cs.onSurface.withValues(alpha: 0.85),
+                      fontWeight: bold ? FontWeight.w600 : FontWeight.w500,
+                      // Full opacity — the expanded body is the clinical
+                      // content, it should be as readable as possible.
+                      color: cs.onSurface,
                     ),
                   ),
                 ],
