@@ -18,6 +18,7 @@ import 'parkland_calculator_screen.dart';
 import 'lund_browder_screen.dart';
 import 'burn_mortality_calculator.dart';
 import 'pet_calculator_screen.dart';
+import 'echo_calculators_screen.dart';
 
 class CalculatorsScreen extends StatelessWidget {
   const CalculatorsScreen({super.key});
@@ -117,6 +118,11 @@ class CalculatorsScreen extends StatelessWidget {
       title: 'PET Calculator',
       subtitle: 'Partial Exchange Transfusion — Polycythemia',
       icon: Icons.bloodtype_outlined,
+    ),
+    _CalculatorItem(
+      title: '2D Echo Calculators',
+      subtitle: 'LVO · RVO · PAPSp · EF · LA/Ao · IVC',
+      icon: Icons.monitor_heart,
     ),
   ];
 
@@ -228,6 +234,9 @@ class CalculatorsScreen extends StatelessWidget {
       case 'PET Calculator':
         Navigator.push(context,
             MaterialPageRoute(builder: (_) => const PETCalculatorScreen()));
+      case '2D Echo Calculators':
+        Navigator.push(context,
+            MaterialPageRoute(builder: (_) => const EchoCalculatorsScreen()));
     }
   }
 }

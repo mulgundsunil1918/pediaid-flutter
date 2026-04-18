@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../calculators/echo_calculators_screen.dart';
 
 // ── Window colour map ────────────────────────────────────────────────────────
 const Color _subcostalColor    = Color(0xFF1565C0);
@@ -1231,6 +1232,8 @@ class _NeonatalEchoScreenState extends State<NeonatalEchoScreen> {
             ),
           );
         }),
+        _echoCalculatorsButton(cs),
+        const SizedBox(height: 10),
         _openWebsiteButton(cs),
         const SizedBox(height: 16),
       ],
@@ -1263,6 +1266,8 @@ class _NeonatalEchoScreenState extends State<NeonatalEchoScreen> {
           },
         ),
         const SizedBox(height: 16),
+        _echoCalculatorsButton(cs),
+        const SizedBox(height: 10),
         _openWebsiteButton(cs),
         const SizedBox(height: 16),
       ],
@@ -1387,6 +1392,8 @@ class _NeonatalEchoScreenState extends State<NeonatalEchoScreen> {
           ),
         ),
         const SizedBox(height: 16),
+        _echoCalculatorsButton(cs),
+        const SizedBox(height: 10),
         _openWebsiteButton(cs),
         const SizedBox(height: 16),
       ],
@@ -1598,6 +1605,35 @@ class _NeonatalEchoScreenState extends State<NeonatalEchoScreen> {
         foregroundColor: cs.primary,
         side: BorderSide(color: cs.primary.withValues(alpha: 0.5)),
         padding: const EdgeInsets.symmetric(vertical: 12),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+    );
+  }
+
+  /// "Echo Calculators" CTA — jumps to the interactive calculator screen
+  /// where the same echo formulas can be computed with live input.
+  Widget _echoCalculatorsButton(ColorScheme cs) {
+    return FilledButton.icon(
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const EchoCalculatorsScreen(),
+          ),
+        );
+      },
+      icon: const Icon(Icons.calculate_outlined, size: 18),
+      label: Text(
+        'Useful Echo Calculators',
+        style: GoogleFonts.plusJakartaSans(
+          fontSize: 13,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+      style: FilledButton.styleFrom(
+        backgroundColor: cs.primary,
+        foregroundColor: Colors.white,
+        padding: const EdgeInsets.symmetric(vertical: 14),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
