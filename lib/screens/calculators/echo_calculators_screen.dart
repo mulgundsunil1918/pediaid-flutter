@@ -1,10 +1,17 @@
 // ignore_for_file: library_private_types_in_public_api
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:math';
+import 'echo/baby_session.dart';
+import 'echo/clinical_wizards.dart';
+import 'echo/composite_screens.dart';
 
 // =============================================================================
 // MAIN SCREEN — EchoCalculatorsScreen
+// Stateful to hold the search query + recent-calc list. Wrapped once at the
+// top level with BabySessionProvider so every child screen can read
+// BabySession.of(context).
 // =============================================================================
 
 class EchoCalculatorsScreen extends StatelessWidget {
@@ -12,6 +19,49 @@ class EchoCalculatorsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return const BabySessionProvider(child: _EchoCalculatorsHome());
+  }
+}
+
+class _EchoCalculatorsHome extends StatefulWidget {
+  const _EchoCalculatorsHome();
+
+  @override
+  State<_EchoCalculatorsHome> createState() => _EchoCalculatorsHomeState();
+}
+
+class _EchoCalculatorsHomeState extends State<_EchoCalculatorsHome> {
+  String _query = '';
+  List<String> _recent = const [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadRecent();
+  }
+
+  Future<void> _loadRecent() async {
+    final recent = await EchoPrefs.getRecent();
+    if (mounted) setState(() => _recent = recent);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final q = _query.trim().toLowerCase();
+
+    // Index every discoverable calculator so the search bar can jump to any
+    // of them even if they live inside a sub-screen. Key = stable id used
+    // for "recently used" tracking; value = destination screen + subtitle.
+    final allCalcs = _allSearchable(context);
+    final matching = q.isEmpty
+        ? const <_SearchHit>[]
+        : allCalcs.where((e) {
+            return e.title.toLowerCase().contains(q) ||
+                   e.subtitle.toLowerCase().contains(q) ||
+                   e.tags.any((t) => t.toLowerCase().contains(q));
+          }).toList();
+
     return Scaffold(
       appBar: AppBar(
         foregroundColor: Colors.white,
@@ -42,103 +92,555 @@ class EchoCalculatorsScreen extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          _CategoryCard(
-            icon: Icons.water_drop,
-            color: const Color(0xFF0D47A1),
-            title: 'Cardiac Output',
-            subtitle: 'LVO · RVO · SVC Flow · DAo · SV',
-            count: 5,
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const _CardiacOutputScreen()),
-            ),
-          ),
-          const SizedBox(height: 12),
-          _CategoryCard(
-            icon: Icons.favorite,
-            color: const Color(0xFFC62828),
-            title: 'LV Systolic Function',
-            subtitle: 'EF · FS · MAPSE · S′ TDI LV',
-            count: 4,
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const _LVFunctionScreen()),
-            ),
-          ),
-          const SizedBox(height: 12),
-          _CategoryCard(
-            icon: Icons.air,
-            color: const Color(0xFF1565C0),
-            title: 'Pulmonary Pressures',
-            subtitle: 'PAPSp · PAAT · EI · MPA:Ao',
-            count: 4,
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const _PulmonaryScreen()),
-            ),
-          ),
-          const SizedBox(height: 12),
-          _CategoryCard(
-            icon: Icons.waves,
-            color: const Color(0xFF6A1B9A),
-            title: 'Diastolic Function',
-            subtitle: 'MPI · E/e′',
-            count: 2,
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const _DiastolicScreen()),
-            ),
-          ),
-          const SizedBox(height: 12),
-          _CategoryCard(
-            icon: Icons.waterfall_chart,
-            color: const Color(0xFF00695C),
-            title: 'Volume Status',
-            subtitle: 'IVC Collapsibility · IVC Distensibility · LA/Ao',
-            count: 3,
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const _VolumeStatusScreen()),
-            ),
-          ),
-          const SizedBox(height: 12),
-          _CategoryCard(
-            icon: Icons.swap_horiz,
-            color: const Color(0xFFE65100),
-            title: 'PDA Assessment',
-            subtitle: 'Qp:Qs Ratio',
-            count: 1,
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const _PDAScreen()),
-            ),
-          ),
-          const SizedBox(height: 12),
-          _CategoryCard(
-            icon: Icons.favorite_outline,
-            color: const Color(0xFFAD1457),
-            title: 'RV Systolic Function',
-            subtitle: 'FAC · TAPSE · S′ TDI RV',
-            count: 3,
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const _RVFunctionScreen()),
-            ),
-          ),
-          const SizedBox(height: 12),
-          _CategoryCard(
-            icon: Icons.library_books,
-            color: const Color(0xFF424242),
-            title: 'Reference Values',
-            subtitle: 'LV dimensions · Wall thickness · Valve velocities · Visceral flow',
-            count: 6,
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const _ReferenceValuesScreen()),
+          // ── Baby session bar ──────────────────────────────────────────
+          const BabySessionBar(),
+
+          // ── Search bar ────────────────────────────────────────────────
+          TextField(
+            onChanged: (v) => setState(() => _query = v),
+            style: GoogleFonts.plusJakartaSans(fontSize: 14),
+            decoration: InputDecoration(
+              hintText: 'Search calculators (e.g. PAPSp, LVO, TDD)',
+              hintStyle: GoogleFonts.plusJakartaSans(
+                fontSize: 13,
+                color: cs.onSurface.withValues(alpha: 0.45),
+              ),
+              prefixIcon: Icon(Icons.search_rounded,
+                  color: cs.onSurface.withValues(alpha: 0.55)),
+              suffixIcon: _query.isNotEmpty
+                  ? IconButton(
+                      icon: const Icon(Icons.close_rounded),
+                      onPressed: () => setState(() => _query = ''),
+                    )
+                  : null,
+              filled: true,
+              fillColor: cs.surfaceContainerHighest,
+              contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 12, vertical: 10),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide.none,
+              ),
             ),
           ),
           const SizedBox(height: 16),
+
+          // ── Search results (if a query is active) ─────────────────────
+          if (matching.isNotEmpty) ...[
+            _SectionHeader(title: 'Search results (${matching.length})'),
+            ...matching.map((hit) => Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: _SearchResultTile(hit: hit, onTap: () {
+                    EchoPrefs.recordUse(hit.id).then((_) => _loadRecent());
+                    hit.open(context);
+                  }),
+                )),
+            const SizedBox(height: 16),
+          ],
+
+          // ── Recently used ─────────────────────────────────────────────
+          if (_query.isEmpty && _recent.isNotEmpty) ...[
+            _SectionHeader(title: 'Recently used'),
+            SizedBox(
+              height: 56,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: [
+                  for (final id in _recent)
+                    if (allCalcs.any((c) => c.id == id))
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: _RecentChip(
+                          hit: allCalcs.firstWhere((c) => c.id == id),
+                          onTap: () {
+                            final hit =
+                                allCalcs.firstWhere((c) => c.id == id);
+                            EchoPrefs.recordUse(id).then((_) => _loadRecent());
+                            hit.open(context);
+                          },
+                        ),
+                      ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+          ],
+
+          // ── Wizards & Workflows ───────────────────────────────────────
+          if (_query.isEmpty) ...[
+            _SectionHeader(title: 'Wizards & Workflows'),
+            _CategoryCard(
+              icon: Icons.swap_horiz,
+              color: const Color(0xFFE65100),
+              title: 'PDA Staging Wizard',
+              subtitle: 'El-Khuffash score — combine TDD · LA:Ao · LPA · DTA',
+              count: null,
+              onTap: () {
+                EchoPrefs.recordUse('pda-wizard').then((_) => _loadRecent());
+                Navigator.push(context, MaterialPageRoute(
+                  builder: (_) => const PdaStagingWizardScreen(),
+                ));
+              },
+            ),
+            const SizedBox(height: 12),
+            _CategoryCard(
+              icon: Icons.air,
+              color: const Color(0xFF1565C0),
+              title: 'PPHN Severity Bundle',
+              subtitle: 'Grade pulmonary hypertension & guide iNO / sildenafil',
+              count: null,
+              onTap: () {
+                EchoPrefs.recordUse('pphn-bundle').then((_) => _loadRecent());
+                Navigator.push(context, MaterialPageRoute(
+                  builder: (_) => const PphnSeverityBundleScreen(),
+                ));
+              },
+            ),
+            const SizedBox(height: 12),
+            _CategoryCard(
+              icon: Icons.favorite_border,
+              color: const Color(0xFFC62828),
+              title: 'Shock Phenotype Classifier',
+              subtitle: 'Hypovolaemic · Cardiogenic · Distributive · Mixed',
+              count: null,
+              onTap: () {
+                EchoPrefs.recordUse('shock-classifier').then((_) => _loadRecent());
+                Navigator.push(context, MaterialPageRoute(
+                  builder: (_) => const ShockPhenotypeClassifierScreen(),
+                ));
+              },
+            ),
+            const SizedBox(height: 12),
+            _CategoryCard(
+              icon: Icons.summarize_outlined,
+              color: const Color(0xFF00695C),
+              title: 'Combine Findings',
+              subtitle: 'Generate an integrated echo report — one paragraph impression',
+              count: null,
+              onTap: () {
+                EchoPrefs.recordUse('combine-findings').then((_) => _loadRecent());
+                Navigator.push(context, MaterialPageRoute(
+                  builder: (_) => const CombineFindingsScreen(),
+                ));
+              },
+            ),
+            const SizedBox(height: 12),
+            _CategoryCard(
+              icon: Icons.playlist_play_rounded,
+              color: const Color(0xFF6A1B9A),
+              title: 'Clinical Scenarios',
+              subtitle: 'Pre-defined workflows — PDA · PPHN · Shock · HIE · RDS',
+              count: null,
+              onTap: () {
+                EchoPrefs.recordUse('clinical-scenarios').then((_) => _loadRecent());
+                Navigator.push(context, MaterialPageRoute(
+                  builder: (_) => const ClinicalScenariosScreen(),
+                ));
+              },
+            ),
+            const SizedBox(height: 20),
+
+            // ── Visual Reference ──────────────────────────────────────
+            _SectionHeader(title: 'Visual Reference'),
+            _CategoryCard(
+              icon: Icons.accessibility_new,
+              color: const Color(0xFF283593),
+              title: 'Probe Positions',
+              subtitle: 'Anatomical illustration — Subcostal · Apical · Parasternal · Suprasternal',
+              count: null,
+              onTap: () {
+                EchoPrefs.recordUse('probe-positions').then((_) => _loadRecent());
+                Navigator.push(context, MaterialPageRoute(
+                  builder: (_) => const ProbePositionsScreen(),
+                ));
+              },
+            ),
+            const SizedBox(height: 12),
+            _CategoryCard(
+              icon: Icons.graphic_eq,
+              color: const Color(0xFF00838F),
+              title: 'Waveform Gallery',
+              subtitle: 'Doppler patterns — LVO · MPA · TR jet · ductal · DTA',
+              count: null,
+              onTap: () {
+                EchoPrefs.recordUse('waveform-gallery').then((_) => _loadRecent());
+                Navigator.push(context, MaterialPageRoute(
+                  builder: (_) => const WaveformGalleryScreen(),
+                ));
+              },
+            ),
+            const SizedBox(height: 20),
+
+            // ── Individual calculators by category ────────────────────
+            _SectionHeader(title: 'Calculators by category'),
+            _CategoryCard(
+              icon: Icons.water_drop,
+              color: const Color(0xFF0D47A1),
+              title: 'Cardiac Output',
+              subtitle: 'LVO · RVO · SVC Flow · DAo · SV',
+              count: 5,
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const _CardiacOutputScreen()),
+              ),
+            ),
+            const SizedBox(height: 12),
+            _CategoryCard(
+              icon: Icons.favorite,
+              color: const Color(0xFFC62828),
+              title: 'LV Systolic Function',
+              subtitle: 'EF · FS · MAPSE · S′ TDI LV',
+              count: 4,
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const _LVFunctionScreen()),
+              ),
+            ),
+            const SizedBox(height: 12),
+            _CategoryCard(
+              icon: Icons.air,
+              color: const Color(0xFF1565C0),
+              title: 'Pulmonary Pressures',
+              subtitle: 'PAPSp · PAAT · EI · MPA:Ao',
+              count: 4,
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const _PulmonaryScreen()),
+              ),
+            ),
+            const SizedBox(height: 12),
+            _CategoryCard(
+              icon: Icons.waves,
+              color: const Color(0xFF6A1B9A),
+              title: 'Diastolic Function',
+              subtitle: 'MPI · E/e′',
+              count: 2,
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const _DiastolicScreen()),
+              ),
+            ),
+            const SizedBox(height: 12),
+            _CategoryCard(
+              icon: Icons.waterfall_chart,
+              color: const Color(0xFF00695C),
+              title: 'Volume Status',
+              subtitle: 'IVC Collapsibility · IVC Distensibility · LA/Ao',
+              count: 3,
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const _VolumeStatusScreen()),
+              ),
+            ),
+            const SizedBox(height: 12),
+            _CategoryCard(
+              icon: Icons.swap_horiz,
+              color: const Color(0xFFE65100),
+              title: 'PDA Assessment',
+              subtitle: 'Qp:Qs Ratio',
+              count: 1,
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const _PDAScreen()),
+              ),
+            ),
+            const SizedBox(height: 12),
+            _CategoryCard(
+              icon: Icons.favorite_outline,
+              color: const Color(0xFFAD1457),
+              title: 'RV Systolic Function',
+              subtitle: 'FAC · TAPSE · S′ TDI RV',
+              count: 3,
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const _RVFunctionScreen()),
+              ),
+            ),
+            const SizedBox(height: 12),
+            _CategoryCard(
+              icon: Icons.library_books,
+              color: const Color(0xFF424242),
+              title: 'Reference Values',
+              subtitle: 'LV dimensions · Wall thickness · Valve velocities · Visceral flow',
+              count: 6,
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const _ReferenceValuesScreen()),
+              ),
+            ),
+            const SizedBox(height: 16),
+          ],
         ],
+      ),
+    );
+  }
+
+  // Flat index of every searchable item so the search bar can jump anywhere.
+  // Each entry names a destination screen the tap opens. Since individual
+  // calculators live inside sub-screens (not standalone), we open the
+  // containing sub-screen rather than the calculator itself — good enough
+  // for discoverability.
+  List<_SearchHit> _allSearchable(BuildContext context) => [
+        _SearchHit(id: 'lvo', title: 'LVO (Left Ventricular Output)',
+            subtitle: 'Cardiac Output',
+            tags: ['lvo', 'cardiac output', 'vti'],
+            open: (c) => Navigator.push(c, MaterialPageRoute(
+                  builder: (_) => const _CardiacOutputScreen()))),
+        _SearchHit(id: 'rvo', title: 'RVO (Right Ventricular Output)',
+            subtitle: 'Cardiac Output',
+            tags: ['rvo', 'mpa'],
+            open: (c) => Navigator.push(c, MaterialPageRoute(
+                  builder: (_) => const _CardiacOutputScreen()))),
+        _SearchHit(id: 'svc', title: 'SVC Flow',
+            subtitle: 'Cardiac Output',
+            tags: ['svc', 'superior vena cava', 'ivh', 'systemic flow'],
+            open: (c) => Navigator.push(c, MaterialPageRoute(
+                  builder: (_) => const _CardiacOutputScreen()))),
+        _SearchHit(id: 'sv', title: 'Stroke Volume',
+            subtitle: 'Cardiac Output', tags: ['sv', 'stroke volume'],
+            open: (c) => Navigator.push(c, MaterialPageRoute(
+                  builder: (_) => const _CardiacOutputScreen()))),
+        _SearchHit(id: 'dao', title: 'DAo Flow',
+            subtitle: 'Cardiac Output', tags: ['dao', 'descending aorta', 'steal'],
+            open: (c) => Navigator.push(c, MaterialPageRoute(
+                  builder: (_) => const _CardiacOutputScreen()))),
+        _SearchHit(id: 'ef', title: 'Ejection Fraction (Simpson)',
+            subtitle: 'LV Systolic Function',
+            tags: ['ef', 'ejection fraction', 'simpson'],
+            open: (c) => Navigator.push(c, MaterialPageRoute(
+                  builder: (_) => const _LVFunctionScreen()))),
+        _SearchHit(id: 'fs', title: 'Fractional Shortening',
+            subtitle: 'LV Systolic Function',
+            tags: ['fs', 'shortening', 'm-mode'],
+            open: (c) => Navigator.push(c, MaterialPageRoute(
+                  builder: (_) => const _LVFunctionScreen()))),
+        _SearchHit(id: 'mapse', title: 'MAPSE (by GA)',
+            subtitle: 'LV Systolic Function',
+            tags: ['mapse', 'longitudinal'],
+            open: (c) => Navigator.push(c, MaterialPageRoute(
+                  builder: (_) => const _LVFunctionScreen()))),
+        _SearchHit(id: 'sprime-lv', title: "S′ TDI (LV)",
+            subtitle: 'LV Systolic Function',
+            tags: ['s prime', 'tissue doppler', 'mitral'],
+            open: (c) => Navigator.push(c, MaterialPageRoute(
+                  builder: (_) => const _LVFunctionScreen()))),
+        _SearchHit(id: 'papsp', title: 'PAPSp (from TR jet)',
+            subtitle: 'Pulmonary Pressures',
+            tags: ['papsp', 'tr jet', 'pulmonary pressure', 'pphn', 'bernoulli'],
+            open: (c) => Navigator.push(c, MaterialPageRoute(
+                  builder: (_) => const _PulmonaryScreen()))),
+        _SearchHit(id: 'paat', title: 'PAAT / PAATi',
+            subtitle: 'Pulmonary Pressures',
+            tags: ['paat', 'pvr', 'pulmonary'],
+            open: (c) => Navigator.push(c, MaterialPageRoute(
+                  builder: (_) => const _PulmonaryScreen()))),
+        _SearchHit(id: 'ei', title: 'Eccentricity Index',
+            subtitle: 'Pulmonary Pressures',
+            tags: ['ei', 'eccentricity', 'd-sign', 'septal'],
+            open: (c) => Navigator.push(c, MaterialPageRoute(
+                  builder: (_) => const _PulmonaryScreen()))),
+        _SearchHit(id: 'mpa-ao', title: 'MPA:Ao Ratio',
+            subtitle: 'Pulmonary Pressures', tags: ['mpa', 'ao'],
+            open: (c) => Navigator.push(c, MaterialPageRoute(
+                  builder: (_) => const _PulmonaryScreen()))),
+        _SearchHit(id: 'mpi', title: 'MPI / Tei Index',
+            subtitle: 'Diastolic Function',
+            tags: ['mpi', 'tei', 'myocardial performance'],
+            open: (c) => Navigator.push(c, MaterialPageRoute(
+                  builder: (_) => const _DiastolicScreen()))),
+        _SearchHit(id: 'ee-prime', title: "E/e′ Ratio",
+            subtitle: 'Diastolic Function',
+            tags: ['e/e', 'filling pressure', 'diastolic'],
+            open: (c) => Navigator.push(c, MaterialPageRoute(
+                  builder: (_) => const _DiastolicScreen()))),
+        _SearchHit(id: 'civc', title: 'IVC Collapsibility Index',
+            subtitle: 'Volume Status',
+            tags: ['ivc', 'collapsibility', 'volume'],
+            open: (c) => Navigator.push(c, MaterialPageRoute(
+                  builder: (_) => const _VolumeStatusScreen()))),
+        _SearchHit(id: 'divc', title: 'IVC Distensibility Index',
+            subtitle: 'Volume Status',
+            tags: ['ivc', 'distensibility', 'fluid responsive'],
+            open: (c) => Navigator.push(c, MaterialPageRoute(
+                  builder: (_) => const _VolumeStatusScreen()))),
+        _SearchHit(id: 'la-ao', title: 'LA/Ao Ratio',
+            subtitle: 'Volume Status',
+            tags: ['la', 'ao', 'pda'],
+            open: (c) => Navigator.push(c, MaterialPageRoute(
+                  builder: (_) => const _VolumeStatusScreen()))),
+        _SearchHit(id: 'qp-qs', title: 'Qp:Qs Ratio',
+            subtitle: 'PDA Assessment',
+            tags: ['qp', 'qs', 'shunt'],
+            open: (c) => Navigator.push(c, MaterialPageRoute(
+                  builder: (_) => const _PDAScreen()))),
+        _SearchHit(id: 'fac', title: 'Fractional Area Change',
+            subtitle: 'RV Systolic Function',
+            tags: ['fac', 'rv function'],
+            open: (c) => Navigator.push(c, MaterialPageRoute(
+                  builder: (_) => const _RVFunctionScreen()))),
+        _SearchHit(id: 'tapse', title: 'TAPSE (by GA)',
+            subtitle: 'RV Systolic Function',
+            tags: ['tapse', 'rv'],
+            open: (c) => Navigator.push(c, MaterialPageRoute(
+                  builder: (_) => const _RVFunctionScreen()))),
+        // Wizards also searchable
+        _SearchHit(id: 'pda-wizard', title: 'PDA Staging Wizard',
+            subtitle: 'Clinical wizard',
+            tags: ['pda', 'el-khuffash', 'hspda'],
+            open: (c) => Navigator.push(c, MaterialPageRoute(
+                  builder: (_) => const PdaStagingWizardScreen()))),
+        _SearchHit(id: 'pphn-bundle', title: 'PPHN Severity Bundle',
+            subtitle: 'Clinical wizard',
+            tags: ['pphn', 'pulmonary hypertension', 'ino'],
+            open: (c) => Navigator.push(c, MaterialPageRoute(
+                  builder: (_) => const PphnSeverityBundleScreen()))),
+        _SearchHit(id: 'shock-classifier', title: 'Shock Phenotype Classifier',
+            subtitle: 'Clinical wizard',
+            tags: ['shock', 'hypovolaemic', 'cardiogenic', 'distributive'],
+            open: (c) => Navigator.push(c, MaterialPageRoute(
+                  builder: (_) => const ShockPhenotypeClassifierScreen()))),
+        _SearchHit(id: 'combine-findings', title: 'Combine Findings',
+            subtitle: 'Integrated report',
+            tags: ['combine', 'summary', 'report'],
+            open: (c) => Navigator.push(c, MaterialPageRoute(
+                  builder: (_) => const CombineFindingsScreen()))),
+        _SearchHit(id: 'clinical-scenarios', title: 'Clinical Scenarios',
+            subtitle: 'Workflow launcher',
+            tags: ['scenarios', 'workflow', 'pda', 'pphn'],
+            open: (c) => Navigator.push(c, MaterialPageRoute(
+                  builder: (_) => const ClinicalScenariosScreen()))),
+        _SearchHit(id: 'probe-positions', title: 'Probe Positions',
+            subtitle: 'Visual reference',
+            tags: ['probe', 'window', 'subcostal', 'apical'],
+            open: (c) => Navigator.push(c, MaterialPageRoute(
+                  builder: (_) => const ProbePositionsScreen()))),
+        _SearchHit(id: 'waveform-gallery', title: 'Waveform Gallery',
+            subtitle: 'Visual reference',
+            tags: ['waveform', 'doppler', 'gallery'],
+            open: (c) => Navigator.push(c, MaterialPageRoute(
+                  builder: (_) => const WaveformGalleryScreen()))),
+      ];
+}
+
+// =============================================================================
+// Search result + recent chip helpers
+// =============================================================================
+
+class _SearchHit {
+  final String id;
+  final String title;
+  final String subtitle;
+  final List<String> tags;
+  final void Function(BuildContext) open;
+
+  _SearchHit({
+    required this.id,
+    required this.title,
+    required this.subtitle,
+    required this.tags,
+    required this.open,
+  });
+}
+
+class _SectionHeader extends StatelessWidget {
+  const _SectionHeader({required this.title});
+  final String title;
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10, top: 2, left: 2),
+      child: Text(
+        title,
+        style: GoogleFonts.plusJakartaSans(
+          fontSize: 12,
+          fontWeight: FontWeight.w800,
+          color: cs.onSurface.withValues(alpha: 0.55),
+          letterSpacing: 0.8,
+        ),
+      ),
+    );
+  }
+}
+
+class _SearchResultTile extends StatelessWidget {
+  const _SearchResultTile({required this.hit, required this.onTap});
+  final _SearchHit hit;
+  final VoidCallback onTap;
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return InkWell(
+      onTap: () { HapticFeedback.selectionClick(); onTap(); },
+      borderRadius: BorderRadius.circular(10),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardColor,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: cs.onSurface.withValues(alpha: 0.1)),
+        ),
+        child: Row(
+          children: [
+            Icon(Icons.arrow_forward_rounded,
+                size: 18, color: cs.primary),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(hit.title,
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                      )),
+                  Text(hit.subtitle,
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 12,
+                        color: cs.onSurface.withValues(alpha: 0.6),
+                      )),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _RecentChip extends StatelessWidget {
+  const _RecentChip({required this.hit, required this.onTap});
+  final _SearchHit hit;
+  final VoidCallback onTap;
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return InkWell(
+      onTap: () { HapticFeedback.selectionClick(); onTap(); },
+      borderRadius: BorderRadius.circular(999),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+        decoration: BoxDecoration(
+          color: cs.primary.withValues(alpha: 0.08),
+          borderRadius: BorderRadius.circular(999),
+          border: Border.all(color: cs.primary.withValues(alpha: 0.2)),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.history, size: 14, color: cs.primary),
+            const SizedBox(width: 6),
+            Text(
+              hit.title,
+              style: GoogleFonts.plusJakartaSans(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: cs.primary,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -153,7 +655,9 @@ class _CategoryCard extends StatelessWidget {
   final Color color;
   final String title;
   final String subtitle;
-  final int count;
+  /// If null, no count badge is shown — used for wizard/workflow cards
+  /// that don't have a simple integer count.
+  final int? count;
   final VoidCallback onTap;
 
   const _CategoryCard({
@@ -213,21 +717,25 @@ class _CategoryCard extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 8),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(
-                color: color.withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Text(
-                '$count',
-                style: GoogleFonts.plusJakartaSans(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w700,
-                  color: color,
+            if (count != null)
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(12),
                 ),
-              ),
-            ),
+                child: Text(
+                  '$count',
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                    color: color,
+                  ),
+                ),
+              )
+            else
+              Icon(Icons.chevron_right_rounded,
+                  color: color.withValues(alpha: 0.5)),
             const SizedBox(width: 4),
             Icon(Icons.chevron_right, color: cs.onSurface.withValues(alpha: 0.4)),
           ],
@@ -1218,7 +1726,7 @@ class _LVOCalculatorState extends State<_LVOCalculator> {
         const SizedBox(height: 14),
         StatefulBuilder(
           builder: (ctx, setSt) => FilledButton(
-            onPressed: () { setSt(() {}); _calculate(); },
+            onPressed: () { HapticFeedback.mediumImpact(); setSt(() {}); _calculate(); },
             child: Text('Calculate', style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600)),
           ),
         ),
@@ -1324,7 +1832,7 @@ class _RVOCalculatorState extends State<_RVOCalculator> {
         const SizedBox(height: 14),
         StatefulBuilder(
           builder: (ctx, setSt) => FilledButton(
-            onPressed: () { setSt(() {}); _calculate(); },
+            onPressed: () { HapticFeedback.mediumImpact(); setSt(() {}); _calculate(); },
             child: Text('Calculate', style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600)),
           ),
         ),
@@ -1436,7 +1944,7 @@ class _SVCCalculatorState extends State<_SVCCalculator> {
         const SizedBox(height: 14),
         StatefulBuilder(
           builder: (ctx, setSt) => FilledButton(
-            onPressed: () { setSt(() {}); _calculate(); },
+            onPressed: () { HapticFeedback.mediumImpact(); setSt(() {}); _calculate(); },
             child: Text('Calculate', style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600)),
           ),
         ),
@@ -1540,7 +2048,7 @@ class _StrokeVolumeCalculatorState extends State<_StrokeVolumeCalculator> {
         const SizedBox(height: 14),
         StatefulBuilder(
           builder: (ctx, setSt) => FilledButton(
-            onPressed: () { setSt(() {}); _calculate(); },
+            onPressed: () { HapticFeedback.mediumImpact(); setSt(() {}); _calculate(); },
             child: Text('Calculate', style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600)),
           ),
         ),
@@ -1656,7 +2164,7 @@ class _EFCalculatorState extends State<_EFCalculator> {
         const SizedBox(height: 14),
         StatefulBuilder(
           builder: (ctx, setSt) => FilledButton(
-            onPressed: () { setSt(() {}); _calculate(); },
+            onPressed: () { HapticFeedback.mediumImpact(); setSt(() {}); _calculate(); },
             child: Text('Calculate', style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600)),
           ),
         ),
@@ -1777,7 +2285,7 @@ class _FSCalculatorState extends State<_FSCalculator> {
         const SizedBox(height: 14),
         StatefulBuilder(
           builder: (ctx, setSt) => FilledButton(
-            onPressed: () { setSt(() {}); _calculate(); },
+            onPressed: () { HapticFeedback.mediumImpact(); setSt(() {}); _calculate(); },
             child: Text('Calculate', style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600)),
           ),
         ),
@@ -1978,7 +2486,7 @@ class _PAPSpCalculatorState extends State<_PAPSpCalculator> {
         const SizedBox(height: 14),
         StatefulBuilder(
           builder: (ctx, setSt) => FilledButton(
-            onPressed: () { setSt(() {}); _calculate(); },
+            onPressed: () { HapticFeedback.mediumImpact(); setSt(() {}); _calculate(); },
             child: Text('Calculate', style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600)),
           ),
         ),
@@ -2086,7 +2594,7 @@ class _PAATCalculatorState extends State<_PAATCalculator> {
         const SizedBox(height: 14),
         StatefulBuilder(
           builder: (ctx, setSt) => FilledButton(
-            onPressed: () { setSt(() {}); _calculate(); },
+            onPressed: () { HapticFeedback.mediumImpact(); setSt(() {}); _calculate(); },
             child: Text('Calculate', style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600)),
           ),
         ),
@@ -2198,7 +2706,7 @@ class _EccentricityCalculatorState extends State<_EccentricityCalculator> {
         const SizedBox(height: 14),
         StatefulBuilder(
           builder: (ctx, setSt) => FilledButton(
-            onPressed: () { setSt(() {}); _calculate(); },
+            onPressed: () { HapticFeedback.mediumImpact(); setSt(() {}); _calculate(); },
             child: Text('Calculate', style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600)),
           ),
         ),
@@ -2412,7 +2920,7 @@ class _MPICalculatorState extends State<_MPICalculator> {
         const SizedBox(height: 14),
         StatefulBuilder(
           builder: (ctx, setSt) => FilledButton(
-            onPressed: () { setSt(() {}); _calculate(); },
+            onPressed: () { HapticFeedback.mediumImpact(); setSt(() {}); _calculate(); },
             child: Text('Calculate', style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600)),
           ),
         ),
@@ -2521,7 +3029,7 @@ class _IVCCollapsibilityCalculatorState extends State<_IVCCollapsibilityCalculat
         const SizedBox(height: 14),
         StatefulBuilder(
           builder: (ctx, setSt) => FilledButton(
-            onPressed: () { setSt(() {}); _calculate(); },
+            onPressed: () { HapticFeedback.mediumImpact(); setSt(() {}); _calculate(); },
             child: Text('Calculate', style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600)),
           ),
         ),
@@ -2659,7 +3167,7 @@ class _IVCDistensibilityCalculatorState extends State<_IVCDistensibilityCalculat
         const SizedBox(height: 14),
         StatefulBuilder(
           builder: (ctx, setSt) => FilledButton(
-            onPressed: () { setSt(() {}); _calculate(); },
+            onPressed: () { HapticFeedback.mediumImpact(); setSt(() {}); _calculate(); },
             child: Text('Calculate', style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600)),
           ),
         ),
@@ -2792,7 +3300,7 @@ class _LAAoCalculatorState extends State<_LAAoCalculator> {
         const SizedBox(height: 14),
         StatefulBuilder(
           builder: (ctx, setSt) => FilledButton(
-            onPressed: () { setSt(() {}); _calculate(); },
+            onPressed: () { HapticFeedback.mediumImpact(); setSt(() {}); _calculate(); },
             child: Text('Calculate', style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600)),
           ),
         ),
@@ -2900,7 +3408,7 @@ class _QpQsCalculatorState extends State<_QpQsCalculator> {
         const SizedBox(height: 14),
         StatefulBuilder(
           builder: (ctx, setSt) => FilledButton(
-            onPressed: () { setSt(() {}); _calculate(); },
+            onPressed: () { HapticFeedback.mediumImpact(); setSt(() {}); _calculate(); },
             child: Text('Calculate', style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600)),
           ),
         ),
@@ -3008,7 +3516,7 @@ class _DAoFlowCalculatorState extends State<_DAoFlowCalculator> {
         const SizedBox(height: 14),
         StatefulBuilder(
           builder: (ctx, setSt) => FilledButton(
-            onPressed: () { setSt(() {}); _calculate(); },
+            onPressed: () { HapticFeedback.mediumImpact(); setSt(() {}); _calculate(); },
             child: Text('Calculate', style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600)),
           ),
         ),
@@ -3099,7 +3607,7 @@ class _MPAAoCalculatorState extends State<_MPAAoCalculator> {
         const SizedBox(height: 14),
         StatefulBuilder(
           builder: (ctx, setSt) => FilledButton(
-            onPressed: () { setSt(() {}); _calculate(); },
+            onPressed: () { HapticFeedback.mediumImpact(); setSt(() {}); _calculate(); },
             child: Text('Calculate', style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600)),
           ),
         ),
@@ -3206,7 +3714,7 @@ class _FACCalculatorState extends State<_FACCalculator> {
         const SizedBox(height: 14),
         StatefulBuilder(
           builder: (ctx, setSt) => FilledButton(
-            onPressed: () { setSt(() {}); _calculate(); },
+            onPressed: () { HapticFeedback.mediumImpact(); setSt(() {}); _calculate(); },
             child: Text('Calculate', style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600)),
           ),
         ),
@@ -3328,7 +3836,7 @@ class _EToEPrimeCalculatorState extends State<_EToEPrimeCalculator> {
         const SizedBox(height: 14),
         StatefulBuilder(
           builder: (ctx, setSt) => FilledButton(
-            onPressed: () { setSt(() {}); _calculate(); },
+            onPressed: () { HapticFeedback.mediumImpact(); setSt(() {}); _calculate(); },
             child: Text('Calculate', style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600)),
           ),
         ),
