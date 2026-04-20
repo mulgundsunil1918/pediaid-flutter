@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../services/formulary_service.dart';
 import 'drug_pdf_viewer_screen.dart';
+import '../drugs/emergency_nicu_drugs_screen.dart';
 
 enum _Source { none, neofax, harrietLane }
 
@@ -163,6 +164,14 @@ class _FormularyScreenState extends State<FormularyScreen> {
                   ),
                 ),
               ],
+            ),
+            const SizedBox(height: 12),
+            _EmergencyDrugsCard(
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => const EmergencyNICUDrugsScreen()),
+              ),
             ),
           ],
         ),
@@ -381,6 +390,126 @@ class _SourceCard extends StatelessWidget {
                 color: cs.onSurface.withValues(alpha: selected ? 0.9 : 0.45),
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Emergency NICU Drugs shortcut card
+//
+// Deep-red tile surfaced at the top of the Formulary screen. A subtle
+// pulsing white dot on the right makes it visibly different from the
+// normal source cards — flags this as an emergency / high-priority tool
+// without screaming.
+// ─────────────────────────────────────────────────────────────────────────────
+
+class _EmergencyDrugsCard extends StatefulWidget {
+  const _EmergencyDrugsCard({required this.onTap});
+  final VoidCallback onTap;
+
+  @override
+  State<_EmergencyDrugsCard> createState() => _EmergencyDrugsCardState();
+}
+
+class _EmergencyDrugsCardState extends State<_EmergencyDrugsCard>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _pulse;
+
+  @override
+  void initState() {
+    super.initState();
+    _pulse = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1200),
+    )..repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _pulse.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: widget.onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        decoration: BoxDecoration(
+          color: const Color(0xFFB71C1C),
+          borderRadius: BorderRadius.circular(14),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFFB71C1C).withValues(alpha: 0.35),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            const Icon(Icons.emergency, color: Colors.white, size: 24),
+            const SizedBox(width: 12),
+            const Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Emergency NICU Drugs',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 2),
+                  Text(
+                    'Weight-based · Preparation Guide',
+                    style: TextStyle(
+                      color: Color(0xCCFFFFFF),
+                      fontSize: 11.5,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
+            // Pulsing white dot — attention indicator.
+            AnimatedBuilder(
+              animation: _pulse,
+              builder: (context, _) {
+                final t = _pulse.value;
+                return Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Container(
+                      width: 22 + (6 * t),
+                      height: 22 + (6 * t),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white.withValues(alpha: 0.25 * (1 - t)),
+                      ),
+                    ),
+                    Container(
+                      width: 10,
+                      height: 10,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+            const SizedBox(width: 6),
+            const Icon(Icons.chevron_right, color: Colors.white),
           ],
         ),
       ),
