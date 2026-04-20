@@ -12,6 +12,7 @@ import 'polycythemia_guide_screen.dart';
 import 'pofras_screen.dart';
 import 'can_score_screen.dart';
 import 'ga_classification_screen.dart';
+import 'birthweight_classification_screen.dart';
 
 class GuidesScreen extends StatelessWidget {
   const GuidesScreen({super.key});
@@ -52,6 +53,15 @@ class GuidesScreen extends StatelessWidget {
                       onTap: () => Navigator.push(context,
                           MaterialPageRoute(
                               builder: (_) => const GAClassificationScreen())),
+                    ),
+                    _GuideCard(
+                      title: 'Birthweight Classification',
+                      subtitle: 'ELBW · VLBW · LBW · NBW · Macrosomia',
+                      icon: Icons.monitor_weight_outlined,
+                      onTap: () => Navigator.push(context,
+                          MaterialPageRoute(
+                              builder: (_) =>
+                                  const BirthweightClassificationScreen())),
                     ),
                     _GuideCard(
                       title: 'Fetal Development',

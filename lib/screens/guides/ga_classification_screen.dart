@@ -16,6 +16,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'widgets/view_mode_toggle.dart';
 
 // ---------------------------------------------------------------------------
 // Classification data — single source of truth for both the live banner
@@ -171,9 +172,12 @@ class GAClassificationScreen extends StatefulWidget {
   State<GAClassificationScreen> createState() => _GAClassificationScreenState();
 }
 
+enum _ViewMode { smart, table }
+
 class _GAClassificationScreenState extends State<GAClassificationScreen> {
   final _weeksCtl = TextEditingController();
   final _daysCtl = TextEditingController();
+  _ViewMode _view = _ViewMode.smart;
 
   @override
   void initState() {
@@ -246,29 +250,74 @@ class _GAClassificationScreenState extends State<GAClassificationScreen> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          _QuickClassifierCard(
-            weeksCtl: _weeksCtl,
-            daysCtl: _daysCtl,
-            totalDays: totalDays,
-            primary: primary,
-            preterm: preterm,
+          // ── View toggle: Smart ↔ Table ──────────────────────────────
+          ViewModeToggle(
+            value: _view == _ViewMode.smart
+                ? ViewModeChoice.smart
+                : ViewModeChoice.table,
+            onChanged: (choice) => setState(() {
+              _view = choice == ViewModeChoice.smart
+                  ? _ViewMode.smart
+                  : _ViewMode.table;
+            }),
           ),
-          const SizedBox(height: 22),
-          _SectionLabel(
-            label: 'Full Classification Table',
-            color: cs.primary,
-          ),
-          const SizedBox(height: 10),
-          ..._classifications.map(
-            (c) => Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: _ClassCard(
-                entry: c,
-                highlighted: highlighted.contains(c.name),
+          const SizedBox(height: 16),
+
+          if (_view == _ViewMode.smart) ...[
+            _QuickClassifierCard(
+              weeksCtl: _weeksCtl,
+              daysCtl: _daysCtl,
+              totalDays: totalDays,
+              primary: primary,
+              preterm: preterm,
+            ),
+            // Smart view also shows the matching card(s) below — focused view
+            if (highlighted.isNotEmpty) ...[
+              const SizedBox(height: 20),
+              _SectionLabel(
+                label: 'Matching Classification',
+                color: primary?.color ?? cs.primary,
+              ),
+              const SizedBox(height: 10),
+              ..._classifications
+                  .where((c) => highlighted.contains(c.name))
+                  .map(
+                    (c) => Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: _ClassCard(entry: c, highlighted: true),
+                    ),
+                  ),
+              const SizedBox(height: 8),
+              TextButton.icon(
+                onPressed: () => setState(() => _view = _ViewMode.table),
+                icon: const Icon(Icons.table_chart_outlined, size: 16),
+                label: Text(
+                  'View full table →',
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 12.5,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ],
+          ] else ...[
+            _SectionLabel(
+              label: 'Full Classification Table',
+              color: cs.primary,
+            ),
+            const SizedBox(height: 10),
+            ..._classifications.map(
+              (c) => Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: _ClassCard(
+                  entry: c,
+                  highlighted: highlighted.contains(c.name),
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 12),
+          ],
+
+          const SizedBox(height: 16),
           Text(
             'Table 6-2: Definitions of Postnatal Gestational Age.\n'
             'Source: Chapter 6 — Gestational Age and Birthweight Classification, Page 51.\n'
