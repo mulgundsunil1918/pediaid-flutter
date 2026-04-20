@@ -1116,6 +1116,10 @@ class _NeonatalEchoScreenState extends State<NeonatalEchoScreen> {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
+        // Force white foreground so the title + subtitle + back arrow
+        // stay readable on the blue AppBar regardless of theme.
+        foregroundColor: Colors.white,
+        iconTheme: const IconThemeData(color: Colors.white),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -1124,13 +1128,14 @@ class _NeonatalEchoScreenState extends State<NeonatalEchoScreen> {
               style: GoogleFonts.plusJakartaSans(
                 fontWeight: FontWeight.w700,
                 fontSize: 17,
+                color: Colors.white,
               ),
             ),
             Text(
               'Point-of-Care Guide · Neonates',
               style: GoogleFonts.plusJakartaSans(
                 fontSize: 11,
-                color: cs.onSurface.withValues(alpha: 0.5),
+                color: Colors.white.withValues(alpha: 0.80),
                 fontWeight: FontWeight.w400,
               ),
             ),

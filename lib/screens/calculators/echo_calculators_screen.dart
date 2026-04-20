@@ -14,6 +14,8 @@ class EchoCalculatorsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        foregroundColor: Colors.white,
+        iconTheme: const IconThemeData(color: Colors.white),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -22,13 +24,14 @@ class EchoCalculatorsScreen extends StatelessWidget {
               style: GoogleFonts.plusJakartaSans(
                 fontWeight: FontWeight.w700,
                 fontSize: 18,
+                color: Colors.white,
               ),
             ),
             Text(
               'Neonatal · Point-of-Care',
               style: GoogleFonts.plusJakartaSans(
                 fontSize: 11,
-                color: Colors.grey[500],
+                color: Colors.white.withValues(alpha: 0.80),
                 fontWeight: FontWeight.w400,
               ),
             ),
@@ -1152,11 +1155,6 @@ class _LVOCalculatorState extends State<_LVOCalculator> {
   double? _lvo;
   double? _svPerKg;
 
-  bool get _canCalc =>
-      _dCtrl.text.isNotEmpty &&
-      _vtiCtrl.text.isNotEmpty &&
-      _hrCtrl.text.isNotEmpty &&
-      _wtCtrl.text.isNotEmpty;
 
   void _calculate() {
     final d = double.tryParse(_dCtrl.text);
@@ -1220,7 +1218,7 @@ class _LVOCalculatorState extends State<_LVOCalculator> {
         const SizedBox(height: 14),
         StatefulBuilder(
           builder: (ctx, setSt) => FilledButton(
-            onPressed: _canCalc ? () { setSt(() {}); _calculate(); } : null,
+            onPressed: () { setSt(() {}); _calculate(); },
             child: Text('Calculate', style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600)),
           ),
         ),
@@ -1267,11 +1265,6 @@ class _RVOCalculatorState extends State<_RVOCalculator> {
 
   double? _rvo;
 
-  bool get _canCalc =>
-      _dCtrl.text.isNotEmpty &&
-      _vtiCtrl.text.isNotEmpty &&
-      _hrCtrl.text.isNotEmpty &&
-      _wtCtrl.text.isNotEmpty;
 
   void _calculate() {
     final d = double.tryParse(_dCtrl.text);
@@ -1331,7 +1324,7 @@ class _RVOCalculatorState extends State<_RVOCalculator> {
         const SizedBox(height: 14),
         StatefulBuilder(
           builder: (ctx, setSt) => FilledButton(
-            onPressed: _canCalc ? () { setSt(() {}); _calculate(); } : null,
+            onPressed: () { setSt(() {}); _calculate(); },
             child: Text('Calculate', style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600)),
           ),
         ),
@@ -1377,11 +1370,6 @@ class _SVCCalculatorState extends State<_SVCCalculator> {
 
   double? _svc;
 
-  bool get _canCalc =>
-      _dCtrl.text.isNotEmpty &&
-      _vtiCtrl.text.isNotEmpty &&
-      _hrCtrl.text.isNotEmpty &&
-      _wtCtrl.text.isNotEmpty;
 
   void _calculate() {
     final d = double.tryParse(_dCtrl.text);
@@ -1448,7 +1436,7 @@ class _SVCCalculatorState extends State<_SVCCalculator> {
         const SizedBox(height: 14),
         StatefulBuilder(
           builder: (ctx, setSt) => FilledButton(
-            onPressed: _canCalc ? () { setSt(() {}); _calculate(); } : null,
+            onPressed: () { setSt(() {}); _calculate(); },
             child: Text('Calculate', style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600)),
           ),
         ),
@@ -1495,8 +1483,6 @@ class _StrokeVolumeCalculatorState extends State<_StrokeVolumeCalculator> {
   double? _sv;
   double? _svPerKg;
 
-  bool get _canCalc =>
-      _dCtrl.text.isNotEmpty && _vtiCtrl.text.isNotEmpty && _wtCtrl.text.isNotEmpty;
 
   void _calculate() {
     final d = double.tryParse(_dCtrl.text);
@@ -1554,7 +1540,7 @@ class _StrokeVolumeCalculatorState extends State<_StrokeVolumeCalculator> {
         const SizedBox(height: 14),
         StatefulBuilder(
           builder: (ctx, setSt) => FilledButton(
-            onPressed: _canCalc ? () { setSt(() {}); _calculate(); } : null,
+            onPressed: () { setSt(() {}); _calculate(); },
             child: Text('Calculate', style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600)),
           ),
         ),
@@ -1598,7 +1584,6 @@ class _EFCalculatorState extends State<_EFCalculator> {
   double? _ef;
   String? _error;
 
-  bool get _canCalc => _edvCtrl.text.isNotEmpty && _esvCtrl.text.isNotEmpty;
 
   void _calculate() {
     final edv = double.tryParse(_edvCtrl.text);
@@ -1671,7 +1656,7 @@ class _EFCalculatorState extends State<_EFCalculator> {
         const SizedBox(height: 14),
         StatefulBuilder(
           builder: (ctx, setSt) => FilledButton(
-            onPressed: _canCalc ? () { setSt(() {}); _calculate(); } : null,
+            onPressed: () { setSt(() {}); _calculate(); },
             child: Text('Calculate', style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600)),
           ),
         ),
@@ -1733,7 +1718,6 @@ class _FSCalculatorState extends State<_FSCalculator> {
   double? _fs;
   String? _error;
 
-  bool get _canCalc => _lveddCtrl.text.isNotEmpty && _lvesdCtrl.text.isNotEmpty;
 
   void _calculate() {
     final lvedd = double.tryParse(_lveddCtrl.text);
@@ -1793,7 +1777,7 @@ class _FSCalculatorState extends State<_FSCalculator> {
         const SizedBox(height: 14),
         StatefulBuilder(
           builder: (ctx, setSt) => FilledButton(
-            onPressed: _canCalc ? () { setSt(() {}); _calculate(); } : null,
+            onPressed: () { setSt(() {}); _calculate(); },
             child: Text('Calculate', style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600)),
           ),
         ),
@@ -1858,7 +1842,6 @@ class _PAPSpCalculatorState extends State<_PAPSpCalculator> {
   double? _papsp;
   double? _ratio;
 
-  bool get _canCalc => _vCtrl.text.isNotEmpty && _rapCtrl.text.isNotEmpty;
 
   void _calculate() {
     final v = double.tryParse(_vCtrl.text);
@@ -1995,7 +1978,7 @@ class _PAPSpCalculatorState extends State<_PAPSpCalculator> {
         const SizedBox(height: 14),
         StatefulBuilder(
           builder: (ctx, setSt) => FilledButton(
-            onPressed: _canCalc ? () { setSt(() {}); _calculate(); } : null,
+            onPressed: () { setSt(() {}); _calculate(); },
             child: Text('Calculate', style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600)),
           ),
         ),
@@ -2042,7 +2025,6 @@ class _PAATCalculatorState extends State<_PAATCalculator> {
   double? _paat;
   double? _paati;
 
-  bool get _canCalc => _paatCtrl.text.isNotEmpty && _rvetCtrl.text.isNotEmpty;
 
   void _calculate() {
     final paat = double.tryParse(_paatCtrl.text);
@@ -2104,7 +2086,7 @@ class _PAATCalculatorState extends State<_PAATCalculator> {
         const SizedBox(height: 14),
         StatefulBuilder(
           builder: (ctx, setSt) => FilledButton(
-            onPressed: _canCalc ? () { setSt(() {}); _calculate(); } : null,
+            onPressed: () { setSt(() {}); _calculate(); },
             child: Text('Calculate', style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600)),
           ),
         ),
@@ -2148,7 +2130,6 @@ class _EccentricityCalculatorState extends State<_EccentricityCalculator> {
 
   double? _ei;
 
-  bool get _canCalc => _d1Ctrl.text.isNotEmpty && _d2Ctrl.text.isNotEmpty;
 
   void _calculate() {
     final d1 = double.tryParse(_d1Ctrl.text);
@@ -2217,7 +2198,7 @@ class _EccentricityCalculatorState extends State<_EccentricityCalculator> {
         const SizedBox(height: 14),
         StatefulBuilder(
           builder: (ctx, setSt) => FilledButton(
-            onPressed: _canCalc ? () { setSt(() {}); _calculate(); } : null,
+            onPressed: () { setSt(() {}); _calculate(); },
             child: Text('Calculate', style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600)),
           ),
         ),
@@ -2268,16 +2249,6 @@ class _MPICalculatorState extends State<_MPICalculator> {
   String _ventricle = 'LV';
 
   double? _mpi;
-
-  bool get _canCalc {
-    if (_method == 0) {
-      return _ivctCtrl.text.isNotEmpty &&
-          _ivrtCtrl.text.isNotEmpty &&
-          _etCtrl.text.isNotEmpty;
-    } else {
-      return _aCtrl.text.isNotEmpty && _bCtrl.text.isNotEmpty;
-    }
-  }
 
   void _calculate() {
     double? mpi;
@@ -2441,7 +2412,7 @@ class _MPICalculatorState extends State<_MPICalculator> {
         const SizedBox(height: 14),
         StatefulBuilder(
           builder: (ctx, setSt) => FilledButton(
-            onPressed: _canCalc ? () { setSt(() {}); _calculate(); } : null,
+            onPressed: () { setSt(() {}); _calculate(); },
             child: Text('Calculate', style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600)),
           ),
         ),
@@ -2489,7 +2460,6 @@ class _IVCCollapsibilityCalculatorState extends State<_IVCCollapsibilityCalculat
   double? _civc;
   String? _error;
 
-  bool get _canCalc => _maxCtrl.text.isNotEmpty && _minCtrl.text.isNotEmpty;
 
   void _calculate() {
     final max = double.tryParse(_maxCtrl.text);
@@ -2551,7 +2521,7 @@ class _IVCCollapsibilityCalculatorState extends State<_IVCCollapsibilityCalculat
         const SizedBox(height: 14),
         StatefulBuilder(
           builder: (ctx, setSt) => FilledButton(
-            onPressed: _canCalc ? () { setSt(() {}); _calculate(); } : null,
+            onPressed: () { setSt(() {}); _calculate(); },
             child: Text('Calculate', style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600)),
           ),
         ),
@@ -2627,7 +2597,6 @@ class _IVCDistensibilityCalculatorState extends State<_IVCDistensibilityCalculat
   double? _divc;
   String? _error;
 
-  bool get _canCalc => _maxCtrl.text.isNotEmpty && _minCtrl.text.isNotEmpty;
 
   void _calculate() {
     final max = double.tryParse(_maxCtrl.text);
@@ -2690,7 +2659,7 @@ class _IVCDistensibilityCalculatorState extends State<_IVCDistensibilityCalculat
         const SizedBox(height: 14),
         StatefulBuilder(
           builder: (ctx, setSt) => FilledButton(
-            onPressed: _canCalc ? () { setSt(() {}); _calculate(); } : null,
+            onPressed: () { setSt(() {}); _calculate(); },
             child: Text('Calculate', style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600)),
           ),
         ),
@@ -2764,7 +2733,6 @@ class _LAAoCalculatorState extends State<_LAAoCalculator> {
 
   double? _laAo;
 
-  bool get _canCalc => _laCtrl.text.isNotEmpty && _aoCtrl.text.isNotEmpty;
 
   void _calculate() {
     final la = double.tryParse(_laCtrl.text);
@@ -2824,7 +2792,7 @@ class _LAAoCalculatorState extends State<_LAAoCalculator> {
         const SizedBox(height: 14),
         StatefulBuilder(
           builder: (ctx, setSt) => FilledButton(
-            onPressed: _canCalc ? () { setSt(() {}); _calculate(); } : null,
+            onPressed: () { setSt(() {}); _calculate(); },
             child: Text('Calculate', style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600)),
           ),
         ),
@@ -2870,11 +2838,6 @@ class _QpQsCalculatorState extends State<_QpQsCalculator> {
 
   double? _qpQs;
 
-  bool get _canCalc =>
-      _mpaVtiCtrl.text.isNotEmpty &&
-      _mpaDCtrl.text.isNotEmpty &&
-      _lvotVtiCtrl.text.isNotEmpty &&
-      _lvotDCtrl.text.isNotEmpty;
 
   void _calculate() {
     final mpaVti = double.tryParse(_mpaVtiCtrl.text);
@@ -2937,7 +2900,7 @@ class _QpQsCalculatorState extends State<_QpQsCalculator> {
         const SizedBox(height: 14),
         StatefulBuilder(
           builder: (ctx, setSt) => FilledButton(
-            onPressed: _canCalc ? () { setSt(() {}); _calculate(); } : null,
+            onPressed: () { setSt(() {}); _calculate(); },
             child: Text('Calculate', style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600)),
           ),
         ),
@@ -2984,11 +2947,6 @@ class _DAoFlowCalculatorState extends State<_DAoFlowCalculator> {
 
   double? _dao;
 
-  bool get _canCalc =>
-      _dCtrl.text.isNotEmpty &&
-      _vtiCtrl.text.isNotEmpty &&
-      _hrCtrl.text.isNotEmpty &&
-      _wtCtrl.text.isNotEmpty;
 
   void _calculate() {
     final d   = double.tryParse(_dCtrl.text);
@@ -3050,7 +3008,7 @@ class _DAoFlowCalculatorState extends State<_DAoFlowCalculator> {
         const SizedBox(height: 14),
         StatefulBuilder(
           builder: (ctx, setSt) => FilledButton(
-            onPressed: _canCalc ? () { setSt(() {}); _calculate(); } : null,
+            onPressed: () { setSt(() {}); _calculate(); },
             child: Text('Calculate', style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600)),
           ),
         ),
@@ -3094,7 +3052,6 @@ class _MPAAoCalculatorState extends State<_MPAAoCalculator> {
 
   double? _ratio;
 
-  bool get _canCalc => _mpaCtrl.text.isNotEmpty && _aoCtrl.text.isNotEmpty;
 
   void _calculate() {
     final mpa = double.tryParse(_mpaCtrl.text);
@@ -3142,7 +3099,7 @@ class _MPAAoCalculatorState extends State<_MPAAoCalculator> {
         const SizedBox(height: 14),
         StatefulBuilder(
           builder: (ctx, setSt) => FilledButton(
-            onPressed: _canCalc ? () { setSt(() {}); _calculate(); } : null,
+            onPressed: () { setSt(() {}); _calculate(); },
             child: Text('Calculate', style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600)),
           ),
         ),
@@ -3186,7 +3143,6 @@ class _FACCalculatorState extends State<_FACCalculator> {
   double? _fac;
   String? _error;
 
-  bool get _canCalc => _edaCtrl.text.isNotEmpty && _esaCtrl.text.isNotEmpty;
 
   void _calculate() {
     final eda = double.tryParse(_edaCtrl.text);
@@ -3250,7 +3206,7 @@ class _FACCalculatorState extends State<_FACCalculator> {
         const SizedBox(height: 14),
         StatefulBuilder(
           builder: (ctx, setSt) => FilledButton(
-            onPressed: _canCalc ? () { setSt(() {}); _calculate(); } : null,
+            onPressed: () { setSt(() {}); _calculate(); },
             child: Text('Calculate', style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600)),
           ),
         ),
@@ -3308,7 +3264,6 @@ class _EToEPrimeCalculatorState extends State<_EToEPrimeCalculator> {
 
   double? _ratio;
 
-  bool get _canCalc => _eCtrl.text.isNotEmpty && _ePrimeCtrl.text.isNotEmpty;
 
   void _calculate() {
     final e      = double.tryParse(_eCtrl.text);
@@ -3373,7 +3328,7 @@ class _EToEPrimeCalculatorState extends State<_EToEPrimeCalculator> {
         const SizedBox(height: 14),
         StatefulBuilder(
           builder: (ctx, setSt) => FilledButton(
-            onPressed: _canCalc ? () { setSt(() {}); _calculate(); } : null,
+            onPressed: () { setSt(() {}); _calculate(); },
             child: Text('Calculate', style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600)),
           ),
         ),
