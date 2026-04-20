@@ -7,6 +7,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'emergency/current_infusions.dart';
+import 'emergency/resuscitation_sheet.dart';
+import 'emergency/drug_extras.dart';
+import 'emergency/advanced_tools.dart';
 
 // ── Data Enums ────────────────────────────────────────────────────────────────
 
@@ -860,7 +864,8 @@ class EmergencyNICUDrugsScreen extends StatefulWidget {
       _EmergencyNICUDrugsScreenState();
 }
 
-class _EmergencyNICUDrugsScreenState extends State<EmergencyNICUDrugsScreen> {
+class _EmergencyNICUDrugsScreenState extends State<EmergencyNICUDrugsScreen>
+    with SingleTickerProviderStateMixin {
   // ── State ──────────────────────────────────────────────────────────────────
   final TextEditingController _weightCtrl = TextEditingController();
   double? _weight;
@@ -874,8 +879,24 @@ class _EmergencyNICUDrugsScreenState extends State<EmergencyNICUDrugsScreen> {
   final TextEditingController _customVolCtrl = TextEditingController();
   bool _showCustomVolField = false;
 
+  // ── FAB pulse animation (scale 1.0 → 1.05) ────────────────────────────────
+  late final AnimationController _pulseCtrl;
+  late final Animation<double> _pulseAnim;
+
+  @override
+  void initState() {
+    super.initState();
+    _pulseCtrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1100),
+    )..repeat(reverse: true);
+    _pulseAnim = Tween<double>(begin: 1.0, end: 1.05)
+        .animate(CurvedAnimation(parent: _pulseCtrl, curve: Curves.easeInOut));
+  }
+
   @override
   void dispose() {
+    _pulseCtrl.dispose();
     _weightCtrl.dispose();
     _customVolCtrl.dispose();
     super.dispose();
@@ -931,6 +952,73 @@ class _EmergencyNICUDrugsScreenState extends State<EmergencyNICUDrugsScreen> {
               ),
             ],
           ),
+          actions: [
+            // Running Infusions panel
+            ListenableBuilder(
+              listenable: InfusionStore.instance,
+              builder: (_, __) {
+                final count = InfusionStore.instance.items.length;
+                return Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    IconButton(
+                      tooltip: 'Current Infusions',
+                      icon: const Icon(Icons.monitor_heart),
+                      onPressed: () => openCurrentInfusionsSheet(
+                        context,
+                        weightKg: _weight,
+                      ),
+                    ),
+                    if (count > 0)
+                      Positioned(
+                        top: 8,
+                        right: 6,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 5, vertical: 1),
+                          decoration: BoxDecoration(
+                            color: Colors.amber,
+                            borderRadius: BorderRadius.circular(999),
+                          ),
+                          child: Text(
+                            '$count',
+                            style: const TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w800,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                );
+              },
+            ),
+            // Resuscitation quick-access
+            IconButton(
+              tooltip: 'Resuscitation Drugs',
+              icon: const Icon(Icons.warning_rounded),
+              onPressed: () =>
+                  openResuscitationSheet(context, weightKg: _weight),
+            ),
+          ],
+        ),
+        floatingActionButton: ScaleTransition(
+          scale: _pulseAnim,
+          child: FloatingActionButton.extended(
+            onPressed: () =>
+                openResuscitationSheet(context, weightKg: _weight),
+            backgroundColor: const Color(0xFFB71C1C),
+            foregroundColor: Colors.white,
+            icon: const Icon(Icons.emergency),
+            label: Text(
+              'RESUS',
+              style: GoogleFonts.plusJakartaSans(
+                fontWeight: FontWeight.w800,
+                letterSpacing: 0.6,
+              ),
+            ),
+          ),
         ),
         body: Column(
           children: [
@@ -973,6 +1061,8 @@ class _EmergencyNICUDrugsScreenState extends State<EmergencyNICUDrugsScreen> {
                             ? _resolvedTotalMl(drug)
                             : null,
                       ),
+                    const SizedBox(height: 12),
+                    AdvancedTools(weight: _weight),
                   ] else ...[
                     _TableViewHeader(weight: _weight),
                     for (final drug in _drugs)
@@ -987,7 +1077,7 @@ class _EmergencyNICUDrugsScreenState extends State<EmergencyNICUDrugsScreen> {
                   ],
                   const SizedBox(height: 8),
                   _DisclaimerBanner(),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 80), // FAB breathing room
                 ],
               ),
             ),
@@ -1415,9 +1505,9 @@ class _SmartDrugCardState extends State<_SmartDrugCard> {
   }
 }
 
-// ── Smart Card Body ───────────────────────────────────────────────────────────
+// ── Smart Card Body (4-tab: Prepare / Titrate / Check / Info) ────────────────
 
-class _SmartCardBody extends StatelessWidget {
+class _SmartCardBody extends StatefulWidget {
   final _DrugData drug;
   final double? weight;
   final double multiplier;
@@ -1435,7 +1525,115 @@ class _SmartCardBody extends StatelessWidget {
   });
 
   @override
+  State<_SmartCardBody> createState() => _SmartCardBodyState();
+}
+
+class _SmartCardBodyState extends State<_SmartCardBody>
+    with SingleTickerProviderStateMixin {
+  late final TabController _tabs;
+  final TextEditingController _titrateCtl = TextEditingController();
+  final TextEditingController _checkRateCtl = TextEditingController();
+  final TextEditingController _checkHoursCtl = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _tabs = TabController(length: 4, vsync: this);
+    _titrateCtl.addListener(() => setState(() {}));
+    _checkRateCtl.addListener(() => setState(() {}));
+    _checkHoursCtl.addListener(() => setState(() {}));
+  }
+
+  @override
+  void dispose() {
+    _tabs.dispose();
+    _titrateCtl.dispose();
+    _checkRateCtl.dispose();
+    _checkHoursCtl.dispose();
+    super.dispose();
+  }
+
+  // Accessor shortcuts so the rest of the old build code stays mostly the same.
+  _DrugData get drug => widget.drug;
+  double? get weight => widget.weight;
+  double get multiplier => widget.multiplier;
+  _Preparation? get prep => widget.prep;
+  bool get isDark => widget.isDark;
+  bool get isFixedNoMul => widget.isFixedNoMul;
+
+  @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    // Morphine and Sildenafil have special non-tab bodies — keep their
+    // original dedicated widgets so the simple UX stays.
+    if (drug.name == 'Morphine' || drug.name == 'Sildenafil') {
+      return _buildPrepareTab(context);
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        // Tab bar
+        Container(
+          decoration: BoxDecoration(
+            color: cs.surfaceContainerHighest,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: TabBar(
+            controller: _tabs,
+            indicator: BoxDecoration(
+              color: cs.primary,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            indicatorSize: TabBarIndicatorSize.tab,
+            indicatorPadding: const EdgeInsets.all(3),
+            dividerColor: Colors.transparent,
+            labelColor: Colors.white,
+            unselectedLabelColor: cs.onSurface.withValues(alpha: 0.65),
+            labelStyle: GoogleFonts.plusJakartaSans(
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+            ),
+            tabs: const [
+              Tab(text: '⚗️ Prepare'),
+              Tab(text: '↕️ Titrate'),
+              Tab(text: '🔄 Check'),
+              Tab(text: 'ℹ️ Info'),
+            ],
+          ),
+        ),
+        const SizedBox(height: 12),
+        // Tab views (fixed-height, content-based via AnimatedSize)
+        AnimatedBuilder(
+          animation: _tabs,
+          builder: (_, __) {
+            Widget child;
+            switch (_tabs.index) {
+              case 0:
+                child = _buildPrepareTab(context);
+                break;
+              case 1:
+                child = _buildTitrateTab(context);
+                break;
+              case 2:
+                child = _buildCheckTab(context);
+                break;
+              case 3:
+              default:
+                child = _buildInfoTab(context);
+            }
+            return AnimatedSize(
+              duration: const Duration(milliseconds: 180),
+              alignment: Alignment.topCenter,
+              child: Container(key: ValueKey(_tabs.index), child: child),
+            );
+          },
+        ),
+      ],
+    );
+  }
+
+  // ── PREPARE TAB (former main body) ───────────────────────────────────────
+  Widget _buildPrepareTab(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     final hasWeight = weight != null && weight! > 0;
 
@@ -1707,6 +1905,337 @@ class _SmartCardBody extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  // ── TITRATE TAB — "what rate for my target dose?" ──────────────────────────
+  Widget _buildTitrateTab(BuildContext context) {
+    final w = weight;
+    final p = prep;
+    final max = kMaxDose[drug.name];
+    final unit = _doseUnitFor(drug.name);
+
+    if (w == null || w <= 0 || p == null) {
+      return _placeholder(context, 'Enter weight above to titrate.');
+    }
+
+    final target = double.tryParse(_titrateCtl.text.trim()) ?? 0;
+    final native = _nativeConcFromPrep(drug.name, p);
+    final targetRate = target > 0
+        ? rateForTargetDose(
+            targetDose: target,
+            weight: w,
+            finalConcNativePerMl: native,
+            doseUnit: unit,
+          )
+        : null;
+
+    final band = target > 0 ? doseBandFor(target, max?.maxValue) : DoseBand.safe;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        TabCardHeader(
+          title: 'What rate for my target dose?',
+          subtitle: 'Concentration: ${p.finalConcLine.replaceFirst("Final concentration: ", "")}',
+        ),
+        const SizedBox(height: 10),
+        TextField(
+          controller: _titrateCtl,
+          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+          style: GoogleFonts.plusJakartaSans(fontSize: 14),
+          decoration: InputDecoration(
+            labelText: 'Target dose',
+            hintText: 'e.g. 12',
+            suffixText: unit,
+            isDense: true,
+            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+          ),
+        ),
+        const SizedBox(height: 10),
+        if (targetRate != null) ...[
+          Container(
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: isDark ? const Color(0xFF0D2137) : const Color(0xFFE3F2FD),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Set rate to ${_fmt(targetRate)} ml/hr',
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w800,
+                    color: const Color(0xFF42A5F5),
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  '${_fmt(targetRate)} ml/hr will deliver $target $unit',
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 12,
+                    color: isDark ? Colors.white70 : const Color(0xFF1A237E),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 10),
+          _titrateBanner(band, max),
+        ] else
+          _placeholder(context, 'Enter a target dose above.'),
+      ],
+    );
+  }
+
+  // ── CHECK TAB — "what dose am I giving at this rate?" ──────────────────────
+  Widget _buildCheckTab(BuildContext context) {
+    final w = weight;
+    final p = prep;
+    final unit = _doseUnitFor(drug.name);
+    final max = kMaxDose[drug.name];
+
+    if (w == null || w <= 0 || p == null) {
+      return _placeholder(context, 'Enter weight above to check.');
+    }
+
+    final rate = double.tryParse(_checkRateCtl.text.trim()) ?? 0;
+    final hours = double.tryParse(_checkHoursCtl.text.trim());
+    final native = _nativeConcFromPrep(drug.name, p);
+
+    final currentDose = rate > 0
+        ? doseFromRate(
+            rateMlHr: rate,
+            weight: w,
+            finalConcNativePerMl: native,
+            doseUnit: unit,
+          )
+        : null;
+
+    final band = currentDose != null
+        ? doseBandFor(currentDose, max?.maxValue)
+        : DoseBand.safe;
+
+    // Total given over the running period
+    String? cumulativeLine;
+    if (rate > 0 && hours != null && hours > 0) {
+      final totalMl = rate * hours;
+      final totalNative = totalMl * native; // same unit as native (mcg or mg)
+      final perKg = totalNative / w;
+      final unitLabel = unit.contains('mg') ? 'mg' : 'mcg';
+      cumulativeLine =
+          'Drug given so far: ${_fmt(totalMl)} ml = ${_fmt(totalNative)} $unitLabel = ${_fmt(perKg)} $unitLabel/kg total';
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const TabCardHeader(
+          title: 'What dose am I giving?',
+          subtitle: 'Enter current rate to see delivered dose.',
+        ),
+        const SizedBox(height: 10),
+        TextField(
+          controller: _checkRateCtl,
+          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+          style: GoogleFonts.plusJakartaSans(fontSize: 14),
+          decoration: InputDecoration(
+            labelText: 'Current rate',
+            hintText: 'e.g. 2.3',
+            suffixText: 'ml/hr',
+            isDense: true,
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+          ),
+        ),
+        const SizedBox(height: 10),
+        TextField(
+          controller: _checkHoursCtl,
+          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+          style: GoogleFonts.plusJakartaSans(fontSize: 14),
+          decoration: InputDecoration(
+            labelText: 'Running for how long? (optional)',
+            hintText: 'e.g. 4.5',
+            suffixText: 'hours',
+            isDense: true,
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+          ),
+        ),
+        const SizedBox(height: 12),
+        if (currentDose != null) ...[
+          Container(
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: isDark ? const Color(0xFF0D2137) : const Color(0xFFE3F2FD),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Running at ${_fmt(rate)} ml/hr = ${_fmt(currentDose, decimals: unit.contains('mcg/kg/min') ? 2 : 3)} $unit',
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 14.5,
+                    fontWeight: FontWeight.w800,
+                    color: const Color(0xFF42A5F5),
+                  ),
+                ),
+                if (cumulativeLine != null) ...[
+                  const SizedBox(height: 6),
+                  Text(
+                    cumulativeLine,
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 12.5,
+                      color: isDark ? Colors.white70 : const Color(0xFF1A237E),
+                      height: 1.4,
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+          const SizedBox(height: 10),
+          _titrateBanner(band, max),
+        ] else
+          _placeholder(context, 'Enter the current rate to see the dose.'),
+      ],
+    );
+  }
+
+  // ── INFO TAB ───────────────────────────────────────────────────────────────
+  Widget _buildInfoTab(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final info = kDrugInfo[drug.name];
+    final compat = kDiluentCompat[drug.name];
+
+    Widget line(String label, String value) {
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              label.toUpperCase(),
+              style: GoogleFonts.plusJakartaSans(
+                fontSize: 10,
+                fontWeight: FontWeight.w800,
+                letterSpacing: 0.8,
+                color: cs.onSurface.withValues(alpha: 0.55),
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              value,
+              style: GoogleFonts.plusJakartaSans(
+                fontSize: 12.5,
+                height: 1.5,
+                color: cs.onSurface,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        if (info != null) ...[
+          line('Mechanism', info.mechanism),
+          line('Neonatal use', info.neonatalUse),
+          line('Special notes', info.special),
+        ],
+        if (compat != null) ...[
+          CompatibilityChips(compat: compat),
+          const SizedBox(height: 10),
+        ],
+        if (info != null)
+          Text(
+            'Source: ${info.source}',
+            style: GoogleFonts.plusJakartaSans(
+              fontSize: 10.5,
+              fontStyle: FontStyle.italic,
+              color: cs.onSurface.withValues(alpha: 0.5),
+            ),
+          ),
+      ],
+    );
+  }
+
+  // ── Helpers ────────────────────────────────────────────────────────────────
+
+  Widget _placeholder(BuildContext context, String msg) {
+    final cs = Theme.of(context).colorScheme;
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: cs.onSurface.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Text(
+        msg,
+        style: GoogleFonts.plusJakartaSans(
+          fontSize: 13,
+          color: cs.onSurface.withValues(alpha: 0.6),
+        ),
+      ),
+    );
+  }
+
+  Widget _titrateBanner(DoseBand band, MaxDoseInfo? max) {
+    switch (band) {
+      case DoseBand.safe:
+        return const DoseBanner(
+          band: DoseBand.safe,
+          message: 'Within normal range',
+        );
+      case DoseBand.nearMax:
+        return const DoseBanner(
+          band: DoseBand.nearMax,
+          message: 'Approaching maximum dose',
+        );
+      case DoseBand.overMax:
+        return DoseBanner(
+          band: DoseBand.overMax,
+          message: max?.suggestion ??
+              'Above maximum recommended dose — reassess.',
+        );
+    }
+  }
+
+  /// Maps a drug name to its dose unit for the Titrate/Check tabs.
+  String _doseUnitFor(String name) {
+    switch (name) {
+      case 'Dopamine':
+      case 'Dobutamine':
+      case 'Adrenaline':
+      case 'Noradrenaline':
+      case 'Milrinone':
+      case 'PGE1 (Alprostadil)':
+      case 'PGE1':
+        return 'mcg/kg/min';
+      case 'Vasopressin':
+        return 'units/kg/min';
+      case 'Fentanyl':
+      case 'Dexmedetomidine':
+        return 'mcg/kg/hr';
+      case 'Midazolam':
+      case 'Furosemide':
+      case 'Ketamine':
+      case 'Sildenafil':
+        return 'mg/kg/hr';
+      default:
+        return 'mcg/kg/min';
+    }
+  }
+
+  /// Extract the drug's native-unit concentration per ml from the Preparation.
+  /// The existing `_Preparation.finalConcMcgPerMl` field holds mcg/ml for
+  /// most drugs, mg/ml for Midazolam / Furosemide / Ketamine / Sildenafil,
+  /// and units/ml for Vasopressin (it's a generic "native per ml" store).
+  double _nativeConcFromPrep(String name, _Preparation p) {
+    return p.finalConcMcgPerMl;
   }
 }
 

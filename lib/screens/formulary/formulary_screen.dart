@@ -469,7 +469,7 @@ class _EmergencyDrugsCardState extends State<_EmergencyDrugsCard>
                   ),
                   SizedBox(height: 2),
                   Text(
-                    'Weight-based · Preparation Guide',
+                    '14 drugs · Infusions · Resuscitation',
                     style: TextStyle(
                       color: Color(0xCCFFFFFF),
                       fontSize: 11.5,
