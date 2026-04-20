@@ -11,6 +11,7 @@ import '../tools/paediatric_parameters_screen.dart';
 import 'polycythemia_guide_screen.dart';
 import 'pofras_screen.dart';
 import 'can_score_screen.dart';
+import 'ga_classification_screen.dart';
 
 class GuidesScreen extends StatelessWidget {
   const GuidesScreen({super.key});
@@ -44,6 +45,14 @@ class GuidesScreen extends StatelessWidget {
                   mainAxisSpacing: 10,
                   childAspectRatio: 1.1,
                   children: [
+                    _GuideCard(
+                      title: 'GA Classification',
+                      subtitle: 'Gestational Age Definitions · Table 6-2',
+                      icon: Icons.calendar_month,
+                      onTap: () => Navigator.push(context,
+                          MaterialPageRoute(
+                              builder: (_) => const GAClassificationScreen())),
+                    ),
                     _GuideCard(
                       title: 'Fetal Development',
                       subtitle: 'Week-by-week from LMP',
