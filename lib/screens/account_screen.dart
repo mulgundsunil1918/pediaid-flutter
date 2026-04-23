@@ -333,7 +333,10 @@ class _AccountScreenState extends State<AccountScreen> {
           ],
 
           // ── Sign out ──────────────────────────────────────────────────
-          if (!_editing) ...[
+          // Hidden while login is disabled for testing. The _handleSignOut
+          // method below is kept for easy restoration.
+          // ignore: dead_code
+          if (false && !_editing) ...[
             const SizedBox(height: 4),
             SizedBox(
               height: 50,

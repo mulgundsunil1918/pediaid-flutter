@@ -78,7 +78,11 @@ class PediAidApp extends StatelessWidget {
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: themeProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light,
-      home: const _AuthGate(),
+      // ── AUTH DISABLED FOR TESTING ──────────────────────────────────────────
+      // User has asked to remove the login page entirely while testing the
+      // app. Jump straight to the HomeScreen; _AuthGate is left in place
+      // below for easy restoration later.
+      home: const HomeScreen(),
     );
   }
 }

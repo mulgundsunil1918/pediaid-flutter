@@ -37,7 +37,12 @@ import '../cme/cme_screen.dart';
 import '../shared/suggest_feature_sheet.dart';
 import '../../academics/academics_web_screen.dart';
 import 'app_search_delegate.dart';
+// AuthService + AdminDashboardScreen imports preserved as references —
+// auth is disabled for testing, but _buildAdminTile below still uses the
+// route so don't remove the file.
+// ignore: unused_import
 import '../../services/auth_service.dart';
+// ignore: unused_import
 import '../admin/admin_dashboard_screen.dart';
 import '../never_again/never_again_screen.dart';
 
@@ -239,11 +244,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               _buildDisclaimer(context, cs),
                               const SizedBox(height: 16),
                               _buildSuggestBanner(context, cs),
-                              if (AuthService.instance.currentUser?.role ==
-                                  'admin') ...[
-                                const SizedBox(height: 16),
-                                _buildAdminTile(context),
-                              ],
+                              // Admin tile disabled while auth is removed for
+                              // testing — was previously gated on
+                              // AuthService.instance.currentUser?.role == 'admin'.
                             ],
                           ),
                         ),
@@ -713,7 +716,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // ── Admin tile (only rendered when currentUser.role == 'admin') ──────────
-
+  // Currently unreferenced — auth is disabled for testing. Kept for easy
+  // restoration when login is re-enabled.
+  // ignore: unused_element
   Widget _buildAdminTile(BuildContext context) {
     return Material(
       color: Colors.transparent,
