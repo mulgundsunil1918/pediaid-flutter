@@ -1,0 +1,510 @@
+{
+  "schema_version": "v2.0",
+  "section": "neofax_batch4",
+  "section_label": "NICU batch 4 — supportive, antimicrobials, neurology, NAS, hypertension, antifibrinolytic",
+  "last_updated": "2026-05-03",
+  "review_disclaimer": "DRAFT — pending clinician review. Verify every dose against your local protocol and current vial concentration before administration.",
+  "drugs": [
+    {
+      "id": "neo-albumin-human",
+      "drug": "Albumin (Human)",
+      "alt_names": [],
+      "category": "Plasma volume expander",
+      "atc_code": "B05AA01",
+      "india_formulations": [],
+      "doses": [
+        { "indication": "Hypotension / volume support", "route": "IV (over 20–30 min)", "ga_band": "Any", "dose_per_kg_per_dose": "0.5 g/kg/dose (= 10 mL/kg of 5 % albumin)", "frequency": "May repeat × max 3 doses" },
+        { "indication": "Septic shock — fluid-refractory", "route": "IV (over 5–10 min)", "ga_band": "Any", "dose_per_kg_per_dose": "0.5 g/kg/dose (= 10 mL/kg of 5%)", "frequency": "Repeat as needed", "max_per_day_all_routes": "3 g/kg (= 60 mL/kg) in the first hour or until perfusion improves / hepatomegaly develops" },
+        { "indication": "Pre-exchange transfusion (HDN — hyperbilirubinaemia)", "route": "IV", "ga_band": "Any", "dose_per_kg_per_dose": "1 g/kg of 25% albumin", "frequency": "Single dose ~ 1 hr before exchange transfusion" }
+      ],
+      "monitoring": "BP, HR, SpO₂, perfusion; serum albumin; signs of fluid overload.",
+      "adverse_effects": "Volume overload, mild allergic reactions (rare).",
+      "contraindications": "Severe anaemia / heart failure (without prior transfusion).",
+      "sources": { "primary_neofax_page": 37, "cross_checks": [ {"source": "WHO WMFc 2024", "agreement": "agrees"}, {"source": "NNF CPG 2020 — Shock", "agreement": "agrees"} ] },
+      "review": { "status": "draft_pending_user_review", "reviewer": null, "review_date": null, "notes": "Crystalloid (NS) is preferred first-line over albumin for routine volume resuscitation. Consider albumin in shock with low oncotic pressure." }
+    },
+    {
+      "id": "neo-alteplase",
+      "drug": "Alteplase (tPA)",
+      "alt_names": ["Tissue plasminogen activator", "tPA", "rtPA"],
+      "category": "Fibrinolytic",
+      "atc_code": "B01AD02",
+      "india_formulations": [],
+      "doses": [
+        { "indication": "Restoration of central venous catheter patency (occlusion)", "route": "Intracatheter instillation", "ga_band": "Any", "dose_per_kg_per_dose": "1 mg/mL — instil 110% of internal lumen volume (max 2 mg in 2 mL); a lower 0.5 mg dose has been used in infants ≤ 10 kg", "frequency": "Dwell 120 min; may repeat × 1" },
+        { "indication": "Dissolution of intravascular thrombus (severe / limb-/organ-threatening)", "route": "IV continuous", "ga_band": "Any", "dose_per_kg_per_min_starting": "0.2 mg/kg/hour (= 200 mcg/kg/hr)", "dose_per_kg_per_min_range": "Up to 0.5 mg/kg/hour catheter-directed; reduce to 0.1 mg/kg/hr if local bleeding (stop 1 h, restart lower)", "duration": "6–48 hours", "comments": "Discontinue heparin several hours before starting. PT, aPTT, fibrinogen, platelets at baseline + every 4–6 h." }
+      ],
+      "monitoring": "PT, aPTT, fibrinogen (keep > 1 g/L), platelets (keep > 50k), bleeding signs, cranial USG (preterm).",
+      "adverse_effects": "Major bleeding (esp. intracranial, GI), hypotension, anaphylaxis (rare).",
+      "contraindications": "Active major bleeding, recent surgery / trauma / IVH, severe HTN, GA < 32 weeks (relative — IVH risk), known hypersensitivity.",
+      "sources": { "primary_neofax_page": 54, "cross_checks": [ {"source": "WHO WMFc 2024", "agreement": "agrees"}, {"source": "ACCP 2018 paediatric antithrombotic", "agreement": "agrees"} ] },
+      "review": { "status": "draft_pending_user_review", "reviewer": null, "review_date": null, "notes": "Alteplase use in extreme preterm requires urgent multidisciplinary review (neonatology, paediatric haematology, IR)." }
+    },
+    {
+      "id": "neo-amoxicillin",
+      "drug": "Amoxicillin",
+      "alt_names": [],
+      "category": "Antibiotic — Aminopenicillin",
+      "atc_code": "J01CA04",
+      "india_formulations": [
+        { "form": "Oral suspension", "strength": "125 mg/5 mL, 250 mg/5 mL", "brands_india": ["Mox (Sun)", "Novamox (Cipla)", "Wymox (Pfizer)"] },
+        { "form": "Oral capsule", "strength": "250 mg, 500 mg", "brands_india": ["Mox", "Novamox", "Amoxil"] },
+        { "form": "Oral drops", "strength": "100 mg/mL", "brands_india": ["Mox drops", "Novamox drops"] }
+      ],
+      "doses": [
+        { "indication": "Mild bacterial infection / completion oral therapy", "route": "PO", "ga_band": "Any", "dose_per_kg_per_dose": "Manufacturer max 30 mg/kg/day divided every 12 h", "frequency": "every 12 hours" },
+        { "indication": "Possible serious infection — empirical (Hawkes 2008)", "route": "PO", "ga_band": "BW ≥ 2 kg", "dose_per_kg_per_dose": "100 mg/kg/day in 2 divided doses", "frequency": "every 12 hours" },
+        { "indication": "Possible serious infection — empirical", "route": "PO", "ga_band": "BW < 2 kg", "dose_per_kg_per_dose": "75 mg/kg/day in 2 divided doses", "frequency": "every 12 hours" }
+      ],
+      "monitoring": "Clinical response.",
+      "adverse_effects": "Rash, diarrhoea, candidiasis.",
+      "contraindications": "Penicillin hypersensitivity.",
+      "sources": { "primary_neofax_page": 84, "cross_checks": [ {"source": "WHO WMFc 2024", "agreement": "agrees"}, {"source": "AAP Red Book", "agreement": "agrees"} ] },
+      "review": { "status": "draft_pending_user_review", "reviewer": null, "review_date": null, "notes": "Oral amoxicillin is used for outpatient completion of treatment after IV ampicillin." }
+    },
+    {
+      "id": "neo-bupivacaine",
+      "drug": "Bupivacaine",
+      "alt_names": [],
+      "category": "Local anaesthetic — long-acting amide",
+      "atc_code": "N01BB01",
+      "india_formulations": [],
+      "doses": [
+        { "indication": "Caudal / regional / infiltration", "route": "Caudal / regional / infiltration", "ga_band": "Any", "dose_per_kg_per_dose": "Use lowest effective dose / concentration. Specific technique-driven doses; consult an anaesthetist.", "max_per_dose": "2 mg/kg single dose (continuous infusion typical max 0.2–0.4 mg/kg/hr in neonates)" }
+      ],
+      "monitoring": "ECG, BP, neurologic status; methaemoglobin level if cyanosis develops.",
+      "adverse_effects": "Cardiotoxicity (worst with rapid IV exposure), seizure, methaemoglobinaemia, respiratory depression with high spinal block.",
+      "contraindications": "Hypersensitivity; methaemoglobinaemia; severe heart block.",
+      "sources": { "primary_neofax_page": 156, "cross_checks": [ {"source": "WHO WMFc 2024", "agreement": "agrees"} ] },
+      "review": { "status": "draft_pending_user_review", "reviewer": null, "review_date": null, "notes": "Use only by trained anaesthetist. Not a first-line pain modality on the NICU floor." }
+    },
+    {
+      "id": "neo-calcium-oral",
+      "drug": "Calcium — Oral supplements",
+      "alt_names": ["Calcium carbonate", "Calcium glubionate", "Calcium gluconate (oral)"],
+      "category": "Mineral supplement",
+      "atc_code": "A12AA",
+      "india_formulations": [
+        { "form": "Calcium carbonate suspension", "strength": "250 mg/mL salt (= 100 mg/mL elemental Ca)", "brands_india": ["Calcimax (Wallace)", "Shelcal suspension"] },
+        { "form": "Calcium glubionate syrup", "strength": "23 mg/mL elemental Ca", "brands_india": ["Calcium Sandoz syrup (Sandoz)"] }
+      ],
+      "doses": [
+        { "indication": "Non-acute hypocalcaemia / maintenance", "route": "PO (with feeds)", "ga_band": "Any", "dose_per_kg_per_dose": "20–80 mg/kg/day elemental Ca, in 2–4 divided doses", "frequency": "scheduled around feeds" },
+        { "indication": "Rickets / osteopenia of prematurity", "route": "PO (with feeds)", "ga_band": "Preterm", "dose_per_kg_per_dose": "Start 20 mg/kg/day elemental Ca + 10–20 mg/kg/day elemental P; titrate to max 70–80 mg/kg/day Ca + 40–50 mg/kg/day P", "frequency": "every 8 hours", "comments": "Always pair Ca with P supplementation in osteopenia." }
+      ],
+      "monitoring": "Serum Ca, P, alk-phos, urine Ca/Cr ratio.",
+      "adverse_effects": "Constipation, mild GI upset, milk-alkali syndrome (high dose).",
+      "contraindications": "Hypercalcaemia, hypercalciuria.",
+      "sources": { "primary_neofax_page": 177, "cross_checks": [ {"source": "ESPGHAN PN guidelines 2018", "agreement": "agrees"}, {"source": "WHO WMFc 2024", "agreement": "agrees"} ] },
+      "review": { "status": "draft_pending_user_review", "reviewer": null, "review_date": null, "notes": "Different oral salts have very different elemental Ca per mL — always document mg of elemental Ca, not mL or salt." }
+    },
+    {
+      "id": "neo-carglumic-acid",
+      "drug": "Carglumic Acid",
+      "alt_names": ["N-carbamylglutamate"],
+      "category": "Urea cycle drug — N-acetylglutamate synthase analog",
+      "atc_code": "A16AA05",
+      "india_formulations": [],
+      "doses": [
+        { "indication": "Acute hyperammonaemia (NAGS deficiency, propionic acidemia, methylmalonic acidemia)", "route": "PO / via NG tube", "ga_band": "Any", "dose_per_kg_per_dose": "100–250 mg/kg/day in 2–4 divided doses (round to nearest 100 mg)", "frequency": "every 6–12 hours", "comments": "Initiate as soon as diagnosis suspected. Titrate to maintain plasma ammonia in normal range. Co-administer with other ammonia-lowering therapies (alternate pathway drugs, dialysis, protein restriction)." },
+        { "indication": "Chronic NAGS deficiency", "route": "PO", "ga_band": "Any", "dose_per_kg_per_dose": "Long-term doses individualised by metabolic specialist; typical 10–100 mg/kg/day divided" }
+      ],
+      "monitoring": "Plasma ammonia, urea cycle metabolites, weight, growth, neurology.",
+      "adverse_effects": "Vomiting, diarrhoea, abdominal pain.",
+      "contraindications": "Hypersensitivity.",
+      "sources": { "primary_neofax_page": 196, "cross_checks": [ {"source": "WHO WMFc 2024", "agreement": "agrees"}, {"source": "DailyMed Carbaglu label", "agreement": "agrees"} ] },
+      "review": { "status": "draft_pending_user_review", "reviewer": null, "review_date": null, "notes": "Specialty drug — initiate only with metabolic medicine team." }
+    },
+    {
+      "id": "neo-chloral-hydrate",
+      "drug": "Chloral hydrate",
+      "alt_names": [],
+      "category": "Sedative / hypnotic — non-benzodiazepine",
+      "atc_code": "N05CC01",
+      "india_formulations": [],
+      "doses": [
+        { "indication": "Procedural sedation (echo, MRI)", "route": "PO / PR", "ga_band": "Any", "dose_per_kg_per_dose": "25–75 mg/kg/dose", "frequency": "Single dose; may repeat once after 30 min if inadequate", "max_per_dose": "Cumulative 100 mg/kg in 24 h" }
+      ],
+      "monitoring": "RR, SpO₂, HR continuously during and after sedation; airway patency.",
+      "adverse_effects": "Long unpredictable half-life; respiratory depression, hypotension, GI upset, paradoxical excitation. Reports of sudden death — falling out of favour.",
+      "contraindications": "Hepatic / renal impairment, GI ulceration, hypersensitivity.",
+      "sources": { "primary_neofax_page": 240, "cross_checks": [ {"source": "WHO WMFc 2024", "agreement": "agrees"}, {"source": "AAP — Procedural sedation", "agreement": "advises caution"} ] },
+      "review": { "status": "draft_pending_user_review", "reviewer": null, "review_date": null, "notes": "Oral / rectal product no longer manufactured in some countries. Long half-life and sudden death reports — POOR CHOICE for routine procedural sedation in 2024+." }
+    },
+    {
+      "id": "neo-epoetin-alfa",
+      "drug": "Epoetin alfa (Erythropoietin)",
+      "alt_names": ["EPO", "rHuEPO"],
+      "category": "Erythropoiesis stimulating agent",
+      "atc_code": "B03XA01",
+      "india_formulations": [],
+      "doses": [
+        { "indication": "Anaemia of prematurity (limited evidence — not routinely recommended)", "route": "SC / IV", "ga_band": "Preterm", "dose_per_kg_per_dose": "200–400 units/kg/dose", "frequency": "3–5 times per week", "duration": "2–6 weeks (total dose 600–1400 U/kg/week)", "comments": "Always co-administer iron 2–6 mg/kg/day. Most meta-analyses show no clinically significant transfusion reduction." },
+        { "indication": "Short course", "route": "SC / IV", "ga_band": "Preterm", "dose_per_kg_per_dose": "300 units/kg/dose daily", "duration": "10 days" }
+      ],
+      "monitoring": "Hb, reticulocytes, iron status, BP.",
+      "adverse_effects": "Hypertension, polycythaemia, pure red cell aplasia (rare).",
+      "contraindications": "Uncontrolled hypertension, hypersensitivity.",
+      "sources": { "primary_neofax_page": 355, "cross_checks": [ {"source": "Cochrane review — EPO in preterm", "agreement": "agrees — no clinical benefit"}, {"source": "WHO WMFc 2024", "agreement": "lists"} ] },
+      "review": { "status": "draft_pending_user_review", "reviewer": null, "review_date": null, "notes": "Routine use NOT recommended — neither early nor late. May be considered for Jehovah's Witness families or specific situations." }
+    },
+    {
+      "id": "neo-erythromycin",
+      "drug": "Erythromycin",
+      "alt_names": [],
+      "category": "Antibiotic — Macrolide / Prokinetic",
+      "atc_code": "J01FA01",
+      "india_formulations": [
+        { "form": "Oral suspension", "strength": "125 mg/5 mL, 250 mg/5 mL", "brands_india": ["Althrocin (Alembic)", "Erythrocin (Abbott)", "Erythro syrup"] },
+        { "form": "Oral tablet", "strength": "250 mg, 500 mg", "brands_india": ["Althrocin", "Erythrocin"] }
+      ],
+      "doses": [
+        { "indication": "Chlamydia trachomatis pneumonitis / conjunctivitis", "route": "PO", "ga_band": "Any", "dose_per_kg_per_dose": "12.5 mg/kg/dose", "frequency": "every 6 hours", "duration": "14 days" },
+        { "indication": "Pertussis (only if azithromycin unavailable / aged > 1 mo)", "route": "PO", "ga_band": "≥ 1 month", "dose_per_kg_per_dose": "12.5 mg/kg/dose", "frequency": "every 6 hours", "duration": "14 days" },
+        { "indication": "Feeding intolerance / dysmotility (prokinetic)", "route": "PO (with feeds)", "ga_band": "GA ≥ 32 weeks", "dose_per_kg_per_dose": "10–12.5 mg/kg/dose (40–50 mg/kg/day)", "frequency": "every 6 hours" },
+        { "indication": "Severe infection — IV (when oral not possible)", "route": "IV (over ≥ 60 min via syringe pump)", "ga_band": "Any", "dose_per_kg_per_dose": "5–10 mg/kg/dose", "frequency": "every 6 hours", "comments": "DO NOT give IM." }
+      ],
+      "monitoring": "Watch for hypertrophic pyloric stenosis (especially under 6 weeks); QT.",
+      "adverse_effects": "HYPERTROPHIC PYLORIC STENOSIS (KIDs list — high risk in neonates < 6 weeks), QT prolongation, GI cramping.",
+      "contraindications": "Macrolide hypersensitivity; concurrent QT-prolonging drugs.",
+      "sources": { "primary_neofax_page": 360, "cross_checks": [ {"source": "AAP Red Book — Chlamydia, Pertussis", "agreement": "agrees"}, {"source": "WHO WMFc 2024", "agreement": "agrees"} ] },
+      "review": { "status": "draft_pending_user_review", "reviewer": null, "review_date": null, "notes": "KIDs list — avoid in neonates UNLESS specific indication (chlamydia, pertussis, prokinetic for feeding intolerance)." }
+    },
+    {
+      "id": "neo-famotidine",
+      "drug": "Famotidine",
+      "alt_names": [],
+      "category": "H₂-receptor antagonist",
+      "atc_code": "A02BA03",
+      "india_formulations": [
+        { "form": "Oral suspension", "strength": "40 mg/5 mL (= 8 mg/mL)", "brands_india": ["Famocid suspension (Sun)", "Topcid (Macleods)"] },
+        { "form": "Oral tablet", "strength": "20 mg, 40 mg", "brands_india": ["Famocid", "Topcid"] }
+      ],
+      "doses": [
+        { "indication": "GERD / stress ulcer prophylaxis", "route": "IV", "ga_band": "Any", "dose_per_kg_per_dose": "0.25–0.5 mg/kg/dose", "frequency": "every 24 hours" },
+        { "indication": "GERD — oral", "route": "PO", "ga_band": "Any", "dose_per_kg_per_dose": "0.5–1 mg/kg/dose", "frequency": "every 24 hours" }
+      ],
+      "monitoring": "RFT.",
+      "adverse_effects": "Headache, dizziness, mild thrombocytopenia (rare); accumulation in renal impairment.",
+      "contraindications": "Hypersensitivity.",
+      "renal_adjustment": "Reduce dose / extend interval if Cr clearance < 50 mL/min.",
+      "sources": { "primary_neofax_page": 386, "cross_checks": [ {"source": "WHO WMFc 2024", "agreement": "agrees"}, {"source": "NASPGHAN / NICE GERD", "agreement": "agrees"} ] },
+      "review": { "status": "draft_pending_user_review", "reviewer": null, "review_date": null, "notes": "Preferred H₂RA in NICU after ranitidine withdrawal (NDMA). PPIs are an alternative for severe GERD." }
+    },
+    {
+      "id": "neo-folic-acid",
+      "drug": "Folic acid",
+      "alt_names": ["Vitamin B9", "Folate"],
+      "category": "Vitamin",
+      "atc_code": "B03BB01",
+      "india_formulations": [
+        { "form": "Oral tablet / drops", "strength": "0.4 mg, 1 mg, 5 mg tablet; 0.4 mg/mL drops", "brands_india": ["Folvite (Wyeth/Pfizer)", "Folate (Various)"] }
+      ],
+      "doses": [
+        { "indication": "Adequate enteral / oral intake", "route": "PO", "ga_band": "Term", "dose_per_kg_per_dose": "65 mcg/day", "frequency": "once daily" },
+        { "indication": "Enteral preterm", "route": "PO", "ga_band": "Preterm", "dose_per_kg_per_dose": "25–50 mcg/kg/day (max 65 mcg/day)", "frequency": "once daily" },
+        { "indication": "PN preterm", "route": "IV via PN", "ga_band": "Preterm", "dose_per_kg_per_dose": "56 mcg/kg/day (max 140 mcg/day for ≥ 3 kg ; 91 mcg/day for 1–3 kg ; 42 mcg/day for < 1 kg)" },
+        { "indication": "Maternal folate deficiency, breast-fed infant supplement", "route": "PO / SC / IM / IV", "ga_band": "Any", "dose_per_kg_per_dose": "50 mcg (= 0.05 mg) once daily" }
+      ],
+      "monitoring": "Routine clinical; CBC if deficient.",
+      "adverse_effects": "None at usual doses.",
+      "contraindications": "None.",
+      "sources": { "primary_neofax_page": 426, "cross_checks": [ {"source": "ESPGHAN PN guidelines 2018", "agreement": "agrees"}, {"source": "AAP — Iron / vitamin supplementation in preterm", "agreement": "agrees"} ] },
+      "review": { "status": "draft_pending_user_review", "reviewer": null, "review_date": null, "notes": "" }
+    },
+    {
+      "id": "neo-hydralazine",
+      "drug": "Hydralazine",
+      "alt_names": [],
+      "category": "Direct vasodilator (arterial)",
+      "atc_code": "C02DB02",
+      "india_formulations": [
+        { "form": "Oral tablet", "strength": "25 mg, 50 mg", "brands_india": ["Apresoline (legacy, limited)", "Hydraz (FDC)"] }
+      ],
+      "doses": [
+        { "indication": "Hypertensive emergency / heart failure (parenteral)", "route": "IV", "ga_band": "Any", "dose_per_kg_per_dose": "Start 0.1–0.5 mg/kg/dose", "frequency": "every 6–8 hours", "max_per_dose": "2 mg/kg/dose every 6 hours" },
+        { "indication": "Maintenance hypertension", "route": "PO (with food)", "ga_band": "Any", "dose_per_kg_per_dose": "0.25–1 mg/kg/dose (≈ 2× IV dose)", "frequency": "every 6–8 hours" }
+      ],
+      "monitoring": "BP, HR (reflex tachycardia), urine output.",
+      "adverse_effects": "Reflex tachycardia, hypotension, fluid retention; lupus-like syndrome (chronic).",
+      "contraindications": "Mitral / aortic valve disease (relative); SLE (relative).",
+      "sources": { "primary_neofax_page": 475, "cross_checks": [ {"source": "WHO WMFc 2024", "agreement": "agrees"}, {"source": "BNF for Children 2024", "agreement": "agrees"} ] },
+      "review": { "status": "draft_pending_user_review", "reviewer": null, "review_date": null, "notes": "Often paired with a β-blocker to attenuate reflex tachycardia." }
+    },
+    {
+      "id": "neo-hydrochlorothiazide",
+      "drug": "Hydrochlorothiazide",
+      "alt_names": ["HCTZ"],
+      "category": "Thiazide diuretic",
+      "atc_code": "C03AA03",
+      "india_formulations": [
+        { "form": "Oral tablet", "strength": "12.5 mg, 25 mg", "brands_india": ["Aquazide (Sun)", "Hydrazide (FDC)"] }
+      ],
+      "doses": [
+        { "indication": "Diuresis / BPD chronic management", "route": "PO (with food)", "ga_band": "Any", "dose_per_kg_per_dose": "1–2 mg/kg/dose", "frequency": "every 12 hours", "comments": "Distinct from chlorothiazide — do not confuse." }
+      ],
+      "monitoring": "Electrolytes (K, Na), urine output.",
+      "adverse_effects": "Hypokalaemia, hyponatraemia, hyperuricaemia, hypercalcaemia, hyperglycaemia.",
+      "contraindications": "Anuria, sulfa hypersensitivity (relative).",
+      "sources": { "primary_neofax_page": 478, "cross_checks": [ {"source": "WHO WMFc 2024", "agreement": "agrees"}, {"source": "NNF CPG 2020 — BPD", "agreement": "agrees"} ] },
+      "review": { "status": "draft_pending_user_review", "reviewer": null, "review_date": null, "notes": "Often combined with spironolactone in BPD chronic care." }
+    },
+    {
+      "id": "neo-imipenem-cilastatin",
+      "drug": "Imipenem / Cilastatin",
+      "alt_names": ["Primaxin"],
+      "category": "Antibiotic — Carbapenem + dehydropeptidase inhibitor",
+      "atc_code": "J01DH51",
+      "india_formulations": [],
+      "doses": [
+        { "indication": "Severe gram-negative / mixed infection", "route": "IV (over 30 min)", "ga_band": "BW ≤ 2 kg, ≤ 1 week", "dose_per_kg_per_dose": "20 mg/kg/dose", "frequency": "every 12 hours" },
+        { "indication": "Severe gram-negative / mixed", "route": "IV", "ga_band": "BW ≤ 2 kg, > 1 week", "dose_per_kg_per_dose": "25 mg/kg/dose", "frequency": "every 12 hours" },
+        { "indication": "Severe gram-negative / mixed", "route": "IV", "ga_band": "BW > 2 kg, < 1 week", "dose_per_kg_per_dose": "25 mg/kg/dose", "frequency": "every 12 hours" },
+        { "indication": "Severe gram-negative / mixed", "route": "IV", "ga_band": "BW > 2 kg, 1–4 weeks", "dose_per_kg_per_dose": "25 mg/kg/dose", "frequency": "every 8 hours" }
+      ],
+      "monitoring": "Clinical response; CBC, RFT, neuro status (seizure risk).",
+      "adverse_effects": "Diarrhoea, nausea, transaminitis, seizures (relatively higher than meropenem — caution in renal impairment / CNS infection), eosinophilia.",
+      "contraindications": "Carbapenem / β-lactam hypersensitivity (anaphylaxis).",
+      "sources": { "primary_neofax_page": 496, "cross_checks": [ {"source": "WHO WMFc 2024", "agreement": "agrees"}, {"source": "AAP Red Book", "agreement": "agrees"} ] },
+      "review": { "status": "draft_pending_user_review", "reviewer": null, "review_date": null, "notes": "Meropenem generally preferred over imipenem in CNS infections — lower seizure risk." }
+    },
+    {
+      "id": "neo-methadone",
+      "drug": "Methadone",
+      "alt_names": [],
+      "category": "Long-acting opioid agonist",
+      "atc_code": "N07BC02",
+      "india_formulations": [],
+      "doses": [
+        { "indication": "Neonatal Abstinence Syndrome — initial", "route": "PO", "ga_band": "Term", "dose_per_kg_per_dose": "0.05–0.1 mg/kg/dose", "frequency": "every 6–24 hours", "comments": "Adjust by 10–20% based on Finnegan score. Standardised stepwise wean (8 steps over ~16 days)." }
+      ],
+      "monitoring": "Finnegan / NAS score, RR, SpO₂, ECG (QT prolongation), feeding pattern.",
+      "adverse_effects": "Respiratory depression, sedation, prolonged QT, NAS rebound on rapid wean.",
+      "contraindications": "Severe respiratory depression without ventilation; concurrent serotonergic drugs (relative — serotonin syndrome).",
+      "black_box_warning": "Respiratory depression, addiction, QT prolongation. Use only by experienced practitioners.",
+      "sources": { "primary_neofax_page": 609, "cross_checks": [ {"source": "WHO WMFc 2024", "agreement": "agrees"}, {"source": "AAP NAS guideline 2020", "agreement": "agrees"} ] },
+      "review": { "status": "draft_pending_user_review", "reviewer": null, "review_date": null, "notes": "Methadone has a long, variable half-life — close monitoring during titration. Morphine and buprenorphine are alternatives with shorter NICU stays." }
+    },
+    {
+      "id": "neo-nitric-oxide-inhaled",
+      "drug": "Nitric Oxide (Inhaled, iNO)",
+      "alt_names": ["INOmax"],
+      "category": "Pulmonary vasodilator (gas)",
+      "atc_code": "R07AX01",
+      "india_formulations": [],
+      "doses": [
+        { "indication": "Hypoxic respiratory failure with PPHN (term / late preterm)", "route": "Inhaled (via ventilator delivery system)", "ga_band": "≥ 34 weeks gestation", "dose_per_kg_per_dose": "Start 20 ppm", "frequency": "Continuous; titrate", "duration": "Up to 14 days; usual ≤ 4 days", "comments": "If PaO₂ rises ≥ 60 torr within 4 h, decrease to 5 ppm. Wean FiO₂ first; when FiO₂ < 0.6, wean iNO by 1 ppm every ~4 h. Stop when stable on 1 ppm × 4 h." }
+      ],
+      "monitoring": "Continuous SpO₂, pre/post-ductal SpO₂, ABG, methaemoglobin level (every 12 h initially), NO₂ (gas analyser), echocardiogram.",
+      "adverse_effects": "Methaemoglobinaemia, NO₂ toxicity (lung injury), rebound pulmonary hypertension on abrupt withdrawal, bleeding (platelet inhibition — minor).",
+      "contraindications": "Right-to-left shunt-dependent congenital heart disease (e.g. severe coarctation, interrupted arch); severe LV dysfunction (relative — may worsen pulmonary oedema).",
+      "sources": { "primary_neofax_page": 689, "cross_checks": [ {"source": "WHO WMFc 2024", "agreement": "agrees"}, {"source": "DailyMed INOmax label", "agreement": "agrees"}, {"source": "NNF CPG 2020 — PPHN", "agreement": "agrees"} ] },
+      "review": { "status": "draft_pending_user_review", "reviewer": null, "review_date": null, "notes": "Routine use in preterm < 34 weeks NOT recommended (no benefit, possible harm). Echo to rule out left heart obstruction is mandatory before starting." }
+    },
+    {
+      "id": "neo-octreotide",
+      "drug": "Octreotide",
+      "alt_names": [],
+      "category": "Somatostatin analogue",
+      "atc_code": "H01CB02",
+      "india_formulations": [],
+      "doses": [
+        { "indication": "Hyperinsulinaemic hypoglycaemia (refractory to diazoxide)", "route": "SC / IV", "ga_band": "Any", "loading_dose_per_kg": "Start 1 mcg/kg/dose every 6 h", "dose_per_kg_per_dose": "Titrate to 10 mcg/kg/dose every 6 hours (max)", "comments": "Tachyphylaxis common after several days." },
+        { "indication": "Chylothorax", "route": "IV continuous", "ga_band": "Any", "dose_per_kg_per_min_starting": "1 mcg/kg/hr", "dose_per_kg_per_min_range": "Titrate up by 1 mcg/kg/hr every 24 h ; max 10 mcg/kg/hr", "duration": "Wean over 2–7 days when chyle drainage falls" }
+      ],
+      "monitoring": "Glucose, GH, IGF-1 (chronic), thyroid, gallbladder USG (long-term), GI symptoms.",
+      "adverse_effects": "Hyperglycaemia / hypoglycaemia, diarrhoea, bile-stone formation (chronic), necrotising enterocolitis (case reports in preterm), growth suppression (chronic).",
+      "contraindications": "Hypersensitivity.",
+      "sources": { "primary_neofax_page": 704, "cross_checks": [ {"source": "WHO WMFc 2024", "agreement": "agrees"}, {"source": "PES Hypoglycaemia 2015", "agreement": "agrees"} ] },
+      "review": { "status": "draft_pending_user_review", "reviewer": null, "review_date": null, "notes": "Preterm — caution due to possible NEC association." }
+    },
+    {
+      "id": "neo-pantoprazole",
+      "drug": "Pantoprazole",
+      "alt_names": [],
+      "category": "Proton pump inhibitor",
+      "atc_code": "A02BC02",
+      "india_formulations": [
+        { "form": "Oral tablet (delayed-release)", "strength": "20 mg, 40 mg", "brands_india": ["Pantocid (Sun)", "Pan (Alkem)", "Pantop (Aristo)"] }
+      ],
+      "doses": [
+        { "indication": "Severe GERD / stress ulcer prophylaxis (refractory to H₂RA)", "route": "PO", "ga_band": "Any neonate", "dose_per_kg_per_dose": "2.5 mg per dose (entire dose, not /kg)", "frequency": "once daily", "comments": "From PK studies in neonates — 2.5 mg orally daily provides similar exposure to 40 mg in adults." }
+      ],
+      "monitoring": "Watch for infection (NEC, pneumonia), Mg, B12 (chronic).",
+      "adverse_effects": "Increased risk of Clostridioides difficile, NEC, pneumonia (with prolonged use). Hypomagnesaemia. Cobalamin / Fe deficiency (chronic).",
+      "contraindications": "Hypersensitivity.",
+      "sources": { "primary_neofax_page": 727, "cross_checks": [ {"source": "WHO WMFc 2024", "agreement": "agrees"}, {"source": "NASPGHAN GERD guideline 2018", "agreement": "agrees"} ] },
+      "review": { "status": "draft_pending_user_review", "reviewer": null, "review_date": null, "notes": "Long-term PPI use in preterm has been associated with NEC and late-onset sepsis — use shortest course possible." }
+    },
+    {
+      "id": "neo-potassium-chloride",
+      "drug": "Potassium chloride",
+      "alt_names": ["KCl"],
+      "category": "Electrolyte",
+      "atc_code": "A12BA01",
+      "india_formulations": [],
+      "doses": [
+        { "indication": "Acute symptomatic hypokalaemia", "route": "IV (over 1 h, peripheral max 40 mmol/L; central max 80 mmol/L)", "ga_band": "Any", "dose_per_kg_per_dose": "0.5–1 mEq/kg/dose", "frequency": "Repeat after recheck", "infusion_rate": "Max 0.5 mEq/kg/hour peripheral" },
+        { "indication": "Maintenance / parenteral nutrition", "route": "IV via PN", "ga_band": "Any", "dose_per_kg_per_dose": "2–4 mEq/kg/day" },
+        { "indication": "Oral replacement", "route": "PO (with feeds)", "ga_band": "Any", "dose_per_kg_per_dose": "0.5–1 mEq/kg/day in divided doses" }
+      ],
+      "administration": "1 g KCl = 13.4 mEq K⁺. 1 mEq K⁺ = 74.6 mg KCl. Always document mEq, not mg of salt.",
+      "monitoring": "ECG (peaked T, QT shortening, arrhythmia), serum K⁺ every 4–6 h during correction.",
+      "adverse_effects": "Hyperkalaemia (cardiac arrest), phlebitis, IV-site pain.",
+      "contraindications": "Hyperkalaemia, severe oliguria / anuria.",
+      "incompatibilities": "Do NOT push undiluted IV — fatal cardiac arrest.",
+      "sources": { "primary_neofax_page": 791, "cross_checks": [ {"source": "WHO WMFc 2024", "agreement": "agrees"}, {"source": "BNF for Children", "agreement": "agrees"} ] },
+      "review": { "status": "draft_pending_user_review", "reviewer": null, "review_date": null, "notes": "PediAid has a Potassium Correction calculator." }
+    },
+    {
+      "id": "neo-propranolol",
+      "drug": "Propranolol",
+      "alt_names": [],
+      "category": "Non-selective β-blocker",
+      "atc_code": "C07AA05",
+      "india_formulations": [
+        { "form": "Oral solution", "strength": "3.75 mg/mL (Hemangiol — imported); 5 mg/5 mL compounded", "brands_india": ["Hemangiol (where stocked)", "Propranolol oral suspension (compounded)"] },
+        { "form": "Oral tablet", "strength": "10 mg, 20 mg, 40 mg", "brands_india": ["Inderal (USV)", "Ciplar (Cipla)"] }
+      ],
+      "doses": [
+        { "indication": "Hypertension / SVT — initial oral", "route": "PO", "ga_band": "Any", "dose_per_kg_per_dose": "0.25–1 mg/kg/dose", "frequency": "every 6 hours", "max_per_dose": "3.5 mg/kg/dose every 6 hours" },
+        { "indication": "Hypertension / SVT — IV", "route": "IV (over 10 min)", "ga_band": "Any", "loading_dose_per_kg": "Start 0.01 mg/kg/dose", "dose_per_kg_per_dose": "Titrate up to 0.15 mg/kg/dose", "frequency": "every 6 hours" },
+        { "indication": "Infantile haemangioma (≥ 5 weeks of age, ≥ 2 kg)", "route": "PO", "ga_band": "≥ 5 weeks", "loading_dose_per_kg": "Week 1: 0.6 mg/kg/dose BD ; Week 2: 1.1 mg/kg/dose BD ; Week 3 onwards: 1.7 mg/kg/dose BD", "frequency": "twice daily, ≥ 9 hours apart, with feeds", "duration": "6 months (typical); continue until full involution / 1 yr of age" }
+      ],
+      "monitoring": "HR, BP, glucose (hypoglycaemia in neonates), bronchospasm signs.",
+      "adverse_effects": "Bradycardia, hypotension, hypoglycaemia (especially in fasting / illness), bronchospasm, sleep disturbance.",
+      "contraindications": "Bradyarrhythmia / heart block (without pacemaker), severe asthma, cardiogenic shock, congenital heart block.",
+      "sources": { "primary_neofax_page": 799, "cross_checks": [ {"source": "WHO WMFc 2024", "agreement": "agrees"}, {"source": "DailyMed Hemangiol label", "agreement": "agrees"}, {"source": "Léauté-Labrèze 2015 NEJM (haemangioma)", "agreement": "agrees"} ] },
+      "review": { "status": "draft_pending_user_review", "reviewer": null, "review_date": null, "notes": "Always feed with each propranolol dose to avoid hypoglycaemia. Hold on intercurrent illness with poor feeding." }
+    },
+    {
+      "id": "neo-pyridoxine",
+      "drug": "Pyridoxine (Vitamin B6)",
+      "alt_names": ["Vitamin B6"],
+      "category": "Vitamin / Antiseizure cofactor",
+      "atc_code": "A11HA02",
+      "india_formulations": [
+        { "form": "Oral tablet", "strength": "10 mg, 25 mg, 40 mg, 100 mg", "brands_india": ["Benadon (Piramal)", "Pyridoxine (generic)"] }
+      ],
+      "doses": [
+        { "indication": "Pyridoxine-dependent epilepsy — diagnostic test", "route": "IV / IM", "ga_band": "Any neonate with refractory seizures", "dose_per_kg_per_dose": "50–100 mg per dose (not /kg)", "frequency": "Single dose with EEG monitoring; if seizures stop within minutes, diagnostic" },
+        { "indication": "Pyridoxine-dependent epilepsy — maintenance", "route": "PO", "ga_band": "Any", "dose_per_kg_per_dose": "50–100 mg per dose", "frequency": "once daily", "comments": "Higher doses may be required during intercurrent illness." }
+      ],
+      "monitoring": "Seizure response, neurodevelopmental progress.",
+      "adverse_effects": "High-dose IV pyridoxine: rare apnoea, hypotonia. Chronic high-dose: peripheral neuropathy.",
+      "contraindications": "Hypersensitivity.",
+      "sources": { "primary_neofax_page": 811, "cross_checks": [ {"source": "WHO WMFc 2024", "agreement": "agrees"}, {"source": "Neonatal Seizure consortium 2018", "agreement": "agrees"} ] },
+      "review": { "status": "draft_pending_user_review", "reviewer": null, "review_date": null, "notes": "Always trial in any neonatal refractory seizure NOT controlled by phenobarbital + phenytoin." }
+    },
+    {
+      "id": "neo-rifampin",
+      "drug": "Rifampin (Rifampicin)",
+      "alt_names": ["Rifampicin"],
+      "category": "Antibiotic — Rifamycin (anti-tuberculous + adjunct staph)",
+      "atc_code": "J04AB02",
+      "india_formulations": [
+        { "form": "Oral suspension", "strength": "100 mg/5 mL (= 20 mg/mL)", "brands_india": ["R-Cinex (Cadila)", "Rifkin (Lupin)", "Rimactane (Sandoz)"] },
+        { "form": "Oral capsule", "strength": "150 mg, 300 mg, 450 mg, 600 mg", "brands_india": ["Rifampin", "R-Cin", "Rimactane"] }
+      ],
+      "doses": [
+        { "indication": "Adjunct for staph — endocarditis / prosthetic infection (with prosthetic material)", "route": "IV / PO", "ga_band": "Any", "dose_per_kg_per_dose": "5–10 mg/kg/dose", "frequency": "every 12–24 hours" },
+        { "indication": "Haemophilus influenzae type b prophylaxis (close contacts)", "route": "PO", "ga_band": "Any", "dose_per_kg_per_dose": "10 mg/kg/dose", "frequency": "every 24 hours", "duration": "4 days" },
+        { "indication": "Meningococcal disease prophylaxis", "route": "PO", "ga_band": "Any", "dose_per_kg_per_dose": "5 mg/kg/dose", "frequency": "every 12 hours", "duration": "2 days" }
+      ],
+      "monitoring": "LFTs, CBC, drug interactions (potent CYP3A4 inducer — lowers levels of many drugs).",
+      "adverse_effects": "Orange-red discolouration of secretions / urine (harmless), transaminitis, thrombocytopenia, rash.",
+      "contraindications": "Active hepatitis (relative); concurrent ritonavir (relative).",
+      "sources": { "primary_neofax_page": 826, "cross_checks": [ {"source": "WHO WMFc 2024", "agreement": "agrees"}, {"source": "AAP Red Book — Hib, meningococcal prophylaxis", "agreement": "agrees"} ] },
+      "review": { "status": "draft_pending_user_review", "reviewer": null, "review_date": null, "notes": "TB-specific dosing (10–20 mg/kg/day) is per IAP/RNTCP guidelines and not detailed here." }
+    },
+    {
+      "id": "neo-rocuronium",
+      "drug": "Rocuronium",
+      "alt_names": [],
+      "category": "Neuromuscular blocker — non-depolarising aminosteroid",
+      "atc_code": "M03AC09",
+      "india_formulations": [],
+      "doses": [
+        { "indication": "Tracheal intubation (RSI)", "route": "IV bolus", "ga_band": "Any", "dose_per_kg_per_dose": "0.6 mg/kg/dose (or 0.45 mg/kg with sevoflurane induction)", "frequency": "Single dose", "comments": "Onset ~75 sec at 0.6 mg/kg." },
+        { "indication": "Maintenance paralysis", "route": "IV", "ga_band": "Any", "dose_per_kg_per_dose": "0.15 mg/kg bolus at T3 reappearance", "dose_per_kg_per_min_range": "Continuous infusion 7–10 mcg/kg/min" }
+      ],
+      "monitoring": "Train-of-four, ventilator synchrony, eye and pressure-area care.",
+      "adverse_effects": "Tachycardia (mild), prolonged paralysis with hepatic / renal impairment, anaphylaxis (rare but documented).",
+      "contraindications": "Use only by trained clinicians familiar with airway management.",
+      "sources": { "primary_neofax_page": 835, "cross_checks": [ {"source": "WHO WMFc 2024", "agreement": "agrees"}, {"source": "DailyMed Zemuron label", "agreement": "agrees"} ] },
+      "review": { "status": "draft_pending_user_review", "reviewer": null, "review_date": null, "notes": "Reverse with sugammadex 16 mg/kg (immediate) or 4 mg/kg (deep block). Vecuronium is alternative for prolonged paralysis." }
+    },
+    {
+      "id": "neo-sodium-nitroprusside",
+      "drug": "Sodium nitroprusside (SNP)",
+      "alt_names": ["Nipride"],
+      "category": "Vasodilator — direct (NO donor)",
+      "atc_code": "C02DD01",
+      "india_formulations": [],
+      "doses": [
+        { "indication": "Hypertensive emergency / afterload reduction", "route": "IV continuous (light-protected line)", "ga_band": "Any", "dose_per_kg_per_min_starting": "0.3 mcg/kg/min", "dose_per_kg_per_min_range": "Titrate to BP, MAX 10 mcg/kg/min — but no longer than 10 min at max rate", "comments": "Risk of cyanide / thiocyanate toxicity beyond 72 h or rates > 2 mcg/kg/min — switch to alternative if prolonged." },
+        { "indication": "Heart failure (afterload reduction)", "route": "IV continuous", "ga_band": "Any", "dose_per_kg_per_min_range": "0.3–4 mcg/kg/min, MAX 6 mcg/kg/min" }
+      ],
+      "administration": "Protect from light (light wrap on bag and tubing). Use central vein. Mix with D5W only.",
+      "monitoring": "Continuous arterial BP, ECG; serum thiocyanate level (> 50 mg/L toxic) if used > 48 h or in renal impairment; serum cyanide / lactate (if metabolic acidosis develops).",
+      "adverse_effects": "Hypotension (rapid onset), cyanide toxicity, thiocyanate accumulation (renal impairment), methaemoglobinaemia.",
+      "contraindications": "Compensatory hypertension (e.g. coarctation, AV shunt); severe hepatic impairment; high-output heart failure.",
+      "renal_adjustment": "If GFR < 30 mL/min/1.73 m²: limit mean rate < 3 mcg/kg/min. Anuria: limit < 1 mcg/kg/min.",
+      "sources": { "primary_neofax_page": 854, "cross_checks": [ {"source": "WHO WMFc 2024", "agreement": "agrees"}, {"source": "DailyMed Nipride label", "agreement": "agrees"}, {"source": "PALS 2020", "agreement": "agrees"} ] },
+      "review": { "status": "draft_pending_user_review", "reviewer": null, "review_date": null, "notes": "Co-administer hydroxocobalamin or sodium thiosulfate for cyanide protection if prolonged use." }
+    },
+    {
+      "id": "neo-spironolactone",
+      "drug": "Spironolactone",
+      "alt_names": [],
+      "category": "Potassium-sparing diuretic — aldosterone antagonist",
+      "atc_code": "C03DA01",
+      "india_formulations": [
+        { "form": "Oral tablet", "strength": "25 mg, 50 mg, 100 mg", "brands_india": ["Aldactone (RPG / Pfizer)", "Spirix (Cadila)"] }
+      ],
+      "doses": [
+        { "indication": "Diuresis (BPD, CHF, ascites) — often combined with HCTZ", "route": "PO (with food)", "ga_band": "Any", "dose_per_kg_per_dose": "1–3 mg/kg/dose", "frequency": "every 24 hours" }
+      ],
+      "monitoring": "Electrolytes (K — risk of hyperkalaemia), Na, urine output, BP, RFT.",
+      "adverse_effects": "Hyperkalaemia, gynaecomastia (chronic), GI upset.",
+      "contraindications": "Anuria, hyperkalaemia, severe renal impairment, Addison disease.",
+      "sources": { "primary_neofax_page": 867, "cross_checks": [ {"source": "WHO WMFc 2024", "agreement": "agrees"}, {"source": "BNF for Children", "agreement": "agrees"} ] },
+      "review": { "status": "draft_pending_user_review", "reviewer": null, "review_date": null, "notes": "Often paired with thiazide (HCTZ) for BPD chronic diuresis — counterbalances K loss." }
+    },
+    {
+      "id": "neo-succinylcholine",
+      "drug": "Succinylcholine (Suxamethonium)",
+      "alt_names": ["Suxamethonium"],
+      "category": "Neuromuscular blocker — depolarising (short-acting)",
+      "atc_code": "M03AB01",
+      "india_formulations": [],
+      "doses": [
+        { "indication": "Tracheal intubation (rare in NICU — rocuronium preferred)", "route": "IV (push)", "ga_band": "Any", "dose_per_kg_per_dose": "1–2 mg/kg/dose", "frequency": "Single immediately before intubation; max cumulative 4 mg/kg", "comments": "Onset ~ 30–60 sec, duration ~ 5 min." },
+        { "indication": "Tracheal intubation — IM (no IV access)", "route": "IM", "ga_band": "Any", "dose_per_kg_per_dose": "2–4 mg/kg/dose", "frequency": "Single dose" }
+      ],
+      "monitoring": "ECG, SpO₂, airway, K (especially in burns / muscular dystrophy / prolonged immobilisation — hyperkalaemia risk).",
+      "adverse_effects": "Hyperkalaemia (especially burns, crush injury, muscular disease — risk of cardiac arrest), bradycardia (especially repeat doses), masseter spasm, malignant hyperthermia.",
+      "contraindications": "Burn / crush injury > 24 h, paraplegia / muscular dystrophy, hyperkalaemia, malignant hyperthermia history. Many NICU experts AVOID due to bradycardia and HyperK risk in sick neonates.",
+      "black_box_warning": "Risk of cardiac arrest from acute hyperkalaemia, especially in undiagnosed muscle / metabolic disease — rocuronium preferred for paediatric intubation.",
+      "sources": { "primary_neofax_page": 871, "cross_checks": [ {"source": "WHO WMFc 2024", "agreement": "agrees"}, {"source": "NRP 8th ed", "agreement": "rocuronium preferred over succinylcholine"} ] },
+      "review": { "status": "draft_pending_user_review", "reviewer": null, "review_date": null, "notes": "Rocuronium is preferred over succinylcholine for routine NICU intubation." }
+    },
+    {
+      "id": "neo-tobramycin",
+      "drug": "Tobramycin",
+      "alt_names": [],
+      "category": "Antibiotic — Aminoglycoside (anti-pseudomonal preferred)",
+      "atc_code": "J01GB01",
+      "india_formulations": [],
+      "doses": [
+        { "indication": "Gram-negative sepsis / Pseudomonas (alternative to gentamicin)", "route": "IV (over 30 min)", "ga_band": "Any", "dose_per_kg_per_dose": "PMA-based: ≤ 29 wk: 5 mg/kg q48h (0–7 d), 4 mg/kg q36h (8–28 d), q24h (≥ 29 d) ; 30–34 wk: 4.5 mg/kg q36h (0–7 d), 4 mg/kg q24h (≥ 8 d) ; ≥ 35 wk: 4 mg/kg q24h" }
+      ],
+      "monitoring": "Therapeutic levels — Peak (30 min post): 5–12 mg/L (target 8–13 for extended-interval) ; Trough: < 1 mg/L. Audiology screen.",
+      "adverse_effects": "Same as gentamicin — nephrotoxic, oto- and vestibular toxic.",
+      "contraindications": "Aminoglycoside hypersensitivity.",
+      "black_box_warning": "Aminoglycoside class — neurotoxicity, ototoxicity, nephrotoxicity. Risk increased with renal impairment, dehydration, prolonged therapy.",
+      "sources": { "primary_neofax_page": 883, "cross_checks": [ {"source": "WHO WMFc 2024", "agreement": "agrees"}, {"source": "BNF for Children", "agreement": "agrees"} ] },
+      "review": { "status": "draft_pending_user_review", "reviewer": null, "review_date": null, "notes": "Tobramycin is preferred over gentamicin against Pseudomonas (slightly lower MICs)." }
+    }
+  ]
+}

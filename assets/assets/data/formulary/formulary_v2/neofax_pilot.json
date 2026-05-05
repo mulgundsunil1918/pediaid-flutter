@@ -1,0 +1,537 @@
+{
+  "schema_version": "v2.0",
+  "section": "neofax_pilot",
+  "section_label": "NICU pilot batch — 5 drugs",
+  "last_updated": "2026-05-03",
+  "review_disclaimer": "DRAFT — pending clinician review. Verify every dose against your local protocol and current vial concentration before administration. PediAid assumes no liability.",
+  "drugs": [
+    {
+      "id": "neo-paracetamol",
+      "drug": "Paracetamol (Acetaminophen)",
+      "alt_names": ["Acetaminophen", "Paracetamol", "APAP"],
+      "category": "Analgesic / Antipyretic",
+      "atc_code": "N02BE01",
+
+      "india_formulations": [
+        {
+          "form": "IV solution",
+          "strength": "10 mg/mL — 1000 mg in 100 mL glass vial",
+          "brands_india": ["Neomol IV (Neon)", "Pacimol IV (Ipca)", "Babygesic IV (Themis)", "Perfalgan (imported, BMS)"],
+          "notes": "Single-use vial. Use within 6 h of opening. Always check mg vs mL — black-box error source."
+        },
+        {
+          "form": "Oral drops (paediatric)",
+          "strength": "100 mg/mL (some 150 mg/mL)",
+          "brands_india": ["Crocin drops (GSK)", "Calpol drops (GSK)", "P-125 drops (Cipla)", "Babymol drops (Wallace)"],
+          "notes": "Confirm strength on the bottle — 100 vs 150 mg/mL exists."
+        },
+        {
+          "form": "Oral syrup",
+          "strength": "125 mg / 5 mL (= 25 mg/mL); 250 mg / 5 mL (= 50 mg/mL)",
+          "brands_india": ["Crocin syrup", "Calpol syrup", "Tempol syrup", "Paracin syrup"],
+          "notes": "Most common paediatric strength is 125 mg / 5 mL."
+        },
+        {
+          "form": "Suppository",
+          "strength": "80, 125, 170, 325, 650 mg",
+          "brands_india": ["Crocin suppository", "Pacimol suppository"],
+          "notes": "Variable absorption — IV preferred when accurate dose needed."
+        }
+      ],
+
+      "doses": [
+        {
+          "indication": "Fever",
+          "route": "IV",
+          "ga_band": "≥ 32 weeks gestation",
+          "dose_per_kg_per_dose": "12.5 mg/kg/dose",
+          "frequency": "every 6 hours",
+          "max_per_day_all_routes": "50 mg/kg/day",
+          "infusion_rate": "Infuse over 15 min (10 mg/mL)",
+          "comments": "Withdraw exact dose into syringe; volume in a neonate should always be ≤ 7.5 mL."
+        },
+        {
+          "indication": "Fever / Pain",
+          "route": "PO",
+          "ga_band": "Preterm < 32 weeks PMA",
+          "loading_dose_per_kg": "20–25 mg/kg (single dose)",
+          "dose_per_kg_per_dose": "12–15 mg/kg/dose",
+          "frequency": "every 12 hours (PRN or ATC)",
+          "max_per_day_all_routes": "50 mg/kg/day",
+          "comments": ""
+        },
+        {
+          "indication": "Fever / Pain",
+          "route": "PO",
+          "ga_band": "Preterm ≥ 32 weeks PMA",
+          "loading_dose_per_kg": "20–25 mg/kg (single dose)",
+          "dose_per_kg_per_dose": "12–15 mg/kg/dose",
+          "frequency": "every 8 hours (PRN or ATC)",
+          "max_per_day_all_routes": "50 mg/kg/day"
+        },
+        {
+          "indication": "Fever / Pain",
+          "route": "PO",
+          "ga_band": "Term",
+          "loading_dose_per_kg": "20–25 mg/kg (single dose)",
+          "dose_per_kg_per_dose": "12–15 mg/kg/dose",
+          "frequency": "every 6 hours (PRN or ATC)",
+          "max_per_day_all_routes": "50 mg/kg/day"
+        },
+        {
+          "indication": "Fever / Pain",
+          "route": "PR",
+          "ga_band": "Preterm < 32 weeks PMA",
+          "loading_dose_per_kg": "30 mg/kg (single dose)",
+          "dose_per_kg_per_dose": "12–18 mg/kg/dose",
+          "frequency": "every 12 hours",
+          "max_per_day_all_routes": "50 mg/kg/day"
+        },
+        {
+          "indication": "Fever / Pain",
+          "route": "PR",
+          "ga_band": "Preterm ≥ 32 weeks PMA",
+          "loading_dose_per_kg": "30 mg/kg (single dose)",
+          "dose_per_kg_per_dose": "12–18 mg/kg/dose",
+          "frequency": "every 8 hours"
+        },
+        {
+          "indication": "Fever / Pain",
+          "route": "PR",
+          "ga_band": "Term",
+          "loading_dose_per_kg": "30 mg/kg (single dose)",
+          "dose_per_kg_per_dose": "12–18 mg/kg/dose",
+          "frequency": "every 6 hours"
+        },
+        {
+          "indication": "PDA closure (off-label)",
+          "route": "PO or IV",
+          "ga_band": "Preterm",
+          "dose_per_kg_per_dose": "15 mg/kg/dose",
+          "frequency": "every 6 hours for 3 days",
+          "comments": "May be considered when NSAIDs (indomethacin/ibuprofen) are contraindicated or have failed. A second course may be required."
+        }
+      ],
+
+      "monitoring": "Pain score; temperature; LFTs (especially if > 48 h of therapy or hepatic risk).",
+      "adverse_effects": "IV — injection-site pain (15%), vomiting (5%). Modest reduction in BP and HR may occur in neonates after IV administration. Hepatotoxicity at supra-therapeutic doses or prolonged therapy. Rare serious skin reactions (SJS / TEN / AGEP). Epidemiological association (not causation) with later asthma, eczema, atopy.",
+      "contraindications": "Severe hepatic impairment / severe active liver disease; hypersensitivity. Caution in G6PD deficiency, severe renal impairment, dehydration.",
+      "renal_adjustment": "Use with caution in severe renal impairment.",
+      "hepatic_adjustment": "Avoid IV formulation in severe hepatic impairment.",
+      "incompatibilities": "Avoid mixing with other IV medications in the same syringe/line.",
+      "reconstitution": "Ready-to-use IV vial 1000 mg / 100 mL. Withdraw dose into syringe and administer within 6 h.",
+      "black_box_warning": "Confirm dose in mg (not mL); patients < 50 kg need weight-based dose; do not exceed daily max from all routes/sources. Acute hepatic failure and death have occurred with overdose.",
+
+      "sources": {
+        "primary_neofax_page": 8,
+        "cross_checks": [
+          { "source": "WHO Model Formulary for Children 2024 — paracetamol", "agreement": "agrees on 10–15 mg/kg PO/PR every 6–8 h, max 60 mg/kg/day under 1 month" },
+          { "source": "NNF CPG 2020", "agreement": "agrees" },
+          { "source": "DailyMed (Ofirmev label, IV acetaminophen)", "agreement": "agrees on IV 12.5 mg/kg q6h ≥ 32 wk PMA, max 50 mg/kg/day" },
+          { "source": "IAP Drug Formulary 2024", "agreement": "agrees" }
+        ]
+      },
+
+      "review": {
+        "status": "draft_pending_user_review",
+        "reviewer": null,
+        "review_date": null,
+        "notes": ""
+      }
+    },
+
+    {
+      "id": "neo-ampicillin",
+      "drug": "Ampicillin",
+      "alt_names": ["Ampicillin sodium"],
+      "category": "Antibiotic — Aminopenicillin (β-lactam)",
+      "atc_code": "J01CA01",
+
+      "india_formulations": [
+        {
+          "form": "Powder for injection (vial)",
+          "strength": "250 mg, 500 mg, 1 g, 2 g vials (some 5 g and 10 g hospital packs)",
+          "brands_india": ["Roscillin (Sun)", "Ampicil (FDC)", "Ampilin", "Biocilin (Biochem)"],
+          "notes": "Reconstitute with sterile water. Use within 1 hour of mixing — loses potency."
+        },
+        {
+          "form": "Oral suspension",
+          "strength": "125 mg / 5 mL, 250 mg / 5 mL",
+          "brands_india": ["Roscillin syrup"],
+          "notes": "Oral form rarely used in NICU; IV preferred for systemic infection."
+        }
+      ],
+
+      "doses": [
+        {
+          "indication": "Sepsis / Bacteraemia (empirical, GBS) — early-onset, with aminoglycoside",
+          "route": "IV (slow push or infusion)",
+          "ga_band": "≤ 34 weeks",
+          "postnatal_age_band": "0–7 days",
+          "dose_per_kg_per_dose": "50 mg/kg/dose",
+          "frequency": "every 12 hours",
+          "duration": "10 days for bacteraemia without focus; longer if complicated",
+          "comments": "Use with aminoglycoside (gentamicin) for empirical EOS therapy. Source: Puopolo 2019 / AAP."
+        },
+        {
+          "indication": "Sepsis / Bacteraemia — late-onset, with aminoglycoside",
+          "route": "IV",
+          "ga_band": "≤ 34 weeks",
+          "postnatal_age_band": "> 7 days",
+          "dose_per_kg_per_dose": "75 mg/kg/dose",
+          "frequency": "every 12 hours"
+        },
+        {
+          "indication": "Sepsis / Bacteraemia",
+          "route": "IV",
+          "ga_band": "> 34 weeks",
+          "postnatal_age_band": "ALL",
+          "dose_per_kg_per_dose": "50 mg/kg/dose",
+          "frequency": "every 8 hours"
+        },
+        {
+          "indication": "Meningitis (GBS or bacterial)",
+          "route": "IV",
+          "ga_band": "Any",
+          "postnatal_age_band": "0–7 days",
+          "dose_per_kg_per_dose": "100 mg/kg/dose",
+          "frequency": "every 8 hours",
+          "duration": "14 days uncomplicated"
+        },
+        {
+          "indication": "Meningitis",
+          "route": "IV",
+          "ga_band": "Any",
+          "postnatal_age_band": "> 7 days",
+          "dose_per_kg_per_dose": "75 mg/kg/dose",
+          "frequency": "every 6 hours"
+        },
+        {
+          "indication": "General dosage — by PMA (alternative interval guide)",
+          "route": "IV / IM",
+          "pma_band": "≤ 29 weeks",
+          "postnatal_age_band": "0–28 days then > 28 days",
+          "dose_per_kg_per_dose": "25–50 mg/kg/dose",
+          "frequency": "every 12 h (postnatal 0–28 d), then every 8 h"
+        },
+        {
+          "indication": "General dosage — by PMA",
+          "route": "IV / IM",
+          "pma_band": "30–36 weeks",
+          "dose_per_kg_per_dose": "25–50 mg/kg/dose",
+          "frequency": "every 12 h (0–14 d), every 8 h (> 14 d)"
+        },
+        {
+          "indication": "General dosage — by PMA",
+          "route": "IV / IM",
+          "pma_band": "37–44 weeks",
+          "dose_per_kg_per_dose": "25–50 mg/kg/dose",
+          "frequency": "every 12 h (0–7 d), every 8 h (> 7 d)"
+        },
+        {
+          "indication": "General dosage — by PMA",
+          "route": "IV / IM",
+          "pma_band": "≥ 45 weeks",
+          "dose_per_kg_per_dose": "25–50 mg/kg/dose",
+          "frequency": "every 6 hours"
+        }
+      ],
+
+      "administration": "IV — doses ≤ 500 mg over 3–5 min slow push; doses ≥ 1 g over 10–15 min. IV concentrations 30, 40, 50, 100 mg/mL. IM — final concentration 250 mg/mL.",
+      "monitoring": "Periodic CBC, LFT, RFT on extended therapy. Bleeding time may prolong by ~60 sec after 3rd–4th dose.",
+      "adverse_effects": "Rash, fever (rare in neonates). CNS excitation/seizures with very large doses. Mild prolongation of bleeding time. Hypersensitivity (uncommon in neonates).",
+      "contraindications": "Penicillin hypersensitivity.",
+      "renal_adjustment": "PMA-driven dosing already accounts for renal maturation; no further adjustment usually needed in absence of overt AKI.",
+      "incompatibilities": "Do NOT mix with: amikacin, amiodarone, dopamine, epinephrine, fluconazole, gentamicin, hydralazine, midazolam, sodium bicarbonate, tobramycin. Compatible with: acyclovir, aztreonam, calcium gluconate, cefepime, heparin, hydrocortisone succinate, insulin, magnesium sulfate, metronidazole, milrinone, morphine, propofol, vancomycin.",
+      "reconstitution": "Reconstitute powder vial with sterile water for injection. Maximum IV concentration 100 mg/mL. IM concentration 250 mg/mL. Use reconstituted solution within 1 hour.",
+
+      "sources": {
+        "primary_neofax_page": 104,
+        "cross_checks": [
+          { "source": "WHO Model Formulary for Children 2024 — ampicillin", "agreement": "agrees on 50 mg/kg q12h (week 1), q8h (weeks 2–4); meningitis 100 mg/kg q8h" },
+          { "source": "NNF CPG 2020 (Sepsis)", "agreement": "agrees" },
+          { "source": "AAP Red Book / Puopolo 2019", "agreement": "agrees — primary source for these tables" },
+          { "source": "DailyMed ampicillin sodium (Auromedics) label", "agreement": "agrees" },
+          { "source": "IAP Drug Formulary 2024", "agreement": "agrees" }
+        ]
+      },
+
+      "review": {
+        "status": "draft_pending_user_review",
+        "reviewer": null,
+        "review_date": null,
+        "notes": ""
+      }
+    },
+
+    {
+      "id": "neo-caffeine-citrate",
+      "drug": "Caffeine citrate",
+      "alt_names": ["Caffeine"],
+      "category": "Methylxanthine / CNS + respiratory stimulant",
+      "atc_code": "N06BC01",
+
+      "india_formulations": [
+        {
+          "form": "IV / Oral solution",
+          "strength": "20 mg/mL caffeine citrate (= 10 mg/mL caffeine base) — preservative-free, 3 mL single-use vial",
+          "brands_india": ["Cafnea (Neon Labs)", "Neocaff (Samarth)", "Caffenate (Themis)", "Cafcit (imported, Mylan/Hikma)"],
+          "notes": "20 mg caffeine citrate ≡ 10 mg caffeine base. Always document which you mean. Same vial used for IV and oral routes."
+        }
+      ],
+
+      "doses": [
+        {
+          "indication": "Apnoea of prematurity — FDA approved",
+          "route": "IV (over 30 min) for load; IV (over 10 min) or PO for maintenance",
+          "ga_band": "28 to < 33 weeks gestation",
+          "loading_dose_per_kg": "20 mg/kg of caffeine citrate (= 1 mL/kg of 20 mg/mL solution)",
+          "dose_per_kg_per_dose": "5 mg/kg/dose of caffeine citrate (= 0.25 mL/kg of 20 mg/mL)",
+          "frequency": "Maintenance every 24 hours; start 24 h after the load",
+          "comments": "Express clearly whether 5 mg/kg refers to citrate or base. This row uses CITRATE."
+        },
+        {
+          "indication": "Apnoea of prematurity — off-label (extremely preterm)",
+          "route": "IV / PO",
+          "ga_band": "22 to 28 weeks gestation",
+          "loading_dose_per_kg": "20 mg/kg (range 19–23 mg/kg) of caffeine citrate",
+          "dose_per_kg_per_dose": "Maintenance median 8 mg/kg/day (range 5–10 mg/kg/day) of caffeine citrate",
+          "frequency": "every 24 hours",
+          "duration": "Median 60 days (range 46–75 days) until extubation / 33 wk PMA",
+          "comments": "Higher-dose maintenance (5–10 mg/kg/day citrate) is associated with lower rates of NEC and PDA-ligation in retrospective data."
+        },
+        {
+          "indication": "Facilitation of extubation",
+          "route": "IV / PO",
+          "ga_band": "Preterm",
+          "loading_dose_per_kg": "20 mg/kg caffeine citrate",
+          "dose_per_kg_per_dose": "5–10 mg/kg/day caffeine citrate",
+          "frequency": "every 24 hours",
+          "comments": "Start 24 h before extubation."
+        }
+      ],
+
+      "monitoring": "Routine serum levels usually NOT required. Therapeutic trough 5–25 mcg/mL caffeine; toxic > 40–50 mcg/mL. Periodic glucose. Watch for tachycardia (HR > 180), feeding intolerance, NEC.",
+      "adverse_effects": "Tachycardia, agitation, feeding intolerance, hyperglycaemia, diuresis. Higher-dose meta-analysis showed no increase in adverse outcomes vs standard dose.",
+      "contraindications": "Hypersensitivity.",
+      "renal_adjustment": "Monitor levels; renal impairment slows clearance. Adjust as needed.",
+      "hepatic_adjustment": "Monitor levels; hepatic impairment slows clearance.",
+      "incompatibilities": "See Neofax compatibility list.",
+      "reconstitution": "No reconstitution needed — supplied as ready solution. 1 mL = 20 mg caffeine citrate.",
+      "pearl": "Caffeine half-life in neonates is 3–4 days (vs ~5 h in adults). Therapeutic effect persists long after stopping the infusion.",
+
+      "sources": {
+        "primary_neofax_page": 171,
+        "cross_checks": [
+          { "source": "WHO Model Formulary for Children 2024 — caffeine citrate", "agreement": "agrees on 20 mg/kg load, 5 mg/kg/day maintenance" },
+          { "source": "NNF CPG 2020 (Apnoea of Prematurity)", "agreement": "agrees" },
+          { "source": "DailyMed Cafcit (caffeine citrate) label", "agreement": "agrees" },
+          { "source": "CAP trial (Schmidt 2006, NEJM) regimen", "agreement": "agrees on standard 20/5 dose" },
+          { "source": "IAP Drug Formulary 2024", "agreement": "agrees" }
+        ]
+      },
+
+      "review": {
+        "status": "draft_pending_user_review",
+        "reviewer": null,
+        "review_date": null,
+        "notes": ""
+      }
+    },
+
+    {
+      "id": "neo-adrenaline",
+      "drug": "Adrenaline (Epinephrine)",
+      "alt_names": ["Epinephrine", "Adrenaline"],
+      "category": "Vasopressor / Inotrope (α + β agonist)",
+      "atc_code": "C01CA24",
+
+      "india_formulations": [
+        {
+          "form": "IV / IM ampoule (1:1,000)",
+          "strength": "1 mg/mL — 1 mL ampoule",
+          "brands_india": ["Adrenor (Neon)", "Adrenaline (Neon)", "Vasopin (Themis)"],
+          "notes": "Use 1 mg/mL stock to PREPARE continuous infusions. Dilute before bolus IV use — bolus IV directly from 1 mg/mL is dangerous."
+        },
+        {
+          "form": "IV / IO emergency (1:10,000) — typically prepared from 1:1,000",
+          "strength": "0.1 mg/mL — prepare by diluting 1 mL of 1 mg/mL with 9 mL of NS",
+          "brands_india": ["No common pre-filled commercial 1:10,000 in India — usually prepared bedside"],
+          "notes": "ALWAYS use the 0.1 mg/mL concentration for IV/IO bolus during code. NEVER use 1 mg/mL for IV bolus (10× error risk)."
+        }
+      ],
+
+      "doses": [
+        {
+          "indication": "Cardiac arrest / Severe bradycardia — IV / IO",
+          "route": "IV / IO",
+          "ga_band": "Any",
+          "dose_per_kg_per_dose": "0.01–0.03 mg/kg/dose (= 10–30 mcg/kg/dose) of 0.1 mg/mL solution",
+          "frequency": "Repeat every 3–5 min as needed",
+          "infusion_rate": "Rapid push, follow with 0.5–1 mL NS flush",
+          "comments": "Standard NRP/PALS dose. 0.1 mL/kg–0.3 mL/kg of 1:10,000 (0.1 mg/mL)."
+        },
+        {
+          "indication": "Cardiac arrest / Severe bradycardia — ETT (when IV access unavailable)",
+          "route": "ETT (endotracheal)",
+          "ga_band": "Any",
+          "dose_per_kg_per_dose": "0.05–0.1 mg/kg/dose (= 50–100 mcg/kg/dose) of 0.1 mg/mL solution",
+          "frequency": "Repeat as needed",
+          "comments": "Follow with several positive-pressure ventilations. NEVER give this higher ETT dose IV. IV route is preferred — ETT efficacy not formally proven in neonates."
+        },
+        {
+          "indication": "Hypotension / persistent bradycardia (low-dose pre-arrest bolus)",
+          "route": "IV / IO (central preferred)",
+          "ga_band": "Any",
+          "dose_per_kg_per_dose": "1 mcg/kg/dose (= 0.001 mg/kg) IV / IO",
+          "frequency": "Repeat in 5–10 min if needed; may follow with infusion",
+          "comments": "'Push-dose pressor' / 'low-dose adrenaline' for the at-risk myocardium. Use 0.01 mg/mL (10 mcg/mL) prep — draw 1 mL of 0.1 mg/mL into 9 mL NS."
+        },
+        {
+          "indication": "Continuous infusion — septic shock (fluid-refractory, dopamine-resistant) / hypotension",
+          "route": "IV continuous infusion (central preferred)",
+          "ga_band": "Any",
+          "dose_per_kg_per_min_starting": "0.05 mcg/kg/min",
+          "dose_per_kg_per_min_range": "0.05–0.3 mcg/kg/min (severe shock); titrate up to 1 mcg/kg/min",
+          "comments": "Recommended infusion concentration in neonates: 10 mcg/mL. Maximum concentration 60 mcg/mL. Prepare from 1 mg/mL stock (NOT from the 1:10,000 prep)."
+        },
+        {
+          "indication": "Pulmonary haemorrhage — endotracheal",
+          "route": "ETT",
+          "ga_band": "Any",
+          "dose_per_kg_per_dose": "0.1 mL/kg of 1:10,000 (0.1 mg/mL) instilled or rapidly nebulised",
+          "frequency": "Repeat as needed during haemorrhage",
+          "comments": "Alternative: 0.5 mL of 1:10,000 + 1 mL air in a 5 mL syringe via OG tube to create a splash."
+        }
+      ],
+
+      "infusion_preparation": "STANDARD NICU 10 mcg/mL PREP: take 0.5 mg of adrenaline (0.5 mL of 1 mg/mL) in 50 mL of D5W → 10 mcg/mL. At 1 mL/kg/hr this = 10 mcg/kg/hr = 0.167 mcg/kg/min. To compute rate for desired dose: rate (mL/hr) = dose (mcg/kg/min) × wt (kg) × 6 / [conc (mcg/mL)].",
+      "monitoring": "Continuous HR + BP, IV site for infiltration (extravasation → tissue ischaemia and necrosis — treat with phentolamine 1 mg/mL local infiltration, 1–5 mL).",
+      "adverse_effects": "Tachyarrhythmia (PVCs, VT), hypertension, hyperglycaemia, lactic acidosis, renal vascular ischaemia at higher doses. Bolus dose hypertension may cause IVH in preterm.",
+      "contraindications": "None absolute in cardiac arrest. Caution with pre-existing tachyarrhythmia.",
+      "reconstitution": "1 mg/mL ready ampoule. For 0.1 mg/mL emergency bolus prep: 1 mL of 1 mg/mL + 9 mL of NS in a 10 mL syringe. Discard 30 min after dilution.",
+      "incompatibilities": "Do NOT mix with: aminophylline, ampicillin, hyaluronidase, micafungin, sodium bicarbonate. NS infusion alone is acceptable but D5W is preferred (dextrose protects against oxidation).",
+
+      "sources": {
+        "primary_neofax_page": 347,
+        "cross_checks": [
+          { "source": "WHO Model Formulary for Children 2024 — epinephrine", "agreement": "agrees on 0.01 mg/kg IV in arrest, infusion 0.1–1 mcg/kg/min" },
+          { "source": "NRP 8th ed (Indian and International)", "agreement": "agrees on 0.01–0.03 mg/kg IV/IO; 0.05–0.1 mg/kg ETT" },
+          { "source": "NNF CPG 2020 — Resuscitation", "agreement": "agrees" },
+          { "source": "PALS 2020", "agreement": "agrees on 0.01 mg/kg IV/IO q3–5 min in arrest" },
+          { "source": "DailyMed Adrenalin 1 mg/mL injection (Par Pharm) label", "agreement": "agrees" }
+        ]
+      },
+
+      "review": {
+        "status": "draft_pending_user_review",
+        "reviewer": null,
+        "review_date": null,
+        "notes": "Critical drug — verify both formulations (1:1,000 vs 1:10,000) on the label before every dose. mg/mL ↔ mcg/mL ↔ ratio confusion is the leading source of paediatric drug error."
+      }
+    },
+
+    {
+      "id": "neo-gentamicin",
+      "drug": "Gentamicin",
+      "alt_names": [],
+      "category": "Antibiotic — Aminoglycoside",
+      "atc_code": "J01GB03",
+
+      "india_formulations": [
+        {
+          "form": "IV / IM injection (adult)",
+          "strength": "40 mg/mL — 1 mL or 2 mL ampoule",
+          "brands_india": ["Genticyn (Abbott / Nicholas Piramal)", "Garamycin (legacy)", "Gencin (Aculife)", "Gentaplus (Aristo)"],
+          "notes": "For NICU use, dilute 40 mg/mL stock to 10 mg/mL or 2 mg/mL before use to minimise error."
+        },
+        {
+          "form": "IV paediatric injection",
+          "strength": "10 mg/mL — 2 mL vial (where stocked)",
+          "brands_india": ["Genticyn paediatric", "Gencin paediatric"],
+          "notes": "Preferred NICU strength when available. Confirm vial label."
+        }
+      ],
+
+      "doses": [
+        {
+          "indication": "Sepsis (extended-interval dosing — preferred neonatal regimen)",
+          "route": "IV (slow infusion 30–120 min)",
+          "ga_band": "Preterm and Term — see PMA bands below",
+          "dose_per_kg_per_dose": "5 mg/kg/dose (extended-interval)",
+          "frequency": "every 36 hours (one regimen)",
+          "comments": "Extended-interval gives Cmax ~9–11 mg/L and Cmin < 1 mg/L. Source: Dersch-Mills 2012/2016."
+        },
+        {
+          "indication": "Sepsis — standard (PMA-based) dosing",
+          "route": "IV",
+          "pma_band": "≤ 29 weeks (or significant asphyxia / PDA / on indomethacin)",
+          "postnatal_age_band": "0–7 d / 8–28 d / ≥ 29 d",
+          "dose_per_kg_per_dose": "5 mg/kg / 4 mg/kg / 4 mg/kg",
+          "frequency": "every 48 h / every 36 h / every 24 h (corresponding to age bands)",
+          "comments": "Reduce to longer interval at greater immaturity."
+        },
+        {
+          "indication": "Sepsis — standard dosing",
+          "route": "IV",
+          "pma_band": "30–34 weeks",
+          "postnatal_age_band": "0–7 d / ≥ 8 d",
+          "dose_per_kg_per_dose": "4.5 mg/kg / 4 mg/kg",
+          "frequency": "every 36 h / every 24 h"
+        },
+        {
+          "indication": "Sepsis — standard dosing",
+          "route": "IV",
+          "pma_band": "≥ 35 weeks",
+          "postnatal_age_band": "ALL",
+          "dose_per_kg_per_dose": "4 mg/kg/dose",
+          "frequency": "every 24 hours"
+        },
+        {
+          "indication": "Hypothermia (HIE — therapeutic cooling)",
+          "route": "IV",
+          "ga_band": "36–40 weeks",
+          "dose_per_kg_per_dose": "5 mg/kg/dose",
+          "frequency": "every 36 hours during cooling",
+          "comments": "Clearance reduced during cooling — interval extended. Day 5 (rewarmed) clearance is ~29% higher; revert to standard interval."
+        },
+        {
+          "indication": "Hypothermia (HIE) — late preterm",
+          "route": "IV",
+          "ga_band": "≥ 42 weeks",
+          "dose_per_kg_per_dose": "5 mg/kg/dose",
+          "frequency": "every 24 hours during cooling"
+        }
+      ],
+
+      "administration": "Infuse over 30–120 min via dedicated line. Concentration 2 mg/mL or 10 mg/mL. NEVER mix in same line/syringe with penicillins (β-lactams inactivate gentamicin in vitro). IM injection has variable absorption in small infants — IV preferred.",
+      "monitoring": "Therapeutic levels — Peak (30 min post end of infusion): 5–12 mg/L (extended-interval target 8–13 mg/L). Trough (just pre-next-dose): ≤ 1 mg/L (some recommend < 0.5). Measure if treating > 48 h, on inotropes, fluid status changing, or in renal impairment. Routine levels NOT mandatory in low-risk full-term neonates with normal urine output.",
+      "adverse_effects": "Reversible renal tubular dysfunction (raised urinary Na/Ca/Mg). Vestibular and auditory ototoxicity (often irreversible — black-box warning). Increased risk with concurrent furosemide, vancomycin, or hypermagnesaemia. Neuromuscular blockade with pancuronium. Gentamicin ointment for ocular prophylaxis has been linked to periocular ulcerative dermatitis — avoid in neonates (KIDs list).",
+      "contraindications": "Aminoglycoside hypersensitivity. Caution in renal impairment, dehydration, concurrent ototoxic drugs.",
+      "renal_adjustment": "PMA-based dosing already accounts for maturation. In overt AKI or oliguria, hold and re-dose by serum level.",
+      "hepatic_adjustment": "No adjustment needed — renal elimination.",
+      "incompatibilities": "Do NOT mix in same line with: amphotericin B, ampicillin, azithromycin, furosemide, imipenem/cilastatin, heparin > 1 U/mL, indomethacin, nafcillin, oxacillin, propofol. Compatible: acyclovir, caffeine citrate, cefepime, ceftazidime, dopamine, fluconazole, magnesium sulfate, milrinone, morphine.",
+      "reconstitution": "10 mg/mL pre-mixed solution available — no reconstitution needed. Dilute 40 mg/mL adult stock if using.",
+      "black_box_warning": "Aminoglycoside therapy carries risk of nephrotoxicity, ototoxicity (often irreversible), and neurotoxicity. Higher risk with renal impairment, dehydration, high dose or prolonged therapy. Discontinue or adjust if toxicity appears.",
+
+      "sources": {
+        "primary_neofax_page": 448,
+        "cross_checks": [
+          { "source": "WHO Model Formulary for Children 2024 — gentamicin", "agreement": "agrees on 5 mg/kg q24h preterm/term ≥ 35 wk; longer intervals at lower PMA" },
+          { "source": "NNF CPG 2020 (Sepsis)", "agreement": "agrees" },
+          { "source": "BNF for Children 2024", "agreement": "agrees" },
+          { "source": "DailyMed Gentamicin sulfate (Auromedics) label", "agreement": "agrees" },
+          { "source": "Dersch-Mills 2016 / 2012 PK studies", "agreement": "primary source for the 22-h sampling tables" },
+          { "source": "IAP Drug Formulary 2024", "agreement": "agrees" }
+        ]
+      },
+
+      "review": {
+        "status": "draft_pending_user_review",
+        "reviewer": null,
+        "review_date": null,
+        "notes": "Therapeutic drug monitoring is best practice — prefer audiology screen at discharge for any neonate exposed > 5 days."
+      }
+    }
+  ]
+}

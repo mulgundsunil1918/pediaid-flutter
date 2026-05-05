@@ -1,0 +1,435 @@
+{
+  "schema_version": "v2.0",
+  "section": "neofax_batch5",
+  "section_label": "NICU batch 5 — antifungals, antivirals, surfactant, urea-cycle, vitamins, immune globulins, antiseizure",
+  "last_updated": "2026-05-03",
+  "review_disclaimer": "DRAFT — pending clinician review. Verify every dose against your local protocol and current vial concentration before administration.",
+  "drugs": [
+    {
+      "id": "neo-anidulafungin",
+      "drug": "Anidulafungin",
+      "alt_names": [],
+      "category": "Antifungal — Echinocandin",
+      "atc_code": "J02AX06",
+      "india_formulations": [],
+      "doses": [
+        { "indication": "Invasive candidiasis (term, intolerant of fluconazole / amphotericin)", "route": "IV", "ga_band": "Term", "loading_dose_per_kg": "3 mg/kg load × 1 dose", "dose_per_kg_per_dose": "1.5 mg/kg/dose maintenance", "frequency": "every 24 hours", "duration": "≥ 2 weeks after blood culture clearance", "comments": "Higher doses may be needed on ECMO." }
+      ],
+      "monitoring": "LFTs, CBC.",
+      "adverse_effects": "Transaminitis, infusion-related histamine reactions (rare).",
+      "contraindications": "Hypersensitivity to echinocandins.",
+      "sources": { "primary_neofax_page": 114, "cross_checks": [ {"source": "WHO WMFc 2024", "agreement": "agrees"}, {"source": "IDSA Candidiasis 2016", "agreement": "agrees"} ] },
+      "review": { "status": "draft_pending_user_review", "reviewer": null, "review_date": null, "notes": "Caspofungin is more frequently used in NICU than anidulafungin." }
+    },
+    {
+      "id": "neo-ascorbic-acid",
+      "drug": "Ascorbic acid (Vitamin C)",
+      "alt_names": ["Vitamin C"],
+      "category": "Vitamin",
+      "atc_code": "A11GA01",
+      "india_formulations": [
+        { "form": "Oral drops / syrup", "strength": "100 mg/mL drops; 200 mg/5 mL syrup", "brands_india": ["Celin drops (GSK)", "Limcee chewable tablet (Procter & Gamble)"] }
+      ],
+      "doses": [
+        { "indication": "Adequate intake — enteral term", "route": "PO / enteral", "ga_band": "Term", "dose_per_kg_per_dose": "40 mg/day total", "frequency": "once daily" },
+        { "indication": "Enteral preterm", "route": "PO / enteral", "ga_band": "Preterm", "dose_per_kg_per_dose": "18–24 mg/kg/day", "frequency": "once daily" },
+        { "indication": "PN preterm", "route": "IV via PN", "ga_band": "Preterm", "dose_per_kg_per_dose": "15–25 mg/kg/day" },
+        { "indication": "PN term", "route": "IV via PN", "ga_band": "Term", "dose_per_kg_per_dose": "80 mg/day total" }
+      ],
+      "monitoring": "Routine clinical.",
+      "adverse_effects": "GI upset (high oral doses), oxalate stones (chronic mega-doses).",
+      "contraindications": "G6PD deficiency (relative — high IV doses cause haemolysis).",
+      "sources": { "primary_neofax_page": 123, "cross_checks": [ {"source": "ESPGHAN PN guidelines 2018", "agreement": "agrees"}, {"source": "AAP — Vitamin supplementation in preterm", "agreement": "agrees"} ] },
+      "review": { "status": "draft_pending_user_review", "reviewer": null, "review_date": null, "notes": "" }
+    },
+    {
+      "id": "neo-bevacizumab",
+      "drug": "Bevacizumab",
+      "alt_names": ["Avastin"],
+      "category": "Anti-VEGF monoclonal antibody",
+      "atc_code": "L01XC07",
+      "india_formulations": [],
+      "doses": [
+        { "indication": "Type 1 retinopathy of prematurity (off-label)", "route": "Intravitreal injection", "ga_band": "Preterm with type 1 ROP", "dose_per_kg_per_dose": "0.625 mg in 0.025 mL per eye (single dose)", "comments": "Lower doses 0.031–0.25 mg in 0.025 mL also used in dose-de-escalation studies. Retreatment may be needed beyond 55 weeks PMA." }
+      ],
+      "monitoring": "Serial retinal exam, plus systemic monitoring (BP, growth) due to systemic VEGF suppression.",
+      "adverse_effects": "Possible systemic VEGF suppression — concern about lung and kidney development. Endophthalmitis (rare procedural).",
+      "contraindications": "Active intraocular infection, severe ocular hypertension.",
+      "sources": { "primary_neofax_page": 146, "cross_checks": [ {"source": "BEAT-ROP trial (Mintz-Hittner 2011 NEJM)", "agreement": "agrees on 0.625 mg dose"}, {"source": "WHO WMFc 2024", "agreement": "lists"} ] },
+      "review": { "status": "draft_pending_user_review", "reviewer": null, "review_date": null, "notes": "Long-term neurodevelopmental safety incomplete — discuss with family. Aflibercept and ranibizumab are alternatives." }
+    },
+    {
+      "id": "neo-cosyntropin",
+      "drug": "Cosyntropin (Synthetic ACTH)",
+      "alt_names": ["Tetracosactide", "Synacthen"],
+      "category": "Synthetic ACTH — adrenal stimulation test",
+      "atc_code": "H01AA02",
+      "india_formulations": [],
+      "doses": [
+        { "indication": "Adrenal insufficiency — diagnostic test (FDA standard dose)", "route": "IV / IM", "ga_band": "< 2 years", "dose_per_kg_per_dose": "0.125 mg per dose (= 0.5 mL of 0.25 mg/mL) ; alternatively 0.015 mg/kg IV", "frequency": "Single dose; sample cortisol at 0, 30, 60 min" },
+        { "indication": "Low-dose ACTH stim (in shortage)", "route": "IV", "ga_band": "Any", "dose_per_kg_per_dose": "0.001 mg (= 1 mcg) per dose", "comments": "Withhold cortisone, hydrocortisone, spironolactone on test day." }
+      ],
+      "monitoring": "Cortisol response.",
+      "adverse_effects": "Rare hypersensitivity.",
+      "contraindications": "Hypersensitivity.",
+      "sources": { "primary_neofax_page": 275, "cross_checks": [ {"source": "WHO WMFc 2024", "agreement": "agrees"}, {"source": "Endocrine Society — Adrenal Insufficiency", "agreement": "agrees"} ] },
+      "review": { "status": "draft_pending_user_review", "reviewer": null, "review_date": null, "notes": "" }
+    },
+    {
+      "id": "neo-digoxin-immune-fab",
+      "drug": "Digoxin Immune Fab (Ovine)",
+      "alt_names": ["Digibind", "DigiFab"],
+      "category": "Antidote — digoxin-specific antibody fragment",
+      "atc_code": "V03AB24",
+      "india_formulations": [],
+      "doses": [
+        { "indication": "Acute digoxin overdose — known ingested amount", "route": "IV", "ga_band": "Any", "dose_per_kg_per_dose": "Vials = (mg digoxin ingested × bioavailability) / 0.5 mg per vial. Bioavailability = 0.85 (solution), 0.8 (tablet). Each 40 mg vial binds ~0.5 mg digoxin." },
+        { "indication": "Chronic digoxin toxicity — known level", "route": "IV", "ga_band": "Any", "dose_per_kg_per_dose": "Dose (mg) = 40 × (serum digoxin ng/mL × wt kg) / 100" },
+        { "indication": "Chronic digoxin toxicity — unknown level", "route": "IV", "ga_band": "Any", "dose_per_kg_per_dose": "Single 40 mg vial IV initially" }
+      ],
+      "monitoring": "Continuous ECG, K, response, serum digoxin (will be falsely high after Fab — total but not free).",
+      "adverse_effects": "Withdrawal of digitalis effect (worsening CHF, AF), allergic reaction (rare with Fab fragments), hypokalaemia → hyperkalaemia shifts.",
+      "contraindications": "Sheep / ovine protein hypersensitivity (relative).",
+      "sources": { "primary_neofax_page": 300, "cross_checks": [ {"source": "WHO WMFc 2024", "agreement": "agrees"}, {"source": "DailyMed DigiFab label", "agreement": "agrees"} ] },
+      "review": { "status": "draft_pending_user_review", "reviewer": null, "review_date": null, "notes": "Rare in NICU. Document the digoxin level and timing of ingestion before dosing." }
+    },
+    {
+      "id": "neo-flumazenil",
+      "drug": "Flumazenil",
+      "alt_names": [],
+      "category": "Benzodiazepine antagonist",
+      "atc_code": "V03AB25",
+      "india_formulations": [],
+      "doses": [
+        { "indication": "Benzodiazepine reversal (procedural / iatrogenic over-sedation)", "route": "IV (over 15 sec)", "ga_band": "Any", "dose_per_kg_per_dose": "5–10 mcg/kg/dose", "frequency": "May repeat every 45 sec until awake", "max_per_dose": "Cumulative max 50 mcg/kg or 1 mg, whichever is smaller (limited neonatal data)" },
+        { "indication": "Reversal — intranasal alternative", "route": "IN (divided across nostrils via TB syringe)", "ga_band": "Any", "dose_per_kg_per_dose": "40 mcg/kg/dose" },
+        { "indication": "Reversal — rectal alternative", "route": "PR", "ga_band": "Any", "dose_per_kg_per_dose": "15–30 mcg/kg/dose", "frequency": "May repeat at 15–20 min" }
+      ],
+      "monitoring": "RR, SpO₂, sedation level, seizure (especially in chronic benzo / TCA exposure).",
+      "adverse_effects": "Seizures (especially with mixed overdose / TCA / chronic benzo dependence), arrhythmia, re-sedation as flumazenil clears.",
+      "contraindications": "TCA overdose, chronic benzo dependence (precipitates withdrawal seizures), known hypersensitivity.",
+      "sources": { "primary_neofax_page": 423, "cross_checks": [ {"source": "WHO WMFc 2024", "agreement": "agrees"}, {"source": "DailyMed Romazicon label", "agreement": "agrees"} ] },
+      "review": { "status": "draft_pending_user_review", "reviewer": null, "review_date": null, "notes": "Half-life shorter than most benzos — re-sedation possible. Continue monitoring 2 hours post-reversal." }
+    },
+    {
+      "id": "neo-glucagon",
+      "drug": "Glucagon",
+      "alt_names": [],
+      "category": "Hyperglycaemic — pancreatic α-cell hormone",
+      "atc_code": "H04AA01",
+      "india_formulations": [],
+      "doses": [
+        { "indication": "Refractory hypoglycaemia (esp. hyperinsulinaemic)", "route": "IV / IM / SC", "ga_band": "Any", "dose_per_kg_per_dose": "200 mcg/kg/dose (= 0.2 mg/kg)", "frequency": "Single push", "max_per_dose": "1 mg" },
+        { "indication": "Hypoglycaemia — continuous infusion", "route": "IV continuous", "ga_band": "Any", "dose_per_kg_per_min_starting": "10 mcg/kg/hour", "dose_per_kg_per_min_range": "10–20 mcg/kg/hr (or 0.5–1 mg/day total regardless of weight)", "comments": "Glucose rise expected within 1 hour." }
+      ],
+      "monitoring": "Capillary glucose, electrolytes, ammonia.",
+      "adverse_effects": "Vomiting, hypokalaemia, rebound hypoglycaemia, paradoxical hypoglycaemia in glycogen-depleted neonates.",
+      "contraindications": "Pheochromocytoma; insulinoma (paradoxical hypoglycaemia); hypersensitivity.",
+      "sources": { "primary_neofax_page": 457, "cross_checks": [ {"source": "WHO WMFc 2024", "agreement": "agrees"}, {"source": "PES Hypoglycaemia 2015", "agreement": "agrees"} ] },
+      "review": { "status": "draft_pending_user_review", "reviewer": null, "review_date": null, "notes": "Useful while securing IV access for D10 bolus. Not a substitute for ongoing dextrose infusion." }
+    },
+    {
+      "id": "neo-hbig",
+      "drug": "Hepatitis B Immune Globulin (Human) (HBIG)",
+      "alt_names": ["HBIG"],
+      "category": "Passive immunisation — anti-HBs IgG",
+      "atc_code": "J06BB04",
+      "india_formulations": [],
+      "doses": [
+        { "indication": "Prevention of perinatal HBV transmission — HBsAg-positive mother", "route": "IM (anterolateral thigh; different site from vaccine)", "ga_band": "Any newborn", "dose_per_kg_per_dose": "0.5 mL per dose", "frequency": "Single dose within 12 h of birth + first hepatitis B vaccine dose at the same visit (different site)" },
+        { "indication": "Prevention of perinatal HBV — HBsAg-unknown mother, BW < 2 kg", "route": "IM", "dose_per_kg_per_dose": "0.5 mL per dose", "frequency": "Within 12 h of birth + HepB vaccine" },
+        { "indication": "Prevention of perinatal HBV — HBsAg-unknown mother, BW ≥ 2 kg", "route": "IM", "dose_per_kg_per_dose": "0.5 mL per dose", "frequency": "Only if mother tests positive — give as soon as known, no later than day 7" },
+        { "indication": "When HepB vaccine series is delayed", "route": "IM", "dose_per_kg_per_dose": "0.5 mL per dose", "frequency": "Repeat at 3 months if HepB vaccination is delayed; further dose at 6 months if vaccination is refused" }
+      ],
+      "monitoring": "HepB serology at 9–12 months postvaccination (anti-HBs titre).",
+      "adverse_effects": "Local injection-site reactions; rare systemic hypersensitivity.",
+      "contraindications": "IgA deficiency with anti-IgA antibodies.",
+      "sources": { "primary_neofax_page": 464, "cross_checks": [ {"source": "AAP Red Book — HepB", "agreement": "agrees"}, {"source": "NIP — Universal Immunisation Programme India 2024", "agreement": "agrees"} ] },
+      "review": { "status": "draft_pending_user_review", "reviewer": null, "review_date": null, "notes": "" }
+    },
+    {
+      "id": "neo-ivig",
+      "drug": "Immune Globulin (Human) (IVIG / IMIG)",
+      "alt_names": ["IVIG", "IMIG"],
+      "category": "Passive immunisation — pooled human IgG",
+      "atc_code": "J06BA02",
+      "india_formulations": [],
+      "doses": [
+        { "indication": "Isoimmune haemolytic disease — total bilirubin at/above escalation threshold", "route": "IV (over 2 h)", "ga_band": "Any", "dose_per_kg_per_dose": "0.5–1 g/kg/dose", "frequency": "May repeat at 12 h if needed" },
+        { "indication": "Neonatal alloimmune thrombocytopenia (NAIT)", "route": "IV", "ga_band": "Any", "dose_per_kg_per_dose": "1 g/kg/dose", "frequency": "Daily × 2 doses" },
+        { "indication": "Measles post-exposure (IM = Gamastan®)", "route": "IM", "ga_band": "Any", "dose_per_kg_per_dose": "0.5 mL/kg", "frequency": "Within 6 days of exposure" },
+        { "indication": "Measles post-exposure — IV", "route": "IV", "ga_band": "Any", "dose_per_kg_per_dose": "400 mg/kg", "frequency": "Within 6 days of exposure" }
+      ],
+      "monitoring": "BP during infusion, urine output (rare nephrotoxicity), Hb (haemolysis from anti-A/B isoagglutinins), thrombosis signs.",
+      "adverse_effects": "Infusion reactions (slow infusion), aseptic meningitis, haemolysis (passive anti-A/B), thrombosis (uncommon in neonates), AKI (sucrose-containing brands).",
+      "contraindications": "IgA deficiency with anti-IgA antibodies; severe systemic reaction to prior IVIG.",
+      "sources": { "primary_neofax_page": 501, "cross_checks": [ {"source": "WHO WMFc 2024", "agreement": "agrees"}, {"source": "AAP guideline — Hyperbilirubinaemia management", "agreement": "agrees"} ] },
+      "review": { "status": "draft_pending_user_review", "reviewer": null, "review_date": null, "notes": "Avoid sucrose-containing IVIG products in renal impairment / preterm." }
+    },
+    {
+      "id": "neo-iron-dextran",
+      "drug": "Iron dextran (parenteral)",
+      "alt_names": [],
+      "category": "Parenteral iron",
+      "atc_code": "B03AC06",
+      "india_formulations": [],
+      "doses": [
+        { "indication": "Iron supplementation when oral not tolerated / on EPO", "route": "IV continuous infusion", "ga_band": "Any", "dose_per_kg_per_dose": "0.4–1 mg/kg/day (= 400–1000 mcg/kg/day)", "comments": "Test dose before first full infusion (anaphylaxis risk). Iron sucrose is generally preferred over dextran due to lower anaphylaxis risk." }
+      ],
+      "monitoring": "Hb, ferritin, transferrin saturation; watch for anaphylaxis during test dose.",
+      "adverse_effects": "Anaphylaxis (TEST DOSE mandatory), arthralgia, hypotension, transaminitis.",
+      "contraindications": "Anaemia not due to iron deficiency, prior anaphylaxis.",
+      "black_box_warning": "Anaphylactic-type reactions including fatalities have occurred. A test dose is mandatory before each course.",
+      "sources": { "primary_neofax_page": 526, "cross_checks": [ {"source": "WHO WMFc 2024", "agreement": "agrees"} ] },
+      "review": { "status": "draft_pending_user_review", "reviewer": null, "review_date": null, "notes": "Iron sucrose / ferric carboxymaltose preferred over iron dextran in modern NICU." }
+    },
+    {
+      "id": "neo-levetiracetam",
+      "drug": "Levetiracetam",
+      "alt_names": [],
+      "category": "Anticonvulsant — SV2A modulator",
+      "atc_code": "N03AX14",
+      "india_formulations": [
+        { "form": "Oral solution", "strength": "100 mg/mL", "brands_india": ["Levipil syrup (Sun)", "Keppra solution (UCB)", "Levroxa"] },
+        { "form": "Oral tablet", "strength": "250 mg, 500 mg, 750 mg, 1000 mg", "brands_india": ["Levipil", "Keppra", "Levroxa"] }
+      ],
+      "doses": [
+        { "indication": "Neonatal seizure — loading", "route": "IV (over 15 min) or PO", "ga_band": "Any", "loading_dose_per_kg": "40 mg/kg load (may repeat with 20 mg/kg if needed)", "comments": "Consider after phenobarbital fails or instead of phenytoin in cardiac instability." },
+        { "indication": "Maintenance", "route": "IV / PO", "ga_band": "Any", "dose_per_kg_per_dose": "40–60 mg/kg/day divided", "frequency": "every 8 hours (3 times daily)" },
+        { "indication": "Seizure prophylaxis post-TBI", "route": "IV", "ga_band": "≥ 5 days", "dose_per_kg_per_dose": "5–40 mg/kg/day (median 20 mg/kg/day)", "duration": "7 days" }
+      ],
+      "monitoring": "Seizure response. Levels not routinely required (target 12–46 mcg/mL if measured).",
+      "adverse_effects": "Sedation, irritability, behavioural changes (older children). Generally well tolerated in neonates.",
+      "contraindications": "Hypersensitivity.",
+      "renal_adjustment": "Reduce dose / extend interval — primarily renally cleared.",
+      "sources": { "primary_neofax_page": 548, "cross_checks": [ {"source": "WHO WMFc 2024", "agreement": "agrees"}, {"source": "NEOLEV2 trial 2020", "agreement": "compares with phenobarbital"}, {"source": "ESETT trial", "agreement": "agrees"} ] },
+      "review": { "status": "draft_pending_user_review", "reviewer": null, "review_date": null, "notes": "Increasingly used as 1st- or 2nd-line for neonatal seizures (favourable cardiac safety vs phenytoin). NEOLEV2: phenobarbital 80% vs levetiracetam 28% efficacy — phenobarb still preferred 1st-line in most guidelines." }
+    },
+    {
+      "id": "neo-lopinavir-ritonavir",
+      "drug": "Lopinavir / Ritonavir",
+      "alt_names": ["Kaletra"],
+      "category": "Antiretroviral — Protease inhibitor combination",
+      "atc_code": "J05AR10",
+      "india_formulations": [
+        { "form": "Oral tablet", "strength": "Lopinavir 200 mg / Ritonavir 50 mg; LPV 100/RTV 25", "brands_india": ["Lopimune (Cipla)", "Ritomune"] },
+        { "form": "Oral solution (paediatric)", "strength": "Lopinavir 80 mg / Ritonavir 20 mg per mL", "brands_india": ["Lopinavir/Ritonavir solution (Cipla, Aurobindo)"], "notes": "Solution contains 42.4% v/v ETHANOL and 15.3% propylene glycol — DO NOT USE in PMA < 42 weeks." }
+      ],
+      "doses": [
+        { "indication": "HIV (treatment) — only after 42 weeks PMA", "route": "PO", "ga_band": "PMA ≥ 42 weeks AND postnatal age ≥ 14 days", "dose_per_kg_per_dose": "Lopinavir 16 mg/kg + Ritonavir 4 mg/kg (or LPV 300 mg/m² + RTV 75 mg/m²)", "frequency": "twice daily", "comments": "DO NOT use once-daily dosing in paediatrics. DO NOT co-administer with efavirenz / nevirapine / nelfinavir under 6 months." }
+      ],
+      "monitoring": "Glucose, lipids, LFTs, lactic acidosis, ECG (QT prolongation, AV block), drug interactions (powerful CYP3A4 inhibitor).",
+      "adverse_effects": "Diarrhoea, hyperglycaemia, hyperlipidaemia, transaminitis, prolonged QT/PR, ethanol/propylene glycol toxicity in preterm (oral solution).",
+      "contraindications": "PMA < 42 weeks (oral solution toxicity); PR > 0.2 sec or QT prolongation; concurrent CYP3A-sensitive drugs.",
+      "black_box_warning": "Cardiac, lactic acidosis, hepatic toxicity. Risk of toxicity from ethanol / propylene glycol in oral solution — DO NOT use in neonates < 14 days postnatal age or PMA < 42 weeks.",
+      "sources": { "primary_neofax_page": 575, "cross_checks": [ {"source": "DHHS Paediatric ARV guidelines 2024", "agreement": "agrees"}, {"source": "WHO Consolidated HIV guidelines 2021", "agreement": "agrees"} ] },
+      "review": { "status": "draft_pending_user_review", "reviewer": null, "review_date": null, "notes": "Discuss with paediatric HIV specialist. India NACO programme uses ART per WHO guidelines." }
+    },
+    {
+      "id": "neo-moxifloxacin",
+      "drug": "Moxifloxacin (ophthalmic)",
+      "alt_names": [],
+      "category": "Antibiotic — Fluoroquinolone (topical ophthalmic only in neonates)",
+      "atc_code": "S01AE07",
+      "india_formulations": [
+        { "form": "Ophthalmic solution", "strength": "0.5% (Vigamox)", "brands_india": ["Vigamox (Alcon)", "Moxiflox eye drops"] }
+      ],
+      "doses": [
+        { "indication": "Bacterial conjunctivitis (mild)", "route": "Ophthalmic drops", "ga_band": "Any", "dose_per_kg_per_dose": "1 drop in affected eye", "frequency": "3 times daily", "duration": "7 days" }
+      ],
+      "monitoring": "Resolution of conjunctivitis.",
+      "adverse_effects": "Local irritation, transient blurred vision.",
+      "contraindications": "Fluoroquinolone hypersensitivity.",
+      "sources": { "primary_neofax_page": 656, "cross_checks": [ {"source": "WHO WMFc 2024", "agreement": "agrees"}, {"source": "DailyMed Vigamox label", "agreement": "agrees"} ] },
+      "review": { "status": "draft_pending_user_review", "reviewer": null, "review_date": null, "notes": "Systemic fluoroquinolones AVOIDED in neonates due to cartilage concerns. Topical use is acceptable." }
+    },
+    {
+      "id": "neo-nevirapine",
+      "drug": "Nevirapine",
+      "alt_names": [],
+      "category": "Antiretroviral — non-nucleoside reverse transcriptase inhibitor (NNRTI)",
+      "atc_code": "J05AG01",
+      "india_formulations": [
+        { "form": "Oral suspension", "strength": "10 mg/mL", "brands_india": ["Nevimune syrup (Cipla)", "Viramune (Boehringer-Ingelheim)"] },
+        { "form": "Oral tablet", "strength": "200 mg", "brands_india": ["Nevimune", "Viramune"] }
+      ],
+      "doses": [
+        { "indication": "Perinatal HIV prophylaxis — BW 1.5 to 2 kg", "route": "PO", "ga_band": "Any newborn 1.5–2 kg", "dose_per_kg_per_dose": "8 mg per dose (NOT mg/kg)", "frequency": "Dose 1: within 48 h of birth (ideally 6–12 h) ; Dose 2: 48 h after dose 1 ; Dose 3: 96 h after dose 2", "comments": "Must be given with zidovudine." },
+        { "indication": "Perinatal HIV prophylaxis — BW > 2 kg", "route": "PO", "ga_band": "Any newborn > 2 kg", "dose_per_kg_per_dose": "12 mg per dose (NOT mg/kg)", "frequency": "Same schedule as above (3 doses)" },
+        { "indication": "HIV treatment — neonate 32–34 wk gestation", "route": "PO", "ga_band": "32–34 weeks", "dose_per_kg_per_dose": "0–2 wk: 2 mg/kg BD ; 2–4 wk: 4 mg/kg BD ; 4–6 wk: 6 mg/kg BD", "frequency": "twice daily" }
+      ],
+      "monitoring": "LFTs, rash (Stevens-Johnson), CBC, HIV viral load.",
+      "adverse_effects": "Severe hepatotoxicity (rarer in neonates), Stevens-Johnson syndrome / TEN, rash.",
+      "contraindications": "Severe hepatic impairment.",
+      "black_box_warning": "Severe, life-threatening hepatotoxicity and serious skin reactions (SJS, TEN).",
+      "sources": { "primary_neofax_page": 678, "cross_checks": [ {"source": "DHHS Paediatric ARV guidelines 2024", "agreement": "agrees"}, {"source": "WHO HIV guidelines 2021", "agreement": "agrees"}, {"source": "India NACO prophylaxis guidelines", "agreement": "agrees"} ] },
+      "review": { "status": "draft_pending_user_review", "reviewer": null, "review_date": null, "notes": "Standard perinatal HIV prophylaxis in India: AZT + NVP combination from birth × 6 weeks." }
+    },
+    {
+      "id": "neo-oseltamivir",
+      "drug": "Oseltamivir",
+      "alt_names": ["Tamiflu"],
+      "category": "Antiviral — Neuraminidase inhibitor (anti-influenza)",
+      "atc_code": "J05AH02",
+      "india_formulations": [
+        { "form": "Oral suspension", "strength": "6 mg/mL or 12 mg/mL (reconstituted)", "brands_india": ["Fluvir suspension (Hetero)", "Tamiflu suspension (Roche)"] },
+        { "form": "Oral capsule", "strength": "30 mg, 45 mg, 75 mg", "brands_india": ["Fluvir", "Tamiflu", "Antiflu"] }
+      ],
+      "doses": [
+        { "indication": "Influenza treatment — preterm < 38 weeks PMA", "route": "PO", "ga_band": "PMA < 38 weeks", "dose_per_kg_per_dose": "1 mg/kg/dose", "frequency": "twice daily", "duration": "5 days (longer in critical illness or immunosuppression)", "comments": "Initiate within 48 h of symptom onset (exceptions for severe / progressive illness)." },
+        { "indication": "Influenza — PMA 38–40 weeks", "route": "PO", "ga_band": "PMA 38–40 weeks", "dose_per_kg_per_dose": "1.5 mg/kg/dose", "frequency": "twice daily", "duration": "5 days" },
+        { "indication": "Influenza — PMA > 40 weeks", "route": "PO", "ga_band": "PMA > 40 weeks", "dose_per_kg_per_dose": "3 mg/kg/dose", "frequency": "twice daily", "duration": "5 days" }
+      ],
+      "monitoring": "Clinical response.",
+      "adverse_effects": "Vomiting, diarrhoea, rare neuropsychiatric events (older children).",
+      "contraindications": "Hypersensitivity.",
+      "renal_adjustment": "Reduce dose if renal impairment.",
+      "sources": { "primary_neofax_page": 711, "cross_checks": [ {"source": "WHO WMFc 2024", "agreement": "agrees"}, {"source": "AAP Red Book — Influenza 2024", "agreement": "agrees"} ] },
+      "review": { "status": "draft_pending_user_review", "reviewer": null, "review_date": null, "notes": "" }
+    },
+    {
+      "id": "neo-penicillin-g-benzathine",
+      "drug": "Penicillin G benzathine",
+      "alt_names": ["Benzathine benzylpenicillin"],
+      "category": "Antibiotic — long-acting Penicillin",
+      "atc_code": "J01CE08",
+      "india_formulations": [],
+      "doses": [
+        { "indication": "Congenital syphilis (asymptomatic, low-risk)", "route": "IM (deep, divided sites if > 2 mL)", "ga_band": "Any", "dose_per_kg_per_dose": "50,000 units/kg/dose", "frequency": "Single dose", "comments": "Use ONLY for asymptomatic, well-screened low-risk infants. Symptomatic / proven congenital syphilis needs aqueous penicillin G IV × 10 days." }
+      ],
+      "monitoring": "VDRL / RPR titre at 3, 6, 12 months; CSF analysis if indicated.",
+      "adverse_effects": "Pain at injection site, hypersensitivity reactions, severe pain / cyanosis if injected near nerve / IV (NEVER GIVE IV).",
+      "contraindications": "Penicillin hypersensitivity.",
+      "black_box_warning": "Inadvertent IV administration has caused cardiopulmonary arrest and death — IM ONLY.",
+      "sources": { "primary_neofax_page": 736, "cross_checks": [ {"source": "AAP Red Book — Syphilis 2024", "agreement": "agrees"}, {"source": "CDC STI guidelines 2021", "agreement": "agrees"} ] },
+      "review": { "status": "draft_pending_user_review", "reviewer": null, "review_date": null, "notes": "Aqueous crystalline penicillin G IV × 10 days is the preferred regimen for proven / probable congenital syphilis." }
+    },
+    {
+      "id": "neo-penicillin-g-procaine",
+      "drug": "Penicillin G procaine",
+      "alt_names": [],
+      "category": "Antibiotic — intermediate-acting Penicillin",
+      "atc_code": "J01CE09",
+      "india_formulations": [],
+      "doses": [
+        { "indication": "Congenital syphilis (when aqueous penicillin G unavailable)", "route": "IM", "ga_band": "Any", "dose_per_kg_per_dose": "50,000 units/kg/dose", "frequency": "once daily", "duration": "10 days" }
+      ],
+      "monitoring": "VDRL / RPR titre at 3, 6, 12 months; LFTs.",
+      "adverse_effects": "Pain at injection site, hypersensitivity, procaine-related reactions (anxiety, delirium — rare).",
+      "contraindications": "Penicillin / procaine hypersensitivity.",
+      "sources": { "primary_neofax_page": 740, "cross_checks": [ {"source": "AAP Red Book — Syphilis 2024", "agreement": "agrees"}, {"source": "CDC STI guidelines 2021", "agreement": "agrees"} ] },
+      "review": { "status": "draft_pending_user_review", "reviewer": null, "review_date": null, "notes": "Procaine penicillin is alternative when aqueous penicillin G IV is unavailable." }
+    },
+    {
+      "id": "neo-poractant-alfa",
+      "drug": "Poractant alfa (Curosurf)",
+      "alt_names": ["Curosurf", "Porcine surfactant"],
+      "category": "Pulmonary surfactant — porcine extract",
+      "atc_code": "R07AA02",
+      "india_formulations": [],
+      "doses": [
+        { "indication": "RDS — initial dose (rescue or prophylaxis)", "route": "Intratracheal (1–2 aliquots)", "ga_band": "Preterm with RDS", "dose_per_kg_per_dose": "2.5 mL/kg/dose (= 200 mg phospholipid/kg/dose) initial", "frequency": "Single initial dose; up to 2 subsequent doses of 1.25 mL/kg (100 mg/kg) every 12 h if persistent need", "max_per_day_all_routes": "Cumulative max 5 mL/kg (= 400 mg phospholipid/kg)", "comments": "For prophylaxis: within 10–30 min of birth. For rescue: within 2 h of birth. May redose more frequently than every 12 h if surfactant inactivated by infection / meconium / blood." }
+      ],
+      "monitoring": "Continuous SpO₂, HR, chest expansion, FiO₂ requirement.",
+      "adverse_effects": "Transient bradycardia, desaturation, ETT block, pulmonary haemorrhage (rare), air leak.",
+      "contraindications": "None established.",
+      "sources": { "primary_neofax_page": 787, "cross_checks": [ {"source": "WHO WMFc 2024", "agreement": "agrees"}, {"source": "European Consensus Guidelines on RDS 2023", "agreement": "agrees"}, {"source": "NNF CPG 2020 — Surfactant", "agreement": "agrees"} ] },
+      "review": { "status": "draft_pending_user_review", "reviewer": null, "review_date": null, "notes": "Poractant alfa (200 mg/kg first dose) has lower mortality vs beractant (100 mg/kg) per Cochrane meta-analysis. Most-used surfactant in India." }
+    },
+    {
+      "id": "neo-na-phenylacetate-benzoate",
+      "drug": "Sodium phenylacetate + Sodium benzoate",
+      "alt_names": ["Ammonul"],
+      "category": "Urea cycle disorder — alternative pathway nitrogen excretion",
+      "atc_code": "A16AX",
+      "india_formulations": [],
+      "doses": [
+        { "indication": "Acute hyperammonaemia (urea cycle disorders, pending diagnosis)", "route": "IV (over 90–120 min loading; then continuous)", "ga_band": "Any neonate", "loading_dose_per_kg": "Sodium phenylacetate 250 mg/kg + Sodium benzoate 250 mg/kg + Arginine HCl 600 mg/kg over 90–120 min", "dose_per_kg_per_min_range": "Maintenance: each at 250 mg/kg/day (range 250–500 mg/kg/day) + Arginine HCl 250 mg/kg/day continuous infusion", "comments": "Premedicate with ondansetron 0.15 mg/kg IV (vomiting). Co-administer dextrose for caloric load. Initiate dialysis preparation for ammonia > 500 mcmol/L." }
+      ],
+      "monitoring": "Plasma ammonia (every 2–4 h), electrolytes, glucose, LFT, plasma amino acids, BP.",
+      "adverse_effects": "Hyperventilation (alkalosis), vomiting, hypokalaemia, hypotension on rapid loading. Severe acidosis at overdose.",
+      "contraindications": "Hypersensitivity.",
+      "sources": { "primary_neofax_page": 858, "cross_checks": [ {"source": "WHO WMFc 2024", "agreement": "agrees"}, {"source": "DailyMed Ammonul label", "agreement": "agrees"} ] },
+      "review": { "status": "draft_pending_user_review", "reviewer": null, "review_date": null, "notes": "Initiate only with metabolic medicine team. Prepare for haemodialysis simultaneously if ammonia > 500 mcmol/L or rising despite therapy." }
+    },
+    {
+      "id": "neo-vzig",
+      "drug": "Varicella-zoster Immune Globulin (VariZIG)",
+      "alt_names": ["VZIG", "VariZIG"],
+      "category": "Passive immunisation — anti-varicella IgG",
+      "atc_code": "J06BB03",
+      "india_formulations": [],
+      "doses": [
+        { "indication": "Prevention / attenuation of varicella in exposed neonate (mother developed varicella 5 days before to 2 days after delivery, or other high-risk contact)", "route": "IM", "ga_band": "BW ≤ 2 kg", "dose_per_kg_per_dose": "62.5 IU (= half vial) per dose", "frequency": "Single dose, ideally within 96 h of exposure (up to 10 days)", "comments": "Repeat full dose if a new exposure occurs > 3 weeks after." },
+        { "indication": "Prevention / attenuation of varicella", "route": "IM", "ga_band": "BW > 2 kg", "dose_per_kg_per_dose": "125 IU (= 1 vial) per dose", "frequency": "Single dose within 96 h" }
+      ],
+      "monitoring": "Watch for varicella signs for 28 days post-exposure (incubation may be prolonged after VZIG).",
+      "adverse_effects": "Local injection-site discomfort; rare hypersensitivity.",
+      "contraindications": "IgA deficiency with anti-IgA antibodies.",
+      "sources": { "primary_neofax_page": 918, "cross_checks": [ {"source": "AAP Red Book — Varicella 2024", "agreement": "agrees"}, {"source": "CDC ACIP", "agreement": "agrees"} ] },
+      "review": { "status": "draft_pending_user_review", "reviewer": null, "review_date": null, "notes": "Limited availability in India — IVIG can be used as alternative if VZIG unavailable." }
+    },
+    {
+      "id": "neo-vitamin-d",
+      "drug": "Vitamin D (Cholecalciferol / Ergocalciferol)",
+      "alt_names": ["Cholecalciferol (D3)", "Ergocalciferol (D2)"],
+      "category": "Fat-soluble vitamin",
+      "atc_code": "A11CC05",
+      "india_formulations": [
+        { "form": "Oral drops", "strength": "Cholecalciferol 400 IU/mL or 800 IU/mL", "brands_india": ["Calcirol drops (Cadila)", "Uprise-D3 drops", "Tayo-D3 drops"] },
+        { "form": "Oral granules / sachet", "strength": "60,000 IU per sachet (high dose for deficiency)", "brands_india": ["Calcirol granules"] }
+      ],
+      "doses": [
+        { "indication": "Routine supplementation — exclusively breastfed", "route": "PO", "ga_band": "Term + late preterm ≥ 2000 g", "dose_per_kg_per_dose": "400 IU/day", "frequency": "once daily" },
+        { "indication": "Routine supplementation — preterm < 2000 g", "route": "PO", "ga_band": "Preterm BW < 2000 g", "dose_per_kg_per_dose": "200–400 IU/day; increase to 400 IU/day when BW ~ 1500 g and on full feeds", "frequency": "once daily" },
+        { "indication": "Treatment of deficiency", "route": "PO", "ga_band": "Any", "dose_per_kg_per_dose": "1000 IU/day", "frequency": "once daily", "duration": "Until 25-OH-D normalises" }
+      ],
+      "monitoring": "Serum 25-OH-vitamin D (target 30–80 ng/mL), Ca, P, alk-phos.",
+      "adverse_effects": "Hypercalcaemia, hypercalciuria, hyperphosphataemia (chronic over-dose), nephrocalcinosis.",
+      "contraindications": "Hypercalcaemia, hypervitaminosis D.",
+      "sources": { "primary_neofax_page": 929, "cross_checks": [ {"source": "AAP — Vitamin D 2014", "agreement": "agrees on 400 IU/day"}, {"source": "ESPGHAN PN 2018", "agreement": "agrees"}, {"source": "IAP Vitamin D guideline 2021", "agreement": "agrees"} ] },
+      "review": { "status": "draft_pending_user_review", "reviewer": null, "review_date": null, "notes": "All exclusively breastfed neonates need vitamin D supplementation from birth." }
+    },
+    {
+      "id": "neo-vitamin-e",
+      "drug": "Vitamin E (Alpha-tocopherol)",
+      "alt_names": ["Tocopherol"],
+      "category": "Fat-soluble vitamin / Antioxidant",
+      "atc_code": "A11HA03",
+      "india_formulations": [
+        { "form": "Oral capsule", "strength": "200 IU, 400 IU, 600 IU", "brands_india": ["Evion (Merck)", "E-cap (Wallace)", "Tocofer"] }
+      ],
+      "doses": [
+        { "indication": "Vitamin E supplementation — preterm enteral", "route": "PO (with feeds; not with iron)", "ga_band": "Preterm", "dose_per_kg_per_dose": "5–25 IU/day total", "frequency": "once daily", "comments": "1 mg α-tocopherol = 1.49 IU natural (d-form) = 2.22 IU synthetic (dl-form). Do NOT co-administer with iron — reduces iron absorption." }
+      ],
+      "monitoring": "Routine clinical; serum vitamin E if deficiency suspected.",
+      "adverse_effects": "Generally well tolerated; high IV doses linked to hepatic / pulmonary / NEC events historically.",
+      "contraindications": "Vitamin K antagonism risk at high doses.",
+      "sources": { "primary_neofax_page": 932, "cross_checks": [ {"source": "ESPGHAN PN 2018", "agreement": "agrees"}, {"source": "WHO WMFc 2024", "agreement": "agrees"} ] },
+      "review": { "status": "draft_pending_user_review", "reviewer": null, "review_date": null, "notes": "" }
+    },
+    {
+      "id": "neo-zidovudine",
+      "drug": "Zidovudine (AZT, ZDV)",
+      "alt_names": ["AZT", "ZDV"],
+      "category": "Antiretroviral — NRTI",
+      "atc_code": "J05AF01",
+      "india_formulations": [
+        { "form": "Oral syrup", "strength": "10 mg/mL", "brands_india": ["Zidovir syrup (Cipla)", "Zidovudine syrup (Aurobindo)"] },
+        { "form": "Oral capsule / tablet", "strength": "100 mg, 300 mg", "brands_india": ["Zidovir", "Retrovir (legacy)"] }
+      ],
+      "doses": [
+        { "indication": "Perinatal HIV prophylaxis — ≥ 35 weeks PMA", "route": "PO (preferred) / IV", "ga_band": "≥ 35 weeks", "dose_per_kg_per_dose": "4 mg/kg/dose PO BD (or 3 mg/kg/dose IV BD if no oral)", "frequency": "every 12 hours", "duration": "4–6 weeks (per protocol; combine with NVP per India NACO)" },
+        { "indication": "Weight-band PO alternative — 0–4 wks", "route": "PO", "ga_band": "Any", "dose_per_kg_per_dose": "2 to < 3 kg: 10 mg q12h ; 3 to < 4 kg: 15 mg q12h ; 4 to < 5 kg: 20 mg q12h" },
+        { "indication": "Perinatal prophylaxis — preterm 30 to < 35 weeks", "route": "PO / IV", "ga_band": "30 to < 35 weeks", "dose_per_kg_per_dose": "Birth–2 wk: 2 mg/kg q12h PO (or 1.5 mg/kg q12h IV) ; 2 wk–4–6 wk: 3 mg/kg q12h PO (or 2.25 mg/kg q12h IV)", "frequency": "every 12 hours" },
+        { "indication": "Perinatal prophylaxis — < 30 weeks", "route": "PO", "ga_band": "< 30 weeks", "dose_per_kg_per_dose": "2 mg/kg q12h", "frequency": "every 12 hours", "duration": "Birth to 4–6 weeks PNA" }
+      ],
+      "monitoring": "CBC (anaemia, neutropenia), LFTs, lactate (lactic acidosis), HIV PCR (viral load).",
+      "adverse_effects": "Anaemia, neutropenia, transaminitis, lactic acidosis (rare in neonates — risk over months).",
+      "contraindications": "Severe anaemia / neutropenia (relative — may need dose adjustment).",
+      "black_box_warning": "Bone marrow suppression (anaemia, neutropenia); lactic acidosis with hepatic steatosis (rare); myopathy (chronic use).",
+      "sources": { "primary_neofax_page": 939, "cross_checks": [ {"source": "DHHS Paediatric ARV guidelines 2024", "agreement": "agrees"}, {"source": "WHO HIV guidelines 2021", "agreement": "agrees"}, {"source": "India NACO HIV PMTCT 2024", "agreement": "agrees"} ] },
+      "review": { "status": "draft_pending_user_review", "reviewer": null, "review_date": null, "notes": "Standard India PMTCT regimen: AZT + NVP from birth × 6 weeks for high-risk infants." }
+    }
+  ]
+}
