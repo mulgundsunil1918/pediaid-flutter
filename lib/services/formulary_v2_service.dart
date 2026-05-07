@@ -340,4 +340,88 @@ class FormularyV2Service {
     }
     return null;
   }
+
+  /// Returns up to [limit] DrugV2 records matching [query] across both
+  /// Neofax and Harriet Lane v3 datasets. Used by the global home-screen
+  /// search bar so a user typing "acetaminophen" or "vanc" or "lasix"
+  /// gets the drug detail directly.
+  ///
+  /// Scoring (per drug):
+  ///   canonical name starts with q  +12
+  ///   canonical name contains q     +6
+  ///   alt-name starts with q        +9
+  ///   alt-name contains q           +4
+  ///   category contains q           +1
+  /// Drugs with score 0 are dropped. Hidden drugs are skipped.
+  Future<List<DrugSearchHit>> searchDrugs(String query,
+      {int limit = 12}) async {
+    await _ensureLoaded();
+    final q = query.trim().toLowerCase();
+    if (q.isEmpty) return const [];
+
+    final scored = <_ScoredDrug>[];
+    final byId = _byId;
+    if (byId == null) return const [];
+
+    final seen = <String>{};
+    for (final drug in byId.values) {
+      if (drug.hidden) continue;
+      if (!seen.add(drug.id)) continue;
+      final s = _scoreDrug(drug, q);
+      if (s > 0) scored.add(_ScoredDrug(drug, s));
+    }
+    scored.sort((a, b) => b.score - a.score);
+    return scored
+        .take(limit)
+        .map((e) => DrugSearchHit(
+              drug: e.drug,
+              source: e.drug.source,
+              page: e.drug.page,
+            ))
+        .toList();
+  }
+
+  static int _scoreDrug(DrugV2 d, String q) {
+    int n = 0;
+    final name = d.drug.toLowerCase();
+    if (name.startsWith(q)) {
+      n += 12;
+    } else if (name.contains(q)) {
+      n += 6;
+    }
+    // Strip "(Acetaminophen)" style synonym so "Paracetamol (Acetaminophen)"
+    // also scores against just "Paracetamol".
+    final stripped = name.replaceAll(RegExp(r'\s*\([^)]*\)'), '').trim();
+    if (stripped.isNotEmpty && stripped != name) {
+      if (stripped.startsWith(q)) n += 12;
+      else if (stripped.contains(q)) n += 6;
+    }
+    for (final alt in d.altNames) {
+      final a = alt.toLowerCase();
+      if (a.startsWith(q)) {
+        n += 9;
+      } else if (a.contains(q)) {
+        n += 4;
+      }
+    }
+    if (d.category.toLowerCase().contains(q)) n += 1;
+    return n;
+  }
+}
+
+class DrugSearchHit {
+  final DrugV2 drug;
+  final String source;
+  final int page;
+  const DrugSearchHit({
+    required this.drug,
+    required this.source,
+    required this.page,
+  });
+}
+
+class _ScoredDrug {
+  final DrugV2 drug;
+  final int score;
+  const _ScoredDrug(this.drug, this.score);
 }
