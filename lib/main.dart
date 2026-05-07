@@ -12,6 +12,7 @@ import 'services/auth_service.dart';
 import 'services/profile_store.dart';
 import 'services/review_service.dart';
 import 'services/guidelines_search_service.dart';
+import 'services/recents_service.dart';
 import 'utils/prefs_keys.dart';
 
 void main() async {
@@ -68,6 +69,14 @@ void main() async {
   // awaited so a slow network can't block app start.
   // ignore: unawaited_futures
   GuidelinesSearchService.instance.ensureLoaded();
+
+  // Hydrate the Recents list (most-recently-opened modules) so the home
+  // screen's Recents row paints with content on the first frame.
+  try {
+    await RecentsService.instance.load();
+  } catch (e) {
+    debugPrint('[boot] RecentsService load failed: $e');
+  }
 
   try {
     await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);

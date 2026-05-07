@@ -301,40 +301,54 @@ class _SlideView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // ── Hero (gradient card with icon OR logo) ───────────────────
-            Container(
-              width: 168,
-              height: 168,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: slide.gradient,
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(40),
-                boxShadow: [
-                  BoxShadow(
-                    color: slide.gradient.last.withValues(alpha: 0.38),
-                    blurRadius: 32,
-                    offset: const Offset(0, 16),
-                  ),
-                ],
-              ),
-              child: Center(
-                child: slide.assetPath != null
-                    ? Padding(
-                        padding: const EdgeInsets.all(22),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(22),
-                          child: Image.asset(
-                            slide.assetPath!,
-                            fit: BoxFit.contain,
-                          ),
+            // ── Hero ─────────────────────────────────────────────────────
+            //
+            // For slides with an asset (the welcome slide), show the logo
+            // PNG on its own — its blue background is part of the brand,
+            // wrapping it in another coloured gradient looked busy. Other
+            // slides use the gradient hero with a white icon.
+            slide.assetPath != null
+                ? Container(
+                    width: 176,
+                    height: 176,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(36),
+                      boxShadow: [
+                        BoxShadow(
+                          color: slide.gradient.last.withValues(alpha: 0.32),
+                          blurRadius: 30,
+                          offset: const Offset(0, 14),
                         ),
-                      )
-                    : Icon(slide.icon, color: Colors.white, size: 72),
-              ),
-            ),
+                      ],
+                    ),
+                    clipBehavior: Clip.antiAlias,
+                    child: Image.asset(
+                      slide.assetPath!,
+                      fit: BoxFit.cover,
+                    ),
+                  )
+                : Container(
+                    width: 168,
+                    height: 168,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: slide.gradient,
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(40),
+                      boxShadow: [
+                        BoxShadow(
+                          color: slide.gradient.last.withValues(alpha: 0.38),
+                          blurRadius: 32,
+                          offset: const Offset(0, 16),
+                        ),
+                      ],
+                    ),
+                    child: Center(
+                      child: Icon(slide.icon, color: Colors.white, size: 72),
+                    ),
+                  ),
             const SizedBox(height: 38),
 
             // ── Eyebrow chip ─────────────────────────────────────────────

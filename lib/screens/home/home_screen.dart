@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../services/recents_service.dart';
 import '../../theme/theme_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../utils/prefs_keys.dart';
@@ -84,7 +85,15 @@ const List<_ChipDef> _allChips = [
   _ChipDef('academics',  'Academics',       Icons.school_rounded),
 ];
 
-const _kDefaultKeys = ['gir', 'gas', 'tpn', 'cga', 'growth'];
+// All modules surface in Quick Access by default. Users can prune via the
+// Edit sheet — but a fresh install shows everything so the carousel feels
+// full rather than empty.
+const List<String> _kDefaultKeys = [
+  'gir', 'gas', 'tpn', 'cga', 'ponderal', 'bsa', 'bp', 'neobp', 'bili',
+  'fluid', 'burn', 'parkland', 'lund', 'pet', 'egfr', 'ga', 'vent',
+  'nutri', 'dve', 'allcalc', 'growth', 'formulary', 'labref', 'guides',
+  'cme', 'academics',
+];
 
 // ── HomeScreen ────────────────────────────────────────────────────────────────
 
@@ -328,6 +337,12 @@ class _HomeScreenState extends State<HomeScreen> {
                               const SizedBox(height: 12),
                               _buildFeatureGrid(context, isDark, cs),
                               const SizedBox(height: 24),
+                              // Recents row — only renders when the user
+                              // has actually opened something (RecentsService
+                              // notifier publishes []).
+                              _RecentsRow(
+                                onOpen: (key) => _navigateChip(context, key),
+                              ),
                               _buildQuickHeader(context, cs),
                               const SizedBox(height: 10),
                               _buildQuickChips(context, cs, isDark),
@@ -603,15 +618,23 @@ class _HomeScreenState extends State<HomeScreen> {
   // ── Feature grid ──────────────────────────────────────────────────────────
 
   Widget _buildFeatureGrid(BuildContext context, bool isDark, ColorScheme cs) {
+    // Each card records itself into Recents on tap so the Recents row
+    // can surface heavy modules (Formulary, Guides) right alongside the
+    // light-weight Quick Access chips.
+    void open(String key, String label, Widget Function() builder) {
+      // ignore: unawaited_futures
+      RecentsService.instance.record(key, label);
+      Navigator.push(context, MaterialPageRoute(builder: (_) => builder()));
+    }
     final cards = [
-      _FeatureDef('Calculators & Tools', 'Calc · BP · Bili · More',   Icons.calculate_rounded,   const Color(0xFF1565C0), () => Navigator.push(context, MaterialPageRoute(builder: (_) => const CalculatorsScreen()))),
-      _FeatureDef('Charts',        'Growth · Fenton · IAP',   Icons.show_chart_rounded,  const Color(0xFF6A1B9A), () => Navigator.push(context, MaterialPageRoute(builder: (_) => const GrowthChartsScreen()))),
-      _FeatureDef('Drug Formulary','500+ drugs',               Icons.medication_rounded,  const Color(0xFF00695C), () => Navigator.push(context, MaterialPageRoute(builder: (_) => const FormularyScreen()))),
-      _FeatureDef('Lab Reference',       'Harriet Lane values',        Icons.biotech_rounded,        const Color(0xFF00838F), () => Navigator.push(context, MaterialPageRoute(builder: (_) => const LabReferenceScreen()))),
-      _FeatureDef('Guides',              'Fetal Dev · Protocols',      Icons.menu_book_outlined,     const Color(0xFF6D4C41), () => Navigator.push(context, MaterialPageRoute(builder: (_) => const GuidesScreen()))),
-      _FeatureDef('CME & Webinars',       'Conferences · Webinars',     Icons.event_note_rounded,     const Color(0xFF7B1FA2), () => Navigator.push(context, MaterialPageRoute(builder: (_) => const CmeScreen()))),
-      _FeatureDef('Academics',           'Peer-reviewed content',       Icons.auto_stories_rounded,   const Color(0xFF283593), () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AcademicsWebScreen(path: '/academics')))),
-      _FeatureDef('Never Again',         'Learn from real mistakes',     Icons.auto_stories,           const Color(0xFF1A237E), () => Navigator.push(context, MaterialPageRoute(builder: (_) => const NeverAgainScreen()))),
+      _FeatureDef('Calculators & Tools', 'Calc · BP · Bili · More',   Icons.calculate_rounded,   const Color(0xFF1565C0), () => open('allcalc',   'Calculators',     () => const CalculatorsScreen())),
+      _FeatureDef('Charts',        'Growth · Fenton · IAP',   Icons.show_chart_rounded,  const Color(0xFF6A1B9A), () => open('growth',    'Charts',          () => const GrowthChartsScreen())),
+      _FeatureDef('Drug Formulary','500+ drugs',               Icons.medication_rounded,  const Color(0xFF00695C), () => open('formulary', 'Drug Formulary',  () => const FormularyScreen())),
+      _FeatureDef('Lab Reference',       'Harriet Lane values',        Icons.biotech_rounded,        const Color(0xFF00838F), () => open('labref',    'Lab Reference',   () => const LabReferenceScreen())),
+      _FeatureDef('Guides',              'Fetal Dev · Protocols',      Icons.menu_book_outlined,     const Color(0xFF6D4C41), () => open('guides',    'Guides',          () => const GuidesScreen())),
+      _FeatureDef('CME & Webinars',       'Conferences · Webinars',     Icons.event_note_rounded,     const Color(0xFF7B1FA2), () => open('cme',       'CME & Webinars',  () => const CmeScreen())),
+      _FeatureDef('Academics',           'Peer-reviewed content',       Icons.auto_stories_rounded,   const Color(0xFF283593), () => open('academics', 'Academics',       () => const AcademicsWebScreen(path: '/academics'))),
+      _FeatureDef('Never Again',         'Learn from real mistakes',     Icons.auto_stories,           const Color(0xFF1A237E), () => open('neveragain','Never Again',     () => const NeverAgainScreen())),
     ];
 
     return GridView.builder(
@@ -860,7 +883,17 @@ class _HomeScreenState extends State<HomeScreen> {
       'academics': () => const AcademicsWebScreen(),
     };
     final builder = routes[key];
-    if (builder != null) Navigator.push(context, MaterialPageRoute(builder: (_) => builder()));
+    if (builder == null) return;
+    // Record into Recents using the chip's display label.
+    final chip = _allChips.firstWhere(
+      (c) => c.key == key,
+      orElse: () => const _ChipDef('', '', Icons.apps_rounded),
+    );
+    if (chip.label.isNotEmpty) {
+      // ignore: unawaited_futures
+      RecentsService.instance.record(key, chip.label);
+    }
+    Navigator.push(context, MaterialPageRoute(builder: (_) => builder()));
   }
 
   // ── Admin tile (only rendered when currentUser.role == 'admin') ──────────
@@ -1233,6 +1266,113 @@ class _DrawerItem extends StatelessWidget {
       dense: true,
       contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+    );
+  }
+}
+
+// ── Recents row ──────────────────────────────────────────────────────────────
+
+class _RecentsRow extends StatelessWidget {
+  /// Open handler — receives the recorded module key and routes to the
+  /// matching screen via [_navigateChip].
+  final void Function(String key) onOpen;
+  const _RecentsRow({required this.onOpen});
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return ValueListenableBuilder<List<RecentItem>>(
+      valueListenable: RecentsService.instance.notifier,
+      builder: (context, items, _) {
+        if (items.isEmpty) return const SizedBox.shrink();
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 18),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.history_rounded, size: 16, color: cs.primary),
+                  const SizedBox(width: 6),
+                  Text(
+                    'RECENTS',
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 11.5,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: 1.2,
+                      color: cs.primary,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              SizedBox(
+                height: 38,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: items.length,
+                  separatorBuilder: (_, __) => const SizedBox(width: 8),
+                  itemBuilder: (_, i) {
+                    final item = items[i];
+                    final chip = _allChips.firstWhere(
+                      (c) => c.key == item.key,
+                      orElse: () => _ChipDef(item.key, item.label,
+                          Icons.history_rounded),
+                    );
+                    return _RecentChip(
+                      label: item.label,
+                      icon: chip.icon,
+                      onTap: () => onOpen(item.key),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _RecentChip extends StatelessWidget {
+  final String label;
+  final IconData icon;
+  final VoidCallback onTap;
+  const _RecentChip({
+    required this.label,
+    required this.icon,
+    required this.onTap,
+  });
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        decoration: BoxDecoration(
+          color: cs.primaryContainer.withValues(alpha: 0.55),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: cs.primary.withValues(alpha: 0.18)),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 15, color: cs.primary),
+            const SizedBox(width: 7),
+            Text(
+              label,
+              style: GoogleFonts.plusJakartaSans(
+                fontSize: 12.5,
+                fontWeight: FontWeight.w700,
+                color: cs.onPrimaryContainer,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
