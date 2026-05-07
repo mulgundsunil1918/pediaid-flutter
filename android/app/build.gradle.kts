@@ -74,17 +74,12 @@ android {
             } else {
                 signingConfigs.getByName("debug")
             }
-            // R8 code minification + resource shrinking — keep rules in
-            // proguard-rules.pro cover plugins that use reflection
-            // (syncfusion_flutter_pdfviewer, flutter_inappwebview, etc.).
-            // Saves ~25 MB on the AAB and removes the Play Console
-            // "no deobfuscation file" / "could be smaller" warning.
-            isMinifyEnabled = true
-            isShrinkResources = true
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+            // R8 minification disabled — earlier attempt with R8 produced
+            // a Play Console-rejected AAB (the proguard-rules.pro file
+            // is kept on disk for future re-enablement). Until then,
+            // upload size stays the same as +4 (~79 MB AAB).
+            isMinifyEnabled = false
+            isShrinkResources = false
         }
     }
 }
