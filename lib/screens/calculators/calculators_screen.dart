@@ -501,71 +501,82 @@ class _CategoryChipBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
-    return Container(
-      height: 50,
-      padding: const EdgeInsets.fromLTRB(14, 8, 14, 6),
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        itemCount: categories.length,
-        separatorBuilder: (_, __) => const SizedBox(width: 8),
-        itemBuilder: (_, i) {
-          final cat = categories[i];
-          final isSelected = cat == selected;
-          final count = countFor(cat);
-          return InkWell(
-            onTap: () => onSelect(cat),
-            borderRadius: BorderRadius.circular(20),
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 180),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              decoration: BoxDecoration(
-                color: isSelected
-                    ? cs.primary
-                    : cs.surfaceContainerHighest.withValues(alpha: 0.65),
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: isSelected
-                      ? cs.primary
-                      : cs.outlineVariant.withValues(alpha: 0.45),
-                  width: isSelected ? 1 : 0.8,
-                ),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    cat,
-                    style: GoogleFonts.plusJakartaSans(
-                      fontSize: 12.5,
-                      fontWeight: FontWeight.w700,
-                      color: isSelected ? cs.onPrimary : cs.onSurface,
-                      letterSpacing: 0.05,
-                    ),
-                  ),
-                  const SizedBox(width: 6),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 6, vertical: 1),
-                    decoration: BoxDecoration(
-                      color: isSelected
-                          ? cs.onPrimary.withValues(alpha: 0.20)
-                          : cs.primary.withValues(alpha: 0.10),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Text(
-                      '$count',
-                      style: GoogleFonts.jetBrainsMono(
-                        fontSize: 10.5,
-                        fontWeight: FontWeight.w800,
-                        color: isSelected ? cs.onPrimary : cs.primary,
-                      ),
-                    ),
-                  ),
-                ],
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(14, 8, 14, 8),
+      child: Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        children: [
+          for (final cat in categories)
+            _chip(
+              cs,
+              label: cat,
+              count: countFor(cat),
+              selected: cat == selected,
+              onTap: () => onSelect(cat),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _chip(
+    ColorScheme cs, {
+    required String label,
+    required int count,
+    required bool selected,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(20),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 180),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+          color: selected
+              ? cs.primary
+              : cs.surfaceContainerHighest.withValues(alpha: 0.65),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: selected
+                ? cs.primary
+                : cs.outlineVariant.withValues(alpha: 0.45),
+            width: selected ? 1 : 0.8,
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              label,
+              style: GoogleFonts.plusJakartaSans(
+                fontSize: 12.5,
+                fontWeight: FontWeight.w700,
+                color: selected ? cs.onPrimary : cs.onSurface,
+                letterSpacing: 0.05,
               ),
             ),
-          );
-        },
+            const SizedBox(width: 6),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+              decoration: BoxDecoration(
+                color: selected
+                    ? cs.onPrimary.withValues(alpha: 0.20)
+                    : cs.primary.withValues(alpha: 0.10),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                '$count',
+                style: GoogleFonts.jetBrainsMono(
+                  fontSize: 10.5,
+                  fontWeight: FontWeight.w800,
+                  color: selected ? cs.onPrimary : cs.primary,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
