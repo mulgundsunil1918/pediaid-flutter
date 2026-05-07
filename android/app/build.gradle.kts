@@ -74,8 +74,17 @@ android {
             } else {
                 signingConfigs.getByName("debug")
             }
-            isMinifyEnabled = false
-            isShrinkResources = false
+            // R8 code minification + resource shrinking — keep rules in
+            // proguard-rules.pro cover plugins that use reflection
+            // (syncfusion_flutter_pdfviewer, flutter_inappwebview, etc.).
+            // Saves ~25 MB on the AAB and removes the Play Console
+            // "no deobfuscation file" / "could be smaller" warning.
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
 }
