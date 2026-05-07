@@ -58,9 +58,9 @@ class _TdscAssistantScreenState extends State<TdscAssistantScreen> {
   static const _kCursor = Color(0xFF1565C0);
   static const _kNeedsAsmt = Color(0xFFD97706);
 
-  // Classic palette (original TDSC paint)
-  static const _kClassicEarly = Color(0xFF7B3F00);
-  static const _kClassicLate = Color(0xFFEA580C);
+  // Classic palette — authentic TDSC paint (CSS SaddleBrown + DarkOrange)
+  static const _kClassicEarly = Color(0xFF8B4513); // SaddleBrown
+  static const _kClassicLate = Color(0xFFFF8C00); // DarkOrange
 
   Color _barColor(TdscItem item, TdscBucket bucket, TdscStatus status) {
     if (_classicMode) return _kClassicLate;
@@ -136,6 +136,8 @@ class _TdscAssistantScreenState extends State<TdscAssistantScreen> {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(14, 14, 14, 32),
         children: [
+          _howToCard(cs),
+          const SizedBox(height: 14),
           _ageCard(cs),
           const SizedBox(height: 14),
           _riskHero(cs, interp),
@@ -259,6 +261,99 @@ class _TdscAssistantScreenState extends State<TdscAssistantScreen> {
           MaterialPageRoute(builder: (_) => const TdscInterpretationScreen()),
         );
     }
+  }
+
+  // ── How to use (intro) ────────────────────────────────────────────────
+  Widget _howToCard(ColorScheme cs) {
+    return _frame(
+      cs,
+      borderColor: _kCursor,
+      tint: _kCursor.withValues(alpha: 0.04),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.lightbulb_outline_rounded,
+                    size: 18, color: _kCursor),
+                const SizedBox(width: 8),
+                Text(
+                  'How to use this screen',
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w800,
+                    color: cs.onSurface,
+                    letterSpacing: 0.3,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            _step(cs, '1', 'Set the child\'s age on the slider below.'),
+            _step(
+              cs,
+              '2',
+              'Tap the green “Mark all expected as achieved” button — that ticks every milestone the child should already have done.',
+            ),
+            _step(
+              cs,
+              '3',
+              'On the bars below, flip ✓ to ✗ for any milestone the child has NOT yet achieved.',
+            ),
+            _step(
+              cs,
+              '4',
+              'Read the verdict + recommendation card. Two-or-more red items past their bar = refer for full assessment.',
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _step(ColorScheme cs, String number, String text) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 22,
+            height: 22,
+            decoration: BoxDecoration(
+              color: _kCursor,
+              borderRadius: BorderRadius.circular(11),
+            ),
+            alignment: Alignment.center,
+            child: Text(
+              number,
+              style: GoogleFonts.jetBrainsMono(
+                fontSize: 11,
+                fontWeight: FontWeight.w800,
+                color: Colors.white,
+              ),
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 2),
+              child: Text(
+                text,
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 12.5,
+                  height: 1.45,
+                  fontWeight: FontWeight.w600,
+                  color: cs.onSurface.withValues(alpha: 0.85),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   // ── Age card ───────────────────────────────────────────────────────────
@@ -951,23 +1046,138 @@ class _TdscAssistantScreenState extends State<TdscAssistantScreen> {
   Widget _legend(ColorScheme cs) {
     return Container(
       margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+      padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
       decoration: BoxDecoration(
         color: cs.surfaceContainerHighest.withValues(alpha: 0.4),
         borderRadius: BorderRadius.circular(8),
       ),
-      child: Wrap(
-        spacing: 12,
-        runSpacing: 6,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _legendDot(_kAchieved, 'Achieved'),
-          _legendDot(_kDelayed, 'Delayed'),
-          _legendDot(_kNeedsAsmt, 'Needs assessment'),
-          _legendDot(_kEmerging, 'Emerging'),
-          _legendDot(_kFuture, 'Future'),
-          _legendDot(_kCursor, 'Age line'),
+          // Always-on classic brown / orange explainer — the original
+          // TDSC bar segments are what every paediatric textbook prints.
+          Text(
+            'Reading the bars (classic TDSC)',
+            style: GoogleFonts.plusJakartaSans(
+              fontSize: 10.5,
+              letterSpacing: 0.5,
+              fontWeight: FontWeight.w800,
+              color: cs.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: 6),
+          _legendRow(
+            cs,
+            swatch: _kClassicEarly,
+            title: 'Brown — earliest acquisition window',
+            body:
+                'Some children begin doing the milestone in this stretch. Failing it here is normal.',
+          ),
+          const SizedBox(height: 6),
+          _legendRow(
+            cs,
+            swatch: _kClassicLate,
+            title: 'Orange — later acquisition window',
+            body:
+                'Most normal children achieve the milestone before the bar ends. By the right edge ≈ 97 % should pass.',
+          ),
+          const SizedBox(height: 4),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+            decoration: BoxDecoration(
+              color: _kCursor.withValues(alpha: 0.08),
+              borderRadius: BorderRadius.circular(6),
+            ),
+            child: Row(
+              children: [
+                Icon(Icons.priority_high_rounded,
+                    size: 14, color: _kCursor),
+                const SizedBox(width: 4),
+                Expanded(
+                  child: Text(
+                    'Bar fully past the age line + Not Achieved = delay (refer).',
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 10.5,
+                      fontWeight: FontWeight.w700,
+                      color: _kCursor,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            _classicMode ? 'Classic mode ON' : 'Status overlay (modern mode)',
+            style: GoogleFonts.plusJakartaSans(
+              fontSize: 10.5,
+              letterSpacing: 0.5,
+              fontWeight: FontWeight.w800,
+              color: cs.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Wrap(
+            spacing: 12,
+            runSpacing: 6,
+            children: [
+              _legendDot(_kAchieved, 'Achieved'),
+              _legendDot(_kDelayed, 'Delayed'),
+              _legendDot(_kNeedsAsmt, 'Needs asmt'),
+              _legendDot(_kEmerging, 'Emerging'),
+              _legendDot(_kFuture, 'Future'),
+              _legendDot(_kCursor, 'Age line'),
+            ],
+          ),
         ],
       ),
+    );
+  }
+
+  Widget _legendRow(
+    ColorScheme cs, {
+    required Color swatch,
+    required String title,
+    required String body,
+  }) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          margin: const EdgeInsets.only(top: 3),
+          width: 18,
+          height: 10,
+          decoration: BoxDecoration(
+            color: swatch,
+            borderRadius: BorderRadius.circular(2),
+          ),
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 11.5,
+                  fontWeight: FontWeight.w800,
+                  color: cs.onSurface,
+                ),
+              ),
+              Text(
+                body,
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 11,
+                  height: 1.4,
+                  fontWeight: FontWeight.w500,
+                  color: cs.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
