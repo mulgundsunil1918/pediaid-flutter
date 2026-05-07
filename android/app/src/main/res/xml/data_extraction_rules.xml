@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Block Auto Backup (Android 6+) AND Device Transfer (Android 12+) for
+  every PediAid storage path. Without this, Samsung Smart Switch / Google
+  Backup carries SharedPreferences across reinstalls and the first-launch
+  tutorial silently never re-shows on the new device.
+
+  With android:allowBackup="false" set in the manifest, this XML's
+  effective behaviour is null — Lint still validates its structure
+  though. Each <exclude> must sit under an <include> for the same
+  domain, hence the parallel pairs.
+-->
+<data-extraction-rules>
+    <cloud-backup>
+        <include domain="sharedpref" path="." />
+        <exclude domain="sharedpref" path="." />
+        <include domain="file" path="." />
+        <exclude domain="file" path="." />
+        <include domain="database" path="." />
+        <exclude domain="database" path="." />
+        <include domain="external" path="." />
+        <exclude domain="external" path="." />
+    </cloud-backup>
+    <device-transfer>
+        <include domain="sharedpref" path="." />
+        <exclude domain="sharedpref" path="." />
+        <include domain="file" path="." />
+        <exclude domain="file" path="." />
+        <include domain="database" path="." />
+        <exclude domain="database" path="." />
+        <include domain="external" path="." />
+        <exclude domain="external" path="." />
+    </device-transfer>
+</data-extraction-rules>

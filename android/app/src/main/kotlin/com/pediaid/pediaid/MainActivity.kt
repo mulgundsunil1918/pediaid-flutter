@@ -1,4 +1,4 @@
-package com.example.neoapp_app
+package com.pediaid.pediaid
 
 import io.flutter.embedding.android.FlutterActivity
 

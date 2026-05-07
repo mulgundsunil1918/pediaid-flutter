@@ -78,6 +78,7 @@ flutter:
   assets:
     - assets/data/who/
     - assets/data/formulary/
+    - assets/data/formulary/formulary_v2/
     - assets/data/bilirubin/
     - assets/data/lab_reference/
     - assets/iap_growth_chart_2015_edited.html
@@ -89,6 +90,7 @@ flutter:
     - assets/data/nicu_scores.json
     - assets/pals/
     - assets/nice/nicecharts.json
+    - assets/icon/
 
   # To add assets to your application, add an assets section, like this:
   # assets:

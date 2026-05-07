@@ -43,3 +43,16 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Release signing — NEVER commit. Lose the keystore and you lose the ability
+# to publish updates ever again. Back these up to a separate location.
+/android/key.properties
+/android/app/upload-keystore.jks
+**/*.jks
+**/*.keystore
+**/.env
+**/.env.local
+**/.env.production
+**/google-services.json
+**/GoogleService-Info.plist
+**/firebase-service-account*.json

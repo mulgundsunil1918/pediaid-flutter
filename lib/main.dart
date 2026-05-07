@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'theme/app_theme.dart';
 import 'theme/theme_provider.dart';
 import 'screens/home/home_screen.dart';
 import 'screens/auth/login_screen.dart';
+import 'screens/intro/intro_screen.dart';
 import 'services/lab_reference_service.dart';
 import 'services/auth_service.dart';
 import 'services/profile_store.dart';
@@ -80,10 +82,60 @@ class PediAidApp extends StatelessWidget {
       themeMode: themeProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light,
       // ── AUTH DISABLED FOR TESTING ──────────────────────────────────────────
       // User has asked to remove the login page entirely while testing the
-      // app. Jump straight to the HomeScreen; _AuthGate is left in place
-      // below for easy restoration later.
-      home: const HomeScreen(),
+      // app. Jump straight to the IntroGate, which shows the first-launch
+      // tutorial once and the HomeScreen on every subsequent launch.
+      // _AuthGate is left in place below for easy restoration later.
+      home: const _IntroGate(),
     );
+  }
+}
+
+/// Top-level intro gate. Reads `seen_intro_v2` from SharedPreferences once
+/// at first frame: if absent/false, shows the [IntroScreen]; otherwise
+/// renders [HomeScreen] directly. The very first paint is HomeScreen with
+/// an opaque cover until the SharedPreferences read resolves — this avoids
+/// flashing Home for one frame before swapping to the tutorial on a fresh
+/// install. The check is cached for the rest of the session.
+class _IntroGate extends StatefulWidget {
+  const _IntroGate();
+
+  @override
+  State<_IntroGate> createState() => _IntroGateState();
+}
+
+class _IntroGateState extends State<_IntroGate> {
+  bool? _seen; // null = checking, true = skip intro, false = show intro
+
+  @override
+  void initState() {
+    super.initState();
+    _check();
+  }
+
+  Future<void> _check() async {
+    bool seen = false;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      seen = prefs.getBool(kIntroSeenKey) ?? false;
+    } catch (e) {
+      debugPrint('[_IntroGate] prefs read failed: $e');
+    }
+    if (mounted) setState(() => _seen = seen);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_seen == null) {
+      // Brief blank state — single-frame, prefs read is sub-millisecond.
+      return const Scaffold(body: SizedBox.expand());
+    }
+    if (_seen == false) {
+      return IntroScreen(onDone: () {
+        if (!mounted) return;
+        setState(() => _seen = true);
+      });
+    }
+    return const HomeScreen();
   }
 }
 

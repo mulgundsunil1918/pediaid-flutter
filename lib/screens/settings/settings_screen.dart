@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../theme/theme_provider.dart';
+import '../intro/intro_screen.dart';
 import '../shared/suggest_feature_sheet.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -108,6 +109,47 @@ class SettingsScreen extends StatelessWidget {
                     ),
                   ),
                 ],
+              ),
+            ),
+            const SizedBox(height: 24),
+            Text('Help',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 0.15,
+                  color: mutedColor,
+                )),
+            const SizedBox(height: 10),
+            Card(
+              child: ListTile(
+                leading: Icon(Icons.tour_outlined,
+                    color: Theme.of(context).colorScheme.primary),
+                title: Text('Show app tour again',
+                    style: TextStyle(
+                        color: textColor,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16)),
+                subtitle: Text(
+                    "Replay the 5-page tutorial you saw on first launch",
+                    style: TextStyle(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withValues(alpha: 0.5),
+                        fontSize: 12)),
+                trailing: Icon(Icons.chevron_right,
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withValues(alpha: 0.35)),
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => IntroScreen(
+                      onDone: () => Navigator.of(context).pop(),
+                    ),
+                    fullscreenDialog: true,
+                  ),
+                ),
               ),
             ),
             const SizedBox(height: 24),

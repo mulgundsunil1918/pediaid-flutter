@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../services/formulary_service.dart';
-import 'drug_pdf_viewer_screen.dart';
+import 'drug_detail_v2_screen.dart';
 import '../drugs/emergency_nicu_drugs_screen.dart';
 
 enum _Source { none, neofax, harrietLane }
@@ -305,7 +305,12 @@ class _FormularyScreenState extends State<FormularyScreen> {
           onTap: () => Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (_) => DrugPdfViewerScreen(entry: entry)),
+              builder: (_) => DrugDetailV2Screen(
+                name: entry.name,
+                source: entry.source,
+                pdfPage: entry.page,
+              ),
+            ),
           ),
         );
       },
