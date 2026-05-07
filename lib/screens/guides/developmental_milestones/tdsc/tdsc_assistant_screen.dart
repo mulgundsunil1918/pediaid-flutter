@@ -408,81 +408,75 @@ class _TdscAssistantScreenState extends State<TdscAssistantScreen> {
   // ── Risk hero ──────────────────────────────────────────────────────────
   Widget _riskHero(ColorScheme cs, TdscInterpretation interp) {
     final (bg, fg, icon) = _verdictPalette(interp);
+    final eyebrow = interp.delayed.isNotEmpty
+        ? interp.risk.label
+        : (interp.needsAssessment.isNotEmpty ? 'INCOMPLETE' : 'LOW RISK');
     return _frame(
       cs,
-      tint: bg,
       borderColor: bg,
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Coloured top stripe — the only saturated area
+          Container(
+            color: bg,
+            padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
+            child: Row(
               children: [
-                Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: bg,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Icon(icon, color: fg, size: 22),
-                ),
+                Icon(icon, color: fg, size: 22),
                 const SizedBox(width: 10),
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        interp.delayed.isNotEmpty
-                            ? interp.risk.label
-                            : (interp.needsAssessment.isNotEmpty
-                                ? 'INCOMPLETE'
-                                : 'LOW RISK'),
-                        style: GoogleFonts.plusJakartaSans(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: 1.2,
-                          color: bg,
-                        ),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        interp.headline,
-                        style: GoogleFonts.plusJakartaSans(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w800,
-                          color: cs.onSurface,
-                          height: 1.2,
-                        ),
-                      ),
-                    ],
+                  child: Text(
+                    eyebrow,
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: 1.2,
+                      color: fg,
+                    ),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 10),
-            Text(
-              interp.oneLineInterpretation,
-              style: GoogleFonts.plusJakartaSans(
-                fontSize: 12.5,
-                height: 1.45,
-                fontWeight: FontWeight.w500,
-                color: cs.onSurface.withValues(alpha: 0.85),
-              ),
-            ),
-            const SizedBox(height: 12),
-            // Quick stats grid
-            Row(
+          ),
+          // Body — sits on cs.surface so the interpretation text is legible
+          Padding(
+            padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _stat(cs, 'Expected', interp.expected.length, _kAchieved),
-                _stat(cs, 'Achieved', interp.achieved.length, _kAchieved),
-                _stat(cs, 'Delayed', interp.delayed.length, _kDelayed),
-                _stat(cs, 'Emerging', interp.emerging.length, _kEmerging),
+                Text(
+                  interp.headline,
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w800,
+                    color: cs.onSurface,
+                    height: 1.2,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  interp.oneLineInterpretation,
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 12.5,
+                    height: 1.45,
+                    fontWeight: FontWeight.w500,
+                    color: cs.onSurface.withValues(alpha: 0.85),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    _stat(cs, 'Expected', interp.expected.length, _kAchieved),
+                    _stat(cs, 'Achieved', interp.achieved.length, _kAchieved),
+                    _stat(cs, 'Delayed', interp.delayed.length, _kDelayed),
+                    _stat(cs, 'Emerging', interp.emerging.length, _kEmerging),
+                  ],
+                ),
               ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
