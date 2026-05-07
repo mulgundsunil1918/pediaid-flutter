@@ -53,8 +53,14 @@ class _TdscChartViewState extends State<TdscChartView>
             : null,
         bottom: TabBar(
           controller: _tab,
+          labelColor: Colors.white,
+          unselectedLabelColor: Colors.white70,
+          indicatorColor: Colors.white,
+          indicatorWeight: 3,
           labelStyle: GoogleFonts.plusJakartaSans(
               fontSize: 12.5, fontWeight: FontWeight.w800),
+          unselectedLabelStyle: GoogleFonts.plusJakartaSans(
+              fontSize: 12.5, fontWeight: FontWeight.w600),
           tabs: const [
             Tab(text: 'Visual chart'),
             Tab(text: 'Table'),

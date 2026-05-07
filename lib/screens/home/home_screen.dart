@@ -792,74 +792,88 @@ class _HomeScreenState extends State<HomeScreen> {
         return StatefulBuilder(
           builder: (ctx, setLocal) {
             final cs = Theme.of(ctx).colorScheme;
-            return Padding(
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Handle bar
-                  Center(
-                    child: Container(
-                      width: 36, height: 4,
-                      decoration: BoxDecoration(
-                          color: cs.outline, borderRadius: BorderRadius.circular(2)),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Row(children: [
-                    Icon(Icons.tune_rounded, color: cs.primary, size: 20),
-                    const SizedBox(width: 8),
-                    Text('Customise Quick Access',
-                        style: GoogleFonts.plusJakartaSans(
-                            fontSize: 17, fontWeight: FontWeight.w700, color: cs.onSurface)),
-                  ]),
-                  const SizedBox(height: 4),
-                  Text('Select which shortcuts appear on your home screen.',
-                      style: GoogleFonts.plusJakartaSans(
-                          fontSize: 12, color: cs.onSurface.withValues(alpha: 0.5))),
-                  const SizedBox(height: 16),
-                  ..._allChips.map((chip) {
-                    final selected = _selectedKeys.contains(chip.key);
-                    return CheckboxListTile(
-                      value: selected,
-                      onChanged: (v) {
-                        setLocal(() {
-                          if (v == true) {
-                            _selectedKeys.add(chip.key);
-                          } else {
-                            _selectedKeys.remove(chip.key);
-                          }
-                        });
-                        setState(() {});
-                        _savePrefs();
-                      },
-                      secondary: Container(
-                        width: 36, height: 36,
+            final maxH = MediaQuery.of(ctx).size.height * 0.85;
+            return ConstrainedBox(
+              constraints: BoxConstraints(maxHeight: maxH),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Handle bar
+                    Center(
+                      child: Container(
+                        width: 36, height: 4,
                         decoration: BoxDecoration(
-                          color: cs.primary.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Icon(chip.icon, color: cs.primary, size: 18),
+                            color: cs.outline, borderRadius: BorderRadius.circular(2)),
                       ),
-                      title: Text(chip.label,
-                          style: GoogleFonts.plusJakartaSans(
-                              fontWeight: FontWeight.w600, fontSize: 14, color: cs.onSurface)),
-                      activeColor: cs.primary,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                      dense: true,
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 4),
-                    );
-                  }),
-                  const SizedBox(height: 8),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () => Navigator.pop(ctx),
-                      child: Text('Done',
-                          style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700)),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 16),
+                    Row(children: [
+                      Icon(Icons.tune_rounded, color: cs.primary, size: 20),
+                      const SizedBox(width: 8),
+                      Text('Customise Quick Access',
+                          style: GoogleFonts.plusJakartaSans(
+                              fontSize: 17, fontWeight: FontWeight.w700, color: cs.onSurface)),
+                    ]),
+                    const SizedBox(height: 4),
+                    Text('Select which shortcuts appear on your home screen.',
+                        style: GoogleFonts.plusJakartaSans(
+                            fontSize: 12, color: cs.onSurface.withValues(alpha: 0.5))),
+                    const SizedBox(height: 12),
+                    Flexible(
+                      child: ListView(
+                        shrinkWrap: true,
+                        padding: const EdgeInsets.only(bottom: 8),
+                        children: [
+                          for (final chip in _allChips)
+                            Builder(builder: (_) {
+                              final selected = _selectedKeys.contains(chip.key);
+                              return CheckboxListTile(
+                                value: selected,
+                                onChanged: (v) {
+                                  setLocal(() {
+                                    if (v == true) {
+                                      _selectedKeys.add(chip.key);
+                                    } else {
+                                      _selectedKeys.remove(chip.key);
+                                    }
+                                  });
+                                  setState(() {});
+                                  _savePrefs();
+                                },
+                                secondary: Container(
+                                  width: 36, height: 36,
+                                  decoration: BoxDecoration(
+                                    color: cs.primary.withValues(alpha: 0.1),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Icon(chip.icon, color: cs.primary, size: 18),
+                                ),
+                                title: Text(chip.label,
+                                    style: GoogleFonts.plusJakartaSans(
+                                        fontWeight: FontWeight.w600, fontSize: 14, color: cs.onSurface)),
+                                activeColor: cs.primary,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10)),
+                                dense: true,
+                                contentPadding: const EdgeInsets.symmetric(horizontal: 4),
+                              );
+                            }),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () => Navigator.pop(ctx),
+                        child: Text('Done',
+                            style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700)),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             );
           },
