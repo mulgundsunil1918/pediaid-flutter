@@ -125,8 +125,8 @@ class DevMilestonesHub extends StatelessWidget {
               icon: Icons.assignment_turned_in_outlined,
               tint: const Color(0xFFE65100),
               title: 'Trivandrum DSC',
-              subtitle: 'Trivandrum Developmental Screening Chart — coming soon',
-              comingSoon: true,
+              subtitle:
+                  'Both charts merged · 51 items · age cursor · live PASS / FAIL screen with the ≥ 2-fail rule',
               onTap: () => Navigator.push(context,
                   MaterialPageRoute(builder: (_) => const DevTrivandrumPlaceholder())),
             ),
