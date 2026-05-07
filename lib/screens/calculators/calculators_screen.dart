@@ -1,4 +1,22 @@
+// =============================================================================
+// lib/screens/calculators/calculators_screen.dart
+//
+// Hub of every calculator + small clinical-tool screen in the app.
+//
+// Filter chips at the top let the user slice the flat list by clinical
+// context (NICU / PICU & Emergency / Fluids & Electrolytes / Cardiac &
+// Echo / Respiratory / Burns / Procedures). Each calculator carries
+// `categories: List<String>` — many are tagged with two or three
+// categories (e.g. ETT lives in NICU + PICU & Emergency + Respiratory
+// + Procedures). Tap "All" to see everything.
+//
+// Single-select filter — minimal state, matches how clinicians scan
+// during rounds. The selected chip is highlighted; an "Items" badge
+// at the right of the chip strip shows the filtered count.
+// =============================================================================
+
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'blood_gas_analyser.dart';
 import 'double_volume_exchange.dart';
@@ -36,198 +54,273 @@ import 'umbilical_catheter_calculator.dart';
 import 'ett_calculator.dart';
 import '../guides/gcs_screen.dart';
 
-class CalculatorsScreen extends StatelessWidget {
+// ── Category catalogue ──────────────────────────────────────────────────────
+//
+// Order here drives chip-strip order. "All" is special — it bypasses the
+// filter. Add a new category by adding a string to this list AND tagging
+// at least one calculator with it.
+
+const String _kAll = 'All';
+const String _kNICU = 'NICU';
+const String _kPICU = 'PICU & Emergency';
+const String _kFluids = 'Fluids & Lytes';
+const String _kCardiac = 'Cardiac & Echo';
+const String _kResp = 'Respiratory';
+const String _kBurns = 'Burns';
+const String _kProc = 'Procedures';
+
+const List<String> _kCategories = [
+  _kAll, _kNICU, _kPICU, _kFluids, _kCardiac, _kResp, _kBurns, _kProc,
+];
+
+class CalculatorsScreen extends StatefulWidget {
   const CalculatorsScreen({super.key});
+
+  @override
+  State<CalculatorsScreen> createState() => _CalculatorsScreenState();
+}
+
+class _CalculatorsScreenState extends State<CalculatorsScreen> {
+  String _selected = _kAll;
 
   static const List<_CalculatorItem> _calculators = [
     _CalculatorItem(
       title: 'Gestational Age & EDD',
       subtitle: 'EDD, GA & Antenatal Dates',
       icon: Icons.pregnant_woman_outlined,
+      categories: [_kNICU],
     ),
     _CalculatorItem(
       title: 'Ponderal Index',
       subtitle: 'IUGR & nutritional status',
       icon: Icons.child_care,
+      categories: [_kNICU],
     ),
     _CalculatorItem(
       title: 'Body Surface Area',
       subtitle: 'Mosteller formula',
       icon: Icons.person_outlined,
+      categories: [_kBurns],
     ),
     _CalculatorItem(
       title: 'Nutritional Audit',
       subtitle: 'ESPGHAN 2022',
       icon: Icons.local_dining,
+      categories: [_kNICU],
     ),
     _CalculatorItem(
       title: 'TPN Calculator',
       subtitle: 'Stock & multi-line TPN',
       icon: Icons.medical_services,
+      categories: [_kNICU, _kFluids],
     ),
     _CalculatorItem(
       title: 'CGA / PMA Calculator',
       subtitle: 'Age correction',
       icon: Icons.calendar_month,
+      categories: [_kNICU],
     ),
     _CalculatorItem(
       title: 'GIR Calculator',
       subtitle: 'Glucose infusion rate',
       icon: Icons.water_drop,
+      categories: [_kNICU, _kFluids],
     ),
     _CalculatorItem(
       title: 'Schwartz eGFR',
       subtitle: 'Creatinine clearance',
       icon: Icons.monitor_heart,
+      categories: [_kPICU, _kFluids],
     ),
     _CalculatorItem(
       title: 'Blood Gas Analyser',
       subtitle: '7-step interpretation',
       icon: Icons.air,
+      categories: [_kPICU, _kResp, _kFluids],
     ),
     _CalculatorItem(
       title: 'DVET Calculator',
       subtitle: 'Exchange transfusion',
       icon: Icons.water_drop,
+      categories: [_kNICU, _kProc],
     ),
     _CalculatorItem(
       title: 'Ventilator Parameters',
       subtitle: 'OI, OSI, MAP, HFOV',
       icon: Icons.monitor_heart,
+      categories: [_kResp, _kPICU, _kNICU],
     ),
     _CalculatorItem(
       title: 'BPD Estimator',
       subtitle: 'Bronchopulmonary Dysplasia — NICHD Neonatal Research Network',
       icon: Icons.air,
+      categories: [_kNICU, _kResp],
     ),
     _CalculatorItem(
       title: 'Blood Pressure',
       subtitle: 'Neonatal & Paediatric BP',
       icon: Icons.favorite_rounded,
+      categories: [_kCardiac, _kPICU, _kNICU],
     ),
     _CalculatorItem(
       title: 'Neonatal Jaundice',
       subtitle: 'AAP 2022 Bilirubin Tool',
       icon: Icons.opacity_rounded,
+      categories: [_kNICU],
     ),
     _CalculatorItem(
       title: 'Maintenance Fluids',
       subtitle: 'Neonatal & Paediatric Fluid Calculator',
       icon: Icons.local_drink_outlined,
+      categories: [_kFluids, _kPICU, _kNICU],
     ),
     _CalculatorItem(
       title: 'Parkland Formula',
       subtitle: 'Burns Fluid Resuscitation',
       icon: Icons.local_fire_department_outlined,
+      categories: [_kBurns, _kFluids, _kPICU],
     ),
     _CalculatorItem(
       title: 'Lund & Browder Chart',
       subtitle: 'Burn Surface Area Estimation',
       icon: Icons.person_outlined,
+      categories: [_kBurns],
     ),
     _CalculatorItem(
       title: 'Burn Mortality',
       subtitle: 'Revised Baux Score',
       icon: Icons.monitor_heart_rounded,
+      categories: [_kBurns],
     ),
     _CalculatorItem(
       title: 'PET Calculator',
       subtitle: 'Partial Exchange Transfusion — Polycythemia',
       icon: Icons.bloodtype_outlined,
+      categories: [_kNICU, _kProc],
     ),
     _CalculatorItem(
       title: '2D Echo Calculators',
       subtitle: 'LVO · RVO · PAPSp · EF · LA/Ao · IVC',
       icon: Icons.monitor_heart,
+      categories: [_kCardiac, _kNICU],
     ),
-    // ── Fluid & electrolyte (an internal reference compendium set) ────────────────────────
+    // ── Fluid & electrolyte (an internal reference compendium set) ────────
     _CalculatorItem(
       title: 'Anion Gap',
       subtitle: 'Na − (HCO₃ + Cl) — HAGMA workup',
       icon: Icons.science_outlined,
+      categories: [_kFluids, _kPICU],
     ),
     _CalculatorItem(
       title: 'Corrected AG (Albumin)',
       subtitle: 'AG + 2.5 × (Normal − Albumin)',
       icon: Icons.science_outlined,
+      categories: [_kFluids, _kPICU],
     ),
     _CalculatorItem(
       title: 'Urine Anion Gap',
       subtitle: 'RTA vs diarrhoea',
       icon: Icons.water_drop_outlined,
+      categories: [_kFluids],
     ),
     _CalculatorItem(
       title: 'Serum Osmolality',
       subtitle: '2Na + Glu/18 + BUN/2.8',
       icon: Icons.science,
+      categories: [_kFluids],
     ),
     _CalculatorItem(
       title: 'Corrected Na (hyperglycaemia)',
       subtitle: 'Na + 1.6 × ((Glucose − 100)/100)',
       icon: Icons.calculate_outlined,
+      categories: [_kFluids],
     ),
     _CalculatorItem(
       title: 'Blood Volume',
       subtitle: 'EBV by age band',
       icon: Icons.bloodtype_outlined,
+      categories: [_kNICU, _kPICU],
     ),
     // ── Electrolyte correction calculators ────────────────────────────
     _CalculatorItem(
       title: 'Free Water Deficit (↑Na)',
       subtitle: 'Hypernatraemia correction',
       icon: Icons.opacity_outlined,
+      categories: [_kFluids],
     ),
     _CalculatorItem(
       title: 'Na Correction (↓Na)',
       subtitle: 'Sodium deficit + 3 % saline bolus',
       icon: Icons.calculate,
+      categories: [_kFluids, _kPICU],
     ),
     _CalculatorItem(
       title: 'K Correction (↓/↑K)',
       subtitle: 'KCl replacement OR ↑K regimen',
       icon: Icons.calculate,
+      categories: [_kFluids, _kPICU],
     ),
     _CalculatorItem(
       title: 'Calcium Correction (↓Ca)',
       subtitle: 'CaCl₂ / gluconate / MgSO₄',
       icon: Icons.calculate,
+      categories: [_kFluids, _kPICU],
     ),
     _CalculatorItem(
       title: 'Magnesium Correction (↓Mg)',
       subtitle: 'MgSO₄ IV + oral',
       icon: Icons.calculate,
+      categories: [_kFluids],
     ),
     _CalculatorItem(
       title: 'Phosphate Correction (↓PO₄)',
       subtitle: 'NaPhos / KPhos / oral',
       icon: Icons.calculate,
+      categories: [_kFluids],
     ),
     _CalculatorItem(
       title: 'Hypoglycaemia Bolus',
       subtitle: 'D10/D25/D50 + GIR + adjuncts',
       icon: Icons.calculate,
+      categories: [_kNICU, _kPICU],
     ),
     // ── Neuro scoring (PIC) ───────────────────────────────────────────
     _CalculatorItem(
       title: 'Glasgow Coma Scale',
       subtitle: 'Smart paediatric scorer',
       icon: Icons.psychology_outlined,
+      categories: [_kPICU],
     ),
     // ── Procedural / airway / lines ──────────────────────────────────
     _CalculatorItem(
       title: 'UVC / UAC Depth',
       subtitle: 'Shukla / Dunn formulas + stump',
       icon: Icons.usb_outlined,
+      categories: [_kNICU, _kProc],
     ),
     _CalculatorItem(
       title: 'ETT Size + Depth',
       subtitle: 'NTL+1 · weight · age-based · tube×3',
       icon: Icons.air_outlined,
+      categories: [_kNICU, _kPICU, _kResp, _kProc],
     ),
   ];
 
+  /// All calculators when "All" is selected; otherwise those whose
+  /// `categories` list contains the active chip.
+  List<_CalculatorItem> get _filtered => _selected == _kAll
+      ? _calculators
+      : _calculators.where((c) => c.categories.contains(_selected)).toList();
+
+  /// Per-chip count badge shown next to the chip label.
+  int _countFor(String category) {
+    if (category == _kAll) return _calculators.length;
+    return _calculators.where((c) => c.categories.contains(category)).length;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final filtered = _filtered;
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
@@ -242,32 +335,48 @@ class CalculatorsScreen extends StatelessWidget {
       body: SafeArea(
         bottom: true,
         child: LayoutBuilder(
-        builder: (context, constraints) {
-          final isWide = constraints.maxWidth > 600;
-          final cols = isWide ? 3 : 2;
-          return Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 700),
-              child: GridView.builder(
-                padding: const EdgeInsets.all(14),
-                itemCount: _calculators.length,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: cols,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                  childAspectRatio: 1.1,
+          builder: (context, constraints) {
+            final isWide = constraints.maxWidth > 600;
+            final cols = isWide ? 3 : 2;
+            return Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 700),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    _CategoryChipBar(
+                      categories: _kCategories,
+                      selected: _selected,
+                      countFor: _countFor,
+                      onSelect: (c) => setState(() => _selected = c),
+                    ),
+                    Expanded(
+                      child: filtered.isEmpty
+                          ? const _EmptyState()
+                          : GridView.builder(
+                              padding: const EdgeInsets.fromLTRB(14, 4, 14, 14),
+                              itemCount: filtered.length,
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: cols,
+                                crossAxisSpacing: 10,
+                                mainAxisSpacing: 10,
+                                childAspectRatio: 1.1,
+                              ),
+                              itemBuilder: (context, index) {
+                                final item = filtered[index];
+                                return _CalculatorCard(
+                                  item: item,
+                                  onTap: () => _navigate(context, item.title),
+                                );
+                              },
+                            ),
+                    ),
+                  ],
                 ),
-                itemBuilder: (context, index) {
-                  final item = _calculators[index];
-                  return _CalculatorCard(
-                    item: item,
-                    onTap: () => _navigate(context, item.title),
-                  );
-                },
               ),
-            ),
-          );
-        },
+            );
+          },
         ),
       ),
     );
@@ -375,6 +484,119 @@ class CalculatorsScreen extends StatelessWidget {
   }
 }
 
+// ── Reusable category-chip strip (also used by GuidesScreen) ────────────────
+
+class _CategoryChipBar extends StatelessWidget {
+  final List<String> categories;
+  final String selected;
+  final int Function(String) countFor;
+  final ValueChanged<String> onSelect;
+  const _CategoryChipBar({
+    required this.categories,
+    required this.selected,
+    required this.countFor,
+    required this.onSelect,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return Container(
+      height: 50,
+      padding: const EdgeInsets.fromLTRB(14, 8, 14, 6),
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        itemCount: categories.length,
+        separatorBuilder: (_, __) => const SizedBox(width: 8),
+        itemBuilder: (_, i) {
+          final cat = categories[i];
+          final isSelected = cat == selected;
+          final count = countFor(cat);
+          return InkWell(
+            onTap: () => onSelect(cat),
+            borderRadius: BorderRadius.circular(20),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 180),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                color: isSelected
+                    ? cs.primary
+                    : cs.surfaceContainerHighest.withValues(alpha: 0.65),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: isSelected
+                      ? cs.primary
+                      : cs.outlineVariant.withValues(alpha: 0.45),
+                  width: isSelected ? 1 : 0.8,
+                ),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    cat,
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 12.5,
+                      fontWeight: FontWeight.w700,
+                      color: isSelected ? cs.onPrimary : cs.onSurface,
+                      letterSpacing: 0.05,
+                    ),
+                  ),
+                  const SizedBox(width: 6),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 6, vertical: 1),
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? cs.onPrimary.withValues(alpha: 0.20)
+                          : cs.primary.withValues(alpha: 0.10),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      '$count',
+                      style: GoogleFonts.jetBrainsMono(
+                        fontSize: 10.5,
+                        fontWeight: FontWeight.w800,
+                        color: isSelected ? cs.onPrimary : cs.primary,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _EmptyState extends StatelessWidget {
+  const _EmptyState();
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.filter_alt_off_outlined,
+              size: 48, color: cs.onSurface.withValues(alpha: 0.3)),
+          const SizedBox(height: 12),
+          Text(
+            'Nothing in this category yet.',
+            style: GoogleFonts.plusJakartaSans(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: cs.onSurface.withValues(alpha: 0.6),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _CalculatorCard extends StatelessWidget {
   final _CalculatorItem item;
   final VoidCallback onTap;
@@ -448,10 +670,12 @@ class _CalculatorItem {
   final String title;
   final String subtitle;
   final IconData icon;
+  final List<String> categories;
 
   const _CalculatorItem({
     required this.title,
     required this.subtitle,
     required this.icon,
+    required this.categories,
   });
 }
