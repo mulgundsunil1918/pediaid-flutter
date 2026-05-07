@@ -22,7 +22,10 @@ class PrefsKeys {
   // ── First-launch experience ──────────────────────────────────────────────
   /// Set when the user finishes (or skips) the slide-based onboarding.
   /// Bump the version suffix on a redesign to re-show.
-  static const String onboardingComplete = 'onboarding_complete_v1';
+  /// _v2 — six-slide revamp (Welcome → Calculators → Formulary →
+  /// Emergency → Guidelines → Search) replacing the original 4-slide
+  /// problem/solution/how-it-works/CTA flow.
+  static const String onboardingComplete = 'onboarding_complete_v2';
 
   /// Set when the user completes the in-app coachmark tour on the home
   /// screen. Independent from the slides so each can be reset / replayed
