@@ -54,6 +54,7 @@ import '../guides/nrp_pdf_viewer.dart';
 import '../guides/neonatal_echo_screen.dart';
 import '../guides/birthweight_classification_screen.dart';
 import '../guides/ga_classification_screen.dart';
+import '../guides/developmental_milestones/dev_milestones_hub.dart';
 // New emergency guides.
 import '../guides/acute_severe_asthma_screen.dart';
 import '../guides/avpu_screen.dart';
@@ -847,6 +848,25 @@ List<_SearchItem> _buildAllItems() => [
     color: _kGuideColor,
     keywords: const ['neonatal echo', '2d echo', 'echocardiogram', 'tnecho', 'targeted neonatal echo', 'PDA', 'PPHN', 'measurements', 'M-mode', 'apical 4 chamber', 'parasternal', 'subcostal', 'cardiac measurements'],
     navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const NeonatalEchoScreen())),
+  ),
+  _SearchItem(
+    title: 'Developmental Milestones',
+    subtitle: 'AIIMS reference · smart view · DQ calculator',
+    category: 'Guides',
+    icon: Icons.child_friendly_rounded,
+    color: _kGuideColor,
+    keywords: const [
+      'developmental milestones', 'milestones', 'development', 'DQ',
+      'developmental quotient', 'developmental delay', 'global developmental delay',
+      'GDD', 'red flags', 'gross motor', 'fine motor', 'language',
+      'social smile', 'pincer grasp', 'crawls', 'walks',
+      'pretend play', 'social', 'hearing', 'vision',
+      'AIIMS', 'Sheffali Gulati', 'Trivandrum', 'TDSC',
+      'developmental screening', 'denver', 'ages and stages',
+      'pediatric development', 'paediatric development',
+      'jargoning', 'babbling', 'cooing', 'tower of cubes', 'draw a man',
+    ],
+    navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const DevMilestonesHub())),
   ),
 
   // ─── Library / Academics ───────────────────────────────────────────────────

@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../services/auth_service.dart';
 import '../../services/cme_service.dart';
+import '../../widgets/under_development_banner.dart';
 import 'widgets/cme_event_card.dart';
 import 'post_event_screen.dart';
 import 'cme_detail_screen.dart';
@@ -147,22 +148,32 @@ class _CmeScreenState extends State<CmeScreen>
           ],
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
+      body: Column(
         children: [
-          for (final t in _eventTypeTabs)
-            _PublicTab(
-              future: _publicFuture,
-              eventType: t.eventType,
-              onRefresh: () async => _refreshAll(),
-              onTap: _openDetail,
+          const UnderDevelopmentBanner(
+            message:
+                'CME & Webinars is in preview — event listings, "My posts" submissions and admin moderation are still being wired up. Browse freely, but please don\'t rely on it for live registration deadlines yet.',
+          ),
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+                for (final t in _eventTypeTabs)
+                  _PublicTab(
+                    future: _publicFuture,
+                    eventType: t.eventType,
+                    onRefresh: () async => _refreshAll(),
+                    onTap: _openDetail,
+                  ),
+                if (hasMyTab)
+                  _MyPostsTab(
+                    future: _myFuture,
+                    onRefresh: () async => _refreshAll(),
+                    onTap: _openDetail,
+                  ),
+              ],
             ),
-          if (hasMyTab)
-            _MyPostsTab(
-              future: _myFuture,
-              onRefresh: () async => _refreshAll(),
-              onTap: _openDetail,
-            ),
+          ),
         ],
       ),
       floatingActionButton: _isLoggedIn

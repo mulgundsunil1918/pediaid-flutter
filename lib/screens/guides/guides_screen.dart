@@ -39,6 +39,7 @@ import 'electrolyte_corrections_screen.dart';
 import 'emergency_icu_drugs_screen.dart';
 import 'sedation_paralytics_screen.dart';
 import 'seizure_meds_screen.dart';
+import 'developmental_milestones/dev_milestones_hub.dart';
 
 // ── Category catalogue ──────────────────────────────────────────────────────
 
@@ -84,6 +85,14 @@ class _GuidesScreenState extends State<GuidesScreen> {
       icon: Icons.child_care_outlined,
       categories: const [_kNeonatal, _kReference],
       build: (_) => const FetalDevelopmentScreen(),
+    ),
+    _GuideItem(
+      title: 'Developmental Milestones',
+      subtitle:
+          'AIIMS reference · 76 milestones · 23 red flags · DQ calculator',
+      icon: Icons.child_friendly_rounded,
+      categories: const [_kNeonatal, _kScoring, _kReference],
+      build: (_) => const DevMilestonesHub(),
     ),
     _GuideItem(
       title: 'NRP 9th Edition',

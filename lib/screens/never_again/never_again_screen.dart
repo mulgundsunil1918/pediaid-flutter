@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import '../../services/never_again_service.dart';
+import '../../widgets/under_development_banner.dart';
 
 // ── Category definitions ──────────────────────────────────────────────────────
 
@@ -281,6 +282,10 @@ class _NeverAgainScreenState extends State<NeverAgainScreen> {
       ),
       body: Column(
         children: [
+          const UnderDevelopmentBanner(
+            message:
+                'Never Again is in preview — anonymous peer-learning posts, moderation flow and the 30-topic taxonomy are still being polished. Read freely; please don\'t treat any post as authoritative until the moderation pipeline is signed off.',
+          ),
           _CategoryFilterRow(
             selected: _selectedCategory,
             onSelect: _selectCategory,
