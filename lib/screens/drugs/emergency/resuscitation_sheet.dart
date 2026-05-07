@@ -903,6 +903,258 @@ class _PrbcCard extends StatelessWidget {
 // Footer
 // ---------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------
+// PUBLIC: ResusBolusList — inline column of all 12 bolus drug cards.
+// Used by the NICU emergency drugs screen to render bolus drugs as a
+// top-level "STAT BOLUS" view (instead of opening as a modal sheet).
+// ---------------------------------------------------------------------------
+
+class ResusBolusList extends StatelessWidget {
+  const ResusBolusList({super.key, required this.weight});
+  final double? weight;
+
+  @override
+  Widget build(BuildContext context) {
+    final w = weight;
+    final cards = <Widget>[
+      _AdrenalineCard(weight: w),
+      _SodiumBicarbonateCard(weight: w),
+      _AdenosineCard(weight: w),
+      _CalciumGluconateCard(weight: w),
+      _GlucoseBolus(weight: w),
+      _AtropineCard(weight: w),
+      _PhenobarbitoneCard(weight: w),
+      _PhenytoinCard(weight: w),
+      _VitaminKCard(weight: w),
+      _NormalSalineCard(weight: w),
+      _FfpCard(weight: w),
+      _PrbcCard(weight: w),
+    ];
+    return Column(
+      children: [
+        for (var i = 0; i < cards.length; i++) ...[
+          if (i > 0) const SizedBox(height: 10),
+          cards[i],
+        ],
+      ],
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// PUBLIC: ResusBolusTable — compact one-row-per-drug table view of bolus
+// drugs. Computes mg + mL live from weight when entered.
+// ---------------------------------------------------------------------------
+
+class _BolusRow {
+  final String name;
+  final String indication;
+  /// Returns the dose+volume string for the given weight (or "Enter wt").
+  final String Function(double w) compute;
+  /// Static reference shown when weight is not entered.
+  final String reference;
+  const _BolusRow({
+    required this.name,
+    required this.indication,
+    required this.compute,
+    required this.reference,
+  });
+}
+
+final List<_BolusRow> _bolusRows = [
+  _BolusRow(
+    name: 'Adrenaline',
+    indication: 'Cardiac arrest',
+    reference: '0.01–0.03 mg/kg of 1:10,000',
+    compute: (w) =>
+        '${(0.01 * w).toStringAsFixed(2)}–${(0.03 * w).toStringAsFixed(2)} mg '
+        '(${(0.1 * w).toStringAsFixed(2)}–${(0.3 * w).toStringAsFixed(2)} mL of 1:10,000)',
+  ),
+  _BolusRow(
+    name: 'Na Bicarbonate',
+    indication: 'Acidosis · Hyperkalaemia',
+    reference: '1–2 mEq/kg of 4.2 %',
+    compute: (w) =>
+        '${(1 * w).toStringAsFixed(1)}–${(2 * w).toStringAsFixed(1)} mEq '
+        '(${(2 * w).toStringAsFixed(1)}–${(4 * w).toStringAsFixed(1)} mL of 4.2 %)',
+  ),
+  _BolusRow(
+    name: 'Adenosine 1st',
+    indication: 'SVT — rapid push',
+    reference: '0.1 mg/kg of 3 mg/mL',
+    compute: (w) =>
+        '${(0.1 * w).toStringAsFixed(2)} mg '
+        '(${(0.1 * w / 3).toStringAsFixed(2)} mL of 3 mg/mL)',
+  ),
+  _BolusRow(
+    name: 'Adenosine 2nd',
+    indication: 'SVT — repeat',
+    reference: '0.2 mg/kg of 3 mg/mL',
+    compute: (w) =>
+        '${(0.2 * w).toStringAsFixed(2)} mg '
+        '(${(0.2 * w / 3).toStringAsFixed(2)} mL of 3 mg/mL)',
+  ),
+  _BolusRow(
+    name: 'Calcium gluconate',
+    indication: 'Hypocalc · Hyperkal',
+    reference: '1–2 mL/kg of 10 %',
+    compute: (w) =>
+        '${(1 * w).toStringAsFixed(1)}–${(2 * w).toStringAsFixed(1)} mL of 10 %',
+  ),
+  _BolusRow(
+    name: 'D10 bolus',
+    indication: 'Hypoglycaemia',
+    reference: '2 mL/kg of 10 % dextrose',
+    compute: (w) => '${(2 * w).toStringAsFixed(1)} mL of 10 % dextrose',
+  ),
+  _BolusRow(
+    name: 'Atropine',
+    indication: 'Brady · pre-intubation',
+    reference: '0.02 mg/kg (min 0.1 / max 0.5)',
+    compute: (w) {
+      final d = (0.02 * w).clamp(0.1, 0.5);
+      return '${d.toStringAsFixed(2)} mg '
+          '(${(d / 0.6).toStringAsFixed(2)} mL of 0.6 mg/mL)';
+    },
+  ),
+  _BolusRow(
+    name: 'Phenobarbitone',
+    indication: 'Seizure load',
+    reference: '20 mg/kg of 200 mg/mL',
+    compute: (w) =>
+        '${(20 * w).toStringAsFixed(0)} mg '
+        '(${(0.1 * w).toStringAsFixed(2)} mL of 200 mg/mL)',
+  ),
+  _BolusRow(
+    name: 'Phenytoin',
+    indication: 'Seizure load',
+    reference: '20 mg/kg of 50 mg/mL',
+    compute: (w) =>
+        '${(20 * w).toStringAsFixed(0)} mg '
+        '(${(0.4 * w).toStringAsFixed(2)} mL of 50 mg/mL)',
+  ),
+  _BolusRow(
+    name: 'Vitamin K',
+    indication: 'IM at birth',
+    reference: '0.5 mg < 1 kg ; 1 mg ≥ 1 kg',
+    compute: (w) => w < 1.0
+        ? '0.5 mg IM (0.05 mL of 10 mg/mL)'
+        : '1.0 mg IM (0.1 mL of 10 mg/mL)',
+  ),
+  _BolusRow(
+    name: 'Normal saline',
+    indication: 'Volume bolus',
+    reference: '10–20 mL/kg of 0.9 % NS',
+    compute: (w) =>
+        '${(10 * w).toStringAsFixed(0)}–${(20 * w).toStringAsFixed(0)} mL of 0.9 % NS',
+  ),
+  _BolusRow(
+    name: 'FFP',
+    indication: 'Coagulopathy',
+    reference: '10–15 mL/kg',
+    compute: (w) =>
+        '${(10 * w).toStringAsFixed(0)}–${(15 * w).toStringAsFixed(0)} mL of FFP',
+  ),
+  _BolusRow(
+    name: 'PRBC',
+    indication: 'Anaemia · transfusion',
+    reference: '10–20 mL/kg',
+    compute: (w) =>
+        '${(10 * w).toStringAsFixed(0)}–${(20 * w).toStringAsFixed(0)} mL of PRBC',
+  ),
+];
+
+class ResusBolusTable extends StatelessWidget {
+  const ResusBolusTable({super.key, required this.weight});
+  final double? weight;
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final w = weight;
+    final hasWt = w != null && w > 0;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        border: Border.all(color: cs.onSurface.withValues(alpha: 0.10)),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        children: [
+          // Header
+          Container(
+            padding: const EdgeInsets.symmetric(
+                horizontal: 12, vertical: 9),
+            decoration: BoxDecoration(
+              color: const Color(0xFFB71C1C).withValues(alpha: 0.10),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(9),
+                topRight: Radius.circular(9),
+              ),
+            ),
+            child: Row(
+              children: [
+                Expanded(flex: 3, child: _hdr('DRUG')),
+                Expanded(flex: 4, child: _hdr('INDICATION')),
+                Expanded(
+                    flex: 6,
+                    child: _hdr(hasWt ? 'DOSE @ ${w.toStringAsFixed(2)} kg'
+                        : 'REFERENCE')),
+              ],
+            ),
+          ),
+          for (final row in _bolusRows)
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 12, vertical: 8),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                      flex: 3,
+                      child: Text(row.name,
+                          style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w700))),
+                  Expanded(
+                      flex: 4,
+                      child: Text(row.indication,
+                          style: TextStyle(
+                              fontSize: 11,
+                              color: cs.onSurface
+                                  .withValues(alpha: 0.7)))),
+                  Expanded(
+                      flex: 6,
+                      child: Text(
+                          hasWt
+                              ? row.compute(w)
+                              : row.reference,
+                          style: TextStyle(
+                              fontSize: 11.5,
+                              fontWeight: hasWt
+                                  ? FontWeight.w800
+                                  : FontWeight.w500,
+                              color: hasWt
+                                  ? const Color(0xFFBF360C)
+                                  : cs.onSurface
+                                      .withValues(alpha: 0.85)))),
+                ],
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _hdr(String s) => Text(s,
+      style: const TextStyle(
+          fontSize: 10.5,
+          fontWeight: FontWeight.w800,
+          color: Color(0xFF8B0000),
+          letterSpacing: 0.4));
+}
+
 class _FooterBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../services/guidelines_search_service.dart';
+import '../../utils/friendly_error.dart';
 
 import '../calculators/gestational_age_calculator.dart';
 import '../calculators/ponderal_index_calculator.dart';
@@ -470,7 +472,15 @@ List<_SearchItem> _buildAllItems() => [
 // ── Delegate ──────────────────────────────────────────────────────────────────
 
 class AppSearchDelegate extends SearchDelegate<void> {
-  AppSearchDelegate() : super(searchFieldLabel: 'Search calculators, drugs, guides, charts…');
+  AppSearchDelegate()
+      : super(
+            searchFieldLabel:
+                'Search calculators, drugs, guides, charts, IAP STG, NNF CPG…') {
+    // Warm the guidelines cache the moment the search opens so the first
+    // keystroke already has the chapter list in memory. ensureLoaded() is
+    // idempotent so repeat calls are free.
+    GuidelinesSearchService.instance.ensureLoaded();
+  }
 
   late final List<_SearchItem> _allItems = _buildAllItems();
 
@@ -530,35 +540,24 @@ class AppSearchDelegate extends SearchDelegate<void> {
 
   Widget _buildList(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
-    final items = _filtered;
+    final localItems = _filtered;
+    final svc = GuidelinesSearchService.instance;
 
-    if (items.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.search_off_rounded, size: 56,
-                color: cs.onSurface.withValues(alpha: 0.18)),
-            const SizedBox(height: 14),
-            Text('No results for "$query"',
-                style: GoogleFonts.plusJakartaSans(
-                    fontSize: 14,
-                    color: cs.onSurface.withValues(alpha: 0.45))),
-            const SizedBox(height: 4),
-            Text('Try a different keyword',
-                style: GoogleFonts.plusJakartaSans(
-                    fontSize: 12,
-                    color: cs.onSurface.withValues(alpha: 0.3))),
-          ],
-        ),
-      );
-    }
-
-    // Group by category, preserving insertion order
+    // Group local matches by category, preserving insertion order.
     final grouped = <String, List<_SearchItem>>{};
-    for (final item in items) {
+    for (final item in localItems) {
       grouped.putIfAbsent(item.category, () => []).add(item);
     }
+
+    final localTiles = grouped.entries.expand((entry) => <Widget>[
+      _CategoryHeader(label: entry.key, cs: cs),
+      ...entry.value.map((item) => _SearchResultTile(
+            item: item,
+            query: query,
+            cs: cs,
+            onTap: () => item.navigate(context),
+          )),
+    ]).toList();
 
     return ListView(
       padding: const EdgeInsets.only(bottom: 24),
@@ -573,16 +572,232 @@ class AppSearchDelegate extends SearchDelegate<void> {
                   color: cs.onSurface.withValues(alpha: 0.4)),
             ),
           ),
-        ...grouped.entries.expand((entry) => [
-          _CategoryHeader(label: entry.key, cs: cs),
-          ...entry.value.map((item) => _SearchResultTile(
-            item: item,
-            query: query,
+        ...localTiles,
+
+        // ── Guideline chapters (IAP STG · IAP Action Plan 2026 · NNF CPG)
+        // Async — only renders when user has typed something AND the index
+        // is ready. Search is in-memory once the cache hydrates, so the
+        // FutureBuilder rebuilds within ~1 frame after `ensureLoaded()`
+        // resolves.
+        if (query.trim().isNotEmpty)
+          _GuidelineResultsSection(
+            query: query.trim(),
+            service: svc,
             cs: cs,
-            onTap: () => item.navigate(context),
-          )),
-        ]),
+          ),
+
+        if (query.trim().isNotEmpty && localItems.isEmpty)
+          // Empty state ONLY shows once we know neither local nor
+          // guideline results matched.
+          _NoResultsHint(query: query, service: svc, cs: cs),
       ],
+    );
+  }
+}
+
+// ── Guideline results section ────────────────────────────────────────────────
+class _GuidelineResultsSection extends StatelessWidget {
+  final String query;
+  final GuidelinesSearchService service;
+  final ColorScheme cs;
+  const _GuidelineResultsSection({
+    required this.query,
+    required this.service,
+    required this.cs,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<void>(
+      future: service.ensureLoaded(),
+      builder: (context, snap) {
+        if (snap.connectionState != ConnectionState.done) {
+          // Cache not yet hydrated. Show a thin loading hint, no spinner —
+          // the local results above are already actionable.
+          return Padding(
+            padding: const EdgeInsets.fromLTRB(16, 14, 16, 0),
+            child: Row(children: [
+              SizedBox(
+                width: 12, height: 12,
+                child: CircularProgressIndicator(
+                  strokeWidth: 1.5,
+                  valueColor: AlwaysStoppedAnimation(
+                      cs.onSurface.withValues(alpha: 0.4)),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text('Searching guidelines…',
+                  style: GoogleFonts.plusJakartaSans(
+                      fontSize: 11.5,
+                      color: cs.onSurface.withValues(alpha: 0.5))),
+            ]),
+          );
+        }
+
+        final hits = service.search(query);
+        if (hits.isEmpty) return const SizedBox.shrink();
+
+        // Group by source publication.
+        final grouped = <String, List<GuidelineSearchHit>>{};
+        for (final h in hits) {
+          grouped.putIfAbsent(h.source.shortName, () => []).add(h);
+        }
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: grouped.entries.expand((entry) => <Widget>[
+                _CategoryHeader(label: entry.key, cs: cs),
+                ...entry.value.map((h) => _GuidelineResultTile(
+                      hit: h,
+                      query: query,
+                      cs: cs,
+                    )),
+              ]).toList(),
+        );
+      },
+    );
+  }
+}
+
+class _GuidelineResultTile extends StatelessWidget {
+  final GuidelineSearchHit hit;
+  final String query;
+  final ColorScheme cs;
+  const _GuidelineResultTile({
+    required this.hit,
+    required this.query,
+    required this.cs,
+  });
+
+  Future<void> _open(BuildContext context) async {
+    try {
+      final uri = Uri.parse(hit.url);
+      final ok = await launchUrl(uri,
+          mode: LaunchMode.externalApplication);
+      if (!ok && context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Could not open the chapter PDF')),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(friendlyError(e))),
+        );
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final color = Color(hit.source.colorArgb);
+    return InkWell(
+      onTap: () => _open(context),
+      child: Padding(
+        padding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        child: Row(
+          children: [
+            Container(
+              width: 40,
+              height: 40,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: color,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Text(
+                hit.no,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    hit.title,
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: cs.onSurface,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 1),
+                  Text(
+                    [
+                      if (hit.section.isNotEmpty) hit.section,
+                      hit.source.shortName,
+                    ].join(' · '),
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 11.5,
+                      color: cs.onSurface.withValues(alpha: 0.5),
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
+            Icon(Icons.open_in_new,
+                size: 16, color: cs.onSurface.withValues(alpha: 0.35)),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _NoResultsHint extends StatelessWidget {
+  final String query;
+  final GuidelinesSearchService service;
+  final ColorScheme cs;
+  const _NoResultsHint({
+    required this.query,
+    required this.service,
+    required this.cs,
+  });
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<void>(
+      future: service.ensureLoaded(),
+      builder: (context, snap) {
+        if (snap.connectionState != ConnectionState.done) {
+          return const SizedBox.shrink();
+        }
+        if (service.search(query).isNotEmpty) {
+          return const SizedBox.shrink();
+        }
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(16, 30, 16, 0),
+          child: Column(
+            children: [
+              Icon(Icons.search_off_rounded,
+                  size: 56,
+                  color: cs.onSurface.withValues(alpha: 0.18)),
+              const SizedBox(height: 14),
+              Text('No results for "$query"',
+                  style: GoogleFonts.plusJakartaSans(
+                      fontSize: 14,
+                      color: cs.onSurface.withValues(alpha: 0.45))),
+              const SizedBox(height: 4),
+              Text(
+                  'Try a synonym, abbreviation or section name',
+                  style: GoogleFonts.plusJakartaSans(
+                      fontSize: 12,
+                      color: cs.onSurface.withValues(alpha: 0.3))),
+            ],
+          ),
+        );
+      },
     );
   }
 }

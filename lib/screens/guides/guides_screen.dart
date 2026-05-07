@@ -13,6 +13,19 @@ import 'pofras_screen.dart';
 import 'can_score_screen.dart';
 import 'ga_classification_screen.dart';
 import 'birthweight_classification_screen.dart';
+import 'dka_algorithm_screen.dart';
+import 'snake_envenomation_screen.dart';
+import 'scorpion_sting_screen.dart';
+import 'poisoning_antidotes_screen.dart';
+import 'acute_severe_asthma_screen.dart';
+import 'hypertensive_emergency_screen.dart';
+import 'avpu_screen.dart';
+import 'gcs_screen.dart';
+import 'rsi_guide_screen.dart';
+import 'electrolyte_corrections_screen.dart';
+import 'emergency_icu_drugs_screen.dart';
+import 'sedation_paralytics_screen.dart';
+import 'seizure_meds_screen.dart';
 
 class GuidesScreen extends StatelessWidget {
   const GuidesScreen({super.key});
@@ -151,6 +164,118 @@ class GuidesScreen extends StatelessWidget {
                       onTap: () => Navigator.push(context,
                           MaterialPageRoute(
                               builder: (_) => const CanScoreScreen())),
+                    ),
+                    // ── Emergency protocol guides (an internal reference compendium set) ──
+                    _GuideCard(
+                      title: 'DKA Algorithm',
+                      subtitle: 'Diabetic ketoacidosis — paediatric flowchart',
+                      icon: Icons.water_drop_outlined,
+                      onTap: () => Navigator.push(context,
+                          MaterialPageRoute(
+                              builder: (_) => const DkaAlgorithmScreen())),
+                    ),
+                    _GuideCard(
+                      title: 'Snake Envenomation',
+                      subtitle: 'First aid · ASV · neuro/haem/renal features',
+                      icon: Icons.warning_amber_rounded,
+                      onTap: () => Navigator.push(context,
+                          MaterialPageRoute(
+                              builder: (_) =>
+                                  const SnakeEnvenomationScreen())),
+                    ),
+                    _GuideCard(
+                      title: 'Scorpion Sting',
+                      subtitle: '5-stage management · ASV + Prazosin',
+                      icon: Icons.bug_report_outlined,
+                      onTap: () => Navigator.push(context,
+                          MaterialPageRoute(
+                              builder: (_) => const ScorpionStingScreen())),
+                    ),
+                    _GuideCard(
+                      title: 'Poisoning & Antidotes',
+                      subtitle: 'Substance → antidote → dose · charcoal · HD',
+                      icon: Icons.science_outlined,
+                      onTap: () => Navigator.push(context,
+                          MaterialPageRoute(
+                              builder: (_) =>
+                                  const PoisoningAntidotesScreen())),
+                    ),
+                    _GuideCard(
+                      title: 'Acute Severe Asthma',
+                      subtitle: 'Status asthmaticus — drug ladder',
+                      icon: Icons.air_outlined,
+                      onTap: () => Navigator.push(context,
+                          MaterialPageRoute(
+                              builder: (_) =>
+                                  const AcuteSevereAsthmaScreen())),
+                    ),
+                    _GuideCard(
+                      title: 'Hypertensive Emergency',
+                      subtitle: 'Triage · IV labetalol/SNP · drug doses',
+                      icon: Icons.favorite_outline,
+                      onTap: () => Navigator.push(context,
+                          MaterialPageRoute(
+                              builder: (_) =>
+                                  const HypertensiveEmergencyScreen())),
+                    ),
+                    _GuideCard(
+                      title: 'AVPU Scale',
+                      subtitle: 'Level of consciousness — Alert / Voice / Pain / Unresponsive',
+                      icon: Icons.psychology_outlined,
+                      onTap: () => Navigator.push(context,
+                          MaterialPageRoute(
+                              builder: (_) => const AvpuScreen())),
+                    ),
+                    _GuideCard(
+                      title: 'Glasgow Coma Scale',
+                      subtitle: 'Smart scorer + paediatric reference tables',
+                      icon: Icons.calculate_outlined,
+                      onTap: () => Navigator.push(context,
+                          MaterialPageRoute(
+                              builder: (_) => const GcsScreen())),
+                    ),
+                    _GuideCard(
+                      title: 'RSI — Rapid Sequence Intubation',
+                      subtitle: '7 P\'s + drug table + 5 scenario sequences',
+                      icon: Icons.air_outlined,
+                      onTap: () => Navigator.push(context,
+                          MaterialPageRoute(
+                              builder: (_) => const RsiGuideScreen())),
+                    ),
+                    _GuideCard(
+                      title: 'Electrolyte Corrections',
+                      subtitle: 'Treatment + work-up + cross-linked calculators',
+                      icon: Icons.water_drop_outlined,
+                      onTap: () => Navigator.push(context,
+                          MaterialPageRoute(
+                              builder: (_) =>
+                                  const ElectrolyteCorrectionsScreen())),
+                    ),
+                    _GuideCard(
+                      title: 'Emergency ICU Drugs',
+                      subtitle: 'Bolus + vasoactive infusion drug doses',
+                      icon: Icons.medical_services_outlined,
+                      onTap: () => Navigator.push(context,
+                          MaterialPageRoute(
+                              builder: (_) =>
+                                  const EmergencyIcuDrugsScreen())),
+                    ),
+                    _GuideCard(
+                      title: 'Sedation, Analgesia & Paralytics',
+                      subtitle: 'PICU/NICU infusion reference (18 drugs)',
+                      icon: Icons.bedtime_outlined,
+                      onTap: () => Navigator.push(context,
+                          MaterialPageRoute(
+                              builder: (_) =>
+                                  const SedationParalyticsScreen())),
+                    ),
+                    _GuideCard(
+                      title: 'Seizure Medications',
+                      subtitle: 'Status epilepticus ladder + reference table',
+                      icon: Icons.flash_on_outlined,
+                      onTap: () => Navigator.push(context,
+                          MaterialPageRoute(
+                              builder: (_) => const SeizureMedsScreen())),
                     ),
                     _GuideCard(
                       title: 'Sepsis Protocols',

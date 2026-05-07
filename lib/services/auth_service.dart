@@ -288,6 +288,68 @@ class AuthService extends ChangeNotifier {
   }
 
   // -------------------------------------------------------------------------
+  // Delete account — Play Store hard requirement
+  //
+  // Hits DELETE /api/academics/auth/account on the Render backend, then
+  // — regardless of the network outcome — wipes the local session so the
+  // user lands back on login. Backend MUST hard-delete the user row;
+  // there is no soft-delete.
+  //
+  // Throws AuthException on permanent failures (4xx other than 401, which
+  // we treat as success since the account is already gone). 5xx / network
+  // errors propagate so the UI can offer a retry, but local session is
+  // still cleared so the user isn't trapped.
+  // -------------------------------------------------------------------------
+
+  Future<void> deleteAccount() async {
+    final token = _accessToken;
+    Object? networkError;
+
+    if (token != null && token.isNotEmpty) {
+      try {
+        final res = await http
+            .delete(
+              Uri.parse('$apiBase/api/academics/auth/account'),
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer $token',
+              },
+            )
+            .timeout(const Duration(seconds: 30));
+
+        // 204 / 200 = deleted. 401 = token already invalid (treat as deleted).
+        // 404 = endpoint not yet implemented on backend — log loudly but
+        //       wipe locally anyway so the user can reinstall fresh.
+        if (res.statusCode == 404) {
+          debugPrint('[AuthService] DELETE /account returned 404 — backend '
+              'endpoint not yet implemented. Wiping local session anyway.');
+        } else if (res.statusCode >= 400 && res.statusCode != 401) {
+          throw AuthException(_extractErrorMessage(res));
+        }
+      } on AuthException {
+        rethrow;
+      } catch (e) {
+        // Network / timeout / parse failure — keep the error so we can
+        // surface it AFTER local wipe, which the UI may want to retry.
+        debugPrint('[AuthService] deleteAccount network failure: $e');
+        networkError = e;
+      }
+    }
+
+    // Always clear local session so the user isn't stranded with a half-
+    // dead account.
+    await logout();
+
+    if (networkError != null) {
+      throw AuthException(
+        'We signed you out, but couldn\'t reach the server to fully delete '
+        'your account. Please try Delete Account again from the sign-in '
+        'screen, or email mulgundsunil@gmail.com to confirm deletion.',
+      );
+    }
+  }
+
+  // -------------------------------------------------------------------------
   // Logout — the ONLY code path that clears the session
   // -------------------------------------------------------------------------
 

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../services/formulary_service.dart';
-import 'drug_detail_v2_screen.dart';
+import 'drug_pdf_viewer_screen.dart';
 import '../drugs/emergency_nicu_drugs_screen.dart';
+import '../drugs/emergency_picu_drugs_screen.dart';
+import '../formulary_v2/formulary_v2_hub.dart';
 
 enum _Source { none, neofax, harrietLane }
 
@@ -167,10 +169,36 @@ class _FormularyScreenState extends State<FormularyScreen> {
             ),
             const SizedBox(height: 12),
             _EmergencyDrugsCard(
+              label: 'Emergency NICU Drugs',
+              sublabel: '14 drugs · Infusions · Resuscitation',
+              color: const Color(0xFFB71C1C),
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (_) => const EmergencyNICUDrugsScreen()),
+              ),
+            ),
+            const SizedBox(height: 8),
+            _EmergencyDrugsCard(
+              label: 'Emergency PICU Drugs',
+              sublabel: '10 STAT bolus + 9 infusions · Smart/Table view',
+              color: const Color(0xFF6A1B9A),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => const EmergencyPICUDrugsScreen()),
+              ),
+            ),
+            const SizedBox(height: 8),
+            // ── PediAid Drug Formulary 2.0 ─────────────────────────────────
+            _EmergencyDrugsCard(
+              label: 'Drug Formulary 2.0  ·  NEW',
+              sublabel:
+                  '199 NICU drugs · India brands · GA-band dosing · Cross-checked',
+              color: const Color(0xFF1565C0),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const FormularyV2Hub()),
               ),
             ),
           ],
@@ -305,11 +333,7 @@ class _FormularyScreenState extends State<FormularyScreen> {
           onTap: () => Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (_) => DrugDetailV2Screen(
-                name: entry.name,
-                source: entry.source,
-                pdfPage: entry.page,
-              ),
+              builder: (_) => DrugPdfViewerScreen(entry: entry),
             ),
           ),
         );
@@ -412,8 +436,16 @@ class _SourceCard extends StatelessWidget {
 // ─────────────────────────────────────────────────────────────────────────────
 
 class _EmergencyDrugsCard extends StatefulWidget {
-  const _EmergencyDrugsCard({required this.onTap});
+  const _EmergencyDrugsCard({
+    required this.onTap,
+    required this.label,
+    required this.sublabel,
+    required this.color,
+  });
   final VoidCallback onTap;
+  final String label;
+  final String sublabel;
+  final Color color;
 
   @override
   State<_EmergencyDrugsCard> createState() => _EmergencyDrugsCardState();
@@ -445,11 +477,11 @@ class _EmergencyDrugsCardState extends State<_EmergencyDrugsCard>
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         decoration: BoxDecoration(
-          color: const Color(0xFFB71C1C),
+          color: widget.color,
           borderRadius: BorderRadius.circular(14),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFFB71C1C).withValues(alpha: 0.35),
+              color: widget.color.withValues(alpha: 0.35),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -459,23 +491,23 @@ class _EmergencyDrugsCardState extends State<_EmergencyDrugsCard>
           children: [
             const Icon(Icons.emergency, color: Colors.white, size: 24),
             const SizedBox(width: 12),
-            const Expanded(
+            Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    'Emergency NICU Drugs',
-                    style: TextStyle(
+                    widget.label,
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 2),
+                  const SizedBox(height: 2),
                   Text(
-                    '14 drugs · Infusions · Resuscitation',
-                    style: TextStyle(
+                    widget.sublabel,
+                    style: const TextStyle(
                       color: Color(0xCCFFFFFF),
                       fontSize: 11.5,
                       fontWeight: FontWeight.w500,

@@ -6,10 +6,13 @@ import 'theme/app_theme.dart';
 import 'theme/theme_provider.dart';
 import 'screens/home/home_screen.dart';
 import 'screens/auth/login_screen.dart';
-import 'screens/intro/intro_screen.dart';
+import 'screens/onboarding/onboarding_screen.dart';
 import 'services/lab_reference_service.dart';
 import 'services/auth_service.dart';
 import 'services/profile_store.dart';
+import 'services/review_service.dart';
+import 'services/guidelines_search_service.dart';
+import 'utils/prefs_keys.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -50,6 +53,22 @@ void main() async {
     debugPrint('[boot] ProfileStore load failed: $e');
   }
 
+  // Stamp the first-launch timestamp so the in-app review prompt has a
+  // valid install-age baseline. Idempotent — only writes if missing.
+  try {
+    await ReviewService.instance.markFirstLaunchIfMissing();
+  } catch (e) {
+    debugPrint('[boot] ReviewService init failed: $e');
+  }
+
+  // Warm the guideline-chapter search index in the background so the
+  // very first home-screen search hit (e.g. "UTI") returns immediately
+  // instead of after a network round-trip. Hydrates from cache first
+  // (instant) then refreshes from network. Fire-and-forget — never
+  // awaited so a slow network can't block app start.
+  // ignore: unawaited_futures
+  GuidelinesSearchService.instance.ensureLoaded();
+
   try {
     await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
@@ -82,60 +101,65 @@ class PediAidApp extends StatelessWidget {
       themeMode: themeProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light,
       // ── AUTH DISABLED FOR TESTING ──────────────────────────────────────────
       // User has asked to remove the login page entirely while testing the
-      // app. Jump straight to the IntroGate, which shows the first-launch
-      // tutorial once and the HomeScreen on every subsequent launch.
-      // _AuthGate is left in place below for easy restoration later.
-      home: const _IntroGate(),
+      // app. Jump straight to the HomeScreen; _AuthGate is left in place
+      // below for easy restoration later.
+      //
+      // Wrapped in an OnboardingGate so first-launch users see the slides
+      // before the home screen.
+      home: const _OnboardingGate(child: HomeScreen()),
     );
   }
 }
 
-/// Top-level intro gate. Reads `seen_intro_v2` from SharedPreferences once
-/// at first frame: if absent/false, shows the [IntroScreen]; otherwise
-/// renders [HomeScreen] directly. The very first paint is HomeScreen with
-/// an opaque cover until the SharedPreferences read resolves — this avoids
-/// flashing Home for one frame before swapping to the tutorial on a fresh
-/// install. The check is cached for the rest of the session.
-class _IntroGate extends StatefulWidget {
-  const _IntroGate();
+/// Shows the slide-based onboarding ONCE on first launch (or after a
+/// version-bumped redesign), then the wrapped child. Uses
+/// [PrefsKeys.onboardingComplete] which is versioned ('_v1') by design —
+/// bumping the suffix re-shows the slides to existing users.
+class _OnboardingGate extends StatefulWidget {
+  final Widget child;
+  const _OnboardingGate({required this.child});
 
   @override
-  State<_IntroGate> createState() => _IntroGateState();
+  State<_OnboardingGate> createState() => _OnboardingGateState();
 }
 
-class _IntroGateState extends State<_IntroGate> {
-  bool? _seen; // null = checking, true = skip intro, false = show intro
+class _OnboardingGateState extends State<_OnboardingGate> {
+  bool? _onboardingDone; // null = still loading
 
   @override
   void initState() {
     super.initState();
-    _check();
+    _hydrate();
   }
 
-  Future<void> _check() async {
-    bool seen = false;
+  Future<void> _hydrate() async {
+    bool done = false;
     try {
       final prefs = await SharedPreferences.getInstance();
-      seen = prefs.getBool(kIntroSeenKey) ?? false;
+      done = prefs.getBool(PrefsKeys.onboardingComplete) ?? false;
     } catch (e) {
-      debugPrint('[_IntroGate] prefs read failed: $e');
+      // If prefs are broken, default to "show onboarding" — better to
+      // show it twice than to lock the user out.
+      debugPrint('[OnboardingGate] prefs read failed: $e');
     }
-    if (mounted) setState(() => _seen = seen);
+    if (mounted) setState(() => _onboardingDone = done);
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_seen == null) {
-      // Brief blank state — single-frame, prefs read is sub-millisecond.
+    if (_onboardingDone == null) {
+      // Brief blank-canvas while we read the flag — no spinner, no flash
+      // (the flag read is sub-frame on every device).
       return const Scaffold(body: SizedBox.expand());
     }
-    if (_seen == false) {
-      return IntroScreen(onDone: () {
-        if (!mounted) return;
-        setState(() => _seen = true);
-      });
+    if (_onboardingDone == false) {
+      return OnboardingScreen(
+        onDone: () {
+          if (mounted) setState(() => _onboardingDone = true);
+        },
+      );
     }
-    return const HomeScreen();
+    return widget.child;
   }
 }
 

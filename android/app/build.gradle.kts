@@ -35,8 +35,7 @@ android {
 
     defaultConfig {
         applicationId = "com.pediaid.pediaid"
-        // minSdk 23 — required floor for flutter_secure_storage and the
-        // current Material 3 widgets we use; covers >99% of devices.
+        // minSdk inherited from Flutter SDK default (covers >99% of devices).
         minSdk = flutter.minSdkVersion
         // Play Store 2026 deadline: targetSdk 35.
         targetSdk = 35

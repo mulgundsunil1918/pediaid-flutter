@@ -864,12 +864,16 @@ class EmergencyNICUDrugsScreen extends StatefulWidget {
       _EmergencyNICUDrugsScreenState();
 }
 
+// Module the user is currently viewing.
+enum _NicuModule { stat, infusion }
+
 class _EmergencyNICUDrugsScreenState extends State<EmergencyNICUDrugsScreen>
     with SingleTickerProviderStateMixin {
   // ── State ──────────────────────────────────────────────────────────────────
   final TextEditingController _weightCtrl = TextEditingController();
   double? _weight;
 
+  _NicuModule _module = _NicuModule.stat;
   bool _smartView = true;
 
   double _multiplier = 1.0;
@@ -1022,6 +1026,11 @@ class _EmergencyNICUDrugsScreenState extends State<EmergencyNICUDrugsScreen>
         ),
         body: Column(
           children: [
+            // ── Top-level Module switch (STAT BOLUS / INFUSION) ───────────
+            _ModuleSwitch(
+              current: _module,
+              onChanged: (m) => setState(() => _module = m),
+            ),
             // ── Sticky Header ──────────────────────────────────────────────
             _StickyHeader(
               weightCtrl: _weightCtrl,
@@ -1045,35 +1054,44 @@ class _EmergencyNICUDrugsScreenState extends State<EmergencyNICUDrugsScreen>
                   _customVolumeMl = double.tryParse(v);
                 });
               },
+              showAdvancedControls: _module == _NicuModule.infusion,
             ),
-            // ── Drug List ──────────────────────────────────────────────────
+            // ── Drug List (body swaps based on module) ─────────────────────
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
                 children: [
-                  if (_smartView) ...[
-                    for (final drug in _drugs)
-                      _SmartDrugCard(
-                        drug: drug,
-                        weight: _weight,
-                        multiplier: _multiplier,
-                        overrideTotalMl: _weight != null
-                            ? _resolvedTotalMl(drug)
-                            : null,
-                      ),
-                    const SizedBox(height: 12),
-                    AdvancedTools(weight: _weight),
+                  if (_module == _NicuModule.stat) ...[
+                    if (_smartView) ...[
+                      ResusBolusList(weight: _weight),
+                    ] else ...[
+                      ResusBolusTable(weight: _weight),
+                    ],
                   ] else ...[
-                    _TableViewHeader(weight: _weight),
-                    for (final drug in _drugs)
-                      _TableDrugRow(
-                        drug: drug,
-                        weight: _weight,
-                        multiplier: _multiplier,
-                        overrideTotalMl: _weight != null
-                            ? _resolvedTotalMl(drug)
-                            : null,
-                      ),
+                    if (_smartView) ...[
+                      for (final drug in _drugs)
+                        _SmartDrugCard(
+                          drug: drug,
+                          weight: _weight,
+                          multiplier: _multiplier,
+                          overrideTotalMl: _weight != null
+                              ? _resolvedTotalMl(drug)
+                              : null,
+                        ),
+                      const SizedBox(height: 12),
+                      AdvancedTools(weight: _weight),
+                    ] else ...[
+                      _TableViewHeader(weight: _weight),
+                      for (final drug in _drugs)
+                        _TableDrugRow(
+                          drug: drug,
+                          weight: _weight,
+                          multiplier: _multiplier,
+                          overrideTotalMl: _weight != null
+                              ? _resolvedTotalMl(drug)
+                              : null,
+                        ),
+                    ],
                   ],
                   const SizedBox(height: 8),
                   _DisclaimerBanner(),
@@ -1081,6 +1099,103 @@ class _EmergencyNICUDrugsScreenState extends State<EmergencyNICUDrugsScreen>
                 ],
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ── Module switch (STAT BOLUS / INFUSION) ────────────────────────────────────
+
+class _ModuleSwitch extends StatelessWidget {
+  final _NicuModule current;
+  final ValueChanged<_NicuModule> onChanged;
+  const _ModuleSwitch({required this.current, required this.onChanged});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        border: Border(
+          bottom: BorderSide(
+              color: Theme.of(context)
+                  .colorScheme
+                  .onSurface
+                  .withValues(alpha: 0.10),
+              width: 1),
+        ),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: _moduleButton(
+              label: 'STAT BOLUS',
+              icon: Icons.bolt,
+              selected: current == _NicuModule.stat,
+              onTap: () => onChanged(_NicuModule.stat),
+              color: const Color(0xFFB71C1C),
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: _moduleButton(
+              label: 'INFUSION',
+              icon: Icons.water_drop_outlined,
+              selected: current == _NicuModule.infusion,
+              onTap: () => onChanged(_NicuModule.infusion),
+              color: const Color(0xFF8B0000),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _moduleButton({
+    required String label,
+    required IconData icon,
+    required bool selected,
+    required VoidCallback onTap,
+    required Color color,
+  }) {
+    return InkWell(
+      onTap: () {
+        HapticFeedback.selectionClick();
+        onTap();
+      },
+      borderRadius: BorderRadius.circular(10),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 180),
+        padding:
+            const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+        decoration: BoxDecoration(
+          color: selected ? color : Colors.transparent,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: color, width: selected ? 0 : 1.5),
+          boxShadow: selected
+              ? [
+                  BoxShadow(
+                      color: color.withValues(alpha: 0.30),
+                      blurRadius: 8,
+                      offset: const Offset(0, 3))
+                ]
+              : null,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon,
+                color: selected ? Colors.white : color, size: 18),
+            const SizedBox(width: 8),
+            Text(label,
+                style: GoogleFonts.plusJakartaSans(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 0.4,
+                    color: selected ? Colors.white : color)),
           ],
         ),
       ),
@@ -1102,6 +1217,7 @@ class _StickyHeader extends StatelessWidget {
   final bool showCustomVolField;
   final TextEditingController customVolCtrl;
   final ValueChanged<String> onCustomVolChanged;
+  final bool showAdvancedControls;
 
   const _StickyHeader({
     required this.weightCtrl,
@@ -1115,6 +1231,7 @@ class _StickyHeader extends StatelessWidget {
     required this.showCustomVolField,
     required this.customVolCtrl,
     required this.onCustomVolChanged,
+    this.showAdvancedControls = true,
   });
 
   static const List<double> _multiplierValues = [0.5, 1.0, 2.0, 3.0, 4.0];
@@ -1233,7 +1350,7 @@ class _StickyHeader extends StatelessWidget {
               ),
             ],
           ),
-          if (smartView) ...[
+          if (smartView && showAdvancedControls) ...[
             const SizedBox(height: 10),
             // Row C — Concentration multiplier chips
             Row(

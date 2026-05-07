@@ -18,6 +18,12 @@
       "runtimeExecutable": "cmd",
       "runtimeArgs": ["/c", "flutter", "run", "-d", "web-server", "--web-port=8081", "--web-hostname=0.0.0.0"],
       "port": 8081
+    },
+    {
+      "name": "PediAid Landing — :8090",
+      "runtimeExecutable": "cmd",
+      "runtimeArgs": ["/c", "cd", "../pediaid-landing", "&&", "python", "-m", "http.server", "8090"],
+      "port": 8090
     }
   ]
 }

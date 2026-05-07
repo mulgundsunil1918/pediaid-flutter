@@ -19,6 +19,22 @@ import 'lund_browder_screen.dart';
 import 'burn_mortality_calculator.dart';
 import 'pet_calculator_screen.dart';
 import 'echo_calculators_screen.dart';
+import 'anion_gap_calculator.dart';
+import 'blood_volume_calculator.dart';
+import 'serum_osmolality_calculator.dart';
+import 'corrected_sodium_calculator.dart';
+import 'urine_anion_gap_calculator.dart';
+import 'corrected_anion_gap_calculator.dart';
+import 'free_water_deficit_calculator.dart';
+import 'sodium_correction_calculator.dart';
+import 'potassium_correction_calculator.dart';
+import 'calcium_correction_calculator.dart';
+import 'magnesium_correction_calculator.dart';
+import 'phosphate_correction_calculator.dart';
+import 'dextrose_bolus_calculator.dart';
+import 'umbilical_catheter_calculator.dart';
+import 'ett_calculator.dart';
+import '../guides/gcs_screen.dart';
 
 class CalculatorsScreen extends StatelessWidget {
   const CalculatorsScreen({super.key});
@@ -123,6 +139,90 @@ class CalculatorsScreen extends StatelessWidget {
       title: '2D Echo Calculators',
       subtitle: 'LVO · RVO · PAPSp · EF · LA/Ao · IVC',
       icon: Icons.monitor_heart,
+    ),
+    // ── Fluid & electrolyte (an internal reference compendium set) ────────────────────────
+    _CalculatorItem(
+      title: 'Anion Gap',
+      subtitle: 'Na − (HCO₃ + Cl) — HAGMA workup',
+      icon: Icons.science_outlined,
+    ),
+    _CalculatorItem(
+      title: 'Corrected AG (Albumin)',
+      subtitle: 'AG + 2.5 × (Normal − Albumin)',
+      icon: Icons.science_outlined,
+    ),
+    _CalculatorItem(
+      title: 'Urine Anion Gap',
+      subtitle: 'RTA vs diarrhoea',
+      icon: Icons.water_drop_outlined,
+    ),
+    _CalculatorItem(
+      title: 'Serum Osmolality',
+      subtitle: '2Na + Glu/18 + BUN/2.8',
+      icon: Icons.science,
+    ),
+    _CalculatorItem(
+      title: 'Corrected Na (hyperglycaemia)',
+      subtitle: 'Na + 1.6 × ((Glucose − 100)/100)',
+      icon: Icons.calculate_outlined,
+    ),
+    _CalculatorItem(
+      title: 'Blood Volume',
+      subtitle: 'EBV by age band',
+      icon: Icons.bloodtype_outlined,
+    ),
+    // ── Electrolyte correction calculators ────────────────────────────
+    _CalculatorItem(
+      title: 'Free Water Deficit (↑Na)',
+      subtitle: 'Hypernatraemia correction',
+      icon: Icons.opacity_outlined,
+    ),
+    _CalculatorItem(
+      title: 'Na Correction (↓Na)',
+      subtitle: 'Sodium deficit + 3 % saline bolus',
+      icon: Icons.calculate,
+    ),
+    _CalculatorItem(
+      title: 'K Correction (↓/↑K)',
+      subtitle: 'KCl replacement OR ↑K regimen',
+      icon: Icons.calculate,
+    ),
+    _CalculatorItem(
+      title: 'Calcium Correction (↓Ca)',
+      subtitle: 'CaCl₂ / gluconate / MgSO₄',
+      icon: Icons.calculate,
+    ),
+    _CalculatorItem(
+      title: 'Magnesium Correction (↓Mg)',
+      subtitle: 'MgSO₄ IV + oral',
+      icon: Icons.calculate,
+    ),
+    _CalculatorItem(
+      title: 'Phosphate Correction (↓PO₄)',
+      subtitle: 'NaPhos / KPhos / oral',
+      icon: Icons.calculate,
+    ),
+    _CalculatorItem(
+      title: 'Hypoglycaemia Bolus',
+      subtitle: 'D10/D25/D50 + GIR + adjuncts',
+      icon: Icons.calculate,
+    ),
+    // ── Neuro scoring (PIC) ───────────────────────────────────────────
+    _CalculatorItem(
+      title: 'Glasgow Coma Scale',
+      subtitle: 'Smart paediatric scorer',
+      icon: Icons.psychology_outlined,
+    ),
+    // ── Procedural / airway / lines ──────────────────────────────────
+    _CalculatorItem(
+      title: 'UVC / UAC Depth',
+      subtitle: 'Shukla / Dunn formulas + stump',
+      icon: Icons.usb_outlined,
+    ),
+    _CalculatorItem(
+      title: 'ETT Size + Depth',
+      subtitle: 'NTL+1 · weight · age-based · tube×3',
+      icon: Icons.air_outlined,
     ),
   ];
 
@@ -237,6 +337,40 @@ class CalculatorsScreen extends StatelessWidget {
       case '2D Echo Calculators':
         Navigator.push(context,
             MaterialPageRoute(builder: (_) => const EchoCalculatorsScreen()));
+      case 'Anion Gap':
+        Navigator.push(context, MaterialPageRoute(builder: (_) => const AnionGapCalculator()));
+      case 'Corrected AG (Albumin)':
+        Navigator.push(context, MaterialPageRoute(builder: (_) => const CorrectedAnionGapCalculator()));
+      case 'Urine Anion Gap':
+        Navigator.push(context, MaterialPageRoute(builder: (_) => const UrineAnionGapCalculator()));
+      case 'Serum Osmolality':
+        Navigator.push(context, MaterialPageRoute(builder: (_) => const SerumOsmolalityCalculator()));
+      case 'Corrected Na (hyperglycaemia)':
+        Navigator.push(context, MaterialPageRoute(builder: (_) => const CorrectedSodiumCalculator()));
+      case 'Blood Volume':
+        Navigator.push(context, MaterialPageRoute(builder: (_) => const BloodVolumeCalculator()));
+      case 'Free Water Deficit (↑Na)':
+        Navigator.push(context, MaterialPageRoute(builder: (_) => const FreeWaterDeficitCalculator()));
+      case 'Na Correction (↓Na)':
+        Navigator.push(context, MaterialPageRoute(builder: (_) => const SodiumCorrectionCalculator()));
+      case 'K Correction (↓/↑K)':
+        Navigator.push(context, MaterialPageRoute(builder: (_) => const PotassiumCorrectionCalculator()));
+      case 'Calcium Correction (↓Ca)':
+        Navigator.push(context, MaterialPageRoute(builder: (_) => const CalciumCorrectionCalculator()));
+      case 'Magnesium Correction (↓Mg)':
+        Navigator.push(context, MaterialPageRoute(builder: (_) => const MagnesiumCorrectionCalculator()));
+      case 'Phosphate Correction (↓PO₄)':
+        Navigator.push(context, MaterialPageRoute(builder: (_) => const PhosphateCorrectionCalculator()));
+      case 'Hypoglycaemia Bolus':
+        Navigator.push(context, MaterialPageRoute(builder: (_) => const DextroseBolusCalculator()));
+      case 'Glasgow Coma Scale':
+        Navigator.push(context, MaterialPageRoute(builder: (_) => const GcsScreen()));
+      case 'UVC / UAC Depth':
+        Navigator.push(context,
+            MaterialPageRoute(builder: (_) => const UmbilicalCatheterCalculator()));
+      case 'ETT Size + Depth':
+        Navigator.push(context,
+            MaterialPageRoute(builder: (_) => const EttCalculator()));
     }
   }
 }

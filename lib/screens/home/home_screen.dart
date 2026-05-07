@@ -180,6 +180,29 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             actions: [
+              // Support the developer — opens bridgr.co.in/support?from=pediaid
+              IconButton(
+                tooltip: 'Support the developer',
+                onPressed: () async {
+                  final uri = Uri.parse(
+                      'https://bridgr.co.in/support?from=pediaid');
+                  try {
+                    await launchUrl(uri,
+                        mode: LaunchMode.externalApplication);
+                  } catch (_) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("Couldn't open the link.")),
+                      );
+                    }
+                  }
+                },
+                icon: const Icon(
+                  Icons.favorite_rounded,
+                  color: Colors.white,
+                  size: 22,
+                ),
+              ),
               Consumer<ThemeProvider>(
                 builder: (context, themeProvider, _) => IconButton(
                   onPressed: () => themeProvider.toggleTheme(),
@@ -269,8 +292,10 @@ class _HomeScreenState extends State<HomeScreen> {
   // PediAid is one person's side project — everything from the calculators
   // to the peer-review pipeline is coded and paid for by Dr. Sunil. Servers,
   // databases, and the domain all cost money every month. A lightweight
-  // "buy me a chai" card at the end of the home scroll makes it easy for
-  // happy users to chip in without being in their face about it.
+  // "Support the developer" card at the end of the home scroll makes it
+  // easy for happy users to chip in without being in their face about it.
+  // Links out to bridgr.co.in (Sunil's own site) so he controls how the
+  // support pitch is presented.
 
   Widget _buildDonationFooter(BuildContext context, bool isDark) {
     return Padding(
@@ -297,7 +322,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 const Text('☕️', style: TextStyle(fontSize: 20)),
                 const SizedBox(width: 8),
                 Text(
-                  'Like PediAid? Buy me a chai.',
+                  'Like PediAid? Support the developer.',
                   style: GoogleFonts.plusJakartaSans(
                     fontSize: 14,
                     fontWeight: FontWeight.w800,
@@ -313,7 +338,8 @@ class _HomeScreenState extends State<HomeScreen> {
               "I've done the coding on my own — the app, the academics web, "
               "the backend, everything. It costs me every month to keep the "
               "servers running. If PediAid has saved you time on a shift, "
-              "consider donating. Every chai keeps the app alive.",
+              "consider supporting the developer. Every contribution keeps "
+              "the app alive.",
               style: GoogleFonts.plusJakartaSans(
                 fontSize: 12.5,
                 height: 1.55,
@@ -336,7 +362,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 onPressed: () async {
-                  final uri = Uri.parse('https://www.chai4.me/mulgundsunil');
+                  final uri = Uri.parse('https://bridgr.co.in/support?from=pediaid');
                   try {
                     await launchUrl(uri,
                         mode: LaunchMode.externalApplication);
@@ -350,7 +376,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
                 icon: const Icon(Icons.favorite_rounded, size: 16),
                 label: Text(
-                  'Buy me a chai',
+                  'Support the developer',
                   style: GoogleFonts.plusJakartaSans(
                     fontSize: 13,
                     fontWeight: FontWeight.w800,
@@ -361,7 +387,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 4),
             Center(
               child: Text(
-                'Opens chai4.me — no account needed.',
+                'Opens bridgr.co.in — no account needed.',
                 style: GoogleFonts.plusJakartaSans(
                   fontSize: 10,
                   color: (isDark

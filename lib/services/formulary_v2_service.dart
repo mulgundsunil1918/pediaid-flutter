@@ -7,10 +7,11 @@
 //   - assets/data/formulary/formulary_v2/neofax_full.json     (199 Neofax
 //     drugs, fully authored)
 //
-// Exposes `DrugV2` records that the new DrugDetailScreenV2 renders. The
-// thin `DrugEntry` index (name + page) used by FormularyScreen for the
-// search list still comes from the old FormularyService — we look up the
-// rich detail here only when the user taps an entry.
+// The two source schemas differ; this class normalises them into a single
+// `DrugV2` shape that the premium drug-detail screen renders. All content
+// from the source JSON is preserved verbatim — granular fields are split
+// out so the renderer can color-code and section them, but no information
+// is dropped.
 // =============================================================================
 
 import 'dart:convert';
@@ -48,50 +49,92 @@ class DosePopulation {
       );
 }
 
+/// Single Indian formulation entry (Neofax has these structured; HL doesn't).
+class FormulationEntry {
+  final String form;
+  final String strength;
+  final List<String> brandsIndia;
+  final String notes;
+  const FormulationEntry({
+    required this.form,
+    required this.strength,
+    required this.brandsIndia,
+    required this.notes,
+  });
+
+  factory FormulationEntry.fromJson(Map<String, dynamic> j) => FormulationEntry(
+        form: ((j['form'] as String?) ?? '').trim(),
+        strength: ((j['strength'] as String?) ?? '').trim(),
+        brandsIndia: ((j['brands_india'] as List?) ?? const [])
+            .map((e) => '$e').toList(),
+        notes: ((j['notes'] as String?) ?? '').trim(),
+      );
+}
+
 /// A single drug — either Harriet Lane (v3 restructured) or Neofax (v2).
-/// The two source schemas differ; this class normalises them.
+/// All content fields below are preserved verbatim from the source JSON.
 class DrugV2 {
   final String id;
   final String drug;
   final List<String> altNames;
   final String category;
+  final String atcCode;
   final int page;
   final String source; // 'Harriet Lane' or 'Neofax'
   final bool hidden;
 
-  // For HL-derived drugs:
+  // Dose data — both schemas
   final List<DoseBlock> doseBlocks;
   final String rawDoseMd;
   final List<String> callouts;
-  final String cautionsMd;
-  final String monitoringMd;
-  final String adverseEffectsMd;
-  final String pharmacokineticsMd;
-  final String pearlsMd;
+
+  // Indian formulations (Neofax-only currently)
+  final List<FormulationEntry> formulations;
+
+  // Granular text sections — all preserved verbatim, never truncated.
+  final String cautionsMd;          // contraindications + cautions
+  final String monitoringMd;        // monitoring guidance
+  final String adverseEffectsMd;    // adverse events
+  final String pharmacokineticsMd;  // PK (HL only)
+  final String pearlsMd;            // clinical pearls
+  final String reconstitutionMd;    // preparation (Neofax)
+  final String incompatibilitiesMd; // IV incompatibilities (Neofax)
+  final String renalAdjustmentMd;   // renal adjustment (Neofax)
+  final String hepaticAdjustmentMd; // hepatic adjustment (Neofax)
 
   const DrugV2({
     required this.id,
     required this.drug,
     required this.altNames,
     required this.category,
+    required this.atcCode,
     required this.page,
     required this.source,
     required this.hidden,
     required this.doseBlocks,
     required this.rawDoseMd,
     required this.callouts,
+    required this.formulations,
     required this.cautionsMd,
     required this.monitoringMd,
     required this.adverseEffectsMd,
     required this.pharmacokineticsMd,
     required this.pearlsMd,
+    required this.reconstitutionMd,
+    required this.incompatibilitiesMd,
+    required this.renalAdjustmentMd,
+    required this.hepaticAdjustmentMd,
   });
+
+  bool get isNeofax => source.toLowerCase().contains('neofax');
+  bool get isHarrietLane => source.toLowerCase().contains('harriet');
 
   factory DrugV2.fromHL(Map<String, dynamic> j) => DrugV2(
         id: (j['id'] as String?) ?? '',
         drug: (j['drug'] as String?) ?? '',
         altNames: ((j['alt_names'] as List?) ?? const []).map((e) => '$e').toList(),
         category: (j['category'] as String?) ?? '',
+        atcCode: (j['atc_code'] as String?) ?? '',
         page: (j['page'] as num?)?.toInt() ?? 0,
         source: 'Harriet Lane',
         hidden: (j['hidden'] as bool?) ?? false,
@@ -101,23 +144,28 @@ class DrugV2 {
             .toList(),
         rawDoseMd: (j['raw_dose_md'] as String?) ?? '',
         callouts: ((j['callouts'] as List?) ?? const []).map((e) => '$e').toList(),
+        formulations: const [],
         cautionsMd: (j['cautions_md'] as String?) ?? '',
         monitoringMd: (j['monitoring_md'] as String?) ?? '',
         adverseEffectsMd: (j['adverse_effects_md'] as String?) ?? '',
         pharmacokineticsMd: (j['pharmacokinetics_md'] as String?) ?? '',
         pearlsMd: (j['pearls_md'] as String?) ?? '',
+        reconstitutionMd: '',
+        incompatibilitiesMd: '',
+        renalAdjustmentMd: '',
+        hepaticAdjustmentMd: '',
       );
 
-  /// Adapt the Neofax schema to our normalized shape. Neofax `doses` is a
-  /// list of structured rows (indication / route / dose_per_kg_per_dose /
-  /// frequency / max_per_dose / comments) — we group them by indication
-  /// and emit one DosePopulation per row, using `route` as the label.
+  /// Adapt the Neofax schema to our normalized shape. `doses` is a list of
+  /// structured rows (indication / route / loading_dose_per_kg /
+  /// dose_per_kg_per_dose / frequency / max_per_dose / comments) — we
+  /// group them by indication and emit one DosePopulation per row.
   factory DrugV2.fromNeofax(Map<String, dynamic> j) {
     final doseRows = ((j['doses'] as List?) ?? const [])
         .whereType<Map<String, dynamic>>()
         .toList();
 
-    // Group rows by indication.
+    // Group dose rows by indication, preserving original order.
     final Map<String, List<Map<String, dynamic>>> byInd = {};
     for (final r in doseRows) {
       final ind = ((r['indication'] as String?) ?? '').trim().isEmpty
@@ -139,75 +187,63 @@ class DrugV2 {
         final maxD  = ((r['max_per_dose'] as String?) ?? '').trim();
         final maxDay= ((r['max_per_day_all_routes'] as String?) ?? '').trim();
         final inf   = ((r['infusion_rate'] as String?) ?? '').trim();
+        final dur   = ((r['duration'] as String?) ?? '').trim();
         final cmt   = ((r['comments'] as String?) ?? '').trim();
 
-        // Build the dose narrative as Markdown.
+        // Build the dose narrative as Markdown — every field included.
         final parts = <String>[];
-        if (load.isNotEmpty)  parts.add('**Loading:** $load');
-        if (dose.isNotEmpty)  parts.add('**Dose:** $dose');
-        if (freq.isNotEmpty)  parts.add('**Frequency:** $freq');
-        if (inf.isNotEmpty)   parts.add('**Infusion:** $inf');
-        if (maxD.isNotEmpty)  parts.add('**Max/dose:** $maxD');
-        if (maxDay.isNotEmpty)parts.add('**Max/day:** $maxDay');
-        if (cmt.isNotEmpty)   parts.add(cmt);
+        if (load.isNotEmpty)   parts.add('**Loading:** $load');
+        if (dose.isNotEmpty)   parts.add('**Dose:** $dose');
+        if (freq.isNotEmpty)   parts.add('**Frequency:** $freq');
+        if (inf.isNotEmpty)    parts.add('**Infusion rate:** $inf');
+        if (dur.isNotEmpty)    parts.add('**Duration:** $dur');
+        if (maxD.isNotEmpty)   parts.add('**Max per dose:** $maxD');
+        if (maxDay.isNotEmpty) parts.add('**Max per day:** $maxDay');
+        if (cmt.isNotEmpty)    parts.add(cmt);
         final doseMd = parts.join('  \n');
 
-        final labelParts = [ga, pma, pna]
-            .where((s) => s.isNotEmpty).toList();
+        final labelParts = <String>[];
+        if (ga.isNotEmpty)  labelParts.add(ga);
+        if (pma.isNotEmpty) labelParts.add(pma);
+        if (pna.isNotEmpty) labelParts.add(pna);
         final label = labelParts.isEmpty ? '' : labelParts.join(' · ');
 
         return DosePopulation(
           label: label,
-          routeHint: route.toUpperCase(),
+          routeHint: route, // keep original casing — it can be a long phrase
           doseMd: doseMd,
         );
       }).toList();
       blocks.add(DoseBlock(indication: ind, populations: pops));
     });
 
-    final indFormulations = ((j['india_formulations'] as List?) ?? const [])
+    final formulations = ((j['india_formulations'] as List?) ?? const [])
         .whereType<Map<String, dynamic>>()
-        .map((f) {
-          final form = (f['form'] ?? '').toString().trim();
-          final str  = (f['strength'] ?? '').toString().trim();
-          final brands = ((f['brands_india'] as List?) ?? const [])
-              .map((e) => '$e').join(', ');
-          final note = (f['notes'] ?? '').toString().trim();
-          var line = form.isNotEmpty ? '**$form** — $str' : '**Formulation:** $str';
-          if (brands.isNotEmpty) line += '  \n_Indian brands:_ $brands';
-          if (note.isNotEmpty)   line += '  \n_${note}_';
-          return line;
-        }).join('\n\n');
-
-    final pearlsMd = [
-      ((j['monitoring'] as String?) ?? '').trim().isNotEmpty
-          ? '**Monitoring:** ${j['monitoring']}' : '',
-      ((j['reconstitution'] as String?) ?? '').trim().isNotEmpty
-          ? '**Reconstitution:** ${j['reconstitution']}' : '',
-      ((j['incompatibilities'] as String?) ?? '').trim().isNotEmpty
-          ? '**Incompatibilities:** ${j['incompatibilities']}' : '',
-      ((j['renal_adjustment'] as String?) ?? '').trim().isNotEmpty
-          ? '**Renal adjustment:** ${j['renal_adjustment']}' : '',
-      ((j['hepatic_adjustment'] as String?) ?? '').trim().isNotEmpty
-          ? '**Hepatic adjustment:** ${j['hepatic_adjustment']}' : '',
-    ].where((s) => s.isNotEmpty).join('\n\n');
+        .map(FormulationEntry.fromJson)
+        .toList();
 
     return DrugV2(
       id: (j['id'] as String?) ?? '',
       drug: (j['drug'] as String?) ?? '',
       altNames: ((j['alt_names'] as List?) ?? const []).map((e) => '$e').toList(),
       category: (j['category'] as String?) ?? '',
+      atcCode: (j['atc_code'] as String?) ?? '',
       page: ((j['sources'] as Map?)?['primary_neofax_page'] as num?)?.toInt() ?? 0,
       source: 'Neofax',
       hidden: false,
       doseBlocks: blocks,
-      rawDoseMd: indFormulations,
+      rawDoseMd: '',
       callouts: const [],
-      cautionsMd: (j['contraindications'] as String?) ?? '',
-      monitoringMd: (j['monitoring'] as String?) ?? '',
-      adverseEffectsMd: (j['adverse_effects'] as String?) ?? '',
-      pharmacokineticsMd: '',
-      pearlsMd: pearlsMd,
+      formulations: formulations,
+      cautionsMd:          (j['contraindications']  as String?) ?? '',
+      monitoringMd:        (j['monitoring']         as String?) ?? '',
+      adverseEffectsMd:    (j['adverse_effects']    as String?) ?? '',
+      pharmacokineticsMd:  '',
+      pearlsMd:            (j['pearl']              as String?) ?? '',
+      reconstitutionMd:    (j['reconstitution']     as String?) ?? '',
+      incompatibilitiesMd: (j['incompatibilities']  as String?) ?? '',
+      renalAdjustmentMd:   (j['renal_adjustment']   as String?) ?? '',
+      hepaticAdjustmentMd: (j['hepatic_adjustment'] as String?) ?? '',
     );
   }
 }
@@ -218,6 +254,10 @@ class FormularyV2Service {
   FormularyV2Service._internal();
 
   Map<String, DrugV2>? _byId;
+  // Index by canonical lowercase name AND by every alt-name lowercased,
+  // so a list entry like "Acetaminophen" still resolves to the canonical
+  // Neofax record "Paracetamol (Acetaminophen)" (alt_names contains
+  // "Acetaminophen").
   Map<String, DrugV2>? _byNameLowerHL;
   Map<String, DrugV2>? _byNameLowerNeofax;
 
@@ -228,6 +268,22 @@ class FormularyV2Service {
     final byNameHL = <String, DrugV2>{};
     final byNameNF = <String, DrugV2>{};
 
+    void index(Map<String, DrugV2> map, DrugV2 d) {
+      map[d.drug.toLowerCase()] = d;
+      // Strip parenthetical synonyms in the canonical name so
+      // "Paracetamol (Acetaminophen)" also indexes under "paracetamol".
+      final stripped = d.drug.replaceAll(RegExp(r'\s*\([^)]*\)'), '').trim();
+      if (stripped.isNotEmpty && stripped.toLowerCase() != d.drug.toLowerCase()) {
+        map.putIfAbsent(stripped.toLowerCase(), () => d);
+      }
+      for (final alt in d.altNames) {
+        final k = alt.trim().toLowerCase();
+        if (k.isEmpty) continue;
+        // Don't overwrite a canonical-name match with an alt-name match.
+        map.putIfAbsent(k, () => d);
+      }
+    }
+
     // ── Harriet Lane (v3 restructured) ──────────────────────────────
     try {
       final raw = await rootBundle.loadString(
@@ -237,9 +293,9 @@ class FormularyV2Service {
         final drug = DrugV2.fromHL(d as Map<String, dynamic>);
         if (drug.id.isEmpty) continue;
         byId[drug.id] = drug;
-        byNameHL[drug.drug.toLowerCase()] = drug;
+        index(byNameHL, drug);
       }
-    } catch (e) {
+    } catch (_) {
       // fall through — Neofax still works.
     }
 
@@ -252,7 +308,7 @@ class FormularyV2Service {
         final drug = DrugV2.fromNeofax(d as Map<String, dynamic>);
         if (drug.id.isEmpty) continue;
         byId[drug.id] = drug;
-        byNameNF[drug.drug.toLowerCase()] = drug;
+        index(byNameNF, drug);
       }
     } catch (_) {}
 
@@ -264,17 +320,23 @@ class FormularyV2Service {
   Future<DrugV2?> findByName(String name, {required String source}) async {
     await _ensureLoaded();
     final key = name.trim().toLowerCase();
-    if (source.toLowerCase().contains('neofax')) {
-      return _byNameLowerNeofax?[key] ?? _matchClosest(key, _byNameLowerNeofax);
-    }
-    return _byNameLowerHL?[key] ?? _matchClosest(key, _byNameLowerHL);
+    final pool = source.toLowerCase().contains('neofax')
+        ? _byNameLowerNeofax
+        : _byNameLowerHL;
+    if (pool == null) return null;
+    final hit = pool[key];
+    if (hit != null) return hit;
+    return _matchClosest(key, pool);
   }
 
-  DrugV2? _matchClosest(String key, Map<String, DrugV2>? map) {
-    if (map == null) return null;
-    // Try a starts-with fallback to handle minor name normalisation.
+  DrugV2? _matchClosest(String key, Map<String, DrugV2> map) {
+    // Prefix or contains-key fallback so partial / casing differences
+    // between the search index and the canonical name still resolve.
     for (final entry in map.entries) {
       if (entry.key.startsWith(key)) return entry.value;
+    }
+    for (final entry in map.entries) {
+      if (entry.key.contains(key)) return entry.value;
     }
     return null;
   }

@@ -44,15 +44,28 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-# Release signing — NEVER commit. Lose the keystore and you lose the ability
-# to publish updates ever again. Back these up to a separate location.
-/android/key.properties
-/android/app/upload-keystore.jks
-**/*.jks
-**/*.keystore
-**/.env
-**/.env.local
-**/.env.production
-**/google-services.json
-**/GoogleService-Info.plist
-**/firebase-service-account*.json
+# ── Signing secrets — NEVER commit ────────────────────────────────────
+# Upload keystore + creds for Play Store release signing.
+# Losing the keystore = losing the ability to publish updates ever again.
+# Always back up upload-keystore.jks separately on the day you create it.
+android/key.properties
+android/app/upload-keystore.jks
+*.jks
+*.keystore
+
+# ── Service accounts / tokens ─────────────────────────────────────────
+*.env
+.env.*
+google-services.json
+GoogleService-Info.plist
+service-account*.json
+firebase-adminsdk*.json
+firebase-service-account*.json
+
+# ── Generated Play Store assets (regen via tools/play_assets.py) ──────
+play-assets/
+play-assets.zip
+
+# ── Claude Code session artefacts ─────────────────────────────────────
+.claude/scheduled_tasks.lock
+.claude/worktrees/

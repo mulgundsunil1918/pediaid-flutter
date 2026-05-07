@@ -10,13 +10,27 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-const String kSupportDeveloperUrl = 'https://www.chai4.me/mulgundsunil';
+const String kSupportDeveloperUrl = 'https://bridgr.co.in/support?from=pediaid';
+const String kBridgrHomeUrl = 'https://bridgr.co.in/';
 
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
 
   Future<void> _openSupport(BuildContext context) async {
     final uri = Uri.parse(kSupportDeveloperUrl);
+    try {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } catch (_) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Couldn't open the link.")),
+        );
+      }
+    }
+  }
+
+  Future<void> _openBridgrHome(BuildContext context) async {
+    final uri = Uri.parse(kBridgrHomeUrl);
     try {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
     } catch (_) {
@@ -250,8 +264,8 @@ class AboutScreen extends StatelessWidget {
                     "email infrastructure. It's free for every user and "
                     "always will be, but servers cost money every month to "
                     "keep running. If PediAid has saved you time on a "
-                    "shift, consider buying me a chai — it directly helps "
-                    "keep the app live and growing.",
+                    "shift, consider supporting the developer — it directly "
+                    "helps keep the app live and growing.",
                     style: GoogleFonts.plusJakartaSans(
                       fontSize: 12.5,
                       height: 1.55,
@@ -273,7 +287,7 @@ class AboutScreen extends StatelessWidget {
                       ),
                       icon: const Icon(Icons.favorite_rounded, size: 16),
                       label: Text(
-                        'Buy me a chai',
+                        'Support the developer',
                         style: GoogleFonts.plusJakartaSans(
                           fontSize: 14,
                           fontWeight: FontWeight.w800,
@@ -283,7 +297,7 @@ class AboutScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Opens chai4.me in your browser. No account needed.',
+                    'Opens bridgr.co.in in your browser.',
                     textAlign: TextAlign.center,
                     style: GoogleFonts.plusJakartaSans(
                       fontSize: 10.5,
@@ -291,6 +305,64 @@ class AboutScreen extends StatelessWidget {
                     ),
                   ),
                 ],
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
+            // ── Visit Bridgr ────────────────────────────────────────────
+            InkWell(
+              onTap: () => _openBridgrHome(context),
+              borderRadius: BorderRadius.circular(16),
+              child: Container(
+                padding: const EdgeInsets.all(18),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFEFF6FF),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                      color: const Color(0xFFBFDBFE), width: 1.5),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 44,
+                      height: 44,
+                      decoration: const BoxDecoration(
+                        color: Color(0xFF1D4ED8),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(Icons.language_rounded,
+                          color: Colors.white, size: 22),
+                    ),
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Visit Bridgr',
+                            style: GoogleFonts.plusJakartaSans(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w800,
+                              color: const Color(0xFF1E3A8A),
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            'bridgr.co.in — the home of all my projects',
+                            style: GoogleFonts.plusJakartaSans(
+                              fontSize: 12,
+                              color: const Color(0xFF1E40AF)
+                                  .withValues(alpha: 0.75),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Icon(Icons.open_in_new_rounded,
+                        color: Color(0xFF1D4ED8), size: 18),
+                  ],
+                ),
               ),
             ),
 

@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.0+1
+version: 1.2.0+4
 
 environment:
   sdk: ^3.11.1
@@ -50,6 +50,12 @@ dependencies:
   # Unified PediAid auth (shared with the React academics app):
   http: ^1.2.0
   flutter_secure_storage: ^9.2.2
+
+  # Production-ready layer (added 2026-05-02):
+  share_plus: ^10.0.0          # Share the app from Profile
+  in_app_review: ^2.0.10       # Native Play / App Store review prompt
+  showcaseview: ^3.0.0         # Coachmark tour on first home-screen launch
+  package_info_plus: ^8.0.0    # App version + build for About / bug reports
   uuid: ^4.5.3
   timeago: ^3.7.1
 
