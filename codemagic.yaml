@@ -1,0 +1,133 @@
+# =============================================================================
+# codemagic.yaml — PediAid
+#
+# Two workflows:
+#   ios-testflight   builds an .ipa, signs with Apple-managed certs, ships to
+#                    TestFlight on every push to main.
+#   ios-debug-build  the manual "did it even compile?" workflow — no signing,
+#                    no upload. Use this from the Codemagic UI when wiring
+#                    things up for the first time, before you have certs.
+#
+# Required Codemagic setup before the signed workflow runs (do once):
+#   1. Integrations → App Store Connect: connect with an API key (Issuer ID,
+#      Key ID, .p8). Name the integration "App Store Connect".
+#   2. Code signing identities → Apply for distribution certificate via
+#      Codemagic's automatic management (uses the API key above).
+#   3. Environment variables → Add to a group named "appstore":
+#         APP_STORE_APP_ID         (numeric Apple ID of the app)
+#         APP_STORE_CONNECT_ISSUER_ID
+#         APP_STORE_CONNECT_KEY_IDENTIFIER
+#         APP_STORE_CONNECT_PRIVATE_KEY  (the contents of the .p8 file)
+#   4. Bundle ID com.pediaid.pediaid must already exist in App Store Connect
+#      and be linked to a real app record (even if the app is unreleased).
+# =============================================================================
+
+definitions:
+  flutter-config: &flutter-config
+    flutter: stable
+    xcode: latest
+    cocoapods: default
+
+  cache-paths: &cache-paths
+    - $HOME/Library/Caches/CocoaPods
+    - $HOME/.pub-cache
+    - $FCI_BUILD_DIR/build
+
+workflows:
+  # ─── Manual smoke build, no signing ──────────────────────────────────────
+  ios-debug-build:
+    name: iOS — debug compile (no signing)
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+    environment:
+      <<: *flutter-config
+    cache:
+      cache_paths: *cache-paths
+    scripts:
+      - name: Flutter packages
+        script: |
+          flutter pub get
+      - name: Pod install
+        script: |
+          cd ios
+          pod install --repo-update
+      - name: Flutter analyze
+        script: flutter analyze --no-fatal-infos
+      - name: Flutter build iOS (no codesign)
+        script: |
+          flutter build ios --release --no-codesign --build-name=$(grep '^version:' pubspec.yaml | sed 's/version: //' | cut -d+ -f1) --build-number=$(grep '^version:' pubspec.yaml | sed 's/version: //' | cut -d+ -f2)
+    artifacts:
+      - build/ios/iphoneos/*.app
+      - flutter_drive.log
+
+  # ─── Signed TestFlight workflow ──────────────────────────────────────────
+  ios-testflight:
+    name: iOS — TestFlight
+    instance_type: mac_mini_m2
+    max_build_duration: 90
+    integrations:
+      app_store_connect: App Store Connect
+    environment:
+      <<: *flutter-config
+      groups:
+        - appstore
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.pediaid.pediaid
+      vars:
+        APP_STORE_APPLE_ID: $APP_STORE_APP_ID
+    cache:
+      cache_paths: *cache-paths
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: main
+          include: true
+          source: true
+    scripts:
+      - name: Flutter packages
+        script: |
+          flutter pub get
+      - name: Pod install
+        script: |
+          cd ios
+          pod install --repo-update
+      - name: Set build number from App Store Connect
+        script: |
+          APP_STORE_BUILD_NUMBER=$(app-store-connect get-latest-app-store-build-number "$APP_STORE_APPLE_ID")
+          echo "Latest build number on App Store Connect = $APP_STORE_BUILD_NUMBER"
+          NEXT=$((APP_STORE_BUILD_NUMBER + 1))
+          echo "Next build number = $NEXT"
+          echo "BUILD_NUMBER=$NEXT" >> $CM_ENV
+      - name: Initialize keychain (signing)
+        script: keychain initialize
+      - name: Fetch signing files
+        script: |
+          app-store-connect fetch-signing-files \
+            "$BUNDLE_IDENTIFIER" \
+            --type IOS_APP_STORE \
+            --create
+      - name: Add certs to keychain
+        script: keychain add-certificates
+      - name: Set up code signing
+        script: xcode-project use-profiles
+      - name: Flutter build iOS
+        script: |
+          VERSION_NAME=$(grep '^version:' pubspec.yaml | sed 's/version: //' | cut -d+ -f1)
+          flutter build ipa --release \
+            --build-name=$VERSION_NAME \
+            --build-number=$BUILD_NUMBER \
+            --export-options-plist=ios/ExportOptions.plist
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - flutter_drive.log
+    publishing:
+      app_store_connect:
+        auth: integration
+        # Skip Apple's own "what's new" until v1.1 — TestFlight shows the
+        # CFBundleVersion on its own.
+        submit_to_testflight: true
+        beta_groups:
+          - Internal
