@@ -63,29 +63,26 @@ class _TdscSmartScreenState extends State<TdscSmartScreen> {
             ),
         ],
       ),
-      body: SafeArea(
-        bottom: false,
-        child: Column(
-          children: [
-            Expanded(
-              child: ListView(
-                padding: const EdgeInsets.fromLTRB(14, 14, 14, 200),
-                children: [
-                  _ageCard(cs),
-                  const SizedBox(height: 14),
-                  _summaryStrip(cs, age, crossed.length, result),
-                  const SizedBox(height: 14),
-                  if (crossed.isEmpty)
-                    _outOfRangeNotice(cs, age)
-                  else
-                    ..._buildItemList(cs, crossed),
-                ],
-              ),
+      body: Column(
+        children: [
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.fromLTRB(14, 14, 14, 16),
+              children: [
+                _ageCard(cs),
+                const SizedBox(height: 14),
+                _summaryStrip(cs, age, crossed.length, result),
+                const SizedBox(height: 14),
+                if (crossed.isEmpty)
+                  _outOfRangeNotice(cs, age)
+                else
+                  ..._buildItemList(cs, crossed),
+              ],
             ),
-          ],
-        ),
+          ),
+          _verdictBar(cs, age, result),
+        ],
       ),
-      bottomNavigationBar: _verdictBar(cs, age, result),
     );
   }
 
@@ -504,18 +501,22 @@ class _TdscSmartScreenState extends State<TdscSmartScreen> {
           '${r.failed} fail${r.failed == 1 ? '' : 's'} of ${r.crossedTotal} crossed · below the ≥ 2 cut-off';
       icon = Icons.check_circle_rounded;
     }
-    return Material(
+    return Container(
       color: bg,
+      width: double.infinity,
       child: SafeArea(
         top: false,
         child: Padding(
           padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
           child: Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Icon(icon, color: Colors.white, size: 26),
+              Icon(icon, color: Colors.white, size: 24),
               const SizedBox(width: 10),
               Expanded(
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
