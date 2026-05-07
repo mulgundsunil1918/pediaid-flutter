@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../theme/theme_provider.dart';
 import '../../theme/app_theme.dart';
+import '../../utils/prefs_keys.dart';
 import '../../widgets/notification_bell.dart';
 import '../calculators/calculators_screen.dart';
 import '../calculators/gir_calculator.dart';
@@ -102,11 +104,57 @@ class _HomeScreenState extends State<HomeScreen> {
   final ValueNotifier<double> _scrollY = ValueNotifier<double>(0);
   static const double _kHeroFadeEnd = 120.0;
 
+  // ── Showcase coachmark keys ────────────────────────────────────────────────
+  // Each highlights a real UI element in the home screen on first visit
+  // (after the slide-based onboarding completes). Re-runnable from
+  // Settings → "Replay tutorial" — that handler clears
+  // PrefsKeys.interactiveTutorialDone so the next HomeScreen build starts
+  // the tour again.
+  final GlobalKey _scDrawerKey      = GlobalKey();
+  final GlobalKey _scSearchKey      = GlobalKey();
+  final GlobalKey _scQuickAccessKey = GlobalKey();
+  final GlobalKey _scCalculatorsKey = GlobalKey();
+  final GlobalKey _scFormularyKey   = GlobalKey();
+  final GlobalKey _scGuidesKey      = GlobalKey();
+  bool _tutorialAttempted = false;
+
   @override
   void initState() {
     super.initState();
     _loadPrefs();
     _scrollController.addListener(_onScroll);
+  }
+
+  /// Called once after the showcase frame is laid out. Reads prefs and,
+  /// if onboarding is done but the coachmark tour hasn't run yet, kicks
+  /// it off. Idempotent — guarded by [_tutorialAttempted].
+  Future<void> _maybeStartTutorial(BuildContext showcaseCtx) async {
+    if (_tutorialAttempted) return;
+    _tutorialAttempted = true;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final onboardingDone =
+          prefs.getBool(PrefsKeys.onboardingComplete) ?? false;
+      final tourDone =
+          prefs.getBool(PrefsKeys.interactiveTutorialDone) ?? false;
+      if (onboardingDone && !tourDone && mounted && showcaseCtx.mounted) {
+        ShowCaseWidget.of(showcaseCtx).startShowCase([
+          _scDrawerKey,
+          _scSearchKey,
+          _scQuickAccessKey,
+          _scCalculatorsKey,
+          _scFormularyKey,
+          _scGuidesKey,
+        ]);
+      }
+    } catch (_) {/* never block boot for the tour */}
+  }
+
+  Future<void> _markTourDone() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool(PrefsKeys.interactiveTutorialDone, true);
+    } catch (_) {/* fine — will retry next launch */}
   }
 
   void _onScroll() {
@@ -147,13 +195,26 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return ShowCaseWidget(
+      onFinish: _markTourDone,
+      blurValue: 1,
+      builder: _buildHomeScaffold,
+    );
+  }
+
+  Widget _buildHomeScaffold(BuildContext showcaseCtx) {
+    final cs = Theme.of(showcaseCtx).colorScheme;
+    final isDark = Theme.of(showcaseCtx).brightness == Brightness.dark;
+
+    // Fire the coachmark trigger after the first frame so widget keys are
+    // registered with the ShowCaseWidget controller.
+    WidgetsBinding.instance.addPostFrameCallback(
+        (_) => _maybeStartTutorial(showcaseCtx));
 
     return Scaffold(
       key: _scaffoldKey,
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      drawer: _buildDrawer(context, isDark),
+      backgroundColor: Theme.of(showcaseCtx).scaffoldBackgroundColor,
+      drawer: _buildDrawer(showcaseCtx, isDark),
       body: CustomScrollView(
         controller: _scrollController,
         slivers: [
@@ -166,9 +227,16 @@ class _HomeScreenState extends State<HomeScreen> {
             backgroundColor: isDark
                 ? const Color(0xFF022B42)
                 : const Color(0xFF395886),
-            leading: IconButton(
-              icon: const Icon(Icons.menu, color: Colors.white),
-              onPressed: () => _scaffoldKey.currentState?.openDrawer(),
+            leading: Showcase(
+              key: _scDrawerKey,
+              title: 'Menu',
+              description:
+                  'Settings, Account, About, Admin and Logout all live here.',
+              targetShapeBorder: const CircleBorder(),
+              child: IconButton(
+                icon: const Icon(Icons.menu, color: Colors.white),
+                onPressed: () => _scaffoldKey.currentState?.openDrawer(),
+              ),
             ),
             title: const Text(
               'PediAid',
@@ -473,28 +541,37 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const SizedBox(height: 12),
                 // Search bar (tappable — opens full search)
-                GestureDetector(
-                  onTap: () => showSearch(
-                    context: context,
-                    delegate: AppSearchDelegate(),
-                  ),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.14),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
+                Showcase(
+                  key: _scSearchKey,
+                  title: 'Search anything',
+                  description:
+                      'Type any drug, calculator, guide or guideline chapter. '
+                      'Common abbreviations like UTI, DKA, RSI or 2D echo all '
+                      'resolve to the right tool.',
+                  targetBorderRadius: BorderRadius.circular(12),
+                  child: GestureDetector(
+                    onTap: () => showSearch(
+                      context: context,
+                      delegate: AppSearchDelegate(),
                     ),
-                    child: Row(children: [
-                      Icon(Icons.search, color: Colors.white.withValues(alpha: 0.6), size: 18),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text('Search calculators, drugs, guides, charts…',
-                            style: GoogleFonts.plusJakartaSans(
-                                color: Colors.white.withValues(alpha: 0.55), fontSize: 13)),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.14),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
                       ),
-                      Icon(Icons.tune_rounded, color: Colors.white.withValues(alpha: 0.4), size: 16),
-                    ]),
+                      child: Row(children: [
+                        Icon(Icons.search, color: Colors.white.withValues(alpha: 0.6), size: 18),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text('Search calculators, drugs, guides, charts…',
+                              style: GoogleFonts.plusJakartaSans(
+                                  color: Colors.white.withValues(alpha: 0.55), fontSize: 13)),
+                        ),
+                        Icon(Icons.tune_rounded, color: Colors.white.withValues(alpha: 0.4), size: 16),
+                      ]),
+                    ),
                   ),
                 ),
               ],
@@ -544,36 +621,81 @@ class _HomeScreenState extends State<HomeScreen> {
         crossAxisCount: 2, crossAxisSpacing: 12, mainAxisSpacing: 12, childAspectRatio: 1.55,
       ),
       itemCount: cards.length,
-      itemBuilder: (_, i) => _FeatureCardWidget(card: cards[i], isDark: isDark),
+      itemBuilder: (_, i) {
+        Widget tile = _FeatureCardWidget(card: cards[i], isDark: isDark);
+        // Wrap the Calculators / Formulary / Guides cards in Showcase so
+        // the coachmark tour can highlight them. Index order matches the
+        // `cards` list above: 0=Calculators, 2=Formulary, 4=Guides.
+        if (i == 0) {
+          tile = Showcase(
+            key: _scCalculatorsKey,
+            title: 'Calculators',
+            description:
+                '40+ bedside calculators — GIR, blood gas, jaundice, '
+                'electrolyte corrections, ETT, fluids and more.',
+            targetBorderRadius: BorderRadius.circular(16),
+            child: tile,
+          );
+        } else if (i == 2) {
+          tile = Showcase(
+            key: _scFormularyKey,
+            title: 'Drug Formulary',
+            description:
+                '676 drugs (Neofax + Harriet Lane). Tap any drug for the '
+                'premium structured detail view with Quick Summary.',
+            targetBorderRadius: BorderRadius.circular(16),
+            child: tile,
+          );
+        } else if (i == 4) {
+          tile = Showcase(
+            key: _scGuidesKey,
+            title: 'Guides & emergency protocols',
+            description:
+                'IAP STG, NNF CPG, NRP, PALS, plus emergency tools — DKA, '
+                'RSI, snake / scorpion envenomation, status epilepticus.',
+            targetBorderRadius: BorderRadius.circular(16),
+            child: tile,
+          );
+        }
+        return tile;
+      },
     );
   }
 
   // ── Quick access header (label + edit button) ──────────────────────────────
 
   Widget _buildQuickHeader(BuildContext context, ColorScheme cs) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        _sectionLabel(context, 'Quick Access'),
-        GestureDetector(
-          onTap: () => _showEditQuickAccess(context),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-            decoration: BoxDecoration(
-              color: cs.primary.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: cs.primary.withValues(alpha: 0.2)),
+    return Showcase(
+      key: _scQuickAccessKey,
+      title: 'Quick Access',
+      description:
+          'Pin the calculators and tools you reach for most. Tap "Edit" '
+          'to add or remove tiles.',
+      targetBorderRadius: BorderRadius.circular(8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _sectionLabel(context, 'Quick Access'),
+          GestureDetector(
+            onTap: () => _showEditQuickAccess(context),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+              decoration: BoxDecoration(
+                color: cs.primary.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: cs.primary.withValues(alpha: 0.2)),
+              ),
+              child: Row(mainAxisSize: MainAxisSize.min, children: [
+                Icon(Icons.edit_outlined, size: 13, color: cs.primary),
+                const SizedBox(width: 5),
+                Text('Edit',
+                    style: GoogleFonts.plusJakartaSans(
+                        fontSize: 12, fontWeight: FontWeight.w600, color: cs.primary)),
+              ]),
             ),
-            child: Row(mainAxisSize: MainAxisSize.min, children: [
-              Icon(Icons.edit_outlined, size: 13, color: cs.primary),
-              const SizedBox(width: 5),
-              Text('Edit',
-                  style: GoogleFonts.plusJakartaSans(
-                      fontSize: 12, fontWeight: FontWeight.w600, color: cs.primary)),
-            ]),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
