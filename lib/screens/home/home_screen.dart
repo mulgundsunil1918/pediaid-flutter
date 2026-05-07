@@ -48,6 +48,8 @@ import '../../services/auth_service.dart';
 // ignore: unused_import
 import '../admin/admin_dashboard_screen.dart';
 import '../never_again/never_again_screen.dart';
+import '../guides/developmental_milestones/dev_milestones_hub.dart';
+import '../guides/developmental_milestones/tdsc/tdsc_assistant_screen.dart';
 
 // ── All available quick-access items ─────────────────────────────────────────
 
@@ -77,6 +79,9 @@ const List<_ChipDef> _allChips = [
   _ChipDef('allcalc',    'All Calculators', Icons.calculate_rounded),
   // Charts
   _ChipDef('growth',     'Growth Charts',   Icons.show_chart_rounded),
+  // Developmental
+  _ChipDef('devmile',    'Dev Milestones',  Icons.child_friendly_rounded),
+  _ChipDef('tdsc',       'TDSC',            Icons.assignment_turned_in_outlined),
   // References / library
   _ChipDef('formulary',  'Formulary',       Icons.menu_book_rounded),
   _ChipDef('labref',     'Lab Reference',   Icons.science_outlined),
@@ -91,8 +96,8 @@ const List<_ChipDef> _allChips = [
 const List<String> _kDefaultKeys = [
   'gir', 'gas', 'tpn', 'cga', 'ponderal', 'bsa', 'bp', 'neobp', 'bili',
   'fluid', 'burn', 'parkland', 'lund', 'pet', 'egfr', 'ga', 'vent',
-  'nutri', 'dve', 'allcalc', 'growth', 'formulary', 'labref', 'guides',
-  'cme', 'academics',
+  'nutri', 'dve', 'allcalc', 'growth', 'devmile', 'tdsc', 'formulary',
+  'labref', 'guides', 'cme', 'academics',
 ];
 
 // ── HomeScreen ────────────────────────────────────────────────────────────────
@@ -905,6 +910,8 @@ class _HomeScreenState extends State<HomeScreen> {
       'dve':       () => const DoubleVolumeExchange(),
       'allcalc':   () => const CalculatorsScreen(),
       'growth':    () => const GrowthChartsScreen(),
+      'devmile':   () => const DevMilestonesHub(),
+      'tdsc':      () => const TdscAssistantScreen(),
       'formulary': () => const FormularyScreen(),
       'labref':    () => const LabReferenceScreen(),
       'guides':    () => const GuidesScreen(),

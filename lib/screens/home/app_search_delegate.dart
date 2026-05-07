@@ -55,6 +55,7 @@ import '../guides/neonatal_echo_screen.dart';
 import '../guides/birthweight_classification_screen.dart';
 import '../guides/ga_classification_screen.dart';
 import '../guides/developmental_milestones/dev_milestones_hub.dart';
+import '../guides/developmental_milestones/tdsc/tdsc_assistant_screen.dart';
 // New emergency guides.
 import '../guides/acute_severe_asthma_screen.dart';
 import '../guides/avpu_screen.dart';
@@ -851,7 +852,7 @@ List<_SearchItem> _buildAllItems() => [
   ),
   _SearchItem(
     title: 'Developmental Milestones',
-    subtitle: 'AIIMS reference · smart view · DQ calculator',
+    subtitle: 'Smart view · list · red flags · DQ calculator',
     category: 'Guides',
     icon: Icons.child_friendly_rounded,
     color: _kGuideColor,
@@ -861,12 +862,37 @@ List<_SearchItem> _buildAllItems() => [
       'GDD', 'red flags', 'gross motor', 'fine motor', 'language',
       'social smile', 'pincer grasp', 'crawls', 'walks',
       'pretend play', 'social', 'hearing', 'vision',
-      'AIIMS', 'Sheffali Gulati', 'Trivandrum', 'TDSC',
       'developmental screening', 'denver', 'ages and stages',
       'pediatric development', 'paediatric development',
       'jargoning', 'babbling', 'cooing', 'tower of cubes', 'draw a man',
+      'sits', 'rolls over', 'stands', 'speaks', 'mama dada',
+      'preterm correction', 'corrected age', 'smart view',
     ],
     navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const DevMilestonesHub())),
+  ),
+  _SearchItem(
+    title: 'Trivandrum DSC (TDSC)',
+    subtitle: 'Intelligent screening assistant · auto verdict · refer rule',
+    category: 'Guides',
+    icon: Icons.assignment_turned_in_outlined,
+    color: _kGuideColor,
+    keywords: const [
+      'TDSC', 'Trivandrum', 'trivandrum dsc',
+      'trivandrum developmental screening chart',
+      'developmental screening', 'screening tool', 'dev screen',
+      'Nair', 'CDC Trivandrum', 'Indian Pediatrics',
+      'screening positive', 'suspect delay', 'refer for assessment',
+      'pass fail', 'achieved milestone', 'not achieved milestone',
+      'two or more fails', 'screen positive',
+      'Bayley', 'DASII', 'Vineland',
+      'age cursor', 'vertical line', 'classic mode', 'brown orange bar',
+      'milestone bar', 'window of acquisition',
+      'risk stratification', 'low risk', 'mild concern', 'moderate concern',
+      'preterm correction', 'corrected age',
+      'paediatric screening', 'pediatric screening', 'kerala',
+    ],
+    navigate: (ctx) =>
+        Navigator.push(ctx, MaterialPageRoute(builder: (_) => const TdscAssistantScreen())),
   ),
 
   // ─── Library / Academics ───────────────────────────────────────────────────

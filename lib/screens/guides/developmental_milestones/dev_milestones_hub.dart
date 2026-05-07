@@ -27,7 +27,6 @@ class DevMilestonesHub extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Developmental Milestones'),
@@ -43,48 +42,6 @@ class DevMilestonesHub extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.fromLTRB(14, 14, 14, 24),
           children: [
-            // Source attribution banner — clinicians need to see provenance
-            // before trusting any developmental tool.
-            Container(
-              padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
-              decoration: BoxDecoration(
-                color: cs.primaryContainer.withValues(alpha: 0.45),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: cs.primary.withValues(alpha: 0.25)),
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.verified_outlined, color: cs.primary, size: 22),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'AIIMS New Delhi reference',
-                          style: GoogleFonts.plusJakartaSans(
-                            fontSize: 12.5,
-                            fontWeight: FontWeight.w800,
-                            color: cs.onSurface,
-                          ),
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          '76 milestones · 23 red flags across 6 domains. Source: Child Neurology Division, Department of Paediatrics, AIIMS New Delhi (Prof. Sheffali Gulati). Enriched with Nelson + Ghai for DQ bands.',
-                          style: GoogleFonts.plusJakartaSans(
-                            fontSize: 11.5,
-                            height: 1.45,
-                            fontWeight: FontWeight.w500,
-                            color: cs.onSurfaceVariant,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 16),
             _HubTile(
               icon: Icons.auto_awesome_rounded,
               tint: const Color(0xFF1565C0),
@@ -145,14 +102,12 @@ class _HubTile extends StatelessWidget {
   final String title;
   final String subtitle;
   final VoidCallback onTap;
-  final bool comingSoon;
   const _HubTile({
     required this.icon,
     required this.tint,
     required this.title,
     required this.subtitle,
     required this.onTap,
-    this.comingSoon = false,
   });
   @override
   Widget build(BuildContext context) {
@@ -185,41 +140,14 @@ class _HubTile extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children: [
-                        Flexible(
-                          child: Text(
-                            title,
-                            style: GoogleFonts.plusJakartaSans(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w800,
-                              color: cs.onSurface,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        if (comingSoon) ...[
-                          const SizedBox(width: 8),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 2),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFE65100)
-                                  .withValues(alpha: 0.15),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              'SOON',
-                              style: GoogleFonts.plusJakartaSans(
-                                fontSize: 9.5,
-                                fontWeight: FontWeight.w800,
-                                letterSpacing: 0.6,
-                                color: const Color(0xFFE65100),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ],
+                    Text(
+                      title,
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w800,
+                        color: cs.onSurface,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 2),
                     Text(
