@@ -16,8 +16,12 @@ import '../../services/never_again_service.dart';
 
 const _kAllCategory = 'All';
 
+// 30 paediatric topics. The original 9 stay verbatim so existing posts
+// keep their category labels; the next 21 expand the taxonomy across
+// every major paediatric subspecialty.
 const List<String> _kCategories = [
   _kAllCategory,
+  // ── Original 9 (do NOT rename — existing posts reference these strings)
   'Neonatology',
   'Fluids & Electrolytes',
   'Jaundice',
@@ -26,10 +30,37 @@ const List<String> _kCategories = [
   'Procedures',
   'Resuscitation',
   'Nutrition',
+  // ── Subspecialties (added)
+  'Cardiology',
+  'Respiratory & Asthma',
+  'Gastroenterology & Hepatology',
+  'Nephrology / RTA',
+  'Endocrinology / Diabetes',
+  'Haematology / Oncology',
+  'Neurology / Seizures',
+  'Critical Care / PICU',
+  'Emergency / Triage',
+  // ── Acute presentations
+  'Burns & Trauma',
+  'Toxicology',
+  'Envenomation',
+  'Allergy / Anaphylaxis',
+  // ── Long-term / preventive
+  'Genetics / Metabolic',
+  'Vaccines & Immunisation',
+  'Growth & Development',
+  'Adolescent / Mental Health',
+  // ── Cross-cutting
+  'Diagnostics / Imaging',
+  'Surgery / Peri-operative',
+  'Child Protection / NAI',
+  'Communication / Ethics',
+  'Education / Teaching',
   'Other',
 ];
 
 const Map<String, Color> _kCategoryColors = {
+  // Original 9
   'Neonatology': Color(0xFF1565C0),
   'Fluids & Electrolytes': Color(0xFF00838F),
   'Jaundice': Color(0xFFF9A825),
@@ -38,6 +69,32 @@ const Map<String, Color> _kCategoryColors = {
   'Procedures': Color(0xFF2E7D32),
   'Resuscitation': Color(0xFFD84315),
   'Nutrition': Color(0xFF558B2F),
+  // Subspecialties
+  'Cardiology': Color(0xFFAD1457),
+  'Respiratory & Asthma': Color(0xFF0277BD),
+  'Gastroenterology & Hepatology': Color(0xFFEF6C00),
+  'Nephrology / RTA': Color(0xFF00695C),
+  'Endocrinology / Diabetes': Color(0xFF7B1FA2),
+  'Haematology / Oncology': Color(0xFFB71C1C),
+  'Neurology / Seizures': Color(0xFF512DA8),
+  'Critical Care / PICU': Color(0xFFE65100),
+  'Emergency / Triage': Color(0xFFD32F2F),
+  // Acute presentations
+  'Burns & Trauma': Color(0xFFBF360C),
+  'Toxicology': Color(0xFF4A148C),
+  'Envenomation': Color(0xFF33691E),
+  'Allergy / Anaphylaxis': Color(0xFFC62828),
+  // Long-term / preventive
+  'Genetics / Metabolic': Color(0xFF1A237E),
+  'Vaccines & Immunisation': Color(0xFF2E7D32),
+  'Growth & Development': Color(0xFF388E3C),
+  'Adolescent / Mental Health': Color(0xFF6A1B9A),
+  // Cross-cutting
+  'Diagnostics / Imaging': Color(0xFF00838F),
+  'Surgery / Peri-operative': Color(0xFF5D4037),
+  'Child Protection / NAI': Color(0xFFB71C1C),
+  'Communication / Ethics': Color(0xFF455A64),
+  'Education / Teaching': Color(0xFF1565C0),
   'Other': Color(0xFF546E7A),
 };
 
@@ -292,7 +349,7 @@ class _NeverAgainScreenState extends State<NeverAgainScreen> {
 
 // ── Category filter row ───────────────────────────────────────────────────────
 
-class _CategoryFilterRow extends StatelessWidget {
+class _CategoryFilterRow extends StatefulWidget {
   const _CategoryFilterRow({
     required this.selected,
     required this.onSelect,
@@ -302,53 +359,154 @@ class _CategoryFilterRow extends StatelessWidget {
   final ValueChanged<String> onSelect;
 
   @override
+  State<_CategoryFilterRow> createState() => _CategoryFilterRowState();
+}
+
+class _CategoryFilterRowState extends State<_CategoryFilterRow> {
+  final TextEditingController _q = TextEditingController();
+
+  @override
+  void dispose() {
+    _q.dispose();
+    super.dispose();
+  }
+
+  /// Chips that match the current filter query. "All" always stays
+  /// visible so users can still reset to the full list.
+  List<String> get _visibleCategories {
+    final q = _q.text.trim().toLowerCase();
+    if (q.isEmpty) return _kCategories;
+    return _kCategories
+        .where((c) => c == _kAllCategory || c.toLowerCase().contains(q))
+        .toList();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
+    final visible = _visibleCategories;
     return Container(
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(color: cs.onSurface.withValues(alpha: 0.08)),
         ),
       ),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-        child: Row(
-          children: _kCategories.map((cat) {
-            final isSelected = cat == selected;
-            final catColor = cat == _kAllCategory ? cs.primary : _categoryColor(cat);
-            return Padding(
-              padding: const EdgeInsets.only(right: 8),
-              child: GestureDetector(
-                onTap: () => onSelect(cat),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 180),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
-                  decoration: BoxDecoration(
-                    color: isSelected ? catColor : Colors.transparent,
-                    border: Border.all(
-                      color: isSelected
-                          ? catColor
-                          : cs.onSurface.withValues(alpha: 0.25),
-                    ),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    cat,
-                    style: GoogleFonts.plusJakartaSans(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Topic search — filter the chips themselves so 30 categories
+          // stay scannable. As the user types, only matching chips show.
+          Padding(
+            padding: const EdgeInsets.fromLTRB(14, 10, 14, 6),
+            child: SizedBox(
+              height: 38,
+              child: TextField(
+                controller: _q,
+                onChanged: (_) => setState(() {}),
+                style: GoogleFonts.plusJakartaSans(fontSize: 13),
+                decoration: InputDecoration(
+                  isDense: true,
+                  hintText: 'Search topics — e.g. seizure, sepsis, NICU…',
+                  hintStyle: GoogleFonts.plusJakartaSans(
                       fontSize: 12.5,
-                      fontWeight: FontWeight.w600,
-                      color: isSelected
-                          ? Colors.white
-                          : cs.onSurface.withValues(alpha: 0.7),
-                    ),
+                      color: cs.onSurface.withValues(alpha: 0.45)),
+                  prefixIcon: Icon(Icons.search,
+                      size: 18, color: cs.onSurface.withValues(alpha: 0.45)),
+                  suffixIcon: _q.text.isEmpty
+                      ? null
+                      : IconButton(
+                          icon: const Icon(Icons.clear, size: 16),
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                          onPressed: () {
+                            _q.clear();
+                            setState(() {});
+                          },
+                        ),
+                  filled: true,
+                  fillColor:
+                      cs.surfaceContainerHighest.withValues(alpha: 0.5),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    borderSide: BorderSide(
+                        color: cs.outlineVariant.withValues(alpha: 0.4)),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    borderSide: BorderSide(
+                        color: cs.outlineVariant.withValues(alpha: 0.4)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    borderSide: BorderSide(color: cs.primary),
                   ),
                 ),
               ),
-            );
-          }).toList(),
-        ),
+            ),
+          ),
+          // Horizontal-scrolling chip row. ListView.separated with explicit
+          // ClampingScrollPhysics scrolls reliably on Android; InkWell on
+          // each chip wins the tap vs swipe gesture arbitration so the
+          // user can swipe across chips to scroll without misfiring taps.
+          SizedBox(
+            height: 44,
+            child: visible.isEmpty
+                ? Center(
+                    child: Text(
+                      'No topic matches "${_q.text}"',
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 12,
+                        color: cs.onSurface.withValues(alpha: 0.45),
+                      ),
+                    ),
+                  )
+                : ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    physics: const ClampingScrollPhysics(),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    itemCount: visible.length,
+                    separatorBuilder: (_, __) => const SizedBox(width: 8),
+                    itemBuilder: (_, i) {
+                      final cat = visible[i];
+                      final isSelected = cat == widget.selected;
+                      final catColor = cat == _kAllCategory
+                          ? cs.primary
+                          : _categoryColor(cat);
+                      return InkWell(
+                        onTap: () => widget.onSelect(cat),
+                        borderRadius: BorderRadius.circular(20),
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 180),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 14, vertical: 7),
+                          decoration: BoxDecoration(
+                            color: isSelected ? catColor : Colors.transparent,
+                            border: Border.all(
+                              color: isSelected
+                                  ? catColor
+                                  : cs.onSurface.withValues(alpha: 0.25),
+                            ),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            cat,
+                            style: GoogleFonts.plusJakartaSans(
+                              fontSize: 12.5,
+                              fontWeight: FontWeight.w600,
+                              color: isSelected
+                                  ? Colors.white
+                                  : cs.onSurface.withValues(alpha: 0.7),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+          ),
+        ],
       ),
     );
   }

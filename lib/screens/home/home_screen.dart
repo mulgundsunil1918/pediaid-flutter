@@ -739,28 +739,43 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     }
 
-    return Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      children: visible.map((c) => InkWell(
-        onTap: () => _navigateChip(context, c.key),
-        borderRadius: BorderRadius.circular(30),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-          decoration: BoxDecoration(
-            color: chipBg,
+    // Horizontal-scrolling carousel — with the new default of 26 chips,
+    // a Wrap would push the page down by 4-5 rows. ListView.separated keeps
+    // the row a single line and slides under the user's finger on Android +
+    // iOS without fighting the parent CustomScrollView (we cap with
+    // shrinkWrap + a fixed height).
+    return SizedBox(
+      height: 38,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        physics: const ClampingScrollPhysics(),
+        itemCount: visible.length,
+        separatorBuilder: (_, __) => const SizedBox(width: 8),
+        itemBuilder: (_, i) {
+          final c = visible[i];
+          return InkWell(
+            onTap: () => _navigateChip(context, c.key),
             borderRadius: BorderRadius.circular(30),
-            border: Border.all(color: chipBorder),
-          ),
-          child: Row(mainAxisSize: MainAxisSize.min, children: [
-            Icon(c.icon, size: 15, color: cs.primary),
-            const SizedBox(width: 6),
-            Text(c.label,
-                style: GoogleFonts.plusJakartaSans(
-                    fontSize: 12, fontWeight: FontWeight.w600, color: cs.onSurface)),
-          ]),
-        ),
-      )).toList(),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              decoration: BoxDecoration(
+                color: chipBg,
+                borderRadius: BorderRadius.circular(30),
+                border: Border.all(color: chipBorder),
+              ),
+              child: Row(mainAxisSize: MainAxisSize.min, children: [
+                Icon(c.icon, size: 15, color: cs.primary),
+                const SizedBox(width: 6),
+                Text(c.label,
+                    style: GoogleFonts.plusJakartaSans(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: cs.onSurface)),
+              ]),
+            ),
+          );
+        },
+      ),
     );
   }
 
