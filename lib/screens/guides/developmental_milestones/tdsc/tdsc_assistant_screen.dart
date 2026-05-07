@@ -139,6 +139,8 @@ class _TdscAssistantScreenState extends State<TdscAssistantScreen> {
           _ageCard(cs),
           const SizedBox(height: 14),
           _riskHero(cs, interp),
+          const SizedBox(height: 12),
+          _quickActions(cs, interp),
           const SizedBox(height: 14),
           _graphCard(cs, interp),
           const SizedBox(height: 14),
@@ -526,6 +528,62 @@ class _TdscAssistantScreenState extends State<TdscAssistantScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  // ── Quick actions ──────────────────────────────────────────────────────
+  Widget _quickActions(ColorScheme cs, TdscInterpretation interp) {
+    final expectedCount = interp.expected.length;
+    final hasAnyAnswer = _answers.isNotEmpty;
+    if (expectedCount == 0 && !hasAnyAnswer) return const SizedBox.shrink();
+    return Row(
+      children: [
+        if (expectedCount > 0)
+          Expanded(
+            child: ElevatedButton.icon(
+              onPressed: _markAllExpectedAchieved,
+              icon: const Icon(Icons.done_all_rounded, size: 16),
+              label: Text(
+                'Mark all $expectedCount expected as achieved',
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 12.5,
+                  fontWeight: FontWeight.w800,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: _kAchieved,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 12, vertical: 10),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                elevation: 0,
+              ),
+            ),
+          ),
+        if (hasAnyAnswer) ...[
+          const SizedBox(width: 8),
+          OutlinedButton.icon(
+            onPressed: () => setState(_answers.clear),
+            icon: const Icon(Icons.refresh_rounded, size: 16),
+            label: Text(
+              'Reset',
+              style: GoogleFonts.plusJakartaSans(
+                fontSize: 12.5,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+            style: OutlinedButton.styleFrom(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+            ),
+          ),
+        ],
+      ],
     );
   }
 
@@ -1093,6 +1151,31 @@ class _TdscAssistantScreenState extends State<TdscAssistantScreen> {
     );
   }
 
+  // ── Status setter (used by inline toggles + sheet) ────────────────────
+  void _setStatus(TdscItem item, TdscStatus s) {
+    setState(() {
+      if (s == TdscStatus.notTested) {
+        _answers.remove(stableId(item));
+      } else {
+        _answers[stableId(item)] = s;
+      }
+    });
+  }
+
+  /// Bulk: mark every EXPECTED milestone as achieved at the current age.
+  /// Typical "child has hit everything expected, no concerns" workflow —
+  /// flip the few they failed afterwards.
+  void _markAllExpectedAchieved() {
+    final age = _age;
+    setState(() {
+      for (final it in kTdscAll) {
+        if (bucketFor(it, age) == TdscBucket.expected) {
+          _answers[stableId(it)] = TdscStatus.achieved;
+        }
+      }
+    });
+  }
+
   // ── Milestone tile ────────────────────────────────────────────────────
   Widget _milestoneTile(
     ColorScheme cs,
@@ -1102,104 +1185,140 @@ class _TdscAssistantScreenState extends State<TdscAssistantScreen> {
   }) {
     final status = statusFor(item, _answers);
     final domain = kTdscDomainInfo[item.domain]!;
-    return InkWell(
-      onTap: () => _editMilestone(item),
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
-        child: Container(
-          padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
-          decoration: BoxDecoration(
-            color: cs.surface,
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(
-              color: cs.outlineVariant.withValues(alpha: 0.55),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(10, 8, 8, 8),
+        decoration: BoxDecoration(
+          color: cs.surface,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: cs.outlineVariant.withValues(alpha: 0.55),
+          ),
+        ),
+        child: Row(
+          children: [
+            // Icon + name (tap to open prompt sheet)
+            Expanded(
+              child: InkWell(
+                onTap: () => _editMilestone(item),
+                borderRadius: BorderRadius.circular(8),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 2),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 28,
+                        height: 28,
+                        decoration: BoxDecoration(
+                          color: domain.color.withValues(alpha: 0.13),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child:
+                            Icon(domain.icon, color: domain.color, size: 15),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              item.name,
+                              style: GoogleFonts.plusJakartaSans(
+                                fontSize: 12.5,
+                                fontWeight: FontWeight.w800,
+                                color: cs.onSurface,
+                                height: 1.25,
+                              ),
+                            ),
+                            const SizedBox(height: 1),
+                            Text(
+                              '${domain.shortLabel} · ${item.ageStart.toStringAsFixed(0)}–${item.ageEnd.toStringAsFixed(0)} mo',
+                              style: GoogleFonts.jetBrainsMono(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w700,
+                                color: cs.onSurfaceVariant,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
-          ),
-          child: Row(
-            children: [
-              Container(
-                width: 30,
-                height: 30,
-                decoration: BoxDecoration(
-                  color: domain.color.withValues(alpha: 0.13),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Icon(domain.icon, color: domain.color, size: 16),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      item.name,
-                      style: GoogleFonts.plusJakartaSans(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w800,
-                        color: cs.onSurface,
-                        height: 1.25,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      '${domain.shortLabel} · ${item.ageStart.toStringAsFixed(0)}–${item.ageEnd.toStringAsFixed(0)} mo',
-                      style: GoogleFonts.jetBrainsMono(
-                        fontSize: 10.5,
-                        fontWeight: FontWeight.w700,
-                        color: cs.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 8),
-              _statusPill(status),
-            ],
-          ),
+            // Inline 3-button toggle — direct set, no sheet
+            const SizedBox(width: 6),
+            _inlineToggle(item, status),
+          ],
         ),
       ),
     );
   }
 
-  Widget _statusPill(TdscStatus status) {
-    late Color color;
-    late String label;
-    late IconData icon;
-    switch (status) {
-      case TdscStatus.achieved:
-        color = _kAchieved;
-        label = 'Achieved';
-        icon = Icons.check_rounded;
-      case TdscStatus.notAchieved:
-        color = _kDelayed;
-        label = 'Not yet';
-        icon = Icons.close_rounded;
-      case TdscStatus.notTested:
-        color = _kFuture;
-        label = 'Untested';
-        icon = Icons.help_outline_rounded;
-    }
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(999),
-        border: Border.all(color: color.withValues(alpha: 0.4)),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, color: color, size: 12),
-          const SizedBox(width: 4),
-          Text(
-            label,
-            style: GoogleFonts.plusJakartaSans(
-              fontSize: 10.5,
-              fontWeight: FontWeight.w800,
-              color: color,
+  Widget _inlineToggle(TdscItem item, TdscStatus status) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        _toggleBtn(
+          icon: Icons.check_rounded,
+          color: _kAchieved,
+          selected: status == TdscStatus.achieved,
+          tooltip: 'Achieved',
+          onTap: () => _setStatus(item, TdscStatus.achieved),
+        ),
+        const SizedBox(width: 4),
+        _toggleBtn(
+          icon: Icons.close_rounded,
+          color: _kDelayed,
+          selected: status == TdscStatus.notAchieved,
+          tooltip: 'Not yet',
+          onTap: () => _setStatus(item, TdscStatus.notAchieved),
+        ),
+        const SizedBox(width: 4),
+        _toggleBtn(
+          icon: Icons.remove_rounded,
+          color: _kFuture,
+          selected: status == TdscStatus.notTested,
+          tooltip: 'Clear / Untested',
+          onTap: () => _setStatus(item, TdscStatus.notTested),
+        ),
+      ],
+    );
+  }
+
+  Widget _toggleBtn({
+    required IconData icon,
+    required Color color,
+    required bool selected,
+    required String tooltip,
+    required VoidCallback onTap,
+  }) {
+    return Tooltip(
+      message: tooltip,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(8),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 140),
+          width: 32,
+          height: 32,
+          decoration: BoxDecoration(
+            color: selected ? color : color.withValues(alpha: 0.08),
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: selected ? color : color.withValues(alpha: 0.35),
+              width: selected ? 1.4 : 1,
             ),
           ),
-        ],
+          alignment: Alignment.center,
+          child: Icon(
+            icon,
+            size: 16,
+            color: selected ? Colors.white : color,
+          ),
+        ),
       ),
     );
   }
