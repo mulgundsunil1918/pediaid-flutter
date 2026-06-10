@@ -81,7 +81,7 @@ class GuidelinesSearchService {
       fullName: 'IAP Standard Treatment Guidelines 2022',
       colorArgb: 0xFF1E3A5F,
       indexUrl:
-          'https://mulgundsunil1918.github.io/pediaid-stg/stg_index.json',
+          'https://pediaid.bridgr.co.in/stg_index.json',
     ),
     GuidelineSource(
       slug: 'iap-action-plan-2026',
@@ -89,7 +89,7 @@ class GuidelinesSearchService {
       fullName: 'IAP Action Plan 2026 — Practice Guidelines',
       colorArgb: 0xFFEA580C,
       indexUrl:
-          'https://mulgundsunil1918.github.io/pediaid-frontend/data/iap-action-plan-2026-index.json',
+          'https://pediaid.bridgr.co.in/data/iap-action-plan-2026-index.json',
     ),
     GuidelineSource(
       slug: 'nnf-cpg',
@@ -97,7 +97,7 @@ class GuidelinesSearchService {
       fullName: 'NNF Clinical Practice Guidelines',
       colorArgb: 0xFF7C3AED,
       indexUrl:
-          'https://mulgundsunil1918.github.io/pediaid-frontend/data/nnf-cpg-index.json',
+          'https://pediaid.bridgr.co.in/data/nnf-cpg-index.json',
     ),
   ];
 

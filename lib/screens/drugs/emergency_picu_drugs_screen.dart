@@ -15,6 +15,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../guides/emergency_icu_drugs_screen.dart';
+import '../../widgets/ios_web_disclaimer_banner.dart';
+import '../../widgets/ios_feature_gate.dart';
 
 const Color _picuRed = Color(0xFF6A1B9A); // PICU = purple to differentiate from NICU red
 const Color _picuRedDark = Color(0xFF4A148C);
@@ -459,7 +461,12 @@ class _EmergencyPICUDrugsScreenState extends State<EmergencyPICUDrugsScreen> {
   Widget build(BuildContext context) {
     final textTheme =
         GoogleFonts.plusJakartaSansTextTheme(Theme.of(context).textTheme);
-    return Theme(
+    return IosFeatureGate(
+      featureName: 'Emergency PICU Drugs',
+      description:
+          'Weight-based emergency drug dosage calculator for PICU — bolus drugs '
+          'and continuous vasoactive infusions. Access this feature on the PediAid web app.',
+      child: Theme(
       data: Theme.of(context).copyWith(textTheme: textTheme),
       child: Scaffold(
         appBar: AppBar(
@@ -494,6 +501,7 @@ class _EmergencyPICUDrugsScreenState extends State<EmergencyPICUDrugsScreen> {
         ),
         body: Column(
           children: [
+            const IosWebDisclaimerBanner(),
             // ── Module switch ────────────────────────────────────────────
             _PicuModuleSwitch(
               current: _module,
@@ -571,7 +579,7 @@ class _EmergencyPICUDrugsScreenState extends State<EmergencyPICUDrugsScreen> {
           ],
         ),
       ),
-    );
+    )); // Theme + IosFeatureGate
   }
 }
 
@@ -714,9 +722,9 @@ class _PicuStickyHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     return Container(
-      color: Theme.of(context).cardColor,
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
       decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
         border: Border(
           bottom: BorderSide(
               color: cs.onSurface.withValues(alpha: 0.12), width: 1),

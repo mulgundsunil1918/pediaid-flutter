@@ -27,7 +27,7 @@ class _AdminPendingChaptersScreenState
   Future<List<PendingChapterSubmission>>? _future;
 
   static const String _reviewBaseUrl =
-      'https://mulgundsunil1918.github.io/pediaid-frontend/academics/moderation';
+      'https://pediaid.bridgr.co.in/academics/moderation';
 
   @override
   void initState() {

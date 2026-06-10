@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
@@ -15,7 +17,9 @@ class _IAPChartScreenState extends State<IAPChartScreen> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bgColor = isDark ? Theme.of(context).scaffoldBackgroundColor : const Color(0xFFF0F3FA);
+    final bgColor = isDark
+        ? Theme.of(context).scaffoldBackgroundColor
+        : const Color(0xFFF0F3FA);
 
     return Scaffold(
       appBar: AppBar(
@@ -28,8 +32,7 @@ class _IAPChartScreenState extends State<IAPChartScreen> {
           children: [
             Text('IAP Growth Charts',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            Text('5–18 Years · IAP 2015',
-                style: TextStyle(fontSize: 11)),
+            Text('5–18 Years · IAP 2015', style: TextStyle(fontSize: 11)),
           ],
         ),
         actions: [
@@ -43,7 +46,8 @@ class _IAPChartScreenState extends State<IAPChartScreen> {
         children: [
           Container(color: bgColor),
           FutureBuilder<String>(
-            future: rootBundle.loadString('assets/iap_growth_chart_2015_edited.html'),
+            future: rootBundle
+                .loadString('assets/iap_growth_chart_2015_edited.html'),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return const SizedBox.shrink();
@@ -62,22 +66,31 @@ class _IAPChartScreenState extends State<IAPChartScreen> {
                   if (mounted) setState(() => _isLoading = true);
                 },
                 onLoadStop: (controller, url) async {
-                  await controller.evaluateJavascript(source:
-                    "document.body.style.backgroundColor = '${isDark ? '#0A0A0A' : '#F0F3FA'}';");
+                  await controller.evaluateJavascript(
+                      source:
+                          "document.body.style.backgroundColor = '${isDark ? '#0A0A0A' : '#F0F3FA'}';");
                   if (mounted) setState(() => _isLoading = false);
                 },
                 initialSettings: InAppWebViewSettings(
                   javaScriptEnabled: true,
                   domStorageEnabled: true,
-                  allowFileAccessFromFileURLs: true,
-                  allowUniversalAccessFromFileURLs: true,
-                  mixedContentMode: MixedContentMode.MIXED_CONTENT_ALWAYS_ALLOW,
-                  useWideViewPort: true,
-                  loadWithOverviewMode: true,
-                  supportZoom: true,
-                  builtInZoomControls: true,
-                  displayZoomControls: false,
                   transparentBackground: false,
+                  supportZoom: true,
+                  // iOS-specific
+                  allowsInlineMediaPlayback: !kIsWeb && !Platform.isAndroid,
+                  allowsBackForwardNavigationGestures:
+                      !kIsWeb && !Platform.isAndroid,
+                  // Android-specific
+                  allowFileAccessFromFileURLs: !kIsWeb && Platform.isAndroid,
+                  allowUniversalAccessFromFileURLs:
+                      !kIsWeb && Platform.isAndroid,
+                  mixedContentMode: !kIsWeb && Platform.isAndroid
+                      ? MixedContentMode.MIXED_CONTENT_ALWAYS_ALLOW
+                      : null,
+                  useWideViewPort: !kIsWeb && Platform.isAndroid,
+                  loadWithOverviewMode: !kIsWeb && Platform.isAndroid,
+                  builtInZoomControls: !kIsWeb && Platform.isAndroid,
+                  displayZoomControls: false,
                 ),
               );
             },
@@ -93,11 +106,16 @@ class _IAPChartScreenState extends State<IAPChartScreen> {
                       color: Theme.of(context).colorScheme.primary,
                     ),
                     const SizedBox(height: 16),
-                    Text('Loading IAP Charts...',
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
-                          fontSize: 14,
-                        )),
+                    Text(
+                      'Loading IAP Charts...',
+                      style: TextStyle(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withValues(alpha: 0.6),
+                        fontSize: 14,
+                      ),
+                    ),
                   ],
                 ),
               ),

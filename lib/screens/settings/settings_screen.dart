@@ -31,13 +31,14 @@ import '../../services/auth_service.dart';
 import '../../utils/friendly_error.dart';
 import '../../utils/prefs_keys.dart';
 import '../faq_screen.dart';
+import '../references_screen.dart';
 
 const String _kSupportEmail = 'mulgundsunil@gmail.com';
 const String _kPrivacyUrl =
-    'https://mulgundsunil1918.github.io/pediaid-landing/privacy.html';
+    'https://pediaid.bridgr.co.in/privacy.html';
 const String _kPlayStoreUrl =
     'https://play.google.com/store/apps/details?id=org.pediaid.app';
-const String _kWebAppUrl = 'https://mulgundsunil1918.github.io/pediaid-flutter/';
+const String _kWebAppUrl = 'https://pediaid.bridgr.co.in/';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -223,6 +224,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
               icon: Icons.description_outlined,
               title: 'Medical Disclaimer',
               onTap: _showMedicalDisclaimer,
+            ),
+            _Divider(),
+            _Tile(
+              icon: Icons.menu_book_outlined,
+              title: 'References & Sources',
+              subtitle: 'All medical sources cited in PediAid',
+              onTap: () => Navigator.push(context,
+                  MaterialPageRoute(builder: (_) => const ReferencesScreen())),
             ),
             _Divider(),
             _Tile(

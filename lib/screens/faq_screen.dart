@@ -11,7 +11,7 @@ class FaqScreen extends StatelessWidget {
 
   static const String _supportEmail = 'mulgundsunil@gmail.com';
   static const String _privacyUrl =
-      'https://mulgundsunil1918.github.io/pediaid-landing/privacy.html';
+      'https://pediaid.bridgr.co.in/privacy.html';
 
   static const List<_QA> _items = [
     // ── About PediAid ───────────────────────────────────────────────────

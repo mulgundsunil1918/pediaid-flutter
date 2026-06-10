@@ -4,26 +4,24 @@
 <dict>
 	<key>method</key>
 	<string>app-store</string>
-	<key>destination</key>
-	<string>export</string>
+	<key>teamID</key>
+	<string>SR35PG294W</string>
 	<key>signingStyle</key>
 	<string>manual</string>
-	<key>uploadSymbols</key>
-	<true/>
+	<key>provisioningProfiles</key>
+	<dict>
+		<key>app.pediaid.pediaid</key>
+		<string>app.pediaid.pediaid AppStore</string>
+	</dict>
 	<key>uploadBitcode</key>
 	<false/>
 	<key>compileBitcode</key>
 	<false/>
+	<key>uploadSymbols</key>
+	<true/>
 	<key>stripSwiftSymbols</key>
 	<true/>
-	<key>generateAppStoreInformation</key>
-	<true/>
-	<key>teamID</key>
-	<string>$(DEVELOPMENT_TEAM)</string>
-	<key>provisioningProfiles</key>
-	<dict>
-		<key>com.pediaid.pediaid</key>
-		<string>$(PROVISIONING_PROFILE_SPECIFIER)</string>
-	</dict>
+	<key>destination</key>
+	<string>export</string>
 </dict>
 </plist>

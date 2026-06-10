@@ -7,6 +7,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../widgets/ios_web_disclaimer_banner.dart';
+import '../../widgets/ios_feature_gate.dart';
 import 'emergency/current_infusions.dart';
 import 'emergency/resuscitation_sheet.dart';
 import 'emergency/drug_extras.dart';
@@ -928,7 +930,12 @@ class _EmergencyNICUDrugsScreenState extends State<EmergencyNICUDrugsScreen>
       Theme.of(context).textTheme,
     );
 
-    return Theme(
+    return IosFeatureGate(
+      featureName: 'Emergency NICU Drugs',
+      description:
+          'Weight-based emergency drug preparation and dosage reference for NICU. '
+          'Access this feature on the PediAid web app.',
+      child: Theme(
       data: Theme.of(context).copyWith(textTheme: textTheme),
       child: Scaffold(
         appBar: AppBar(
@@ -1026,6 +1033,7 @@ class _EmergencyNICUDrugsScreenState extends State<EmergencyNICUDrugsScreen>
         ),
         body: Column(
           children: [
+            const IosWebDisclaimerBanner(),
             // ── Top-level Module switch (STAT BOLUS / INFUSION) ───────────
             _ModuleSwitch(
               current: _module,
@@ -1102,7 +1110,7 @@ class _EmergencyNICUDrugsScreenState extends State<EmergencyNICUDrugsScreen>
           ],
         ),
       ),
-    );
+    )); // Theme + IosFeatureGate
   }
 }
 
@@ -1250,9 +1258,9 @@ class _StickyHeader extends StatelessWidget {
     final cs = Theme.of(context).colorScheme;
 
     return Container(
-      color: Theme.of(context).cardColor,
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
       decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
         border: Border(
           bottom: BorderSide(
             color: cs.onSurface.withValues(alpha: 0.12),

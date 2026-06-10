@@ -15,7 +15,7 @@ class AcademicsWebScreen extends StatefulWidget {
 
 class _AcademicsWebScreenState extends State<AcademicsWebScreen> {
   static const _baseUrl =
-      'https://mulgundsunil1918.github.io/pediaid-frontend';
+      'https://pediaid.bridgr.co.in';
 
   InAppWebViewController? _controller;
   bool _loading = true;

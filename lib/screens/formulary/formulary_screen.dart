@@ -4,6 +4,8 @@ import 'drug_pdf_viewer_screen.dart';
 import '../drugs/emergency_nicu_drugs_screen.dart';
 import '../drugs/emergency_picu_drugs_screen.dart';
 import '../formulary_v2/formulary_v2_hub.dart';
+import '../../widgets/ios_web_disclaimer_banner.dart';
+import '../../widgets/ios_feature_gate.dart';
 
 enum _Source { none, neofax, harrietLane }
 
@@ -82,7 +84,13 @@ class _FormularyScreenState extends State<FormularyScreen> {
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
-    return Scaffold(
+    return IosFeatureGate(
+      featureName: 'Drug Formulary',
+      description:
+          'The PediAid drug formulary contains dosage information from Neofax® '
+          'and the Harriet Lane Handbook®. Access the complete formulary with '
+          'all 676 drugs on the PediAid web app.',
+      child: Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor: cs.primary,
@@ -100,6 +108,7 @@ class _FormularyScreenState extends State<FormularyScreen> {
         bottom: true,
         child: Column(
           children: [
+            const IosWebDisclaimerBanner(),
             _buildSourceSelector(),
             if (_selectedSource != _Source.none) ...[
               _buildSearchBar(),
@@ -108,7 +117,7 @@ class _FormularyScreenState extends State<FormularyScreen> {
           ],
         ),
       ),
-    );
+    )); // Scaffold + IosFeatureGate
   }
 
   // ── Source selector ──────────────────────────────────────────────────────────

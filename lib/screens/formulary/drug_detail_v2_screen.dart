@@ -32,6 +32,7 @@
 // =============================================================================
 
 import 'package:flutter/material.dart';
+import '../../widgets/ios_web_disclaimer_banner.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../services/formulary_service.dart';
 import '../../services/formulary_v2_service.dart';
@@ -131,8 +132,10 @@ class _DrugBody extends StatelessWidget {
     final tox = ToxicitySplit.from(drug.adverseEffectsMd);
 
     return ListView(
-      padding: const EdgeInsets.fromLTRB(14, 12, 14, 36),
+      padding: const EdgeInsets.fromLTRB(14, 0, 14, 36),
       children: [
+        const IosWebDisclaimerBanner(),
+        const SizedBox(height: 12),
         // ── Hero ──────────────────────────────────────────────────────
         _Hero(drug: drug),
         const SizedBox(height: 14),

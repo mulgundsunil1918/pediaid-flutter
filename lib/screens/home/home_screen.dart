@@ -35,10 +35,15 @@ import '../settings/settings_screen.dart';
 import '../lab_reference/lab_reference_screen.dart';
 import '../about_screen.dart';
 import '../account_screen.dart';
+import '../references_screen.dart';
 import '../guides/guides_screen.dart';
 import '../cme/cme_screen.dart';
 import '../shared/suggest_feature_sheet.dart';
 import '../../academics/academics_web_screen.dart';
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:in_app_review/in_app_review.dart';
+import 'package:share_plus/share_plus.dart';
 import 'app_search_delegate.dart';
 // AuthService + AdminDashboardScreen imports preserved as references —
 // auth is disabled for testing, but _buildAdminTile below still uses the
@@ -262,29 +267,30 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             actions: [
-              // Support the developer — opens bridgr.co.in/support?from=pediaid
-              IconButton(
-                tooltip: 'Support the developer',
-                onPressed: () async {
-                  final uri = Uri.parse(
-                      'https://bridgr.co.in/support?from=pediaid');
-                  try {
-                    await launchUrl(uri,
-                        mode: LaunchMode.externalApplication);
-                  } catch (_) {
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Couldn't open the link.")),
-                      );
+              // Support the developer — hidden on iOS (App Store guideline 3.1.1)
+              if (kIsWeb || !Platform.isIOS)
+                IconButton(
+                  tooltip: 'Support the developer',
+                  onPressed: () async {
+                    final uri = Uri.parse(
+                        'https://bridgr.co.in/support?from=pediaid');
+                    try {
+                      await launchUrl(uri,
+                          mode: LaunchMode.externalApplication);
+                    } catch (_) {
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text("Couldn't open the link.")),
+                        );
+                      }
                     }
-                  }
-                },
-                icon: const Icon(
-                  Icons.favorite_rounded,
-                  color: Colors.white,
-                  size: 22,
+                  },
+                  icon: const Icon(
+                    Icons.favorite_rounded,
+                    color: Colors.white,
+                    size: 22,
+                  ),
                 ),
-              ),
               Consumer<ThemeProvider>(
                 builder: (context, themeProvider, _) => IconButton(
                   onPressed: () => themeProvider.toggleTheme(),
@@ -334,12 +340,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: ConstrainedBox(
                         constraints: BoxConstraints(maxWidth: maxContent),
                         child: Padding(
-                          padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
+                          padding: const EdgeInsets.fromLTRB(16, 10, 16, 32),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              _sectionLabel(context, 'Features'),
-                              const SizedBox(height: 12),
                               _buildFeatureGrid(context, isDark, cs),
                               const SizedBox(height: 24),
                               // Recents row — only renders when the user
@@ -353,6 +357,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               _buildQuickChips(context, cs, isDark),
                               const SizedBox(height: 24),
                               _buildDisclaimer(context, cs),
+                              const SizedBox(height: 8),
+                              _buildReferencesLink(context, cs),
                               const SizedBox(height: 16),
                               _buildSuggestBanner(context, cs),
                               // Admin tile disabled while auth is removed for
@@ -365,7 +371,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     );
                   },
                 ),
-                _buildDonationFooter(context, isDark),
+                if (kIsWeb || !Platform.isIOS) _buildDonationFooter(context, isDark),
                 SizedBox(height: MediaQuery.of(context).padding.bottom + 16),
               ],
             ),
@@ -1041,6 +1047,57 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // ── References & Sources link ─────────────────────────────────────────────
+
+  Widget _buildReferencesLink(BuildContext context, ColorScheme cs) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return GestureDetector(
+      onTap: () => Navigator.push(context,
+          MaterialPageRoute(builder: (_) => const ReferencesScreen())),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+        decoration: BoxDecoration(
+          color: isDark
+              ? const Color(0xFF1A1A2E)
+              : const Color(0xFFEEF2FF),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: isDark
+                ? const Color(0xFF4F46E5).withValues(alpha: 0.35)
+                : const Color(0xFFC7D2FE),
+          ),
+        ),
+        child: Row(
+          children: [
+            Icon(Icons.menu_book_rounded,
+                size: 16,
+                color: isDark
+                    ? const Color(0xFF818CF8)
+                    : const Color(0xFF4F46E5)),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                'References & Sources — Neofax, Harriet Lane, IAP STG, WHO & more',
+                style: TextStyle(
+                  fontSize: 11.5,
+                  color: isDark
+                      ? const Color(0xFF818CF8)
+                      : const Color(0xFF3730A3),
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            Icon(Icons.chevron_right_rounded,
+                size: 16,
+                color: isDark
+                    ? const Color(0xFF818CF8).withValues(alpha: 0.6)
+                    : const Color(0xFF4F46E5).withValues(alpha: 0.6)),
+          ],
+        ),
+      ),
+    );
+  }
+
   // ── Suggest a Feature banner ──────────────────────────────────────────────
 
   Widget _buildSuggestBanner(BuildContext context, ColorScheme cs) {
@@ -1172,10 +1229,74 @@ class _HomeScreenState extends State<HomeScreen> {
                 // formulary, lab reference, guides, CME, academics) are the
                 // primary tiles on the home screen itself, so they've been
                 // removed from the drawer to keep it a quiet utility menu.
-                _DrawerItem(icon: Icons.home_rounded,         label: 'Home',     onTap: () => Navigator.pop(context)),
-                _DrawerItem(icon: Icons.settings_rounded,     label: 'Settings', onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const SettingsScreen())); }),
-                _DrawerItem(icon: Icons.info_outline_rounded, label: 'About me', onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const AboutScreen())); }),
+                _DrawerItem(icon: Icons.home_rounded,            label: 'Home',     onTap: () => Navigator.pop(context)),
+                _DrawerItem(icon: Icons.settings_rounded,        label: 'Settings', onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const SettingsScreen())); }),
+                _DrawerItem(icon: Icons.info_outline_rounded,    label: 'About',    onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const AboutScreen())); }),
+                _DrawerItem(icon: Icons.menu_book_rounded,       label: 'References & Sources', onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const ReferencesScreen())); }),
                 _DrawerItem(icon: Icons.account_circle_outlined, label: 'Account',  onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const AccountScreen())); }),
+                const Divider(height: 24, indent: 16, endIndent: 16),
+                // ── Rate, Share, Web, Feedback ────────────────────────
+                _DrawerItem(
+                  icon: Icons.star_rounded,
+                  label: 'Rate PediAid',
+                  onTap: () async {
+                    Navigator.pop(context);
+                    final review = InAppReview.instance;
+                    if (await review.isAvailable()) {
+                      review.requestReview();
+                    } else {
+                      review.openStoreListing(
+                        appStoreId: '6748139585',
+                        microsoftStoreId: null,
+                      );
+                    }
+                  },
+                ),
+                _DrawerItem(
+                  icon: Icons.share_rounded,
+                  label: 'Share with Colleagues',
+                  onTap: () {
+                    Navigator.pop(context);
+                    Share.share(
+                      'Check out PediAid — a free paediatric & neonatal clinical reference app for drug doses, calculators, and growth charts.\n\n'
+                      '📱 iOS: https://apps.apple.com/app/id6748139585\n'
+                      '🤖 Android: https://play.google.com/store/apps/details?id=org.pediaid.app',
+                    );
+                  },
+                ),
+                _DrawerItem(
+                  icon: Icons.language_rounded,
+                  label: 'Visit Web App',
+                  onTap: () async {
+                    Navigator.pop(context);
+                    await launchUrl(
+                      Uri.parse('https://pediaid.bridgr.co.in'),
+                      mode: LaunchMode.externalApplication,
+                    );
+                  },
+                ),
+                _DrawerItem(
+                  icon: Icons.hub_rounded,
+                  label: 'Bridgr Ecosystem',
+                  onTap: () async {
+                    Navigator.pop(context);
+                    await launchUrl(
+                      Uri.parse('https://bridgr.co.in'),
+                      mode: LaunchMode.externalApplication,
+                    );
+                  },
+                ),
+                _DrawerItem(
+                  icon: Icons.feedback_outlined,
+                  label: 'Send Feedback',
+                  onTap: () async {
+                    Navigator.pop(context);
+                    await launchUrl(
+                      Uri.parse('mailto:mulgundsunil1918@gmail.com?subject=PediAid%20Feedback'),
+                      mode: LaunchMode.externalApplication,
+                    );
+                  },
+                ),
               ],
             ),
           ),
