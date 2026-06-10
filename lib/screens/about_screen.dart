@@ -6,6 +6,9 @@
 // exists, plus a short tag-line for PediAid Academics.
 // =============================================================================
 
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -232,7 +235,8 @@ class AboutScreen extends StatelessWidget {
 
             const SizedBox(height: 24),
 
-            // ── Support the developer ──────────────────────────────────
+            // ── Support the developer (hidden on iOS — App Store 3.1.1) ──
+            if (kIsWeb || !Platform.isIOS)
             Container(
               padding: const EdgeInsets.all(18),
               decoration: BoxDecoration(
