@@ -44,6 +44,8 @@ import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:in_app_review/in_app_review.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'app_search_delegate.dart';
 // AuthService + AdminDashboardScreen imports preserved as references —
 // auth is disabled for testing, but _buildAdminTile below still uses the
@@ -137,11 +139,31 @@ class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey _scGuidesKey      = GlobalKey();
   bool _tutorialAttempted = false;
 
+  // Visitor counter — web only, decorative. Shown at the end of the home
+  // page. Stays null (and hidden) if the call fails; never blocks the page.
+  int? _visitCount;
+
   @override
   void initState() {
     super.initState();
     _loadPrefs();
     _scrollController.addListener(_onScroll);
+    _loadVisitCount();
+  }
+
+  Future<void> _loadVisitCount() async {
+    if (!kIsWeb) return;
+    try {
+      final res = await http
+          .get(Uri.parse('${AuthService.apiBase}/api/stats/visits/pediaid_home'))
+          .timeout(const Duration(seconds: 5));
+      if (res.statusCode == 200 && mounted) {
+        final body = jsonDecode(res.body) as Map<String, dynamic>;
+        setState(() => _visitCount = body['count'] as int);
+      }
+    } catch (_) {
+      // Decorative counter — silently skip on any network/backend hiccup.
+    }
   }
 
   /// Called once after the showcase frame is laid out. Reads prefs and,
@@ -373,6 +395,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 if (kIsWeb || !Platform.isIOS) _buildDonationFooter(context, isDark),
                 if (!kIsWeb && Platform.isIOS) _buildWebPromoFooter(context),
+                if (kIsWeb && _visitCount != null) _buildVisitorCounter(context),
                 SizedBox(height: MediaQuery.of(context).padding.bottom + 16),
               ],
             ),
@@ -507,6 +530,27 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  // ── Visitor counter (web only, very end of the page) ─────────────────────
+  Widget _buildVisitorCounter(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final formatted = _visitCount!.toString().replaceAllMapped(
+          RegExp(r'\B(?=(\d{3})+(?!\d))'),
+          (m) => ',',
+        );
+    return Padding(
+      padding: const EdgeInsets.only(top: 16),
+      child: Center(
+        child: Text(
+          '$formatted visitors',
+          style: TextStyle(
+            fontSize: 12,
+            color: cs.onSurface.withValues(alpha: 0.4),
+          ),
         ),
       ),
     );
