@@ -543,14 +543,39 @@ class _HomeScreenState extends State<HomeScreen> {
           (m) => ',',
         );
     return Padding(
-      padding: const EdgeInsets.only(top: 16),
-      child: Center(
-        child: Text(
-          '$formatted visitors',
-          style: TextStyle(
-            fontSize: 12,
-            color: cs.onSurface.withValues(alpha: 0.4),
-          ),
+      padding: const EdgeInsets.fromLTRB(18, 8, 18, 8),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 22),
+        decoration: BoxDecoration(
+          color: cs.primary.withValues(alpha: 0.08),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: cs.primary.withValues(alpha: 0.25)),
+        ),
+        child: Column(
+          children: [
+            Icon(Icons.groups_rounded, color: cs.primary, size: 32),
+            const SizedBox(height: 8),
+            Text(
+              formatted,
+              style: TextStyle(
+                fontSize: 44,
+                fontWeight: FontWeight.w800,
+                color: cs.primary,
+                height: 1.1,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              'TOTAL VISITORS',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w700,
+                color: cs.onSurface.withValues(alpha: 0.6),
+                letterSpacing: 1.0,
+              ),
+            ),
+          ],
         ),
       ),
     );
