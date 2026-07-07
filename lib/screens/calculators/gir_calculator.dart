@@ -68,6 +68,39 @@ class _GIRCalculatorState extends State<GIRCalculator>
     super.dispose();
   }
 
+  // ── Shared two-stock mixing math ─────────────────────────────────────────
+  // Given a target %, total volume, and two stock concentrations, returns
+  // how much of each to combine (or an error if the target is unreachable
+  // with that pair). Used by both the GIR tab's auto-pick and the Mixer
+  // tab's manual selection, and by the GIR result's stock override.
+  ({double volA, double volB, String? error}) _mixVolumes(
+      double targetPct, double totalVol, int stockA, int stockB) {
+    final a = stockA.toDouble();
+    final b = stockB.toDouble();
+
+    if ((a - b).abs() < 0.001) {
+      final matches = (a - targetPct).abs() < 0.001;
+      return (
+        volA: totalVol,
+        volB: 0,
+        error: matches
+            ? null
+            : 'Both stocks are D$stockA% — cannot reach ${targetPct.toStringAsFixed(1)}%',
+      );
+    }
+
+    final v1 = totalVol * (targetPct - b) / (a - b);
+    final v2 = totalVol - v1;
+    if (v1 < -0.5 || v2 < -0.5) {
+      return (
+        volA: 0,
+        volB: 0,
+        error: 'Target ${targetPct.toStringAsFixed(1)}% is outside D$stockA%–D$stockB% range',
+      );
+    }
+    return (volA: max(0, v1), volB: max(0, v2), error: null);
+  }
+
   // ── GIR Calculation ──────────────────────────────────────────────────────
   void _calculateGIR() {
     final gir = double.tryParse(_girTargetCtrl.text);
@@ -92,29 +125,17 @@ class _GIRCalculatorState extends State<GIRCalculator>
     }
     final a = lower ?? 0;
     final b = higher ?? 50;
-
-    double volA = vol, volB = 0;
-    String? mixError;
-    if ((a - b).abs() > 0) {
-      final v1 = vol * (targetPct - b) / (a - b);
-      final v2 = vol - v1;
-      if (v1 < -0.5 || v2 < -0.5) {
-        mixError = 'Target ${targetPct.toStringAsFixed(1)}% is outside available stock range';
-      } else {
-        volA = max(0, v1);
-        volB = max(0, v2);
-      }
-    }
+    final mix = _mixVolumes(targetPct, vol, a, b);
 
     setState(() {
       _girResult = _GIRCalcResult(
         targetPct: targetPct,
         stockA: a,
         stockB: b,
-        volA: volA,
-        volB: volB,
+        volA: mix.volA,
+        volB: mix.volB,
         safety: safety,
-        mixError: mixError,
+        mixError: mix.error,
         weightG: weightG,
         weightKg: weightKg,
         totalVol: vol,
@@ -122,6 +143,31 @@ class _GIRCalculatorState extends State<GIRCalculator>
       );
     });
     _fadeCtrl.forward(from: 0);
+  }
+
+  // Called from the result's stock dropdowns — re-mixes with the overridden
+  // stock(s) while keeping the same target % / volume from the calculation.
+  void _overrideGIRStock({int? stockA, int? stockB}) {
+    final r = _girResult;
+    if (r == null) return;
+    final newA = stockA ?? r.stockA;
+    final newB = stockB ?? r.stockB;
+    final mix = _mixVolumes(r.targetPct, r.totalVol, newA, newB);
+    setState(() {
+      _girResult = _GIRCalcResult(
+        targetPct: r.targetPct,
+        stockA: newA,
+        stockB: newB,
+        volA: mix.volA,
+        volB: mix.volB,
+        safety: r.safety,
+        mixError: mix.error,
+        weightG: r.weightG,
+        weightKg: r.weightKg,
+        totalVol: r.totalVol,
+        gir: r.gir,
+      );
+    });
   }
 
   // ── Glucose Mixer Calculation ────────────────────────────────────────────
@@ -135,36 +181,13 @@ class _GIRCalculatorState extends State<GIRCalculator>
       return;
     }
 
-    final a = _mixStockA.toDouble();
-    final b = _mixStockB.toDouble();
-
-    if ((a - b).abs() < 0.001) {
-      setState(() {
-        _mixResult = _MixResult(
-          stockA: _mixStockA, stockB: _mixStockB,
-          volA: totalVol, volB: 0, totalVol: totalVol,
-          actualPct: a, error: a != targetPct
-              ? 'Both stocks are D$_mixStockA% — cannot reach ${targetPct.toStringAsFixed(1)}%'
-              : null,
-        );
-      });
-      _fadeCtrl.forward(from: 0);
-      return;
-    }
-
-    final v1 = totalVol * (targetPct - b) / (a - b);
-    final v2 = totalVol - v1;
-
-    String? error;
-    if (v1 < -0.5 || v2 < -0.5) {
-      error = 'Target ${targetPct.toStringAsFixed(1)}% is outside D$_mixStockA%–D$_mixStockB% range';
-    }
+    final mix = _mixVolumes(targetPct, totalVol, _mixStockA, _mixStockB);
 
     setState(() {
       _mixResult = _MixResult(
         stockA: _mixStockA, stockB: _mixStockB,
-        volA: max(0, v1), volB: max(0, v2),
-        totalVol: totalVol, actualPct: targetPct, error: error,
+        volA: mix.volA, volB: mix.volB,
+        totalVol: totalVol, actualPct: targetPct, error: mix.error,
       );
     });
     _fadeCtrl.forward(from: 0);
@@ -358,6 +381,15 @@ class _GIRCalculatorState extends State<GIRCalculator>
           ),
         ),
         const SizedBox(height: 12),
+        // Override the auto-picked stock solutions
+        Text('Prepare using',
+            style: TextStyle(
+                color: cs.onSurface.withValues(alpha: 0.6),
+                fontSize: 12,
+                fontWeight: FontWeight.w600)),
+        const SizedBox(height: 6),
+        _girStockDropdowns(r),
+        const SizedBox(height: 12),
         // Mixing volumes
         if (r.mixError == null) ...[
           _mixResultRow(
@@ -462,6 +494,45 @@ class _GIRCalculatorState extends State<GIRCalculator>
                       fontWeight: FontWeight.w600)),
               const SizedBox(height: 6),
               _stockDropdown(_mixStockB, (v) => setState(() => _mixStockB = v)),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  // Stock override dropdowns shown on the GIR tab's result — lets the user
+  // pick different stock solutions than the auto-picked pair.
+  Widget _girStockDropdowns(_GIRCalcResult r) {
+    final cs = Theme.of(context).colorScheme;
+    return Row(
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Stock A (lower)',
+                  style: TextStyle(
+                      color: cs.onSurface.withValues(alpha: 0.6),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600)),
+              const SizedBox(height: 6),
+              _stockDropdown(r.stockA, (v) => _overrideGIRStock(stockA: v)),
+            ],
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Stock B (higher)',
+                  style: TextStyle(
+                      color: cs.onSurface.withValues(alpha: 0.6),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600)),
+              const SizedBox(height: 6),
+              _stockDropdown(r.stockB, (v) => _overrideGIRStock(stockB: v)),
             ],
           ),
         ),
