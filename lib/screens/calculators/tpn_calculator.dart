@@ -157,6 +157,18 @@ class _TpnCalculatorState extends State<TpnCalculator> {
 
   void _calculateStock(double w, double tpnVol, double sod, double pot,
       double ami, double cal, double gir, List<String> errors) {
+    // SAFETY: in a single stock bag, KH₂PO₄ (phosphate) and calcium gluconate
+    // cannot coexist — calcium phosphate precipitates. Hard-block this combo.
+    // (Multi-line TPN keeps phosphate in Line 1 and calcium in Line 3.)
+    if (_potassiumType == 'kphos' && cal > 0) {
+      errors.add(
+          '⛔ KH₂PO₄ + calcium not allowed in a single stock bag — calcium-phosphate '
+          'precipitation risk. Fix: switch potassium source to KCl, set calcium to 0, '
+          'or use Multi-Line TPN (phosphate and calcium are kept in separate lines).');
+      setState(() => _result = _TpnResult(errors: errors));
+      return;
+    }
+
     // Component volumes (per day → already in ml for 24h)
     final sodiumVol = (sod * w) / 0.5;       // 3% NaCl → 0.5 mEq/ml
     final potassiumVol = _potassiumType == 'kphos'
@@ -485,6 +497,32 @@ class _TpnCalculatorState extends State<TpnCalculator> {
               _radioChip('KCl', 'kcl'),
             ],
           ),
+          if (_tpnType == 'stock' && _potassiumType == 'kphos') ...[
+            const SizedBox(height: 6),
+            Container(
+              padding: const EdgeInsets.all(9),
+              decoration: BoxDecoration(
+                color: Colors.orange.shade800.withValues(alpha: 0.1),
+                border: Border.all(color: Colors.orange.shade800.withValues(alpha: 0.4)),
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(Icons.warning_amber_rounded, size: 15, color: Colors.orange.shade800),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: Text(
+                      'Single-bag stock TPN: KH₂PO₄ cannot be combined with calcium '
+                      '(calcium-phosphate precipitation). Use KCl if calcium is needed, '
+                      'or choose Multi-Line TPN.',
+                      style: TextStyle(fontSize: 11, color: Colors.orange.shade800, height: 1.4),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
           const SizedBox(height: 6),
           _fieldOnly(_potassiumCtrl, 'e.g. 2'),
         ],
