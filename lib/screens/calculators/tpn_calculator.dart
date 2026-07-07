@@ -455,23 +455,28 @@ class _TpnCalculatorState extends State<TpnCalculator> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Label and source toggle on the same line.
-          Row(
+          Text('Potassium (mEq/kg/day)',
+              style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: cs.onSurface)),
+          _espghanNote('ESPGHAN proposed range: 1–3 mEq/kg/day'),
+          const SizedBox(height: 8),
+          // Source selector — labelled and left-aligned, right beside the field.
+          Wrap(
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: 8,
+            runSpacing: 6,
             children: [
-              Expanded(
-                child: Text('Potassium (mEq/kg/day)',
-                    style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                        color: cs.onSurface)),
-              ),
+              Text('Select your potassium source:',
+                  style: TextStyle(
+                      fontSize: 12.5,
+                      color: cs.onSurface.withValues(alpha: 0.7))),
               _radioChip('KH₂PO₄', 'kphos'),
-              const SizedBox(width: 6),
               _radioChip('KCl', 'kcl'),
             ],
           ),
-          _espghanNote('ESPGHAN proposed range: 1–3 mEq/kg/day'),
-          const SizedBox(height: 4),
+          const SizedBox(height: 6),
           _fieldOnly(_potassiumCtrl, 'e.g. 2'),
         ],
       ),
