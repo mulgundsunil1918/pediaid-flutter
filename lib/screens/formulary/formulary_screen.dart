@@ -4,8 +4,8 @@ import 'drug_pdf_viewer_screen.dart';
 import '../drugs/emergency_nicu_drugs_screen.dart';
 import '../drugs/emergency_picu_drugs_screen.dart';
 import '../formulary_v2/formulary_v2_hub.dart';
-import '../../widgets/ios_web_disclaimer_banner.dart';
 import '../../widgets/ios_feature_gate.dart';
+import '../../widgets/educational_disclaimer_banner.dart';
 
 enum _Source { none, neofax, harrietLane }
 
@@ -25,16 +25,23 @@ class _FormularyScreenState extends State<FormularyScreen> {
   List<DrugEntry>? _results;
   bool _loading = false;
   String _query = '';
+  bool _searchFocused = false;
 
   @override
   void initState() {
     super.initState();
     _searchController.addListener(_onSearchChanged);
+    _searchFocus.addListener(_onFocusChanged);
+  }
+
+  void _onFocusChanged() {
+    setState(() => _searchFocused = _searchFocus.hasFocus);
   }
 
   @override
   void dispose() {
     _searchController.removeListener(_onSearchChanged);
+    _searchFocus.removeListener(_onFocusChanged);
     _searchController.dispose();
     _searchFocus.dispose();
     super.dispose();
@@ -108,8 +115,8 @@ class _FormularyScreenState extends State<FormularyScreen> {
         bottom: true,
         child: Column(
           children: [
-            const IosWebDisclaimerBanner(),
-            _buildSourceSelector(),
+            const EducationalDisclaimerBanner(),
+            if (!_searchFocused) _buildSourceSelector(),
             if (_selectedSource != _Source.none) ...[
               _buildSearchBar(),
               Expanded(child: _buildContent()),
@@ -198,18 +205,14 @@ class _FormularyScreenState extends State<FormularyScreen> {
                     builder: (_) => const EmergencyPICUDrugsScreen()),
               ),
             ),
-            const SizedBox(height: 8),
-            // ── PediAid Drug Formulary 2.0 ─────────────────────────────────
-            _EmergencyDrugsCard(
-              label: 'Drug Formulary 2.0  ·  NEW',
-              sublabel:
-                  '199 NICU drugs · India brands · GA-band dosing · Cross-checked',
-              color: const Color(0xFF1565C0),
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const FormularyV2Hub()),
-              ),
-            ),
+            // Drug Formulary 2.0 hidden for now (data retained)
+            // const SizedBox(height: 8),
+            // _EmergencyDrugsCard(
+            //   label: 'Drug Formulary 2.0  ·  NEW',
+            //   sublabel: '199 NICU drugs · India brands · GA-band dosing · Cross-checked',
+            //   color: const Color(0xFF1565C0),
+            //   onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const FormularyV2Hub())),
+            // ),
           ],
         ),
       ),

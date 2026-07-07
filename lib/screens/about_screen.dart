@@ -16,8 +16,54 @@ import 'package:url_launcher/url_launcher.dart';
 const String kSupportDeveloperUrl = 'https://bridgr.co.in/support?from=pediaid';
 const String kBridgrHomeUrl = 'https://bridgr.co.in/';
 
+const List<_Reference> _kReferences = [
+  _Reference(
+    title: 'Neofax',
+    subtitle: 'Neonatal drug dosing — Wolters Kluwer',
+    url: 'https://www.wolterskluwer.com/en/solutions/clinical-drug-information/neofax',
+  ),
+  _Reference(
+    title: 'The Harriet Lane Handbook',
+    subtitle: 'Pediatric drug reference — Elsevier',
+    url: 'https://www.elsevier.com/books/the-harriet-lane-handbook/tschudy/978-0-323-67407-4',
+  ),
+  _Reference(
+    title: 'WHO Child Growth Standards',
+    subtitle: 'Growth charts and z-scores — World Health Organization',
+    url: 'https://www.who.int/tools/child-growth-standards',
+  ),
+  _Reference(
+    title: 'IAP — Indian Academy of Pediatrics',
+    subtitle: 'Clinical guidelines and STGs for Indian paediatric practice',
+    url: 'https://www.iapindia.org',
+  ),
+  _Reference(
+    title: 'NNF — National Neonatology Forum',
+    subtitle: 'Clinical practice guidelines for neonatology',
+    url: 'https://www.nnfpublication.org',
+  ),
+  _Reference(
+    title: "Nelson's Textbook of Pediatrics",
+    subtitle: 'Comprehensive paediatric reference — Elsevier',
+    url: 'https://www.elsevier.com/books/nelson-textbook-of-pediatrics/kliegman/978-0-323-52950-1',
+  ),
+];
+
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
+
+  Future<void> _openUrl(BuildContext context, String url) async {
+    final uri = Uri.parse(url);
+    try {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } catch (_) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Couldn't open the link.")),
+        );
+      }
+    }
+  }
 
   Future<void> _openSupport(BuildContext context) async {
     final uri = Uri.parse(kSupportDeveloperUrl);
@@ -184,6 +230,86 @@ class AboutScreen extends StatelessWidget {
                 color: cs.onSurface,
               ),
             ),
+
+            const SizedBox(height: 24),
+
+            // ── Educational Disclaimer ───────────────────────────────────
+            _SectionLabel(label: 'Disclaimer', color: const Color(0xFF92400E)),
+            const SizedBox(height: 10),
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFFFBEB),
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: const Color(0xFFFDE68A), width: 1.5),
+              ),
+              child: Text(
+                'PediAid is intended for educational and reference use by '
+                'qualified clinicians and trainees only. All drug doses, '
+                'calculator outputs, and clinical references are sourced from '
+                'established paediatric and neonatal texts (see References '
+                'below). They are not a substitute for professional clinical '
+                'judgement. Always verify information against current '
+                'institutional protocols, the latest editions of referenced '
+                'texts, and product information before clinical use.',
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 13,
+                  height: 1.6,
+                  color: const Color(0xFF78350F),
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 24),
+
+            // ── References & Citations ───────────────────────────────────
+            _SectionLabel(label: 'References & Citations', color: cs.primary),
+            const SizedBox(height: 10),
+            ...(_kReferences.map((ref) => Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: InkWell(
+                onTap: () => _openUrl(context, ref.url),
+                borderRadius: BorderRadius.circular(12),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                  decoration: BoxDecoration(
+                    color: cs.surfaceContainerHighest,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: cs.outlineVariant),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.menu_book_rounded, size: 18, color: cs.primary),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              ref.title,
+                              style: GoogleFonts.plusJakartaSans(
+                                fontSize: 13.5,
+                                fontWeight: FontWeight.w700,
+                                color: cs.onSurface,
+                              ),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              ref.subtitle,
+                              style: GoogleFonts.plusJakartaSans(
+                                fontSize: 11.5,
+                                color: cs.onSurface.withValues(alpha: 0.6),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Icon(Icons.open_in_new_rounded, size: 14, color: cs.primary),
+                    ],
+                  ),
+                ),
+              ),
+            ))),
 
             const SizedBox(height: 24),
 
@@ -392,6 +518,13 @@ class AboutScreen extends StatelessWidget {
 // ---------------------------------------------------------------------------
 // Small helper widgets
 // ---------------------------------------------------------------------------
+
+class _Reference {
+  final String title;
+  final String subtitle;
+  final String url;
+  const _Reference({required this.title, required this.subtitle, required this.url});
+}
 
 class _SectionLabel extends StatelessWidget {
   const _SectionLabel({required this.label, required this.color});

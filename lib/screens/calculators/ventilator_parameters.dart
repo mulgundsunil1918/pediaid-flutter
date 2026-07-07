@@ -24,6 +24,9 @@ class VentilatorParameters extends StatefulWidget {
 class _VentilatorParametersState extends State<VentilatorParameters> {
   int _activeTab = 0;
 
+  // ── TAB 1 — OI / OSI toggle ──────────────────────────────────────────────────
+  String _oxIndexMode = 'OI'; // 'OI' | 'OSI'
+
   // ── TAB 1 — OI ──────────────────────────────────────────────────────────────
   String _oiFio2Mode = 'percent';
   final _oiMapCtrl   = TextEditingController();
@@ -404,9 +407,7 @@ class _VentilatorParametersState extends State<VentilatorParameters> {
   Widget _buildTab1() {
     return Column(
       children: [
-        _buildOICard(),
-        const SizedBox(height: 12),
-        _buildOSICard(),
+        _buildOxIndexCard(),
         const SizedBox(height: 12),
         _buildMAPCard(),
         const SizedBox(height: 12),
@@ -415,8 +416,67 @@ class _VentilatorParametersState extends State<VentilatorParameters> {
     );
   }
 
-  // ── OI Card ───────────────────────────────────────────────────────────────────
-  Widget _buildOICard() {
+  // ── OI / OSI toggle card ──────────────────────────────────────────────────────
+  Widget _buildOxIndexCard() {
+    final isOI = _oxIndexMode == 'OI';
+    return _card(child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(children: [
+          Text(isOI ? '🫁 Oxygenation Index (OI)' : '📊 Oxygen Saturation Index (OSI)',
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface)),
+          const SizedBox(width: 8),
+          _badge(isOI ? 'Invasive · PaO2' : 'Non-invasive · SpO2', isOI ? _danger : _success),
+        ]),
+        const SizedBox(height: 12),
+        _oiOsiToggle(),
+        const SizedBox(height: 12),
+        if (isOI) _buildOIInputs() else _buildOSIInputs(),
+      ],
+    ));
+  }
+
+  Widget _oiOsiToggle() {
+    return Builder(builder: (context) => Container(
+      padding: const EdgeInsets.all(3),
+      decoration: BoxDecoration(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        border: Border.all(color: Theme.of(context).colorScheme.outline),
+        borderRadius: BorderRadius.circular(9),
+      ),
+      child: Row(
+        children: [
+          Expanded(child: _oxModeSeg('OI', 'Uses PaO₂')),
+          Expanded(child: _oxModeSeg('OSI', 'Uses SpO₂')),
+        ],
+      ),
+    ));
+  }
+
+  Widget _oxModeSeg(String val, String sub) {
+    final active = _oxIndexMode == val;
+    return Builder(builder: (context) => GestureDetector(
+      onTap: () => setState(() => _oxIndexMode = val),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 9),
+        decoration: BoxDecoration(
+          color: active ? _primary : Colors.transparent,
+          borderRadius: BorderRadius.circular(7),
+        ),
+        child: Column(
+          children: [
+            Text(val, style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold,
+                color: active ? Colors.white : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7))),
+            Text(sub, style: TextStyle(fontSize: 10,
+                color: active ? Colors.white70 : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.45))),
+          ],
+        ),
+      ),
+    ));
+  }
+
+  // ── OI inputs ─────────────────────────────────────────────────────────────────
+  Widget _buildOIInputs() {
     final oiFio2Label = _oiFio2Mode == 'percent' ? 'FiO2 (%)' : 'FiO2 (decimal)';
     final oiFio2Hint  = _oiFio2Mode == 'percent' ? 'Enter as percentage (21-100)' : 'Enter as decimal (0.21-1.00)';
     final oiFio2PH    = _oiFio2Mode == 'percent' ? 'e.g., 40' : 'e.g., 0.40';
@@ -424,15 +484,9 @@ class _VentilatorParametersState extends State<VentilatorParameters> {
         ? 'Current Formula: OI = (MAP × FiO2%) / PaO2 — Enter FiO2 as percentage (21-100)'
         : 'Current Formula: OI = (MAP × FiO2 × 100) / PaO2 — Enter FiO2 as decimal (0.21-1.00)';
 
-    return _card(child: Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(children: [
-          Text('🫁 Oxygenation Index (OI)', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface)),
-          const SizedBox(width: 8),
-          _badge('CORRECTED', _danger),
-        ]),
-        const SizedBox(height: 12),
         _fio2ModeRow(_oiFio2Mode, (v) { setState(() { _oiFio2Mode = v; _oiFio2Error = ''; _oiResult = null; }); }),
         const SizedBox(height: 8),
         _formulaBox(formulaText),
@@ -453,11 +507,66 @@ class _VentilatorParametersState extends State<VentilatorParameters> {
           const SizedBox(height: 12),
           _resultBox(_oiResult!.toStringAsFixed(1), 'Oxygenation Index', _oiCat(_oiResult!)),
           const SizedBox(height: 8),
+          _oiSeverityScale(_oiResult!),
+          const SizedBox(height: 8),
           _calcStepsBox(_oiCalcSteps()),
           const SizedBox(height: 8),
           _infoAlert('Validation: Normal lungs on room air: MAP ~5, FiO2 21%, PaO2 ~80 → OI ≈ 1.3'),
         ],
       ],
+    );
+  }
+
+  // ── OI severity scale ─────────────────────────────────────────────────────────
+  Widget _oiSeverityScale(double oi) {
+    const labels = ['Mild', 'Moderate', 'Severe', 'Very Severe', 'ECMO'];
+    const colors = [_success, _warning, _orange, _danger, _purple];
+    const meanings = [
+      'Minimal lung disease. Conventional ventilation, wean as tolerated.',
+      'Moderate respiratory failure. Optimise conventional ventilation, consider surfactant.',
+      'Severe respiratory failure. Consider HFOV, iNO if PPHN.',
+      'Very severe respiratory failure. HFOV mandatory, iNO, consider paralysis.',
+      'Refractory hypoxaemia. ECMO evaluation if available.',
+    ];
+    final idx = _severityRowIdx(oi).clamp(0, 4);
+    return Builder(builder: (context) => Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+        border: Border.all(color: Theme.of(context).colorScheme.outline),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('OI Severity Scale — what this signifies',
+              style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface)),
+          const SizedBox(height: 8),
+          Row(
+            children: List.generate(5, (i) => Expanded(
+              child: Container(
+                height: 8,
+                margin: const EdgeInsets.symmetric(horizontal: 1.5),
+                decoration: BoxDecoration(
+                  color: colors[i].withValues(alpha: i == idx ? 1.0 : 0.25),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+              ),
+            )),
+          ),
+          const SizedBox(height: 6),
+          Row(
+            children: List.generate(5, (i) => Expanded(
+              child: Text(labels[i], textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 8.5,
+                      color: i == idx ? colors[i] : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.45),
+                      fontWeight: i == idx ? FontWeight.bold : FontWeight.normal)),
+            )),
+          ),
+          const SizedBox(height: 8),
+          Text(meanings[idx], style: TextStyle(fontSize: 11.5, color: Theme.of(context).colorScheme.onSurface, height: 1.4)),
+        ],
+      ),
     ));
   }
 
@@ -471,8 +580,8 @@ class _VentilatorParametersState extends State<VentilatorParameters> {
     }
   }
 
-  // ── OSI Card ──────────────────────────────────────────────────────────────────
-  Widget _buildOSICard() {
+  // ── OSI inputs ────────────────────────────────────────────────────────────────
+  Widget _buildOSIInputs() {
     final label      = _osiFio2Mode == 'percent' ? 'FiO2 (%)' : 'FiO2 (decimal)';
     final helperText = _osiFio2Mode == 'percent' ? 'Enter as percentage (21-100)' : 'Enter as decimal (0.21-1.00)';
     final ph         = _osiFio2Mode == 'percent' ? 'e.g., 60' : 'e.g., 0.60';
@@ -480,15 +589,9 @@ class _VentilatorParametersState extends State<VentilatorParameters> {
         ? 'Current Formula: OSI = (MAP × FiO2%) / SpO2 — Enter FiO2 as percentage (21-100)'
         : 'Current Formula: OSI = (MAP × FiO2 × 100) / SpO2 — Enter FiO2 as decimal (0.21-1.00)';
 
-    return _card(child: Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(children: [
-          Text('📊 Oxygen Saturation Index (OSI)', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface)),
-          const SizedBox(width: 8),
-          _badge('Non-invasive', _success),
-        ]),
-        const SizedBox(height: 12),
         _fio2ModeRow(_osiFio2Mode, (v) { setState(() { _osiFio2Mode = v; _osiResult = null; }); }),
         const SizedBox(height: 8),
         _formulaBox(formulaText),
@@ -510,7 +613,7 @@ class _VentilatorParametersState extends State<VentilatorParameters> {
           _infoAlert('Correlation: OI ≈ (2.3 × OSI) - 4'),
         ],
       ],
-    ));
+    );
   }
 
   String _osiCalcSteps() {
@@ -560,6 +663,7 @@ class _VentilatorParametersState extends State<VentilatorParameters> {
             Text('Waveform Constant (K)', style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface)),
             const SizedBox(height: 6),
             _kDropdown(),
+            _kUsageGuide(),
           ],
         ),
         if (_mapResult != null) ...[
@@ -601,6 +705,43 @@ class _VentilatorParametersState extends State<VentilatorParameters> {
         underline: const SizedBox.shrink(),
         items: items.map((e) => DropdownMenuItem<double>(value: e['val'] as double, child: Text(e['label'] as String, style: const TextStyle(fontSize: 12.5)))).toList(),
         onChanged: (v) { setState(() => _mapK = v ?? 0.64); _calcMAP(); },
+      ),
+    ));
+  }
+
+  Widget _kUsageGuide() {
+    return Builder(builder: (context) => Container(
+      margin: const EdgeInsets.only(top: 8),
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: _info.withValues(alpha: .08),
+        border: Border.all(color: _info.withValues(alpha: .3)),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('Which K to use?', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: _info)),
+          const SizedBox(height: 6),
+          _kGuideRow('Square', '1.0', 'Default for most conventional NICU ventilators in pressure-control / SIMV / PC-AC mode with a constant pressure plateau (e.g., Dräger Babylog, SLE, VIP Bird). Use this if the waveform is unknown.'),
+          _kGuideRow('Sine', '0.64', 'Sinusoidal pressure/flow pattern — used for HFOV (high-frequency oscillatory ventilation) and some volume-controlled modes with a sine flow profile.'),
+          _kGuideRow('Triangular', '0.5', 'Decelerating/ramp flow pattern seen in some volume-controlled or transport ventilator modes.'),
+        ],
+      ),
+    ));
+  }
+
+  Widget _kGuideRow(String wave, String k, String desc) {
+    return Builder(builder: (context) => Padding(
+      padding: const EdgeInsets.only(top: 6),
+      child: RichText(
+        text: TextSpan(
+          style: TextStyle(fontSize: 11.5, color: Theme.of(context).colorScheme.onSurface, height: 1.4),
+          children: [
+            TextSpan(text: '$wave (K=$k): ', style: const TextStyle(fontWeight: FontWeight.bold, color: _info)),
+            TextSpan(text: desc),
+          ],
+        ),
       ),
     ));
   }

@@ -7,7 +7,7 @@ class AcademicsWebScreen extends StatefulWidget {
   /// Deep-link path appended after the base URL, e.g. '/academics/nelson'
   final String path;
 
-  const AcademicsWebScreen({super.key, this.path = '/academics'});
+  const AcademicsWebScreen({super.key, this.path = '/'});
 
   @override
   State<AcademicsWebScreen> createState() => _AcademicsWebScreenState();
@@ -15,7 +15,7 @@ class AcademicsWebScreen extends StatefulWidget {
 
 class _AcademicsWebScreenState extends State<AcademicsWebScreen> {
   static const _baseUrl =
-      'https://pediaid.bridgr.co.in';
+      'https://academics.pediaid.bridgr.co.in';
 
   InAppWebViewController? _controller;
   bool _loading = true;
@@ -62,7 +62,15 @@ class _AcademicsWebScreenState extends State<AcademicsWebScreen> {
           transparentBackground: true,
           supportZoom: false,
         ),
-        onWebViewCreated: (c) => _controller = c,
+        onWebViewCreated: (c) {
+          _controller = c;
+          c.addJavaScriptHandler(
+            handlerName: 'goToAppHome',
+            callback: (args) {
+              if (mounted) Navigator.of(context).pop();
+            },
+          );
+        },
         onLoadStart: (c, url) => setState(() => _loading = true),
         onLoadStop: (c, url) => setState(() => _loading = false),
         onProgressChanged: (c, progress) =>

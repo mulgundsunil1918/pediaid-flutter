@@ -15,6 +15,8 @@
 // at the right of the chip strip shows the filtered count.
 // =============================================================================
 
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -111,6 +113,7 @@ class _CalculatorsScreenState extends State<CalculatorsScreen> {
     _CalculatorItem(
       title: 'TPN Calculator',
       subtitle: 'Stock & multi-line TPN',
+      iosHidden: true,
       icon: Icons.medical_services,
       categories: [_kNICU, _kFluids],
     ),
@@ -123,6 +126,7 @@ class _CalculatorsScreenState extends State<CalculatorsScreen> {
     _CalculatorItem(
       title: 'GIR Calculator',
       subtitle: 'Glucose infusion rate',
+      iosHidden: true,
       icon: Icons.water_drop,
       categories: [_kNICU, _kFluids],
     ),
@@ -141,6 +145,7 @@ class _CalculatorsScreenState extends State<CalculatorsScreen> {
     _CalculatorItem(
       title: 'DVET Calculator',
       subtitle: 'Exchange transfusion',
+      iosHidden: true,
       icon: Icons.water_drop,
       categories: [_kNICU, _kProc],
     ),
@@ -171,12 +176,14 @@ class _CalculatorsScreenState extends State<CalculatorsScreen> {
     _CalculatorItem(
       title: 'Maintenance Fluids',
       subtitle: 'Neonatal & Paediatric Fluid Calculator',
+      iosHidden: true,
       icon: Icons.local_drink_outlined,
       categories: [_kFluids, _kPICU, _kNICU],
     ),
     _CalculatorItem(
       title: 'Parkland Formula',
       subtitle: 'Burns Fluid Resuscitation',
+      iosHidden: true,
       icon: Icons.local_fire_department_outlined,
       categories: [_kBurns, _kFluids, _kPICU],
     ),
@@ -195,6 +202,7 @@ class _CalculatorsScreenState extends State<CalculatorsScreen> {
     _CalculatorItem(
       title: 'PET Calculator',
       subtitle: 'Partial Exchange Transfusion — Polycythemia',
+      iosHidden: true,
       icon: Icons.bloodtype_outlined,
       categories: [_kNICU, _kProc],
     ),
@@ -245,12 +253,14 @@ class _CalculatorsScreenState extends State<CalculatorsScreen> {
     _CalculatorItem(
       title: 'Free Water Deficit (↑Na)',
       subtitle: 'Hypernatraemia correction',
+      iosHidden: true,
       icon: Icons.opacity_outlined,
       categories: [_kFluids],
     ),
     _CalculatorItem(
       title: 'Na Correction (↓Na)',
       subtitle: 'Sodium deficit + 3 % saline bolus',
+      iosHidden: true,
       icon: Icons.calculate,
       categories: [_kFluids, _kPICU],
     ),
@@ -259,30 +269,35 @@ class _CalculatorsScreenState extends State<CalculatorsScreen> {
       subtitle: 'KCl replacement OR ↑K regimen',
       icon: Icons.calculate,
       categories: [_kFluids, _kPICU],
+      iosHidden: true,
     ),
     _CalculatorItem(
       title: 'Calcium Correction (↓Ca)',
       subtitle: 'CaCl₂ / gluconate / MgSO₄',
       icon: Icons.calculate,
       categories: [_kFluids, _kPICU],
+      iosHidden: true,
     ),
     _CalculatorItem(
       title: 'Magnesium Correction (↓Mg)',
       subtitle: 'MgSO₄ IV + oral',
       icon: Icons.calculate,
       categories: [_kFluids],
+      iosHidden: true,
     ),
     _CalculatorItem(
       title: 'Phosphate Correction (↓PO₄)',
       subtitle: 'NaPhos / KPhos / oral',
       icon: Icons.calculate,
       categories: [_kFluids],
+      iosHidden: true,
     ),
     _CalculatorItem(
       title: 'Hypoglycaemia Bolus',
       subtitle: 'D10/D25/D50 + GIR + adjuncts',
       icon: Icons.calculate,
       categories: [_kNICU, _kPICU],
+      iosHidden: true,
     ),
     // ── Neuro scoring (PIC) ───────────────────────────────────────────
     _CalculatorItem(
@@ -306,16 +321,18 @@ class _CalculatorsScreenState extends State<CalculatorsScreen> {
     ),
   ];
 
-  /// All calculators when "All" is selected; otherwise those whose
-  /// `categories` list contains the active chip.
-  List<_CalculatorItem> get _filtered => _selected == _kAll
-      ? _calculators
-      : _calculators.where((c) => c.categories.contains(_selected)).toList();
+  static bool get _isIos => !kIsWeb && Platform.isIOS;
 
-  /// Per-chip count badge shown next to the chip label.
+  List<_CalculatorItem> get _visible =>
+      _isIos ? _calculators.where((c) => !c.iosHidden).toList() : _calculators;
+
+  List<_CalculatorItem> get _filtered => _selected == _kAll
+      ? _visible
+      : _visible.where((c) => c.categories.contains(_selected)).toList();
+
   int _countFor(String category) {
-    if (category == _kAll) return _calculators.length;
-    return _calculators.where((c) => c.categories.contains(category)).length;
+    if (category == _kAll) return _visible.length;
+    return _visible.where((c) => c.categories.contains(category)).length;
   }
 
   @override
@@ -682,11 +699,13 @@ class _CalculatorItem {
   final String subtitle;
   final IconData icon;
   final List<String> categories;
+  final bool iosHidden;
 
   const _CalculatorItem({
     required this.title,
     required this.subtitle,
     required this.icon,
     required this.categories,
+    this.iosHidden = false,
   });
 }

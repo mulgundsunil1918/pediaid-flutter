@@ -19,9 +19,7 @@ class _CGAPMACalculatorState extends State<CGAPMACalculator>
   final _gaWeeksCtrl = TextEditingController();
   final _gaDaysCtrl = TextEditingController();
 
-  late int _curDay;
-  late int _curMonth;
-  late int _curYear;
+  DateTime? _curDate;
 
   bool _showResults = false;
   bool _showInfo = false;
@@ -38,10 +36,7 @@ class _CGAPMACalculatorState extends State<CGAPMACalculator>
   @override
   void initState() {
     super.initState();
-    final now = DateTime.now();
-    _curDay = now.day;
-    _curMonth = now.month;
-    _curYear = now.year;
+    _curDate = DateTime.now();
 
     _fadeCtrl = AnimationController(
       vsync: this,
@@ -96,21 +91,12 @@ class _CGAPMACalculatorState extends State<CGAPMACalculator>
     }
 
     // Validate current date
-    DateTime? curDate;
-    try {
-      curDate = DateTime(_curYear, _curMonth, _curDay);
-      final daysInMonth = DateUtils.getDaysInMonth(_curYear, _curMonth);
-      if (_curDay < 1 || _curDay > daysInMonth) {
-        setState(() => _errCurDate = 'Please select a valid current date');
-        valid = false;
-        curDate = null;
-      }
-    } catch (_) {
+    if (_curDate == null) {
       setState(() => _errCurDate = 'Please select a valid current date');
       valid = false;
     }
 
-    if (_dob != null && curDate != null && curDate.isBefore(_dob!)) {
+    if (_dob != null && _curDate != null && _curDate!.isBefore(_dob!)) {
       setState(
           () => _errCurDate = 'Current date cannot be before date of birth');
       valid = false;
@@ -122,7 +108,7 @@ class _CGAPMACalculatorState extends State<CGAPMACalculator>
     }
 
     final dob = _dob!;
-    final now = curDate!;
+    final now = _curDate!;
     final gaw = gaWeeks!;
     final gad = gaDays;
 
@@ -190,14 +176,11 @@ class _CGAPMACalculatorState extends State<CGAPMACalculator>
   }
 
   void _clearAll() {
-    final now = DateTime.now();
     setState(() {
       _dob = null;
       _gaWeeksCtrl.clear();
       _gaDaysCtrl.clear();
-      _curDay = now.day;
-      _curMonth = now.month;
-      _curYear = now.year;
+      _curDate = DateTime.now();
       _errDob = null;
       _errGa = null;
       _errCurDate = null;
@@ -223,6 +206,26 @@ class _CGAPMACalculatorState extends State<CGAPMACalculator>
       setState(() {
         _dob = picked;
         _errDob = null;
+      });
+    }
+  }
+
+  Future<void> _pickCurDate() async {
+    final now = DateTime.now();
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: _curDate ?? now,
+      firstDate: DateTime(now.year - 5),
+      lastDate: now,
+      builder: (ctx, child) => Theme(
+        data: Theme.of(context),
+        child: child!,
+      ),
+    );
+    if (picked != null) {
+      setState(() {
+        _curDate = picked;
+        _errCurDate = null;
       });
     }
   }
@@ -374,69 +377,50 @@ class _CGAPMACalculatorState extends State<CGAPMACalculator>
   }
 
   Widget _buildCurrentDateSection() {
-    final now = DateTime.now();
-    final years = List.generate(6, (i) => now.year - i);
-    final months = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
-    ];
-    final daysInMonth = DateUtils.getDaysInMonth(_curYear, _curMonth);
-    final days = List.generate(daysInMonth, (i) => i + 1);
-
-    // Clamp day if month changed
-    if (_curDay > daysInMonth) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        setState(() => _curDay = daysInMonth);
-      });
-    }
-
     return _inputCard(
       title: 'Current Date (Assessment)',
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _fieldLabel('Day / Month / Year'),
+          _fieldLabel('Select Date'),
           const SizedBox(height: 6),
-          Row(
-            children: [
-              // Day
-              SizedBox(
-                width: 70,
-                child: _dropdown<int>(
-                  value: days.contains(_curDay) ? _curDay : days.last,
-                  items: days,
-                  label: (v) => v.toString().padLeft(2, '0'),
-                  onChanged: (v) =>
-                      setState(() => _curDay = v ?? _curDay),
-                  hasError: _errCurDate != null,
-                ),
+          GestureDetector(
+            onTap: _pickCurDate,
+            child: Container(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
+              decoration: BoxDecoration(
+                color: Theme.of(context).inputDecorationTheme.fillColor ??
+                    Theme.of(context).cardColor,
+                border: Border.all(
+                    color: _errCurDate != null
+                        ? Colors.red.shade400
+                        : Theme.of(context).colorScheme.outline),
+                borderRadius: BorderRadius.circular(8),
               ),
-              const SizedBox(width: 8),
-              // Month
-              Expanded(
-                child: _dropdown<int>(
-                  value: _curMonth,
-                  items: List.generate(12, (i) => i + 1),
-                  label: (v) => months[v - 1],
-                  onChanged: (v) =>
-                      setState(() => _curMonth = v ?? _curMonth),
-                  hasError: _errCurDate != null,
-                ),
+              child: Row(
+                children: [
+                  Icon(Icons.calendar_today,
+                      color: Theme.of(context).colorScheme.primary, size: 18),
+                  const SizedBox(width: 10),
+                  Text(
+                    _curDate != null
+                        ? '${_curDate!.day.toString().padLeft(2, '0')} / '
+                            '${_curDate!.month.toString().padLeft(2, '0')} / '
+                            '${_curDate!.year}'
+                        : 'Tap to select date',
+                    style: TextStyle(
+                        color: _curDate != null
+                            ? Theme.of(context).colorScheme.onSurface
+                            : Theme.of(context)
+                                .colorScheme
+                                .onSurface
+                                .withValues(alpha: 0.6),
+                        fontSize: 14),
+                  ),
+                ],
               ),
-              const SizedBox(width: 8),
-              // Year
-              SizedBox(
-                width: 90,
-                child: _dropdown<int>(
-                  value: _curYear,
-                  items: years,
-                  label: (v) => v.toString(),
-                  onChanged: (v) =>
-                      setState(() => _curYear = v ?? _curYear),
-                  hasError: _errCurDate != null,
-                ),
-              ),
-            ],
+            ),
           ),
           if (_errCurDate != null) _errorText(_errCurDate!),
         ],
@@ -499,6 +483,9 @@ class _CGAPMACalculatorState extends State<CGAPMACalculator>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        // Hero CGA/PMA result
+        _buildHeroResult(r, pmaFmt),
+        const SizedBox(height: 12),
         // 3 stat boxes
         Row(
           children: [
@@ -562,6 +549,62 @@ class _CGAPMACalculatorState extends State<CGAPMACalculator>
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildHeroResult(_CalcResult r, ({int w, int d}) pmaFmt) {
+    final cs = Theme.of(context).colorScheme;
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [cs.primary, cs.primary.withValues(alpha: 0.8)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Column(
+        children: [
+          Text('CORRECTED GESTATIONAL AGE',
+              style: TextStyle(
+                  color: Colors.white.withValues(alpha: 0.8),
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 1.2)),
+          const SizedBox(height: 8),
+          Text(
+            r.cgaApplicable ? r.cgaStr : 'N/A',
+            style: const TextStyle(
+                color: Colors.white,
+                fontSize: 36,
+                fontWeight: FontWeight.bold),
+          ),
+          if (!r.cgaApplicable && r.cgaNotApplicableReason != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 4),
+              child: Text(r.cgaNotApplicableReason!,
+                  style: TextStyle(
+                      color: Colors.white.withValues(alpha: 0.8),
+                      fontSize: 12)),
+            ),
+          const SizedBox(height: 14),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              'PMA: ${pmaFmt.w} weeks ${pmaFmt.d} days',
+              style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -1096,48 +1139,6 @@ class _CGAPMACalculatorState extends State<CGAPMACalculator>
                   ? Colors.red.shade400
                   : Theme.of(context).colorScheme.primary),
         ),
-      ),
-    );
-  }
-
-  Widget _dropdown<T>({
-    required T value,
-    required List<T> items,
-    required String Function(T) label,
-    required void Function(T?) onChanged,
-    required bool hasError,
-  }) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      decoration: BoxDecoration(
-        color: Theme.of(context).inputDecorationTheme.fillColor ??
-            Theme.of(context).cardColor,
-        border: Border.all(
-            color: hasError
-                ? Colors.red.shade400
-                : Theme.of(context).colorScheme.outline),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: DropdownButton<T>(
-        value: value,
-        isExpanded: true,
-        dropdownColor: Theme.of(context).cardColor,
-        underline: const SizedBox(),
-        style: TextStyle(
-            color: Theme.of(context).colorScheme.onSurface, fontSize: 13),
-        icon: Icon(Icons.expand_more,
-            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
-            size: 18),
-        items: items
-            .map((v) => DropdownMenuItem<T>(
-                  value: v,
-                  child: Text(label(v),
-                      style: TextStyle(
-                          color: Theme.of(context).colorScheme.onSurface,
-                          fontSize: 13)),
-                ))
-            .toList(),
-        onChanged: onChanged,
       ),
     );
   }

@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'html_download_stub.dart'
     if (dart.library.html) 'html_download_web.dart';
 
@@ -25,6 +27,20 @@ class _N {
     protein: protein * k, fat: fat * k, carbs: carbs * k, calcium: calcium * k,
     phosphorus: phosphorus * k, iron: iron * k, vitD: vitD * k, calories: calories * k,
   );
+  Map<String, dynamic> toJson() => {
+    'protein': protein, 'fat': fat, 'carbs': carbs, 'calcium': calcium,
+    'phosphorus': phosphorus, 'iron': iron, 'vitD': vitD, 'calories': calories,
+  };
+  factory _N.fromJson(Map<String, dynamic> j) => _N(
+    protein: (j['protein'] as num?)?.toDouble() ?? 0,
+    fat: (j['fat'] as num?)?.toDouble() ?? 0,
+    carbs: (j['carbs'] as num?)?.toDouble() ?? 0,
+    calcium: (j['calcium'] as num?)?.toDouble() ?? 0,
+    phosphorus: (j['phosphorus'] as num?)?.toDouble() ?? 0,
+    iron: (j['iron'] as num?)?.toDouble() ?? 0,
+    vitD: (j['vitD'] as num?)?.toDouble() ?? 0,
+    calories: (j['calories'] as num?)?.toDouble() ?? 0,
+  );
 }
 
 // ── Custom item ────────────────────────────────────────────────────────────────
@@ -34,6 +50,14 @@ class _CustomItem {
   final double amount;
   final _N composition;
   _CustomItem({required this.name, required this.amount, required this.composition});
+  Map<String, dynamic> toJson() => {
+    'name': name, 'amount': amount, 'composition': composition.toJson(),
+  };
+  factory _CustomItem.fromJson(Map<String, dynamic> j) => _CustomItem(
+    name: j['name'] as String,
+    amount: (j['amount'] as num).toDouble(),
+    composition: _N.fromJson(j['composition'] as Map<String, dynamic>),
+  );
 }
 
 // ── Item type ──────────────────────────────────────────────────────────────────
@@ -70,7 +94,7 @@ const _cNeoPF = _N(protein:0.75, fat:0,    carbs:0,    calcium:0,    phosphorus:
 
 const _cMct      = _N(fat:0.945, calories:7.8);
 const _cCalcimax = _N(calcium:30, phosphorus:15, vitD:20);
-// Orofer: iron = orofer_ml * 10 * 0.1  (handled inline)
+// Orofer: 10 mg iron per 1 ml (i.e. 1 mg per 0.1 ml) — handled inline
 
 // ── ESPGHAN 2022 guidelines (per kg/day) ──────────────────────────────────────
 
@@ -198,6 +222,74 @@ class _NAState extends State<NutritionalAuditCalculator> {
 
   _Snap? _snap;
 
+  // Saved custom templates (persist across sessions)
+  List<_CustomItem> _savedFormulas = [];
+  List<_CustomItem> _savedFortifications = [];
+  List<_CustomItem> _savedSupplements = [];
+
+  static const _kSavedFormulas = 'na_saved_formulas';
+  static const _kSavedFortifications = 'na_saved_fortifications';
+  static const _kSavedSupplements = 'na_saved_supplements';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSaved();
+  }
+
+  Future<void> _loadSaved() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _savedFormulas = _decodeList(prefs.getString(_kSavedFormulas));
+      _savedFortifications = _decodeList(prefs.getString(_kSavedFortifications));
+      _savedSupplements = _decodeList(prefs.getString(_kSavedSupplements));
+    });
+  }
+
+  List<_CustomItem> _decodeList(String? raw) {
+    if (raw == null || raw.isEmpty) return [];
+    final list = jsonDecode(raw) as List;
+    return list.map((e) => _CustomItem.fromJson(e as Map<String, dynamic>)).toList();
+  }
+
+  Future<void> _saveItem(_ItemType type, _CustomItem item) async {
+    final prefs = await SharedPreferences.getInstance();
+    switch (type) {
+      case _ItemType.formula:
+        _savedFormulas.add(item);
+        await prefs.setString(_kSavedFormulas, jsonEncode(_savedFormulas.map((e) => e.toJson()).toList()));
+      case _ItemType.fortification:
+        _savedFortifications.add(item);
+        await prefs.setString(_kSavedFortifications, jsonEncode(_savedFortifications.map((e) => e.toJson()).toList()));
+      case _ItemType.supplement:
+        _savedSupplements.add(item);
+        await prefs.setString(_kSavedSupplements, jsonEncode(_savedSupplements.map((e) => e.toJson()).toList()));
+    }
+    if (mounted) setState(() {});
+  }
+
+  Future<void> _deleteSaved(_ItemType type, int index) async {
+    final prefs = await SharedPreferences.getInstance();
+    switch (type) {
+      case _ItemType.formula:
+        _savedFormulas.removeAt(index);
+        await prefs.setString(_kSavedFormulas, jsonEncode(_savedFormulas.map((e) => e.toJson()).toList()));
+      case _ItemType.fortification:
+        _savedFortifications.removeAt(index);
+        await prefs.setString(_kSavedFortifications, jsonEncode(_savedFortifications.map((e) => e.toJson()).toList()));
+      case _ItemType.supplement:
+        _savedSupplements.removeAt(index);
+        await prefs.setString(_kSavedSupplements, jsonEncode(_savedSupplements.map((e) => e.toJson()).toList()));
+    }
+    if (mounted) setState(() {});
+  }
+
+  List<_CustomItem> _savedFor(_ItemType type) => switch (type) {
+    _ItemType.formula       => _savedFormulas,
+    _ItemType.fortification => _savedFortifications,
+    _ItemType.supplement    => _savedSupplements,
+  };
+
   @override
   void dispose() {
     for (final c in [
@@ -247,7 +339,7 @@ class _NAState extends State<NutritionalAuditCalculator> {
     // Supplements
     tot = tot + _cMct.scale(mctMl);
     tot = tot + _cCalcimax.scale(calMl);
-    tot = tot + _N(iron: orMl * 10 * 0.1);
+    tot = tot + _N(iron: orMl * 10);
     for (final s in _cs) { tot = tot + s.composition.scale(s.amount); }
 
     final perKg   = tot.scale(1 / wt);
@@ -279,14 +371,44 @@ class _NAState extends State<NutritionalAuditCalculator> {
   // ── Add / remove custom items ────────────────────────────────────────────────
 
   Future<void> _addCustom(_ItemType type) async {
-    final item = await showDialog<_CustomItem>(
+    final saved = _savedFor(type);
+    if (saved.isNotEmpty) {
+      final pickResult = await showDialog<Object>(
+        context: context,
+        builder: (_) => _PickOrCreateDialog(
+          type: type,
+          saved: saved,
+          onDelete: (i) async {
+            await _deleteSaved(type, i);
+          },
+        ),
+      );
+      if (pickResult == null) return;
+      if (pickResult is _CustomItem) {
+        setState(() {
+          switch (type) {
+            case _ItemType.formula:       _cf.add(pickResult);
+            case _ItemType.fortification: _cfo.add(pickResult);
+            case _ItemType.supplement:    _cs.add(pickResult);
+          }
+        });
+        return;
+      }
+      if (pickResult == 'create_new') {
+        // Fall through to create-new dialog below
+      } else {
+        return;
+      }
+    }
+    final result = await showDialog<_DialogResult>(
         context: context, builder: (_) => _CustomItemDialog(type: type));
-    if (item == null) return;
+    if (result == null) return;
+    if (result.save) await _saveItem(type, result.item);
     setState(() {
       switch (type) {
-        case _ItemType.formula:       _cf.add(item);
-        case _ItemType.fortification: _cfo.add(item);
-        case _ItemType.supplement:    _cs.add(item);
+        case _ItemType.formula:       _cf.add(result.item);
+        case _ItemType.fortification: _cfo.add(result.item);
+        case _ItemType.supplement:    _cs.add(result.item);
       }
     });
   }
@@ -950,6 +1072,14 @@ $footer2
   }
 }
 
+// ── Dialog result wrapper ─────────────────────────────────────────────────────
+
+class _DialogResult {
+  final _CustomItem item;
+  final bool save;
+  _DialogResult({required this.item, required this.save});
+}
+
 // ── Section 8: Custom item dialog ─────────────────────────────────────────────
 
 class _CustomItemDialog extends StatefulWidget {
@@ -970,6 +1100,7 @@ class _CIDState extends State<_CustomItemDialog> {
   final _feCtrl   = TextEditingController();
   final _vdCtrl   = TextEditingController();
   final _calCtrl  = TextEditingController();
+  bool _saveForLater = true;
 
   bool get _canAdd =>
       _nameCtrl.text.trim().isNotEmpty &&
@@ -991,13 +1122,16 @@ class _CIDState extends State<_CustomItemDialog> {
     final name   = _nameCtrl.text.trim();
     final amount = double.tryParse(_amtCtrl.text.trim()) ?? 0;
     if (name.isEmpty || amount <= 0) return;
-    Navigator.of(context).pop(_CustomItem(
-      name: name, amount: amount,
-      composition: _N(
-        protein: _p(_proCtrl), fat: _p(_fatCtrl), carbs: _p(_carbCtrl),
-        calcium: _p(_caCtrl), phosphorus: _p(_pCtrl),
-        iron: _p(_feCtrl), vitD: _p(_vdCtrl), calories: _p(_calCtrl),
+    Navigator.of(context).pop(_DialogResult(
+      item: _CustomItem(
+        name: name, amount: amount,
+        composition: _N(
+          protein: _p(_proCtrl), fat: _p(_fatCtrl), carbs: _p(_carbCtrl),
+          calcium: _p(_caCtrl), phosphorus: _p(_pCtrl),
+          iron: _p(_feCtrl), vitD: _p(_vdCtrl), calories: _p(_calCtrl),
+        ),
       ),
+      save: _saveForLater,
     ));
   }
 
@@ -1024,9 +1158,10 @@ class _CIDState extends State<_CustomItemDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
     return AlertDialog(
       title: Text('Add Custom ${_typeLabel(widget.type)}',
-          style: TextStyle(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.bold, fontSize: 16)),
+          style: TextStyle(color: cs.primary, fontWeight: FontWeight.bold, fontSize: 16)),
       content: SizedBox(
         width: 380,
         child: SingleChildScrollView(
@@ -1048,6 +1183,23 @@ class _CIDState extends State<_CustomItemDialog> {
               _dField(_feCtrl,   'Iron (mg)'),
               _dField(_vdCtrl,   'Vitamin D (IU)'),
               _dField(_calCtrl,  'Calories (kcal)'),
+              const SizedBox(height: 8),
+              Row(children: [
+                SizedBox(
+                  width: 24, height: 24,
+                  child: Checkbox(
+                    value: _saveForLater,
+                    onChanged: (v) => setState(() => _saveForLater = v ?? true),
+                    activeColor: cs.primary,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(child: GestureDetector(
+                  onTap: () => setState(() => _saveForLater = !_saveForLater),
+                  child: Text('Save this ${_typeLabel(widget.type).toLowerCase()} for future use',
+                      style: TextStyle(fontSize: 12, color: cs.onSurface.withValues(alpha: 0.7))),
+                )),
+              ]),
             ],
           ),
         ),
@@ -1056,14 +1208,108 @@ class _CIDState extends State<_CustomItemDialog> {
         TextButton(
             onPressed: () => Navigator.of(context).pop(),
             child: const Text('Cancel')),
-        ElevatedButton(
+        ElevatedButton.icon(
           onPressed: _canAdd ? _submit : null,
+          icon: Icon(_saveForLater ? Icons.save : Icons.add, size: 16),
+          label: Text(_saveForLater ? 'Save & Add' : 'Add to Calculation'),
           style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.primary,
-              foregroundColor: Theme.of(context).colorScheme.onPrimary),
-          child: const Text('Add to Calculation'),
+              backgroundColor: cs.primary,
+              foregroundColor: cs.onPrimary),
         ),
       ],
     );
+  }
+}
+
+// ── Pick from saved or create new ────────────────────────────────────────────
+
+class _PickOrCreateDialog extends StatefulWidget {
+  final _ItemType type;
+  final List<_CustomItem> saved;
+  final Future<void> Function(int index) onDelete;
+  const _PickOrCreateDialog({required this.type, required this.saved, required this.onDelete});
+  @override
+  State<_PickOrCreateDialog> createState() => _PickOrCreateState();
+}
+
+class _PickOrCreateState extends State<_PickOrCreateDialog> {
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final label = _typeLabel(widget.type);
+    return AlertDialog(
+      title: Text('Add $label',
+          style: TextStyle(color: cs.primary, fontWeight: FontWeight.bold, fontSize: 16)),
+      content: SizedBox(
+        width: 380,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Saved ${label}s', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: cs.onSurface)),
+            const SizedBox(height: 8),
+            ...widget.saved.asMap().entries.map((e) {
+              final item = e.value;
+              return Container(
+                margin: const EdgeInsets.only(bottom: 6),
+                decoration: BoxDecoration(
+                  border: Border.all(color: cs.outline),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: ListTile(
+                  dense: true,
+                  title: Text(item.name, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
+                  subtitle: Text(_compSummary(item.composition), style: const TextStyle(fontSize: 11)),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.delete_outline, size: 18, color: _red),
+                        onPressed: () async {
+                          await widget.onDelete(e.key);
+                          if (widget.saved.isEmpty && mounted) {
+                            Navigator.of(context).pop();
+                            return;
+                          }
+                          setState(() {});
+                        },
+                      ),
+                      Icon(Icons.add_circle_outline, color: cs.primary, size: 20),
+                    ],
+                  ),
+                  onTap: () => Navigator.of(context).pop(item),
+                ),
+              );
+            }),
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                onPressed: () => Navigator.of(context).pop('create_new'),
+                icon: const Icon(Icons.add, size: 16),
+                label: Text('Create New $label'),
+                style: OutlinedButton.styleFrom(foregroundColor: cs.primary),
+              ),
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Cancel')),
+      ],
+    );
+  }
+
+  String _compSummary(_N n) {
+    final parts = <String>[];
+    if (n.protein > 0)    parts.add('P:${n.protein}g');
+    if (n.fat > 0)        parts.add('F:${n.fat}g');
+    if (n.carbs > 0)      parts.add('C:${n.carbs}g');
+    if (n.calcium > 0)    parts.add('Ca:${n.calcium}mg');
+    if (n.iron > 0)       parts.add('Fe:${n.iron}mg');
+    if (n.calories > 0)   parts.add('${n.calories}kcal');
+    return parts.isEmpty ? 'No composition data' : parts.join(' · ');
   }
 }

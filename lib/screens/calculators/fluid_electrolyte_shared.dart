@@ -18,6 +18,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../../widgets/ios_feature_gate.dart';
+import '../../widgets/educational_disclaimer_banner.dart';
 
 class FECalcScaffold extends StatelessWidget {
   final String title;
@@ -30,18 +32,30 @@ class FECalcScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: AppBar(
-        title: Text(title,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17)),
-        elevation: 0,
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(16, 14, 16, 32),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: children,
+    return IosFeatureGate(
+      featureName: title,
+      description:
+          'This calculation is available on the PediAid web app with full clinical references and citations.',
+      child: Scaffold(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        appBar: AppBar(
+          title: Text(title,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17)),
+          elevation: 0,
+        ),
+        body: Column(
+          children: [
+            const EducationalDisclaimerBanner(),
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(16, 14, 16, 32),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: children,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

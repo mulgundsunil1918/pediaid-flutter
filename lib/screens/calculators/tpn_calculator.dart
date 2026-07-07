@@ -12,6 +12,9 @@ class TpnCalculator extends StatefulWidget {
 class _TpnCalculatorState extends State<TpnCalculator> {
   String? _tpnType; // null, 'stock', 'multiline'
   String _potassiumType = 'kphos'; // 'kphos' or 'kcl'
+  String _dextroseMode = 'auto'; // 'auto' or 'manual'
+  int _dexStockA = 5;
+  int _dexStockB = 10;
 
   final _weightCtrl = TextEditingController();
   final _totalVolumeCtrl = TextEditingController();
@@ -44,6 +47,9 @@ class _TpnCalculatorState extends State<TpnCalculator> {
       _tpnType = null;
       _result = null;
       _potassiumType = 'kphos';
+      _dextroseMode = 'auto';
+      _dexStockA = 5;
+      _dexStockB = 10;
       for (final c in [
         _weightCtrl, _totalVolumeCtrl, _otherInfusionsCtrl, _sodiumCtrl,
         _potassiumCtrl, _aminovenCtrl, _lipidCtrl, _calciumCtrl, _girCtrl,
@@ -55,6 +61,17 @@ class _TpnCalculatorState extends State<TpnCalculator> {
 
   // ── Dextrose mixture finder ───────────────────────────────────────────────
   _DextroseMix? _findDextroseMixture(double targetConc, double totalDexVol) {
+    if (_dextroseMode == 'manual') {
+      final a = _dexStockA.toDouble();
+      final b = _dexStockB.toDouble();
+      if ((b - a).abs() < 0.001) {
+        return _DextroseMix(a, b, totalDexVol, 0.0, totalDexVol);
+      }
+      final volA = (targetConc - b) * totalDexVol / (a - b);
+      final volB = totalDexVol - volA;
+      return _DextroseMix(a, b, max(0, volA), max(0, volB), totalDexVol);
+    }
+
     const stocks = [0.0, 5.0, 10.0, 25.0, 50.0];
     _DextroseMix? best;
     double bestDiff = double.infinity;
@@ -70,9 +87,6 @@ class _TpnCalculatorState extends State<TpnCalculator> {
           }
           continue;
         }
-        // targetConc = a * volA/total + b * volB/total
-        // volA + volB = totalDexVol
-        // volA = (targetConc - b) * totalDexVol / (a - b)
         final volA = (targetConc - b) * totalDexVol / (a - b);
         final volB = totalDexVol - volA;
         if (volA < -0.001 || volB < -0.001) continue;
@@ -385,6 +399,33 @@ class _TpnCalculatorState extends State<TpnCalculator> {
               _inputRow('GIR (mg/kg/min)', _girCtrl, 'e.g. 6'),
             ],
           ),
+          const SizedBox(height: 12),
+          _sectionCard(
+            title: 'Dextrose Stock Selection',
+            icon: Icons.water_drop_outlined,
+            color: Colors.purple.shade700,
+            children: [
+              Row(
+                children: [
+                  Text('Mode:', style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.onSurface)),
+                  const SizedBox(width: 12),
+                  _dexModeChip('Auto-pick', 'auto'),
+                  const SizedBox(width: 8),
+                  _dexModeChip('Choose stocks', 'manual'),
+                ],
+              ),
+              if (_dextroseMode == 'manual') ...[
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(child: _dexStockDropdown('Stock A', _dexStockA, (v) => setState(() => _dexStockA = v))),
+                    const SizedBox(width: 12),
+                    Expanded(child: _dexStockDropdown('Stock B', _dexStockB, (v) => setState(() => _dexStockB = v))),
+                  ],
+                ),
+              ],
+            ],
+          ),
           const SizedBox(height: 16),
           ElevatedButton.icon(
             onPressed: _calculate,
@@ -447,6 +488,59 @@ class _TpnCalculatorState extends State<TpnCalculator> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _dexModeChip(String label, String value) {
+    final selected = _dextroseMode == value;
+    return GestureDetector(
+      onTap: () => setState(() => _dextroseMode = value),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        decoration: BoxDecoration(
+          color: selected ? Colors.purple.shade700 : Colors.transparent,
+          border: Border.all(color: selected ? Colors.purple.shade700 : Theme.of(context).colorScheme.outline),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            fontSize: 12,
+            color: selected ? Colors.white : Theme.of(context).colorScheme.onSurface,
+            fontWeight: selected ? FontWeight.bold : FontWeight.normal,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _dexStockDropdown(String label, int value, void Function(int) onChanged) {
+    const stocks = [0, 5, 10, 25, 50];
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6))),
+        const SizedBox(height: 4),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          decoration: BoxDecoration(
+            border: Border.all(color: Theme.of(context).colorScheme.outline),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: DropdownButton<int>(
+            value: value,
+            isExpanded: true,
+            dropdownColor: Theme.of(context).cardColor,
+            underline: const SizedBox(),
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 13),
+            items: stocks.map((s) => DropdownMenuItem(
+              value: s,
+              child: Text('D$s%', style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
+            )).toList(),
+            onChanged: (v) { if (v != null) onChanged(v); },
+          ),
+        ),
+      ],
     );
   }
 
@@ -577,13 +671,32 @@ class _TpnCalculatorState extends State<TpnCalculator> {
   }
 
   Widget _volumeSummaryCard(_TpnResult r) {
+    final sod = double.tryParse(_sodiumCtrl.text) ?? 0.0;
+    final pot = double.tryParse(_potassiumCtrl.text) ?? 0.0;
+    final ami = double.tryParse(_aminovenCtrl.text) ?? 0.0;
+    final lip = double.tryParse(_lipidCtrl.text) ?? 0.0;
+    final cal = double.tryParse(_calciumCtrl.text) ?? 0.0;
+    final gir = double.tryParse(_girCtrl.text) ?? 0.0;
+    final oi = double.tryParse(_otherInfusionsCtrl.text) ?? 0.0;
+    final tv = double.tryParse(_totalVolumeCtrl.text) ?? 0.0;
+
     return _resultCard(
-      title: 'Volume Summary',
-      icon: Icons.water_drop,
+      title: 'Prescription Summary',
+      icon: Icons.assignment,
       color: Theme.of(context).colorScheme.primary,
       children: [
         _resultRow('Weight', '${r.weight!.toStringAsFixed(2)} kg'),
-        _resultRow('Total TPN Volume', '${r.tpnVolume!.toStringAsFixed(1)} ml/day'),
+        _resultRow('Total Fluid/day', '${tv.toStringAsFixed(0)} ml/day (${(tv / r.weight!).toStringAsFixed(0)} ml/kg/day)'),
+        if (oi > 0) _resultRow('Other Infusions', '${oi.toStringAsFixed(0)} ml/day'),
+        _resultRow('TPN Volume', '${r.tpnVolume!.toStringAsFixed(1)} ml/day'),
+        const Divider(height: 16),
+        _resultRow('Sodium', '${sod.toStringAsFixed(1)} mEq/kg/day'),
+        _resultRow('Potassium (${_potassiumType == 'kphos' ? 'KH₂PO₄' : 'KCl'})', '${pot.toStringAsFixed(1)} mEq/kg/day'),
+        _resultRow('Aminoven 10%', '${ami.toStringAsFixed(1)} g/kg/day'),
+        if (r.tpnType == 'multiline')
+          _resultRow('Lipid SMOF 20%', '${lip.toStringAsFixed(1)} g/kg/day'),
+        _resultRow('Calcium Gluconate', '${cal.toStringAsFixed(1)} ml/kg/day'),
+        _resultRow('GIR', '${gir.toStringAsFixed(1)} mg/kg/min', bold: true),
       ],
     );
   }

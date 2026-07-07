@@ -26,31 +26,23 @@ class _Cfg {
 const _cfgPh   = _Cfg(lo:7.35, hi:7.45, mn:6.80, mx:7.80, dec:2, sym:false, rev:false);
 const _cfgPco2 = _Cfg(lo:35,   hi:45,   mn:10,   mx:100,  dec:0, sym:false, rev:false);
 const _cfgHco3 = _Cfg(lo:22,   hi:26,   mn:5,    mx:45,   dec:0, sym:false, rev:false);
-const _cfgBe   = _Cfg(lo:-2,   hi:2,    mn:-25,  mx:25,   dec:0, sym:true,  rev:false);
-const _cfgPao2 = _Cfg(lo:80,   hi:100,  mn:20,   mx:200,  dec:0, sym:false, rev:true);
-const _cfgSpo2 = _Cfg(lo:94,   hi:100,  mn:60,   mx:100,  dec:0, sym:false, rev:true);
 
 // ── Result model ──────────────────────────────────────────────────────────────
 class _BgResult {
   final String dis, disLbl, vCls;
   final bool mixed;
   final String? cExp, cAct, cNote, cCls;
-  final String beNote, beCls;
-  final String oxyNote, oxyCls;
   // anion gap
   final String? ag, corrAG, agStepCls, agNote, ddText, ddCls, lacNote;
   final bool agHi, cagHi;
   // raw values
-  final double ph, pco2, hco3, be, pao2, spo2;
+  final double ph, pco2, hco3;
   const _BgResult({
     required this.dis, required this.disLbl, required this.vCls, required this.mixed,
     this.cExp, this.cAct, this.cNote, this.cCls,
-    required this.beNote, required this.beCls,
-    required this.oxyNote, required this.oxyCls,
     this.ag, this.corrAG, this.agStepCls, this.agNote, this.ddText, this.ddCls, this.lacNote,
     required this.agHi, required this.cagHi,
-    required this.ph, required this.pco2, required this.hco3, required this.be,
-    required this.pao2, required this.spo2,
+    required this.ph, required this.pco2, required this.hco3,
   });
 }
 
@@ -67,9 +59,6 @@ class _BloodGasAnalyserState extends State<BloodGasAnalyser>
   double _ph   = 7.40;
   double _pco2 = 40;
   double _hco3 = 24;
-  double _be   = 0;
-  double _pao2 = 90;
-  double _spo2 = 98;
 
   // Anion gap toggle + values
   bool _agOn = false;
@@ -99,7 +88,7 @@ class _BloodGasAnalyserState extends State<BloodGasAnalyser>
   @override
   void initState() {
     super.initState();
-    _stepOpen = List.generate(8, (i) => i < 2);
+    _stepOpen = List.generate(5, (i) => i < 2);
     _blinkCtrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 900))..repeat(reverse: true);
     _blinkAnim = CurvedAnimation(parent: _blinkCtrl, curve: Curves.easeInOut);
     _fadeCtrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 450));
@@ -122,9 +111,6 @@ class _BloodGasAnalyserState extends State<BloodGasAnalyser>
     final ph   = _ph;
     final pco2 = _pco2;
     final hco3 = _hco3;
-    final be   = _be;
-    final pao2 = _pao2;
-    final spo2 = _spo2;
 
     final phLow  = ph < 7.35;
     final phHigh = ph > 7.45;
@@ -204,26 +190,6 @@ class _BloodGasAnalyserState extends State<BloodGasAnalyser>
 
     if (cMixed && !mixed) { mixed=true; vCls='vm'; disLbl='Mixed Disorder — $disLbl'; }
 
-    // Base excess
-    String beNote, beCls;
-    if (be < -2) {
-      beNote = 'Base deficit ${be.toInt()} mEq/L → metabolic acidosis component';
-      beCls = 'r';
-      if (be < -6) beNote += ' ⚠️ Significant base deficit';
-    } else if (be > 2) {
-      beNote = 'Base excess +${be.toInt()} mEq/L → metabolic alkalosis component';
-      beCls = 'a';
-    } else {
-      beNote = 'BE ${be.toInt()} mEq/L — within normal (−2 to +2)';
-      beCls = 'g';
-    }
-
-    // Oxygenation
-    String oxyNote, oxyCls;
-    if (pao2 < 60)      { oxyNote='Severe hypoxaemia — PaO₂ critically low'; oxyCls='r'; }
-    else if (pao2 < 80) { oxyNote='Mild–moderate hypoxaemia'; oxyCls='a'; }
-    else                { oxyNote='Oxygenation adequate'; oxyCls='g'; }
-
     // Anion gap
     String? agStr, corrAGStr, agStepCls, agNote, ddText, ddCls, lacNote;
     bool agHi = false, cagHi = false;
@@ -254,15 +220,13 @@ class _BloodGasAnalyserState extends State<BloodGasAnalyser>
       _result = _BgResult(
         dis:dis, disLbl:disLbl, vCls:vCls, mixed:mixed,
         cExp:cExp, cAct:cAct, cNote:cNote, cCls:cCls,
-        beNote:beNote, beCls:beCls,
-        oxyNote:oxyNote, oxyCls:oxyCls,
         ag:agStr, corrAG:corrAGStr, agStepCls:agStepCls, agNote:agNote,
         ddText:ddText, ddCls:ddCls, lacNote:lacNote,
         agHi:agHi, cagHi:cagHi,
-        ph:ph, pco2:pco2, hco3:hco3, be:be, pao2:pao2, spo2:spo2,
+        ph:ph, pco2:pco2, hco3:hco3,
       );
       _showResults = true;
-      _stepOpen = List.generate(8, (i) => i < 2);
+      _stepOpen = List.generate(5, (i) => i < 2);
     });
     _fadeCtrl.forward(from: 0);
     Future.delayed(const Duration(milliseconds: 100), () {
@@ -390,26 +354,6 @@ class _BloodGasAnalyserState extends State<BloodGasAnalyser>
             name:'HCO₃⁻', unit:'mEq/L', value:_hco3, cfg:_cfgHco3,
             marks: const ['5', 'Normal 22–26', '45'],
             onChanged: (v) => setState(() => _hco3 = v),
-          ),
-          const SizedBox(height:20),
-          _buildSlider(
-            name:'Base Excess', unit:'mEq/L', value:_be, cfg:_cfgBe,
-            marks: const ['−25 (deficit)', 'Normal −2 to +2', '+25 (excess)'],
-            onChanged: (v) => setState(() => _be = v),
-            showPlus: true,
-          ),
-          const SizedBox(height:20),
-          _buildSlider(
-            name:'PaO₂', unit:'mmHg', value:_pao2, cfg:_cfgPao2,
-            marks: const ['20 (critical)', 'Normal 80–100', '200'],
-            onChanged: (v) => setState(() => _pao2 = v),
-          ),
-          const SizedBox(height:20),
-          _buildSlider(
-            name:'SpO₂', unit:'%', value:_spo2, cfg:_cfgSpo2,
-            marks: const ['60% (critical)', 'Target ≥94%', '100%'],
-            onChanged: (v) => setState(() => _spo2 = v),
-            optional: true,
           ),
         ],
       ),
@@ -660,7 +604,7 @@ class _BloodGasAnalyserState extends State<BloodGasAnalyser>
 
   // ── Results ──────────────────────────────────────────────────────────────────
   Widget _buildResults(_BgResult r) {
-    final stepCount = _agOn ? 7 : 6;
+    final stepCount = _agOn ? 5 : 4;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -673,16 +617,12 @@ class _BloodGasAnalyserState extends State<BloodGasAnalyser>
         _buildStep(1, r, '2', 'Identify Primary Disorder', r.disLbl, _cyan, _buildStep2Body(r)),
         const SizedBox(height:8),
         _buildStep(2, r, '3', 'Compensation Analysis', r.cNote ?? 'No compensation applicable', _clsColor(r.cCls), _buildStep3Body(r)),
-        const SizedBox(height:8),
-        _buildStep(3, r, '4', 'Base Excess / Deficit', 'BE ${r.be >= 0 && r.beCls != 'g' ? '+' : ''}${r.be.toInt()} mEq/L', _clsColor(r.beCls), _buildStep4Body(r)),
-        const SizedBox(height:8),
-        _buildStep(4, r, '5', 'Oxygenation Assessment', 'PaO₂ ${r.pao2.toInt()} mmHg · SpO₂ ${r.spo2.toInt()}%', _clsColor(r.oxyCls), _buildStep5Body(r)),
         if (_agOn) ...[
           const SizedBox(height:8),
-          _buildStep(5, r, '6', 'Anion Gap', 'AG ${r.ag} mEq/L — ${r.agHi ? 'ELEVATED' : 'Normal'}', _clsColor(r.agStepCls), _buildStep6Body(r)),
+          _buildStep(3, r, '4', 'Anion Gap', 'AG ${r.ag} mEq/L — ${r.agHi ? 'ELEVATED' : 'Normal'}', _clsColor(r.agStepCls), _buildStepAGBody(r)),
         ],
         const SizedBox(height:8),
-        _buildStep(_agOn ? 6 : 5, r, '$stepCount', 'Mixed Disorder', r.mixed ? '⚠ Detected' : '— Not Detected',
+        _buildStep(_agOn ? 4 : 3, r, '$stepCount', 'Mixed Disorder', r.mixed ? '⚠ Detected' : '— Not Detected',
             r.mixed ? _violet : _green, _buildStepMixedBody(r, stepCount)),
         const SizedBox(height:16),
         _buildDisclaimer(),
@@ -733,7 +673,7 @@ class _BloodGasAnalyserState extends State<BloodGasAnalyser>
           ),
           const SizedBox(height:8),
           Text(
-            'pH ${r.ph.toStringAsFixed(2)} · PCO₂ ${r.pco2.toInt()} · HCO₃ ${r.hco3.toInt()} · BE ${r.be >= 0 ? '+' : ''}${r.be.toInt()} · PaO₂ ${r.pao2.toInt()} · SpO₂ ${r.spo2.toInt()}%${r.mixed ? ' · ⚠ Mixed disorder detected' : ''}',
+            'pH ${r.ph.toStringAsFixed(2)} · PCO₂ ${r.pco2.toInt()} · HCO₃ ${r.hco3.toInt()}${r.mixed ? ' · ⚠ Mixed disorder detected' : ''}',
             style: TextStyle(color:Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6), fontSize:11.5),
           ),
         ],
@@ -750,12 +690,6 @@ class _BloodGasAnalyserState extends State<BloodGasAnalyser>
         _rawBox('PCO₂', '${r.pco2.toInt()}',        r.pco2 < 35 ? 'lo' : r.pco2 > 45 ? 'hi' : 'ok', false),
         const SizedBox(width:6),
         _rawBox('HCO₃', '${r.hco3.toInt()}',        r.hco3 < 22 ? 'lo' : r.hco3 > 26 ? 'hi' : 'ok', false),
-        const SizedBox(width:6),
-        _rawBox('BE',   '${r.be >= 0 ? '+' : ''}${r.be.toInt()}', r.be < -2 ? 'lo' : r.be > 2 ? 'hi' : 'ok', false),
-        const SizedBox(width:6),
-        _rawBox('PaO₂', '${r.pao2.toInt()}',        r.pao2 < 80 ? 'lo' : 'ok', true),
-        const SizedBox(width:6),
-        _rawBox('SpO₂', '${r.spo2.toInt()}%',       r.spo2 < 94 ? 'lo' : 'ok', true),
       ],
     );
   }
@@ -904,51 +838,6 @@ class _BloodGasAnalyserState extends State<BloodGasAnalyser>
     );
   }
 
-  Widget _buildStep4Body(_BgResult r) {
-    final bc = _clsColor(r.beCls);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Text('${r.be >= 0 ? '+' : ''}${r.be.toInt()}',
-                style: TextStyle(color:bc, fontSize:22, fontWeight:FontWeight.bold)),
-            const SizedBox(width:6),
-            Text('mEq/L', style: TextStyle(color:Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6), fontSize:12)),
-            const SizedBox(width:10),
-            Expanded(child: Text(r.beNote, style: TextStyle(color:bc, fontSize:12))),
-          ],
-        ),
-        const SizedBox(height:8),
-        _intelBlock('be', r),
-      ],
-    );
-  }
-
-  Widget _buildStep5Body(_BgResult r) {
-    final pao2C = r.pao2 >= 80 ? _green : r.pao2 >= 60 ? _amber : _red;
-    final spo2C = r.spo2 >= 94 ? _green : r.spo2 >= 88 ? _amber : _red;
-    final pao2Sub = r.pao2 >= 80 ? 'Normal mmHg' : r.pao2 >= 60 ? 'Mild hypoxaemia' : 'Hypoxaemia';
-    final spo2Sub = r.spo2 >= 94 ? 'Adequate' : r.spo2 >= 88 ? 'Borderline' : 'Low';
-    final oxC = _clsColor(r.oxyCls);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Expanded(child: _oxyBox('PaO₂', '${r.pao2.toInt()}', pao2Sub, pao2C)),
-            const SizedBox(width:10),
-            Expanded(child: _oxyBox('SpO₂', '${r.spo2.toInt()}%', spo2Sub, spo2C)),
-          ],
-        ),
-        const SizedBox(height:8),
-        _pill(oxC, oxC.withValues(alpha:.12), r.oxyNote),
-        const SizedBox(height:8),
-        _intelBlock('oxy', r),
-      ],
-    );
-  }
-
   Widget _oxyBox(String label, String val, String sub, Color c) {
     return Container(
       padding: const EdgeInsets.all(10),
@@ -969,7 +858,7 @@ class _BloodGasAnalyserState extends State<BloodGasAnalyser>
     );
   }
 
-  Widget _buildStep6Body(_BgResult r) {
+  Widget _buildStepAGBody(_BgResult r) {
     if (!_agOn || r.ag == null) return _bodyText('Enable Anion Gap toggle above.');
     final agC    = r.agHi  ? _red : _green;
     final cagC   = r.cagHi ? _red : _green;
@@ -1185,23 +1074,6 @@ class _BloodGasAnalyserState extends State<BloodGasAnalyser>
           _bodyText('Golden rule: Compensation never overshoots. If pH is normalised and continues beyond normal, that is a second independent disorder — not over-compensation.'),
         ];
         break;
-      case 'be':
-        title = 'What Base Excess Tells Us';
-        content = [
-          _bodyText('BE is the purest measure of the metabolic component — it mathematically removes the respiratory component.'),
-          _formulaBox('BE = amount of acid or base (mEq/L) needed to restore pH to 7.40\nat normal temperature, PCO₂ = 40 mmHg\n\nBE < −2  → base deficit (metabolic acidosis component)\nBE > +2  → base excess (metabolic alkalosis component)\nBE < −6  → clinically significant (neonatal asphyxia, severe sepsis)\nBE < −10 → severe — correlates with significant hypoxic injury in neonates'),
-          _bodyText('In neonatal medicine, BE is particularly valuable — a severely negative BE at birth correlates with hypoxic-ischaemic encephalopathy (HIE) risk.'),
-        ];
-        break;
-      case 'oxy':
-        title = 'Oxygenation Targets';
-        content = [
-          _bodyText('Standard adult/paediatric: PaO₂ 80–100 mmHg · SpO₂ ≥94%'),
-          _bodyText('Preterm neonates: SpO₂ 91–95% — avoid hyperoxia (causes ROP, BPD, lung injury)'),
-          _bodyText('Term neonates: SpO₂ ≥95%'),
-          _formulaBox('Hypoxaemia classification (PaO₂ on room air):\nMild:     60–79 mmHg\nModerate: 40–59 mmHg\nSevere:   <40 mmHg'),
-        ];
-        break;
       case 'dd':
         title = 'Delta-Delta Ratio';
         final ddC = _clsColor(r.ddCls);
@@ -1248,7 +1120,7 @@ class _BloodGasAnalyserState extends State<BloodGasAnalyser>
       ),
       child: const Text(
         '⚠️ Clinical decision support only · Always correlate with patient context\n'
-        'Normal: pH 7.35–7.45 · PCO₂ 35–45 · HCO₃ 22–26 · BE −2 to +2 · PaO₂ 80–100',
+        'Normal: pH 7.35–7.45 · PCO₂ 35–45 · HCO₃ 22–26',
         style: TextStyle(color:_amber, fontSize:11.5, height:1.5),
       ),
     );

@@ -61,6 +61,7 @@ GoogleService-Info.plist
 service-account*.json
 firebase-adminsdk*.json
 firebase-service-account*.json
+ios/api_key.json
 
 # ── Generated Play Store assets (regen via tools/play_assets.py) ──────
 play-assets/

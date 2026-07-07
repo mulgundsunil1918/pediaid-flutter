@@ -372,6 +372,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                 ),
                 if (kIsWeb || !Platform.isIOS) _buildDonationFooter(context, isDark),
+                if (!kIsWeb && Platform.isIOS) _buildWebPromoFooter(context),
                 SizedBox(height: MediaQuery.of(context).padding.bottom + 16),
               ],
             ),
@@ -511,6 +512,65 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // ── Web promo footer (iOS only) ──────────────────────────────────────────
+  Widget _buildWebPromoFooter(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(18, 24, 18, 8),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: () => launchUrl(
+          Uri.parse('https://pediaid.bridgr.co.in'),
+          mode: LaunchMode.externalApplication,
+        ),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: cs.primaryContainer.withValues(alpha: 0.35),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: cs.primary.withValues(alpha: 0.25)),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 42, height: 42,
+                decoration: BoxDecoration(
+                  color: cs.primary,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Icon(Icons.language_rounded, color: Colors.white, size: 22),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'More features on the Web App',
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 13.5, fontWeight: FontWeight.w700,
+                        color: cs.onSurface,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      'Drug formulary, dose calculators & more at pediaid.bridgr.co.in',
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 11.5,
+                        color: cs.onSurface.withValues(alpha: 0.6),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(Icons.open_in_new_rounded, size: 16, color: cs.primary),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   // ── Welcome banner (below AppBar, in scroll body) ────────────────────────
 
   Widget _buildWelcomeBanner(BuildContext context, bool isDark) {
@@ -637,14 +697,16 @@ class _HomeScreenState extends State<HomeScreen> {
       RecentsService.instance.record(key, label);
       Navigator.push(context, MaterialPageRoute(builder: (_) => builder()));
     }
+    final bool _iosNative = !kIsWeb && Platform.isIOS;
     final cards = [
       _FeatureDef('Calculators & Tools', 'Calc · BP · Bili · More',   Icons.calculate_rounded,   const Color(0xFF1565C0), () => open('allcalc',   'Calculators',     () => const CalculatorsScreen())),
       _FeatureDef('Charts',        'Growth · Fenton · IAP',   Icons.show_chart_rounded,  const Color(0xFF6A1B9A), () => open('growth',    'Charts',          () => const GrowthChartsScreen())),
+      if (!_iosNative)
       _FeatureDef('Drug Formulary','500+ drugs',               Icons.medication_rounded,  const Color(0xFF00695C), () => open('formulary', 'Drug Formulary',  () => const FormularyScreen())),
       _FeatureDef('Lab Reference',       'Harriet Lane values',        Icons.biotech_rounded,        const Color(0xFF00838F), () => open('labref',    'Lab Reference',   () => const LabReferenceScreen())),
       _FeatureDef('Guides',              'Fetal Dev · Protocols',      Icons.menu_book_outlined,     const Color(0xFF6D4C41), () => open('guides',    'Guides',          () => const GuidesScreen())),
       _FeatureDef('CME & Webinars',       'Conferences · Webinars',     Icons.event_note_rounded,     const Color(0xFF7B1FA2), () => open('cme',       'CME & Webinars',  () => const CmeScreen())),
-      _FeatureDef('Academics',           'Peer-reviewed content',       Icons.auto_stories_rounded,   const Color(0xFF283593), () => open('academics', 'Academics',       () => const AcademicsWebScreen(path: '/academics'))),
+      _FeatureDef('Academics',           'Peer-reviewed content',       Icons.auto_stories_rounded,   const Color(0xFF283593), () => open('academics', 'Academics',       () => const AcademicsWebScreen())),
       _FeatureDef('Never Again',         'Learn from real mistakes',     Icons.auto_stories,           const Color(0xFF1A237E), () => open('neveragain','Never Again',     () => const NeverAgainScreen())),
     ];
 
@@ -739,7 +801,11 @@ class _HomeScreenState extends State<HomeScreen> {
     final chipBg     = isDark ? AppTheme.dCard   : Colors.white;
     final chipBorder = isDark ? AppTheme.dBorder : const Color(0xFFCBD8EB);
 
-    final visible = _allChips.where((c) => _selectedKeys.contains(c.key)).toList();
+    final bool _iosChip = !kIsWeb && Platform.isIOS;
+    final visible = _allChips
+        .where((c) => _selectedKeys.contains(c.key))
+        .where((c) => !_iosChip || c.key != 'formulary')
+        .toList();
 
     if (visible.isEmpty) {
       return Padding(

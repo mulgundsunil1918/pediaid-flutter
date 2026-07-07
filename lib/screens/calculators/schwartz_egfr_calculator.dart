@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 // ── Semantic/status colors (kept as constants) ────────────────────────────────
-const Color _accent    = Color(0xFF58a6ff);
 const Color _green     = Color(0xFF3fb950);
 const Color _greenDim  = Color(0xFF122820);
 const Color _amber     = Color(0xFFd29922);
@@ -23,17 +22,13 @@ class SchwartzEGFRCalculator extends StatefulWidget {
 class _SchwartzEGFRCalculatorState extends State<SchwartzEGFRCalculator>
     with SingleTickerProviderStateMixin {
   // ── State ─────────────────────────────────────────────────────────────────
-  String _ageGroup = 'infant'; // 'infant' | 'child'
-  double _k = 0.33;
-  String _kReason = 'Infant < 1 year';
+  static const double _k = 0.413; // Bedside Schwartz constant — used for all ages
 
-  double _ageY  = 0;
-  double _ageM  = 6;
-  double _height = 65;
-  double _creat  = 0.4;
+  double _ageDays = 180;
+  double _height  = 65;
+  double _creat   = 0.4;
 
-  final _ageYCtrl    = TextEditingController(text: '0');
-  final _ageMCtrl    = TextEditingController(text: '6');
+  final _ageDaysCtrl = TextEditingController(text: '180');
   final _heightCtrl  = TextEditingController(text: '65');
   final _creatCtrl   = TextEditingController(text: '0.4');
 
@@ -60,36 +55,23 @@ class _SchwartzEGFRCalculatorState extends State<SchwartzEGFRCalculator>
 
   @override
   void dispose() {
-    _ageYCtrl.dispose();
-    _ageMCtrl.dispose();
+    _ageDaysCtrl.dispose();
     _heightCtrl.dispose();
     _creatCtrl.dispose();
     _fadeCtrl.dispose();
     super.dispose();
   }
 
-  // ── Age group ─────────────────────────────────────────────────────────────
-  void _setAgeGroup(String group) {
-    setState(() {
-      _ageGroup = group;
-      if (group == 'infant') {
-        _k       = 0.33;
-        _kReason = 'Infant < 1 year';
-        _ageY    = 0;  _ageYCtrl.text   = '0';
-        _ageM    = 6;  _ageMCtrl.text   = '6';
-        _height  = 65; _heightCtrl.text = '65';
-      } else {
-        _k       = 0.45;
-        _kReason = 'Child ≥ 1 year';
-        _ageY    = 5;  _ageYCtrl.text   = '5';
-        _ageM    = 0;  _ageMCtrl.text   = '0';
-        _height  = 110; _heightCtrl.text = '110';
-      }
-      _errHeight    = null;
-      _errCreat     = null;
-      _showResults  = false;
-      _result       = null;
-    });
+  // ── Age formatting ────────────────────────────────────────────────────────
+  String _formatAgeDays(double days) {
+    final d = days.toInt();
+    if (d < 31) return '$d day${d == 1 ? '' : 's'}';
+    final years = d ~/ 365;
+    final months = (d % 365) ~/ 30;
+    if (years > 0) {
+      return months > 0 ? '$years yr(s) $months mo' : '$years yr(s)';
+    }
+    return '$months month(s)';
   }
 
   // ── CKD stage ─────────────────────────────────────────────────────────────
@@ -117,28 +99,18 @@ class _SchwartzEGFRCalculatorState extends State<SchwartzEGFRCalculator>
     }
     if (!valid) { setState(() => _showResults = false); return; }
 
-    final egfr        = double.parse((_k * _height / _creat).toStringAsFixed(1));
-    final egfrBedside = double.parse((0.413 * _height / _creat).toStringAsFixed(1));
-    final stage       = _getCKDStage(egfr);
-
-    final String ageStr;
-    if (_ageGroup == 'infant') {
-      ageStr = '${_ageM.toInt()} month(s)';
-    } else {
-      final mPart = _ageM > 0 ? ' ${_ageM.toInt()}m' : '';
-      ageStr = '${_ageY.toInt()} yr(s)$mPart'.trim();
-    }
+    final egfr  = double.parse((_k * _height / _creat).toStringAsFixed(1));
+    final stage = _getCKDStage(egfr);
+    final ageStr = _formatAgeDays(_ageDays);
 
     setState(() {
       _result = _CalcResult(
         egfr: egfr,
-        egfrBedside: egfrBedside,
         stage: stage,
         ageStr: ageStr,
+        ageDays: _ageDays,
         height: _height,
         creat: _creat,
-        k: _k,
-        ageGroup: _ageGroup,
       );
       _showResults = true;
     });
@@ -147,18 +119,13 @@ class _SchwartzEGFRCalculatorState extends State<SchwartzEGFRCalculator>
 
   // ── Reset ─────────────────────────────────────────────────────────────────
   void _clearAll() {
-    final h = _ageGroup == 'infant' ? 65.0 : 110.0;
-    final ay = _ageGroup == 'infant' ? 0.0  : 5.0;
-    final am = _ageGroup == 'infant' ? 6.0  : 0.0;
-    _heightCtrl.text = h.toInt().toString();
-    _creatCtrl.text  = '0.4';
-    _ageYCtrl.text   = ay.toInt().toString();
-    _ageMCtrl.text   = am.toInt().toString();
+    _heightCtrl.text   = '65';
+    _creatCtrl.text    = '0.4';
+    _ageDaysCtrl.text  = '180';
     setState(() {
-      _height       = h;
+      _height       = 65;
       _creat        = 0.4;
-      _ageY         = ay;
-      _ageM         = am;
+      _ageDays      = 180;
       _errHeight    = null;
       _errCreat     = null;
       _showResults  = false;
@@ -183,8 +150,6 @@ class _SchwartzEGFRCalculatorState extends State<SchwartzEGFRCalculator>
           children: [
             _buildHeader(),
             const SizedBox(height: 16),
-            _buildAgeGroupSection(),
-            const SizedBox(height: 12),
             _buildPatientDetails(),
             const SizedBox(height: 16),
             _buildActionButtons(),
@@ -229,96 +194,10 @@ class _SchwartzEGFRCalculatorState extends State<SchwartzEGFRCalculator>
                 color: Theme.of(context).colorScheme.onSurface, fontSize: 22, fontWeight: FontWeight.bold))),
         const SizedBox(height: 4),
         Builder(builder: (context) => Text(
-            'Creatinine clearance for infants & children — Schwartz equation with CKD staging',
+            'Creatinine clearance for infants & children — Bedside Schwartz equation (k=0.413) with CKD staging',
             style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6), fontSize: 12.5))),
       ],
     );
-  }
-
-  // ── Age group section ─────────────────────────────────────────────────────
-  Widget _buildAgeGroupSection() {
-    return _sectionCard(
-      title: 'Age Group',
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Toggle buttons
-          Row(
-            children: [
-              Expanded(child: _ageToggleBtn('infant', '< 1 Year (Infant)')),
-              const SizedBox(width: 8),
-              Expanded(child: _ageToggleBtn('child',  '≥ 1 Year (Child)')),
-            ],
-          ),
-          const SizedBox(height: 14),
-          // K constant badge
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-            decoration: BoxDecoration(
-              color: _purple.withValues(alpha: 0.12),
-              border: Border.all(color: _purple.withValues(alpha: 0.4)),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Row(
-              children: [
-                const Text('🧮', style: TextStyle(fontSize: 22)),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text('Schwartz constant k',
-                          style: TextStyle(
-                              color: _purple,
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold)),
-                      const SizedBox(height: 2),
-                      Builder(builder: (context) => Text(_kReason,
-                          style: TextStyle(
-                              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6), fontSize: 11.5))),
-                    ],
-                  ),
-                ),
-                Text(
-                  _k.toStringAsFixed(2),
-                  style: const TextStyle(
-                      color: _purple,
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _ageToggleBtn(String group, String label) {
-    final active = _ageGroup == group;
-    return Builder(builder: (context) {
-      final cs = Theme.of(context).colorScheme;
-      return GestureDetector(
-        onTap: () => _setAgeGroup(group),
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          decoration: BoxDecoration(
-            color: active ? _purple : Colors.transparent,
-            border: Border.all(
-                color: active ? _purple : cs.outline),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Text(
-            label,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                color: active ? Colors.white : cs.onSurface.withValues(alpha: 0.6),
-                fontSize: 13,
-                fontWeight: active ? FontWeight.bold : FontWeight.normal),
-          ),
-        ),
-      );
-    });
   }
 
   // ── Patient details ───────────────────────────────────────────────────────
@@ -327,35 +206,28 @@ class _SchwartzEGFRCalculatorState extends State<SchwartzEGFRCalculator>
       title: 'Patient Details',
       child: Column(
         children: [
-          Row(
-            children: [
-              Expanded(child: _stepperField(
-                label: 'Age — Years',
-                value: _ageY,
-                ctrl: _ageYCtrl,
-                unit: 'years',
-                step: 1,
-                min: 0,
-                max: 18,
-                decimals: 0,
-                error: null,
-                onChanged: (v) => setState(() => _ageY = v),
-              )),
-              const SizedBox(width: 10),
-              Expanded(child: _stepperField(
-                label: 'Age — Months',
-                value: _ageM,
-                ctrl: _ageMCtrl,
-                unit: 'months',
-                step: 1,
-                min: 0,
-                max: 11,
-                decimals: 0,
-                error: null,
-                onChanged: (v) => setState(() => _ageM = v),
-              )),
-            ],
+          _stepperField(
+            label: 'Age',
+            value: _ageDays,
+            ctrl: _ageDaysCtrl,
+            unit: 'days',
+            step: 1,
+            min: 0,
+            max: 6570,
+            decimals: 0,
+            error: null,
+            onChanged: (v) => setState(() => _ageDays = v),
           ),
+          Builder(builder: (context) => Padding(
+            padding: const EdgeInsets.only(top: 6),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text('≈ ${_formatAgeDays(_ageDays)}',
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+                      fontSize: 11)),
+            ),
+          )),
           const SizedBox(height: 10),
           Row(
             children: [
@@ -542,8 +414,6 @@ class _SchwartzEGFRCalculatorState extends State<SchwartzEGFRCalculator>
       children: [
         _buildEgfrHero(r),
         const SizedBox(height: 12),
-        _buildBedsideBox(r),
-        const SizedBox(height: 12),
         _buildDetailCard(r),
         const SizedBox(height: 12),
         _buildCKDTable(r.stage),
@@ -571,7 +441,7 @@ class _SchwartzEGFRCalculatorState extends State<SchwartzEGFRCalculator>
       ),
       child: Column(
         children: [
-          Text('Estimated GFR — Schwartz',
+          Text('Estimated GFR — Bedside Schwartz',
               style: TextStyle(
                   color: tagColor,
                   fontSize: 12,
@@ -608,120 +478,16 @@ class _SchwartzEGFRCalculatorState extends State<SchwartzEGFRCalculator>
     );
   }
 
-  // Bedside Schwartz box
-  Widget _buildBedsideBox(_CalcResult r) {
-    return _sectionCard(
-      title: '',
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const Text('🩺', style: TextStyle(fontSize: 18)),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Builder(builder: (context) => Text('Bedside Schwartz Formula',
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.onSurface,
-                            fontSize: 13.5,
-                            fontWeight: FontWeight.bold))),
-                    Builder(builder: (context) => Text('QUICK ESTIMATE — no k constant needed',
-                        style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6), fontSize: 11))),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Builder(builder: (context) => Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: Theme.of(context).scaffoldBackgroundColor,
-              border: Border.all(color: _purple.withValues(alpha: 0.3)),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: const Text(
-              'eGFR = 0.413 × Height (cm) / Serum Creatinine (mg/dL)',
-              style: TextStyle(
-                  color: _purple,
-                  fontSize: 12.5,
-                  fontFamily: 'monospace'),
-            ),
-          )),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              Expanded(child: _compBox(
-                label: 'Schwartz (k)',
-                value: r.egfr.toStringAsFixed(1),
-                color: _purple,
-              )),
-              const SizedBox(width: 10),
-              Expanded(child: _compBox(
-                label: 'Bedside (0.413)',
-                value: r.egfrBedside.toStringAsFixed(1),
-                color: _accent,
-              )),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _compBox({
-    required String label,
-    required String value,
-    required Color color,
-  }) {
-    return Builder(builder: (context) => Container(
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        border: Border.all(color: color.withValues(alpha: 0.4)),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Column(
-        children: [
-          Text(label,
-              style: TextStyle(
-                  color: color,
-                  fontSize: 11,
-                  fontWeight: FontWeight.bold)),
-          const SizedBox(height: 6),
-          Text(value,
-              style: TextStyle(
-                  color: color,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold)),
-          const SizedBox(height: 2),
-          Text('mL/min/1.73m²',
-              style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6), fontSize: 10)),
-        ],
-      ),
-    ));
-  }
-
   // Detail card
   Widget _buildDetailCard(_CalcResult r) {
-    final ageLbl = r.ageGroup == 'infant'
-        ? '< 1 Year (Infant)'
-        : '≥ 1 Year (Child)';
-    final kLbl = '${r.k.toStringAsFixed(2)} (${r.ageGroup == 'infant' ? 'infant < 1yr' : 'child ≥ 1yr'})';
-
     return _sectionCard(
       title: '',
       child: Column(
         children: [
-          _detailRow('Age Group', ageLbl),
           _detailRow('Age', r.ageStr),
           _detailRow('Height', '${r.height.toStringAsFixed(r.height % 1 == 0 ? 0 : 1)} cm'),
           _detailRow('Serum Creatinine', '${r.creat.toStringAsFixed(1)} mg/dL'),
-          _detailRow('k constant used', kLbl),
+          _detailRow('k constant', '0.413 (bedside Schwartz)'),
           const SizedBox(height: 4),
           Builder(builder: (context) => Row(
             children: [
@@ -733,7 +499,7 @@ class _SchwartzEGFRCalculatorState extends State<SchwartzEGFRCalculator>
               Expanded(
                 flex: 6,
                 child: Text(
-                  'eGFR = k × Height(cm) / SCr(mg/dL)',
+                  'eGFR = 0.413 × Height(cm) / SCr(mg/dL)',
                   textAlign: TextAlign.right,
                   style: TextStyle(
                       color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
@@ -948,7 +714,7 @@ class _SchwartzEGFRCalculatorState extends State<SchwartzEGFRCalculator>
         borderRadius: BorderRadius.circular(8),
       ),
       child: const Text(
-        '⚠️ Staging per KDIGO 2024. Schwartz equation validated for paediatric patients only.\n'
+        '⚠️ Staging per KDIGO 2024. Bedside Schwartz equation (k=0.413) validated for paediatric patients only.\n'
         'Normal GFR is age-dependent in infants — interpret in clinical context.\n'
         'Not for use in adults.',
         style: TextStyle(color: _amber, fontSize: 11.5, height: 1.5),
@@ -1065,22 +831,18 @@ class _TableRow {
 
 class _CalcResult {
   final double egfr;
-  final double egfrBedside;
   final _CKDStage stage;
   final String ageStr;
+  final double ageDays;
   final double height;
   final double creat;
-  final double k;
-  final String ageGroup;
 
   const _CalcResult({
     required this.egfr,
-    required this.egfrBedside,
     required this.stage,
     required this.ageStr,
+    required this.ageDays,
     required this.height,
     required this.creat,
-    required this.k,
-    required this.ageGroup,
   });
 }

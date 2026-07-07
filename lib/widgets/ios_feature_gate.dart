@@ -90,7 +90,7 @@ class _IosGateScreen extends StatelessWidget {
 
               // Title
               Text(
-                '$featureName is available on the Web App',
+                '$featureName is available on the PediAid Web App',
                 textAlign: TextAlign.center,
                 style: GoogleFonts.plusJakartaSans(
                   fontSize: 20,
@@ -140,9 +140,7 @@ class _IosGateScreen extends StatelessWidget {
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        'Due to App Store guidelines for medical apps, '
-                        'drug dosage content is provided via our web app '
-                        'where full clinical references and citations are available.',
+                        'This feature is available on the PediAid web app at pediaid.bridgr.co.in',
                         style: TextStyle(
                           fontSize: 12,
                           height: 1.5,

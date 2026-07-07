@@ -75,4 +75,7 @@ assets/        — iap_growth_chart_2015_edited.html (embedded IAP chart)
 - Dart SDK: `^3.11.1`
 - Flutter stable channel
 - Android NDK: `27.0.12077973`, Java target: `VERSION_17`
-- Package name: `com.example.neoapp_app`
+- Bundle ID / Package name: `com.pediaid.pediaid` (Android + iOS, locked — never change)
+- iOS minimum deployment target: 13.0
+- iOS signing: automatic (simulator unsigned, device requires Apple Developer account)
+- pod install fix: requires `LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8` prefix on Ruby 4.x (already in ~/.zshrc)
