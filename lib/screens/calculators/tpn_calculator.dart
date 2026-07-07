@@ -12,7 +12,7 @@ class TpnCalculator extends StatefulWidget {
 class _TpnCalculatorState extends State<TpnCalculator> {
   String? _tpnType; // null, 'stock', 'multiline'
   String _potassiumType = 'kphos'; // 'kphos' or 'kcl'
-  String _dextroseMode = 'auto'; // 'auto' or 'manual'
+  // Dextrose stocks — auto-picked on calculate, overridable from the result.
   int _dexStockA = 5;
   int _dexStockB = 10;
 
@@ -47,7 +47,6 @@ class _TpnCalculatorState extends State<TpnCalculator> {
       _tpnType = null;
       _result = null;
       _potassiumType = 'kphos';
-      _dextroseMode = 'auto';
       _dexStockA = 5;
       _dexStockB = 10;
       for (final c in [
@@ -59,38 +58,68 @@ class _TpnCalculatorState extends State<TpnCalculator> {
     });
   }
 
-  // ── Dextrose mixture finder ───────────────────────────────────────────────
-  _DextroseMix? _findDextroseMixture(double targetConc, double totalDexVol) {
-    if (_dextroseMode == 'manual') {
-      final a = _dexStockA.toDouble();
-      final b = _dexStockB.toDouble();
-      if ((b - a).abs() < 0.001) {
-        return _DextroseMix(a, b, totalDexVol, 0.0, totalDexVol);
-      }
-      final volA = (targetConc - b) * totalDexVol / (a - b);
-      final volB = totalDexVol - volA;
-      return _DextroseMix(a, b, max(0, volA), max(0, volB), totalDexVol);
+  // ── Dextrose mixing — reuses the GIR calculator's exact logic ─────────────
+  static const List<int> _dexStocks = [0, 5, 10, 25, 50];
+
+  // Nearest bracketing pair for a target concentration (largest stock ≤ target
+  // as the lower, smallest stock ≥ target as the higher).
+  (int, int) _autoPickStocks(double targetConc) {
+    int? lower, higher;
+    for (final s in _dexStocks) {
+      if (s <= targetConc) lower = s;
+      if (s >= targetConc && higher == null) higher = s;
+    }
+    return (lower ?? 0, higher ?? 50);
+  }
+
+  // Volumes of stock A and B to fill totalVol at targetConc — identical to the
+  // GIR calculator's _mixVolumes, including the impossibility errors.
+  _DextroseMix _mixDextrose(double targetConc, double totalVol, int stockA, int stockB) {
+    final a = stockA.toDouble();
+    final b = stockB.toDouble();
+
+    if ((a - b).abs() < 0.001) {
+      final matches = (a - targetConc).abs() < 0.05;
+      return _DextroseMix(a, b, totalVol, 0.0, totalVol,
+          error: matches
+              ? null
+              : 'Both stocks are D$stockA% — cannot reach ${targetConc.toStringAsFixed(1)}%');
     }
 
-    // Auto-pick — same bracketing strategy as the GIR calculator: take the
-    // largest stock at or below the target as the lower, and the smallest
-    // stock at or above it as the higher, then mix those two. This gives the
-    // clinically sensible pair (e.g. D5 + D10 for 7.3%) rather than diluting a
-    // high stock down with water.
-    const stocks = [0, 5, 10, 25, 50];
-    double? lower, higher;
-    for (final s in stocks) {
-      if (s <= targetConc) lower = s.toDouble();
-      if (s >= targetConc && higher == null) higher = s.toDouble();
+    final v1 = totalVol * (targetConc - b) / (a - b);
+    final v2 = totalVol - v1;
+    if (v1 < -0.5 || v2 < -0.5) {
+      return _DextroseMix(a, b, 0.0, 0.0, totalVol,
+          error: 'Target ${targetConc.toStringAsFixed(1)}% is outside D$stockA%–D$stockB% range');
     }
-    final a = lower ?? 0.0;
-    final b = higher ?? 50.0;
-    if ((a - b).abs() < 0.001) {
-      return _DextroseMix(a, b, totalDexVol, 0.0, totalDexVol);
+    return _DextroseMix(a, b, max(0.0, v1), max(0.0, v2), totalVol);
+  }
+
+  // Re-mix from the result's dropdowns without re-entering the whole form.
+  void _overrideDextroseStock({int? stockA, int? stockB}) {
+    final r = _result;
+    if (r == null) return;
+    final newA = stockA ?? _dexStockA;
+    final newB = stockB ?? _dexStockB;
+
+    double target, dexVol;
+    if (r.stockResult != null) {
+      target = r.stockResult!.targetDexConc;
+      dexVol = r.stockResult!.dexVol;
+    } else if (r.multilineResult != null) {
+      target = r.multilineResult!.targetDexConc;
+      dexVol = r.multilineResult!.dexVol;
+    } else {
+      return;
     }
-    final volA = (targetConc - b) * totalDexVol / (a - b);
-    final volB = totalDexVol - volA;
-    return _DextroseMix(a, b, max(0, volA), max(0, volB), totalDexVol);
+
+    final newMix = _mixDextrose(target, dexVol, newA, newB);
+    setState(() {
+      _dexStockA = newA;
+      _dexStockB = newB;
+      r.stockResult?.dextroseMix = newMix;
+      r.multilineResult?.dextroseMix = newMix;
+    });
   }
 
   // ── Calculate ─────────────────────────────────────────────────────────────
@@ -151,9 +180,13 @@ class _TpnCalculatorState extends State<TpnCalculator> {
       return;
     }
 
-    // Target dextrose concentration
+    // Target dextrose concentration — auto-pick the bracketing stock pair
+    // (nearest below + nearest above), same as the GIR calculator.
     final targetDexConc = dexVol > 0 ? (dextroseGday / dexVol) * 100 : 0.0;
-    final mix = _findDextroseMixture(targetDexConc, dexVol);
+    final picked = _autoPickStocks(targetDexConc);
+    _dexStockA = picked.$1;
+    _dexStockB = picked.$2;
+    final mix = _mixDextrose(targetDexConc, dexVol, _dexStockA, _dexStockB);
 
     // Nutritional totals
     final proteinGday = aminovenVol * 0.1;  // Aminoven 10%
@@ -222,10 +255,13 @@ class _TpnCalculatorState extends State<TpnCalculator> {
     // Line 3: calcium + dextrose
     final line3Vol = calciumVol + dexVol;
 
-    // Dextrose concentration
+    // Dextrose concentration — auto-pick bracketing stock pair (as GIR).
     final dextroseGday = gir * w * 1.44;
     final targetDexConc = dexVol > 0 ? (dextroseGday / dexVol) * 100 : 0.0;
-    final mix = _findDextroseMixture(targetDexConc, dexVol);
+    final picked = _autoPickStocks(targetDexConc);
+    _dexStockA = picked.$1;
+    _dexStockB = picked.$2;
+    final mix = _mixDextrose(targetDexConc, dexVol, _dexStockA, _dexStockB);
 
     // Nutritional analysis
     final proteinGday = aminovenVol * 0.1;          // Aminoven 10%
@@ -398,33 +434,6 @@ class _TpnCalculatorState extends State<TpnCalculator> {
                   range: 'ESPGHAN proposed range: start 4–8, up to 8–10 (max ~12) mg/kg/min'),
             ],
           ),
-          const SizedBox(height: 12),
-          _sectionCard(
-            title: 'Dextrose Stock Selection',
-            icon: Icons.water_drop_outlined,
-            color: Colors.purple.shade700,
-            children: [
-              Row(
-                children: [
-                  Text('Mode:', style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.onSurface)),
-                  const SizedBox(width: 12),
-                  _dexModeChip('Auto-pick', 'auto'),
-                  const SizedBox(width: 8),
-                  _dexModeChip('Choose stocks', 'manual'),
-                ],
-              ),
-              if (_dextroseMode == 'manual') ...[
-                const SizedBox(height: 12),
-                Row(
-                  children: [
-                    Expanded(child: _dexStockDropdown('Stock A', _dexStockA, (v) => setState(() => _dexStockA = v))),
-                    const SizedBox(width: 12),
-                    Expanded(child: _dexStockDropdown('Stock B', _dexStockB, (v) => setState(() => _dexStockB = v))),
-                  ],
-                ),
-              ],
-            ],
-          ),
           const SizedBox(height: 16),
           ElevatedButton.icon(
             onPressed: _calculate,
@@ -506,28 +515,6 @@ class _TpnCalculatorState extends State<TpnCalculator> {
     );
   }
 
-  Widget _dexModeChip(String label, String value) {
-    final selected = _dextroseMode == value;
-    return GestureDetector(
-      onTap: () => setState(() => _dextroseMode = value),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        decoration: BoxDecoration(
-          color: selected ? Colors.purple.shade700 : Colors.transparent,
-          border: Border.all(color: selected ? Colors.purple.shade700 : Theme.of(context).colorScheme.outline),
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            color: selected ? Colors.white : Theme.of(context).colorScheme.onSurface,
-            fontWeight: selected ? FontWeight.bold : FontWeight.normal,
-          ),
-        ),
-      ),
-    );
-  }
 
   Widget _dexStockDropdown(String label, int value, void Function(int) onChanged) {
     const stocks = [0, 5, 10, 25, 50];
@@ -955,21 +942,61 @@ class _TpnCalculatorState extends State<TpnCalculator> {
                   fontWeight: FontWeight.bold,
                   color: Colors.blue.shade800,
                   fontSize: 13)),
-          const SizedBox(height: 6),
-          if (mix.volA > 0.01)
-            Text(
-              'D${mix.concA.toStringAsFixed(0)}W: ${mix.volA.toStringAsFixed(2)} ml',
-              style: const TextStyle(fontSize: 13),
-            ),
-          if (mix.volB > 0.01)
-            Text(
-              'D${mix.concB.toStringAsFixed(0)}W: ${mix.volB.toStringAsFixed(2)} ml',
-              style: const TextStyle(fontSize: 13),
-            ),
-          Text(
-            'Total: ${mix.totalVol.toStringAsFixed(2)} ml',
-            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+          const SizedBox(height: 8),
+          // Prepare-using stock override (defaults to the auto-picked pair).
+          Row(
+            children: [
+              Expanded(
+                child: _dexStockDropdown('Stock A (lower)', _dexStockA,
+                    (v) => _overrideDextroseStock(stockA: v)),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _dexStockDropdown('Stock B (higher)', _dexStockB,
+                    (v) => _overrideDextroseStock(stockB: v)),
+              ),
+            ],
           ),
+          const SizedBox(height: 10),
+          if (mix.error != null)
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(9),
+              decoration: BoxDecoration(
+                color: const Color(0xFFf85149).withValues(alpha: 0.12),
+                border: Border.all(color: const Color(0xFFf85149).withValues(alpha: 0.5)),
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Row(
+                children: [
+                  const Icon(Icons.error_outline, color: Color(0xFFf85149), size: 16),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(mix.error!,
+                        style: const TextStyle(
+                            color: Color(0xFFf85149),
+                            fontSize: 12.5,
+                            fontWeight: FontWeight.w600)),
+                  ),
+                ],
+              ),
+            )
+          else ...[
+            if (mix.volA > 0.01)
+              Text(
+                'D${mix.concA.toStringAsFixed(0)}W: ${mix.volA.toStringAsFixed(2)} ml',
+                style: const TextStyle(fontSize: 13),
+              ),
+            if (mix.volB > 0.01)
+              Text(
+                'D${mix.concB.toStringAsFixed(0)}W: ${mix.volB.toStringAsFixed(2)} ml',
+                style: const TextStyle(fontSize: 13),
+              ),
+            Text(
+              'Total: ${mix.totalVol.toStringAsFixed(2)} ml',
+              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+            ),
+          ],
         ],
       ),
     );
@@ -1348,8 +1375,10 @@ class _DextroseMix {
   final double volA;
   final double volB;
   final double totalVol;
+  final String? error; // non-null when the chosen stocks can't reach the target
 
-  _DextroseMix(this.concA, this.concB, this.volA, this.volB, this.totalVol);
+  _DextroseMix(this.concA, this.concB, this.volA, this.volB, this.totalVol,
+      {this.error});
 }
 
 class _StockResult {
@@ -1361,7 +1390,7 @@ class _StockResult {
   final double calciumVol;
   final double dexVol;
   final double targetDexConc;
-  final _DextroseMix? dextroseMix;
+  _DextroseMix? dextroseMix; // mutable so result-level stock override can re-mix
   final double proteinGkg;
   final double fatGkg;
   final double carbsGkg;
@@ -1401,7 +1430,7 @@ class _MultilineResult {
   final double heparinVol;
   final double dexVol;
   final double targetDexConc;
-  final _DextroseMix? dextroseMix;
+  _DextroseMix? dextroseMix; // mutable so result-level stock override can re-mix
   final double proteinGkg;
   final double fatGkg;
   final double carbsGkg;
