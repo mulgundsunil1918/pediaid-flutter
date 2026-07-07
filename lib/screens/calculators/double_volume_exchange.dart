@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:math';
 
 // ── Colors ────────────────────────────────────────────────────────────────────
 const Color _primary     = Color(0xFF2563eb);
@@ -36,9 +35,10 @@ class _DvetResult {
   final String unitsToOrder;
   final int highlightBloodRow; // 1-5, 0=none
   final String finalBloodRec;
-  // indication
-  final String indicationText;
-  final String indicationLevel; // green/amber/neutral
+  // reconstitution (⅔ LRBC + ⅓ FFP, drawn into 50 mL syringes)
+  final double lrbcVol;
+  final double ffpVol;
+  final int numSyringes;
   // summary
   final String summaryVolume;
   final String summaryAliquot;
@@ -64,8 +64,9 @@ class _DvetResult {
     required this.unitsToOrder,
     required this.highlightBloodRow,
     required this.finalBloodRec,
-    required this.indicationText,
-    required this.indicationLevel,
+    required this.lrbcVol,
+    required this.ffpVol,
+    required this.numSyringes,
     required this.summaryVolume,
     required this.summaryAliquot,
     required this.summaryCycles,
@@ -85,8 +86,6 @@ class _DoubleVolumeExchangeState extends State<DoubleVolumeExchange>
   double? _weight;
   int?    _gestAge;
 
-  String  _riskLevel = 'low';
-  double? _tsb;
   String  _neoType   = '';
   String  _neoRh     = 'pos';
   String  _momType   = '';
@@ -95,8 +94,6 @@ class _DoubleVolumeExchangeState extends State<DoubleVolumeExchange>
 
   final _weightCtrl      = TextEditingController();
   final _gestCtrl        = TextEditingController();
-  final _postnatalCtrl   = TextEditingController();
-  final _tsbCtrl         = TextEditingController();
 
   _DvetResult? _result;
   late AnimationController _fadeCtrl;
@@ -114,8 +111,6 @@ class _DoubleVolumeExchangeState extends State<DoubleVolumeExchange>
     _fadeCtrl.dispose();
     _weightCtrl.dispose();
     _gestCtrl.dispose();
-    _postnatalCtrl.dispose();
-    _tsbCtrl.dispose();
     super.dispose();
   }
 
@@ -133,14 +128,16 @@ class _DoubleVolumeExchangeState extends State<DoubleVolumeExchange>
     final totalBV   = weightKg * bvpkg;
     final doubleVol = totalBV * 2;
 
-    // Aliquot
+    // Aliquot — weight bands (RCH sheet / unit practice)
     int aliquot;
-    if (weight < 1000) {
+    if (weight < 1500) {
       aliquot = 5;
-    } else if (weight <= 2000) {
+    } else if (weight <= 2500) {
       aliquot = 10;
+    } else if (weight <= 3500) {
+      aliquot = 15;
     } else {
-      aliquot = min(max((weightKg * 5).round(), 15), 20);
+      aliquot = 20;
     }
 
     final numCycles    = (doubleVol / aliquot).ceil();
@@ -161,7 +158,18 @@ class _DoubleVolumeExchangeState extends State<DoubleVolumeExchange>
     final withdrawVol = '$aliquot mL';
     final infuseVol   = '$aliquot mL';
 
-    int highlightRow = weight < 1000 ? 0 : weight <= 2000 ? 1 : 2;
+    final int highlightRow = weight < 1500
+        ? 0
+        : weight <= 2500
+            ? 1
+            : weight <= 3500
+                ? 2
+                : 3;
+
+    // Reconstituted blood: ⅔ LRBC + ⅓ FFP, drawn into 50 mL syringes.
+    final lrbcVol = doubleVol * 2 / 3;
+    final ffpVol  = doubleVol / 3;
+    final numSyringes = (doubleVol / 50).ceil();
 
     // Blood selection
     String bloodRec    = 'Enter blood types to see specific recommendation';
@@ -214,24 +222,6 @@ class _DoubleVolumeExchangeState extends State<DoubleVolumeExchange>
     final finalBloodRec =
         'FINAL BLOOD ORDER: $bloodRec | Volume: ${doubleVol.round()} mL (+20% extra)';
 
-    // Indication
-    String indicationText  = 'Enter TSB and risk level to determine indication for exchange';
-    String indicationLevel = 'neutral';
-
-    if (_tsb != null) {
-      const thresholds = {'low': 22, 'medium': 20, 'high': 18};
-      final threshold = thresholds[_riskLevel] ?? 22;
-      if (_tsb! >= threshold) {
-        indicationText  =
-            '✓ EXCHANGE TRANSFUSION INDICATED — TSB ${_tsb!.toStringAsFixed(1)} mg/dL exceeds exchange threshold ($threshold mg/dL) for ${_riskLevel.toUpperCase()} risk neonate. Proceed with informed consent.';
-        indicationLevel = 'green';
-      } else {
-        indicationText  =
-            '⚠️ PHOTOTHERAPY FIRST — TSB ${_tsb!.toStringAsFixed(1)} mg/dL below exchange threshold ($threshold mg/dL). Start intensive phototherapy immediately. Recheck TSB in 2-4 hours. Exchange if rising rapidly or signs of ABE.';
-        indicationLevel = 'amber';
-      }
-    }
-
     final newResult = _DvetResult(
       weightKg:        weightKg,
       bloodVolPerKg:   bvpkg,
@@ -252,8 +242,9 @@ class _DoubleVolumeExchangeState extends State<DoubleVolumeExchange>
       unitsToOrder:    unitsToOrder,
       highlightBloodRow: hlBlood,
       finalBloodRec:   finalBloodRec,
-      indicationText:  indicationText,
-      indicationLevel: indicationLevel,
+      lrbcVol:         lrbcVol,
+      ffpVol:          ffpVol,
+      numSyringes:     numSyringes,
       summaryVolume:   '${doubleVol.round()} mL',
       summaryAliquot:  '$aliquot mL',
       summaryCycles:   '$numCycles cycles',
@@ -411,35 +402,9 @@ class _DoubleVolumeExchangeState extends State<DoubleVolumeExchange>
             label: 'Gestational Age (weeks)',
             ctrl: _gestCtrl,
             hint: 'e.g., 38',
-            helperText: 'Determines blood volume (85 mL/kg term, 90-100 mL/kg preterm)',
+            helperText: 'Determines blood volume (85 mL/kg term, 95 mL/kg preterm)',
             onChanged: (v) {
               _gestAge = int.tryParse(v);
-              _calculate();
-            },
-          ),
-          const SizedBox(height: 10),
-          _inputField(
-            label: 'Postnatal Age (hours)',
-            ctrl: _postnatalCtrl,
-            hint: 'e.g., 24',
-            onChanged: (v) {
-              _calculate();
-            },
-          ),
-          const SizedBox(height: 10),
-          Text('Clinical Risk Category',
-              style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface)),
-          const SizedBox(height: 6),
-          _riskRadio('low',    'Low Risk',    'Low Risk / ≥38wks + Well'),
-          _riskRadio('medium', 'Medium Risk', 'Medium Risk / ≥38wks + RF or 35-37wks'),
-          _riskRadio('high',   'High Risk',   'High Risk / <35wks or Sepsis/Acidosis'),
-          const SizedBox(height: 10),
-          _inputField(
-            label: 'Total Serum Bilirubin (mg/dL)',
-            ctrl: _tsbCtrl,
-            hint: 'e.g., 20',
-            onChanged: (v) {
-              _tsb = double.tryParse(v);
               _calculate();
             },
           ),
@@ -478,35 +443,6 @@ class _DoubleVolumeExchangeState extends State<DoubleVolumeExchange>
           const SizedBox(height: 6),
           _hemoDropdown(),
         ],
-      ),
-    );
-  }
-
-  Widget _riskRadio(String value, String label, String desc) {
-    final selected = _riskLevel == value;
-    return GestureDetector(
-      onTap: () { setState(() => _riskLevel = value); _calculate(); },
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 6),
-        child: Row(
-          children: [
-            Container(
-              width: 18, height: 18,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: selected ? _primary : Theme.of(context).colorScheme.outline, width: 2),
-                color: selected ? _primary : Colors.transparent,
-              ),
-              child: selected
-                  ? const Center(child: CircleAvatar(radius: 4, backgroundColor: Colors.white))
-                  : null,
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Text(desc, style: TextStyle(fontSize: 12, color: selected ? _primary : Theme.of(context).colorScheme.onSurface, fontWeight: selected ? FontWeight.w600 : FontWeight.normal)),
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -591,6 +527,8 @@ class _DoubleVolumeExchangeState extends State<DoubleVolumeExchange>
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         _buildStep1(r),
+        const SizedBox(height: 16),
+        _buildReconstitution(r),
         const SizedBox(height: 16),
         _buildStep2(r),
         const SizedBox(height: 16),
@@ -722,9 +660,10 @@ class _DoubleVolumeExchangeState extends State<DoubleVolumeExchange>
             _th('Neonate Weight'), _th('Aliquot Volume'), _th('Time per Cycle'),
           ],
         ),
-        _aliquotRow('<1000 g', '5 mL', '5 minutes', r.highlightRow == 0, r.highlightRow == 0),
-        _aliquotRow('1000-2000 g', '10 mL', '5 minutes', r.highlightRow == 1, r.highlightRow == 1),
-        _aliquotRow('>2000 g', '15-20 mL', '5 minutes', r.highlightRow == 2, r.highlightRow == 2),
+        _aliquotRow('<1500 g', '5 mL', '5 minutes', r.highlightRow == 0, r.highlightRow == 0),
+        _aliquotRow('1500-2500 g', '10 mL', '5 minutes', r.highlightRow == 1, r.highlightRow == 1),
+        _aliquotRow('2500-3500 g', '15 mL', '5 minutes', r.highlightRow == 2, r.highlightRow == 2),
+        _aliquotRow('>3500 g', '20 mL', '5 minutes', r.highlightRow == 3, r.highlightRow == 3),
       ],
     );
   }
@@ -756,6 +695,102 @@ class _DoubleVolumeExchangeState extends State<DoubleVolumeExchange>
     );
   }
 
+  // ── Reconstitution (⅔ LRBC + ⅓ FFP into 50 mL syringes) ─────────────────────
+  Widget _buildReconstitution(_DvetResult r) {
+    final perSyrLrbc = 50 * 2 / 3;
+    final perSyrFfp  = 50 / 3;
+    return _card(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _stepHeader('🧪 STEP 1b: BLOOD RECONSTITUTION'),
+          const SizedBox(height: 12),
+          Text('Prepare reconstituted blood as ⅔ packed red cells (LRBC) + ⅓ FFP.',
+              style: TextStyle(fontSize: 12.5, color: Theme.of(context).colorScheme.onSurface)),
+          const SizedBox(height: 12),
+          LayoutBuilder(builder: (ctx, c) {
+            final wide = c.maxWidth > 480;
+            final lrbcBox = _reconBox('LRBC (⅔)', '${r.lrbcVol.round()} mL', _danger);
+            final ffpBox  = _reconBox('FFP (⅓)', '${r.ffpVol.round()} mL', _info);
+            final totBox  = _reconBox('Total', '${(r.lrbcVol + r.ffpVol).round()} mL', _success);
+            if (wide) {
+              return Row(children: [
+                Expanded(child: lrbcBox), const SizedBox(width: 8),
+                Expanded(child: ffpBox), const SizedBox(width: 8),
+                Expanded(child: totBox),
+              ]);
+            }
+            return Column(children: [
+              Row(children: [Expanded(child: lrbcBox), const SizedBox(width: 8), Expanded(child: ffpBox)]),
+              const SizedBox(height: 8),
+              totBox,
+            ]);
+          }),
+          const SizedBox(height: 12),
+          Container(
+            padding: const EdgeInsets.all(11),
+            decoration: BoxDecoration(
+              color: _primary.withValues(alpha: .06),
+              border: Border.all(color: _primary.withValues(alpha: .3)),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    const Icon(Icons.vaccines_outlined, size: 18, color: _primary),
+                    const SizedBox(width: 8),
+                    Text('Prepare ${r.numSyringes} × 50 mL syringes',
+                        style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: _primary)),
+                  ],
+                ),
+                const SizedBox(height: 6),
+                Text('Each 50 mL syringe ≈ ${perSyrLrbc.round()} mL LRBC + ${perSyrFfp.round()} mL FFP',
+                    style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurface)),
+                const SizedBox(height: 2),
+                Text('(Final syringe may be partly filled to match the exact total.)',
+                    style: TextStyle(fontSize: 11, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6))),
+              ],
+            ),
+          ),
+          const SizedBox(height: 8),
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: _warning.withValues(alpha: .08),
+              border: Border.all(color: _warning.withValues(alpha: .4)),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Text(
+              'Target reconstituted Hct ≈ 40–50%. Blood must be fresh (<5–7 days), CMV-safe / leukodepleted, irradiated, and warmed to 37°C.',
+              style: TextStyle(fontSize: 11.5, color: Theme.of(context).colorScheme.onSurface, height: 1.5),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _reconBox(String label, String value, Color color) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: .1),
+        border: Border.all(color: color.withValues(alpha: .4)),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label, style: TextStyle(fontSize: 11.5, color: color, fontWeight: FontWeight.w600)),
+          const SizedBox(height: 4),
+          Text(value, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: color)),
+        ],
+      ),
+    );
+  }
+
   // ── Step 2 ────────────────────────────────────────────────────────────────────
   Widget _buildStep2(_DvetResult r) {
     return _card(
@@ -764,8 +799,6 @@ class _DoubleVolumeExchangeState extends State<DoubleVolumeExchange>
         children: [
           _stepHeader('🩸 STEP 2: BLOOD PRODUCT SELECTION GUIDE'),
           const SizedBox(height: 12),
-          _indicationAlert(r),
-          const SizedBox(height: 14),
           Text('Blood Type Selection Based on Hemolysis',
               style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface)),
           const SizedBox(height: 8),
@@ -783,27 +816,6 @@ class _DoubleVolumeExchangeState extends State<DoubleVolumeExchange>
           _mandatorySpecs(),
         ],
       ),
-    );
-  }
-
-  Widget _indicationAlert(_DvetResult r) {
-    Color bg, border, textColor;
-    switch (r.indicationLevel) {
-      case 'green':
-        bg = _success.withValues(alpha: .08); border = _success; textColor = _success;
-        break;
-      case 'amber':
-        bg = _warning.withValues(alpha: .1); border = _warning; textColor = const Color(0xFF92400e);
-        break;
-      default:
-        bg = const Color(0xFFf1f5f9); border = Theme.of(context).colorScheme.outline; textColor = Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6);
-    }
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-          color: bg, border: Border.all(color: border), borderRadius: BorderRadius.circular(8)),
-      child: Text(r.indicationText,
-          style: TextStyle(fontSize: 12.5, color: textColor, height: 1.5, fontWeight: FontWeight.w600)),
     );
   }
 
