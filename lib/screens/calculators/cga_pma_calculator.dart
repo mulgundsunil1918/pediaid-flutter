@@ -498,6 +498,14 @@ class _CGAPMACalculatorState extends State<CGAPMACalculator>
             )),
             const SizedBox(width: 8),
             Expanded(child: _statBox(
+              icon: '🌱',
+              label: 'PMA',
+              value: '${pmaFmt.w}w',
+              sub: '+${pmaFmt.d}d',
+              color: _green,
+            )),
+            const SizedBox(width: 8),
+            Expanded(child: _statBox(
               icon: r.cgaApplicable ? '🧠' : '—',
               label: 'CGA',
               value: r.cgaApplicable ? '${r.cgaWks}w' : 'N/A',
@@ -508,14 +516,6 @@ class _CGAPMACalculatorState extends State<CGAPMACalculator>
                   ? Theme.of(context).colorScheme.primary
                   : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
               dimmed: !r.cgaApplicable,
-            )),
-            const SizedBox(width: 8),
-            Expanded(child: _statBox(
-              icon: '🌱',
-              label: 'PMA',
-              value: '${pmaFmt.w}w',
-              sub: '+${pmaFmt.d}d',
-              color: _green,
             )),
           ],
         ),
@@ -566,7 +566,7 @@ class _CGAPMACalculatorState extends State<CGAPMACalculator>
       ),
       child: Column(
         children: [
-          Text('CORRECTED GESTATIONAL AGE',
+          Text('POST-MENSTRUAL AGE',
               style: TextStyle(
                   color: Colors.white.withValues(alpha: 0.8),
                   fontSize: 11,
@@ -574,20 +574,12 @@ class _CGAPMACalculatorState extends State<CGAPMACalculator>
                   letterSpacing: 1.2)),
           const SizedBox(height: 8),
           Text(
-            r.cgaApplicable ? r.cgaStr : 'N/A',
+            '${pmaFmt.w}w ${pmaFmt.d}d',
             style: const TextStyle(
                 color: Colors.white,
                 fontSize: 36,
                 fontWeight: FontWeight.bold),
           ),
-          if (!r.cgaApplicable && r.cgaNotApplicableReason != null)
-            Padding(
-              padding: const EdgeInsets.only(top: 4),
-              child: Text(r.cgaNotApplicableReason!,
-                  style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.8),
-                      fontSize: 12)),
-            ),
           const SizedBox(height: 14),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -596,7 +588,9 @@ class _CGAPMACalculatorState extends State<CGAPMACalculator>
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
-              'PMA: ${pmaFmt.w} weeks ${pmaFmt.d} days',
+              r.cgaApplicable
+                  ? 'CGA: ${r.cgaStr}'
+                  : 'CGA: N/A — ${r.cgaNotApplicableReason ?? 'await 40w'}',
               style: const TextStyle(
                   color: Colors.white,
                   fontSize: 14,
