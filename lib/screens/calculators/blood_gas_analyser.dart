@@ -625,6 +625,8 @@ class _BloodGasAnalyserState extends State<BloodGasAnalyser>
         _buildStep(_agOn ? 4 : 3, r, '$stepCount', 'Mixed Disorder', r.mixed ? '⚠ Detected' : '— Not Detected',
             r.mixed ? _violet : _green, _buildStepMixedBody(r, stepCount)),
         const SizedBox(height:16),
+        _buildManagementCard(r),
+        const SizedBox(height:16),
         _buildDisclaimer(),
       ],
     );
@@ -1111,6 +1113,132 @@ class _BloodGasAnalyserState extends State<BloodGasAnalyser>
   }
 
   // ── Disclaimer ───────────────────────────────────────────────────────────────
+  // ── What To Do Next — disorder-specific management ───────────────────────────
+  Widget _buildManagementCard(_BgResult r) {
+    final d = r.dis;
+    final isMetAc  = d.contains('met-ac')  || d == 'mixed-ac';
+    final isRespAc = d.contains('resp-ac') || d == 'mixed-ac';
+    final isRespAlk = d.contains('resp-alk') || d == 'mixed-alk';
+    final isMetAlk = d.contains('met-alk') || d == 'mixed-alk';
+    final isNormal = d == 'normal';
+
+    final sections = <Widget>[];
+
+    if (isNormal) {
+      sections.add(_mgmtBlock('✔️ No acid–base intervention needed', _green, [
+        _bodyText('Blood gas is within normal limits. Manage the patient by clinical status, not the numbers.'),
+        _bullet('Correlate with oxygenation, perfusion and the working diagnosis.'),
+        _bullet('A normal gas does not exclude a fully compensated or cancelled-out mixed disorder — recheck if the clinical picture changes.'),
+      ]));
+    }
+
+    if (isMetAc) {
+      sections.add(_mgmtBlock('1 · Treat the cause of the metabolic acidosis', _red, [
+        _bodyText('The anion gap points to the cause:'),
+        _bullet('High AG (MUDPILES): DKA → fluids + insulin · Lactic acidosis → restore perfusion/oxygen delivery, treat sepsis · Toxins (salicylate, methanol, ethylene glycol) → specific antidote/dialysis · Renal failure → renal support.'),
+        _bullet('Normal AG (HARDUP): GI/renal HCO₃ loss (diarrhoea, RTA) → replace bicarbonate losses and treat the source.'),
+      ]));
+      sections.add(_mgmtBlock('2 · Bicarbonate correction', _cyan, [
+        _bodyText('Reserve NaHCO₃ for severe acidaemia (pH < 7.1–7.2) refractory to treating the cause — correct the underlying problem first.'),
+        _formulaBox('HCO₃⁻ deficit (mEq) = 0.3 × weight (kg) × base deficit\n(use 0.4–0.5 × weight in neonates)\n\nGive ~½ the deficit slowly (diluted), then recheck ABG.'),
+        _bullet('Ensure ventilation is adequate BEFORE giving bicarbonate — it generates CO₂ that must be exhaled.'),
+        _bullet('Neonates: use with caution (IVH, hyperosmolarity risk); give slow and diluted.'),
+      ]));
+    }
+
+    if (isRespAc) {
+      sections.add(_mgmtBlock('${isMetAc ? '3' : '1'} · Improve ventilation (respiratory acidosis)', _amber, [
+        _bodyText('The problem is CO₂ clearance — fix ventilation, not with bicarbonate.'),
+        _subHead('On a ventilator — increase minute ventilation:'),
+        _bullet('↑ Respiratory rate, and/or ↑ tidal volume / ↑ PIP (watch plateau pressures).'),
+        _bullet('Check for tube/circuit obstruction, secretions (suction), bronchospasm (bronchodilators), pneumothorax.'),
+        _subHead('Not yet ventilated:'),
+        _bullet('Consider NIV / HFNC; escalate to intubation if pH < 7.25 with rising CO₂ or exhaustion.'),
+        _bullet('Chronic CO₂ retainer: use controlled O₂ — avoid abolishing the hypoxic drive.'),
+      ]));
+    }
+
+    if (isRespAlk) {
+      sections.add(_mgmtBlock('1 · Treat the cause of hyperventilation', _amber, [
+        _bullet('Look for and treat: pain, anxiety, fever, sepsis, hypoxia, salicylate toxicity.'),
+        _bullet('Always check for HYPOXIA as a driver (a red flag — e.g. PE, pneumonia, sepsis).'),
+        _bullet('If iatrogenic (over-ventilation): reduce ventilator rate / tidal volume.'),
+        _bodyText('Bicarbonate is not indicated.'),
+      ]));
+    }
+
+    if (isMetAlk) {
+      sections.add(_mgmtBlock('1 · Classify & treat the metabolic alkalosis', _amber, [
+        _bodyText('Check urine chloride to classify:'),
+        _bullet('Chloride-responsive (urine Cl⁻ < 20): vomiting, NG loss, diuretics → give volume + NaCl, replace K⁺, stop/adjust diuretics.'),
+        _bullet('Chloride-resistant (urine Cl⁻ > 20): mineralocorticoid excess (Conn\'s, Cushing\'s, Bartter/Gitelman) → treat the cause, aldosterone antagonist.'),
+        _bullet('Correct hypokalaemia — it perpetuates the alkalosis.'),
+      ]));
+    }
+
+    // Monitoring block — always shown last.
+    sections.add(_mgmtBlock('Recheck & monitor', _green, [
+      _bullet('Repeat ABG after each intervention to confirm the trend.'),
+      if (isMetAc) _bullet('Trend lactate, anion gap and electrolytes (K⁺ shifts with pH correction).'),
+      if (isRespAc || isRespAlk) _bullet('Watch respiratory rate, work of breathing and mental status.'),
+      if (isMetAlk) _bullet('Track K⁺, Cl⁻ and urine chloride.'),
+      _bullet('Treat the patient and the underlying cause — not just the number.'),
+    ]));
+
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        border: Border.all(color: _cyan.withValues(alpha: .4)),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Text('🩺', style: TextStyle(fontSize: 18)),
+              const SizedBox(width: 8),
+              Text('What To Do Next — Management',
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurface,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold)),
+            ],
+          ),
+          const SizedBox(height: 4),
+          Text('Guidance for ${r.disLbl}',
+              style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                  fontSize: 11.5)),
+          const SizedBox(height: 10),
+          ...sections,
+        ],
+      ),
+    );
+  }
+
+  Widget _mgmtBlock(String title, Color color, List<Widget> children) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.all(11),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.07),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title,
+              style: TextStyle(color: color, fontSize: 12.5, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 6),
+          ...children,
+        ],
+      ),
+    );
+  }
+
   Widget _buildDisclaimer() {
     return Container(
       padding: const EdgeInsets.all(12),

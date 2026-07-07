@@ -24,11 +24,17 @@ class _SchwartzEGFRCalculatorState extends State<SchwartzEGFRCalculator>
   // ── State ─────────────────────────────────────────────────────────────────
   static const double _k = 0.413; // Bedside Schwartz constant — used for all ages
 
-  double _ageDays = 180;
+  // Age entered as years / months / days (display only — not used in the
+  // bedside Schwartz formula, which is 0.413 × height / creatinine).
+  double _ageY  = 0;
+  double _ageMo = 5;
+  double _ageD  = 0;
   double _height  = 65;
   double _creat   = 0.4;
 
-  final _ageDaysCtrl = TextEditingController(text: '180');
+  final _ageYCtrl  = TextEditingController(text: '0');
+  final _ageMoCtrl = TextEditingController(text: '5');
+  final _ageDCtrl  = TextEditingController(text: '0');
   final _heightCtrl  = TextEditingController(text: '65');
   final _creatCtrl   = TextEditingController(text: '0.4');
 
@@ -55,7 +61,9 @@ class _SchwartzEGFRCalculatorState extends State<SchwartzEGFRCalculator>
 
   @override
   void dispose() {
-    _ageDaysCtrl.dispose();
+    _ageYCtrl.dispose();
+    _ageMoCtrl.dispose();
+    _ageDCtrl.dispose();
     _heightCtrl.dispose();
     _creatCtrl.dispose();
     _fadeCtrl.dispose();
@@ -63,16 +71,19 @@ class _SchwartzEGFRCalculatorState extends State<SchwartzEGFRCalculator>
   }
 
   // ── Age formatting ────────────────────────────────────────────────────────
-  String _formatAgeDays(double days) {
-    final d = days.toInt();
-    if (d < 31) return '$d day${d == 1 ? '' : 's'}';
-    final years = d ~/ 365;
-    final months = (d % 365) ~/ 30;
-    if (years > 0) {
-      return months > 0 ? '$years yr(s) $months mo' : '$years yr(s)';
-    }
-    return '$months month(s)';
+  String _ageDisplay() {
+    final y = _ageY.toInt();
+    final mo = _ageMo.toInt();
+    final d = _ageD.toInt();
+    final parts = <String>[];
+    if (y > 0) parts.add('$y yr${y == 1 ? '' : 's'}');
+    if (mo > 0) parts.add('$mo mo');
+    if (d > 0) parts.add('$d day${d == 1 ? '' : 's'}');
+    return parts.isEmpty ? '0 days' : parts.join(' ');
   }
+
+  // Approximate total days — for the result's ageDays field only.
+  double get _ageTotalDays => _ageY * 365 + _ageMo * 30 + _ageD;
 
   // ── CKD stage ─────────────────────────────────────────────────────────────
   _CKDStage _getCKDStage(double egfr) {
@@ -101,14 +112,14 @@ class _SchwartzEGFRCalculatorState extends State<SchwartzEGFRCalculator>
 
     final egfr  = double.parse((_k * _height / _creat).toStringAsFixed(1));
     final stage = _getCKDStage(egfr);
-    final ageStr = _formatAgeDays(_ageDays);
+    final ageStr = _ageDisplay();
 
     setState(() {
       _result = _CalcResult(
         egfr: egfr,
         stage: stage,
         ageStr: ageStr,
-        ageDays: _ageDays,
+        ageDays: _ageTotalDays,
         height: _height,
         creat: _creat,
       );
@@ -121,11 +132,15 @@ class _SchwartzEGFRCalculatorState extends State<SchwartzEGFRCalculator>
   void _clearAll() {
     _heightCtrl.text   = '65';
     _creatCtrl.text    = '0.4';
-    _ageDaysCtrl.text  = '180';
+    _ageYCtrl.text     = '0';
+    _ageMoCtrl.text    = '5';
+    _ageDCtrl.text     = '0';
     setState(() {
       _height       = 65;
       _creat        = 0.4;
-      _ageDays      = 180;
+      _ageY         = 0;
+      _ageMo        = 5;
+      _ageD         = 0;
       _errHeight    = null;
       _errCreat     = null;
       _showResults  = false;
@@ -206,23 +221,64 @@ class _SchwartzEGFRCalculatorState extends State<SchwartzEGFRCalculator>
       title: 'Patient Details',
       child: Column(
         children: [
-          _stepperField(
-            label: 'Age',
-            value: _ageDays,
-            ctrl: _ageDaysCtrl,
-            unit: 'days',
-            step: 1,
-            min: 0,
-            max: 6570,
-            decimals: 0,
-            error: null,
-            onChanged: (v) => setState(() => _ageDays = v),
+          Builder(builder: (context) => Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Text('Age',
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                      fontSize: 11.5,
+                      fontWeight: FontWeight.w600)),
+            ),
+          )),
+          Row(
+            children: [
+              Expanded(child: _stepperField(
+                label: 'Years',
+                value: _ageY,
+                ctrl: _ageYCtrl,
+                unit: 'years',
+                step: 1,
+                min: 0,
+                max: 18,
+                decimals: 0,
+                error: null,
+                onChanged: (v) => setState(() => _ageY = v),
+              )),
+              const SizedBox(width: 10),
+              Expanded(child: _stepperField(
+                label: 'Months',
+                value: _ageMo,
+                ctrl: _ageMoCtrl,
+                unit: 'months',
+                step: 1,
+                min: 0,
+                max: 11,
+                decimals: 0,
+                error: null,
+                onChanged: (v) => setState(() => _ageMo = v),
+              )),
+              const SizedBox(width: 10),
+              Expanded(child: _stepperField(
+                label: 'Days',
+                value: _ageD,
+                ctrl: _ageDCtrl,
+                unit: 'days',
+                step: 1,
+                min: 0,
+                max: 30,
+                decimals: 0,
+                error: null,
+                onChanged: (v) => setState(() => _ageD = v),
+              )),
+            ],
           ),
           Builder(builder: (context) => Padding(
             padding: const EdgeInsets.only(top: 6),
             child: Align(
               alignment: Alignment.centerLeft,
-              child: Text('≈ ${_formatAgeDays(_ageDays)}',
+              child: Text('≈ ${_ageDisplay()}',
                   style: TextStyle(
                       color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                       fontSize: 11)),
