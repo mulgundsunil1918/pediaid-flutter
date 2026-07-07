@@ -72,33 +72,25 @@ class _TpnCalculatorState extends State<TpnCalculator> {
       return _DextroseMix(a, b, max(0, volA), max(0, volB), totalDexVol);
     }
 
-    const stocks = [0.0, 5.0, 10.0, 25.0, 50.0];
-    _DextroseMix? best;
-    double bestDiff = double.infinity;
-
-    for (int i = 0; i < stocks.length; i++) {
-      for (int j = i; j < stocks.length; j++) {
-        final a = stocks[i];
-        final b = stocks[j];
-        if ((b - a).abs() < 0.001) {
-          if ((a - targetConc).abs() < bestDiff) {
-            bestDiff = (a - targetConc).abs();
-            best = _DextroseMix(a, b, totalDexVol, 0.0, totalDexVol);
-          }
-          continue;
-        }
-        final volA = (targetConc - b) * totalDexVol / (a - b);
-        final volB = totalDexVol - volA;
-        if (volA < -0.001 || volB < -0.001) continue;
-        final actualConc = (a * max(0, volA) + b * max(0, volB)) / totalDexVol;
-        final diff = (actualConc - targetConc).abs();
-        if (diff < bestDiff) {
-          bestDiff = diff;
-          best = _DextroseMix(a, b, max(0, volA), max(0, volB), totalDexVol);
-        }
-      }
+    // Auto-pick — same bracketing strategy as the GIR calculator: take the
+    // largest stock at or below the target as the lower, and the smallest
+    // stock at or above it as the higher, then mix those two. This gives the
+    // clinically sensible pair (e.g. D5 + D10 for 7.3%) rather than diluting a
+    // high stock down with water.
+    const stocks = [0, 5, 10, 25, 50];
+    double? lower, higher;
+    for (final s in stocks) {
+      if (s <= targetConc) lower = s.toDouble();
+      if (s >= targetConc && higher == null) higher = s.toDouble();
     }
-    return best;
+    final a = lower ?? 0.0;
+    final b = higher ?? 50.0;
+    if ((a - b).abs() < 0.001) {
+      return _DextroseMix(a, b, totalDexVol, 0.0, totalDexVol);
+    }
+    final volA = (targetConc - b) * totalDexVol / (a - b);
+    final volB = totalDexVol - volA;
+    return _DextroseMix(a, b, max(0, volA), max(0, volB), totalDexVol);
   }
 
   // ── Calculate ─────────────────────────────────────────────────────────────
@@ -389,16 +381,21 @@ class _TpnCalculatorState extends State<TpnCalculator> {
             icon: Icons.medication,
             color: Colors.teal.shade700,
             children: [
-              _inputRow('Sodium (mEq/kg/day)', _sodiumCtrl, 'e.g. 3'),
+              _inputRow('Sodium (mEq/kg/day)', _sodiumCtrl, 'e.g. 3',
+                  range: 'ESPGHAN proposed range: 2–5 mEq/kg/day'),
               const SizedBox(height: 8),
               _potassiumRow(),
               const SizedBox(height: 8),
-              _inputRow('Aminoven 10% (g/kg/day)', _aminovenCtrl, 'e.g. 2.5'),
+              _inputRow('Aminoven 10% (g/kg/day)', _aminovenCtrl, 'e.g. 2.5',
+                  range: 'ESPGHAN proposed range: 1.5–3.5 g/kg/day'),
               if (_tpnType == 'multiline') ...[
-                _inputRow('Lipid SMOF 20% (g/kg/day)', _lipidCtrl, 'e.g. 2'),
+                _inputRow('Lipid SMOF 20% (g/kg/day)', _lipidCtrl, 'e.g. 2',
+                    range: 'ESPGHAN proposed range: 1–3 g/kg/day (max 4)'),
               ],
-              _inputRow('Calcium Gluconate (ml/kg/day)', _calciumCtrl, 'e.g. 1'),
-              _inputRow('GIR (mg/kg/min)', _girCtrl, 'e.g. 6'),
+              _inputRow('Calcium Gluconate 10% (ml/kg/day)', _calciumCtrl, 'e.g. 1',
+                  range: 'ESPGHAN proposed range: 0.8–2 mmol/kg/day (10% Ca gluconate ≈ 0.22 mmol/ml)'),
+              _inputRow('GIR (mg/kg/min)', _girCtrl, 'e.g. 6',
+                  range: 'ESPGHAN proposed range: start 4–8, up to 8–10 (max ~12) mg/kg/min'),
             ],
           ),
           const SizedBox(height: 12),
@@ -452,21 +449,32 @@ class _TpnCalculatorState extends State<TpnCalculator> {
   }
 
   Widget _potassiumRow() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _inputRow('Potassium (mEq/kg/day)', _potassiumCtrl, 'e.g. 2'),
-        const SizedBox(height: 8),
-        Row(
-          children: [
-            Text('Source:', style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.onSurface)),
-            const SizedBox(width: 12),
-            _radioChip('KH₂PO₄ (4 mEq/ml)', 'kphos'),
-            const SizedBox(width: 8),
-            _radioChip('KCl (2 mEq/ml)', 'kcl'),
-          ],
-        ),
-      ],
+    final cs = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Label and source toggle on the same line.
+          Row(
+            children: [
+              Expanded(
+                child: Text('Potassium (mEq/kg/day)',
+                    style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: cs.onSurface)),
+              ),
+              _radioChip('KH₂PO₄', 'kphos'),
+              const SizedBox(width: 6),
+              _radioChip('KCl', 'kcl'),
+            ],
+          ),
+          _espghanNote('ESPGHAN proposed range: 1–3 mEq/kg/day'),
+          const SizedBox(height: 4),
+          _fieldOnly(_potassiumCtrl, 'e.g. 2'),
+        ],
+      ),
     );
   }
 
@@ -580,7 +588,7 @@ class _TpnCalculatorState extends State<TpnCalculator> {
   }
 
   Widget _inputRow(String label, TextEditingController ctrl, String hint,
-      {bool optional = false}) {
+      {bool optional = false, String? range}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: Column(
@@ -591,33 +599,50 @@ class _TpnCalculatorState extends State<TpnCalculator> {
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
                   color: Theme.of(context).colorScheme.onSurface)),
+          if (range != null) _espghanNote(range),
           const SizedBox(height: 4),
-          TextField(
-            controller: ctrl,
-            keyboardType:
-                const TextInputType.numberWithOptions(decimal: true),
-            decoration: InputDecoration(
-              hintText: hint,
-              hintStyle:
-                  TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.outline),
-              isDense: true,
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: Theme.of(context).colorScheme.outline),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: Theme.of(context).colorScheme.outline),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
-              ),
-            ),
-          ),
+          _fieldOnly(ctrl, hint),
         ],
+      ),
+    );
+  }
+
+  // Small grey caption used for ESPGHAN reference ranges under an input.
+  Widget _espghanNote(String text) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 2),
+      child: Text(text,
+          style: TextStyle(
+              fontSize: 11,
+              fontStyle: FontStyle.italic,
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.55))),
+    );
+  }
+
+  // The bare number field (no label) — shared by _inputRow and the potassium row.
+  Widget _fieldOnly(TextEditingController ctrl, String hint) {
+    final cs = Theme.of(context).colorScheme;
+    return TextField(
+      controller: ctrl,
+      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+      decoration: InputDecoration(
+        hintText: hint,
+        hintStyle: TextStyle(fontSize: 13, color: cs.outline),
+        isDense: true,
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: cs.outline),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: cs.outline),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: cs.primary),
+        ),
       ),
     );
   }
@@ -692,14 +717,59 @@ class _TpnCalculatorState extends State<TpnCalculator> {
         if (oi > 0) _resultRow('Other Infusions', '${oi.toStringAsFixed(0)} ml/day'),
         _resultRow('TPN Volume', '${r.tpnVolume!.toStringAsFixed(1)} ml/day'),
         const Divider(height: 16),
-        _resultRow('Sodium', '${sod.toStringAsFixed(1)} mEq/kg/day'),
-        _resultRow('Potassium (${_potassiumType == 'kphos' ? 'KH₂PO₄' : 'KCl'})', '${pot.toStringAsFixed(1)} mEq/kg/day'),
-        _resultRow('Aminoven 10%', '${ami.toStringAsFixed(1)} g/kg/day'),
+        _resultRow('Sodium (3% NaCl · 0.5 mEq/ml)', '${sod.toStringAsFixed(1)} mEq/kg/day'),
+        _resultRow(
+            'Potassium (${_potassiumType == 'kphos' ? 'KH₂PO₄ · 4 mEq/ml' : 'KCl · 2 mEq/ml'})',
+            '${pot.toStringAsFixed(1)} mEq/kg/day'),
+        _resultRow('Aminoven 10% (0.1 g/ml)', '${ami.toStringAsFixed(1)} g/kg/day'),
         if (r.tpnType == 'multiline')
-          _resultRow('Lipid SMOF 20%', '${lip.toStringAsFixed(1)} g/kg/day'),
-        _resultRow('Calcium Gluconate', '${cal.toStringAsFixed(1)} ml/kg/day'),
+          _resultRow('Lipid SMOF 20% (0.2 g/ml)', '${lip.toStringAsFixed(1)} g/kg/day'),
+        _resultRow('Calcium Gluconate (10%)', '${cal.toStringAsFixed(1)} ml/kg/day'),
         _resultRow('GIR', '${gir.toStringAsFixed(1)} mg/kg/min', bold: true),
+        const SizedBox(height: 12),
+        _compositionDisclaimer(),
       ],
+    );
+  }
+
+  // Reminds the clinician which stock strengths the volumes assume, so they
+  // verify their own products match before administering.
+  Widget _compositionDisclaimer() {
+    const amber = Color(0xFFd29922);
+    return Container(
+      padding: const EdgeInsets.all(11),
+      decoration: BoxDecoration(
+        color: amber.withValues(alpha: 0.1),
+        border: Border.all(color: amber.withValues(alpha: 0.4)),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: const [
+              Icon(Icons.warning_amber_rounded, color: amber, size: 16),
+              SizedBox(width: 6),
+              Text('Make sure your TPN components match these compositions',
+                  style: TextStyle(
+                      color: amber, fontSize: 12, fontWeight: FontWeight.bold)),
+            ],
+          ),
+          const SizedBox(height: 6),
+          Text(
+            '• Sodium — 3% NaCl = 0.5 mEq/ml\n'
+            '• Potassium — KH₂PO₄ = 4 mEq/ml · KCl = 2 mEq/ml\n'
+            '• Aminoven 10% = 0.1 g/ml (10 g/100 ml)\n'
+            '• Lipid SMOF 20% = 0.2 g/ml\n'
+            '• Calcium Gluconate = 10% (≈ 0.22 mmol Ca²⁺/ml)\n'
+            '• MgSO₄ = 0.1 ml/kg · Multivitamin = 1.5 ml/kg',
+            style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.75),
+                fontSize: 11.5,
+                height: 1.5),
+          ),
+        ],
+      ),
     );
   }
 
@@ -729,6 +799,8 @@ class _TpnCalculatorState extends State<TpnCalculator> {
               const SizedBox(height: 8),
               _dextroseMixBox(s.dextroseMix!),
             ],
+            const SizedBox(height: 8),
+            _dextroseSafetyBanner(s.targetDexConc),
             const SizedBox(height: 8),
             _infusionRateRow(s.dexVol + s.sodiumVol + s.potassiumVol + s.aminovenVol + s.mgso4Vol + s.calciumVol, Colors.amber.shade700),
           ],
@@ -801,6 +873,8 @@ class _TpnCalculatorState extends State<TpnCalculator> {
               _dextroseMixBox(m.dextroseMix!),
             ],
             const SizedBox(height: 8),
+            _dextroseSafetyBanner(m.targetDexConc),
+            const SizedBox(height: 8),
             _infusionRateRow(m.line3Vol, Colors.purple.shade700),
           ],
         ),
@@ -817,6 +891,46 @@ class _TpnCalculatorState extends State<TpnCalculator> {
           kcalAAStatus: m.kcalAAStatus,
         ),
       ],
+    );
+  }
+
+  // Peripheral vs central-line safety banner keyed to the final dextrose
+  // concentration — same thresholds as the GIR calculator.
+  Widget _dextroseSafetyBanner(double conc) {
+    IconData icon;
+    String msg;
+    Color color;
+    if (conc <= 12.5) {
+      icon = Icons.check_circle;
+      msg = 'Safe for peripheral infusion';
+      color = const Color(0xFF3fb950);
+    } else if (conc <= 20.0) {
+      icon = Icons.warning_amber_rounded;
+      msg = 'Caution — prefer central line if prolonged';
+      color = const Color(0xFFd29922);
+    } else {
+      icon = Icons.dangerous;
+      msg = 'Central line strongly recommended';
+      color = const Color(0xFFf85149);
+    }
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.1),
+        border: Border.all(color: color.withValues(alpha: 0.4)),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, color: color, size: 18),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(msg,
+                style: TextStyle(
+                    color: color, fontSize: 12.5, fontWeight: FontWeight.w600)),
+          ),
+        ],
+      ),
     );
   }
 
