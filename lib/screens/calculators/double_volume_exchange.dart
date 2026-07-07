@@ -799,6 +799,8 @@ class _DoubleVolumeExchangeState extends State<DoubleVolumeExchange>
         children: [
           _stepHeader('🩸 STEP 2: BLOOD PRODUCT SELECTION GUIDE'),
           const SizedBox(height: 12),
+          _bloodFrameworkCard(),
+          const SizedBox(height: 14),
           Text('Blood Type Selection Based on Hemolysis',
               style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface)),
           const SizedBox(height: 8),
@@ -816,6 +818,89 @@ class _DoubleVolumeExchangeState extends State<DoubleVolumeExchange>
           _mandatorySpecs(),
         ],
       ),
+    );
+  }
+
+  // Formal blood-selection framework (clinical reference).
+  Widget _bloodFrameworkCard() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Blood Selection — Clinical Framework',
+            style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface)),
+        const SizedBox(height: 6),
+        Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: _info.withValues(alpha: .06),
+            border: Border.all(color: _info.withValues(alpha: .3)),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Text(
+            'Principle: donor red cells must be compatible with BOTH the neonate and the maternal '
+            'antibody — the maternal alloantibody drives the haemolysis and is present in the infant. '
+            'Reconstitute to a haematocrit of ≈ 40–50%.',
+            style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurface, height: 1.5),
+          ),
+        ),
+        const SizedBox(height: 8),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Table(
+            border: TableBorder.all(color: Theme.of(context).colorScheme.outline),
+            defaultColumnWidth: const IntrinsicColumnWidth(),
+            children: [
+              TableRow(
+                decoration: BoxDecoration(color: _primary.withValues(alpha: .9)),
+                children: [
+                  _th('Clinical scenario', minW: 170),
+                  _th('Red cells to use', minW: 190),
+                  _th('Key point', minW: 150),
+                ],
+              ),
+              _frameworkRow(
+                'Rh (D) haemolytic disease\n(maternal Rh D-negative, anti-D)',
+                'Rh D-negative red cells, ABO-compatible with neonate & mother (commonly O Rh D-negative)',
+                'Rh D-negative mandatory'),
+              _frameworkRow(
+                'ABO haemolytic disease\n(maternal group O, neonate A or B)',
+                'Group O red cells, Rh identical to the neonate',
+                'Group O avoids donor anti-A/anti-B; reconstitute with AB or low-titre plasma'),
+              _frameworkRow(
+                'Combined ABO + Rh incompatibility',
+                'O Rh D-negative red cells',
+                'Most restrictive — satisfies both'),
+              _frameworkRow(
+                'Other red-cell alloantibody\n(anti-Kell, -c, -E, -Duffy, -Kidd)',
+                'Red cells negative for the implicated antigen',
+                'Requires blood bank antigen typing'),
+              _frameworkRow(
+                'Non-immune hyperbilirubinaemia\n(no isoimmunisation)',
+                'Neonate\'s own ABO/Rh group, crossmatch-compatible',
+                'Standard selection'),
+              _frameworkRow(
+                'Unknown antibody / urgent (safe default)',
+                'O Rh D-negative, crossmatched against maternal serum',
+                'Universal safe choice'),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  TableRow _frameworkRow(String scenario, String cells, String key) {
+    return TableRow(
+      decoration: BoxDecoration(color: Theme.of(context).cardColor),
+      children: [
+        _tdPad(scenario, FontWeight.w600),
+        Padding(
+          padding: const EdgeInsets.all(8),
+          child: Text(cells,
+              style: const TextStyle(fontSize: 11.5, color: _primary, fontWeight: FontWeight.w600, height: 1.4)),
+        ),
+        _tdPad(key, FontWeight.normal),
+      ],
     );
   }
 
