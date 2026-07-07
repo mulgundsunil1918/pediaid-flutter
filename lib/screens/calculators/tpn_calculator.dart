@@ -105,7 +105,9 @@ class _TpnCalculatorState extends State<TpnCalculator> {
   void _calculate() {
     final errors = <String>[];
 
-    final w = double.tryParse(_weightCtrl.text);
+    // Weight is entered in grams; convert to kg for all per-kg dosing below.
+    final wG = double.tryParse(_weightCtrl.text);
+    final w = (wG != null && wG > 0) ? wG / 1000.0 : null;
     final tv = double.tryParse(_totalVolumeCtrl.text);
     final oi = double.tryParse(_otherInfusionsCtrl.text) ?? 0.0;
     final sod = double.tryParse(_sodiumCtrl.text) ?? 0.0;
@@ -376,7 +378,7 @@ class _TpnCalculatorState extends State<TpnCalculator> {
             icon: Icons.person,
             color: Theme.of(context).colorScheme.primary,
             children: [
-              _inputRow('Weight (kg)', _weightCtrl, 'e.g. 1.2'),
+              _inputRow('Enter weight in grams', _weightCtrl, 'e.g. 1200'),
               _inputRow('Total Volume per Day (ml)', _totalVolumeCtrl, 'e.g. 150'),
               _inputRow('Other Infusions/Feeds/Drugs (ml/day)', _otherInfusionsCtrl, 'e.g. 20', optional: true),
             ],

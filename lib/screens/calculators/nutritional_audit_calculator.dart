@@ -305,7 +305,9 @@ class _NAState extends State<NutritionalAuditCalculator> {
   // ── Calculate ───────────────────────────────────────────────────────────────
 
   void _calculate() {
-    final wt = double.tryParse(_wtCtrl.text.trim()) ?? 0;
+    // Weight is entered in grams; convert to kg for per-kg nutrition math.
+    final wtG = double.tryParse(_wtCtrl.text.trim()) ?? 0;
+    final wt = wtG / 1000.0;
     if (wt <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Please enter a valid baby weight.')));
@@ -551,7 +553,7 @@ class _NAState extends State<NutritionalAuditCalculator> {
       children: [
         _secHeader('Baby Weight', Icons.monitor_weight_outlined),
         const SizedBox(height: 14),
-        _numField(_wtCtrl, 'Baby Weight (kg)', 'kg', hint: '0.000'),
+        _numField(_wtCtrl, 'Enter baby weight in grams', 'g', hint: 'e.g. 1200'),
       ],
     );
   }

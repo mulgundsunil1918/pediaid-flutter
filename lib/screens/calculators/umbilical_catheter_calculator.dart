@@ -49,7 +49,9 @@ class _UmbilicalCatheterCalculatorState
 
   void _calc() {
     setState(() {
-      _wt = double.tryParse(_wtCtrl.text);
+      // Input is in grams; convert to kg for the depth formulas below.
+      final wtG = double.tryParse(_wtCtrl.text);
+      _wt = (wtG != null && wtG > 0) ? wtG / 1000.0 : null;
       _stump = double.tryParse(_stumpCtrl.text) ?? 0.0;
       _showResult = (_wt != null && _wt! > 0);
     });
@@ -68,9 +70,9 @@ class _UmbilicalCatheterCalculatorState
             children: [
               FECalcNumberField(
                 controller: _wtCtrl,
-                label: 'Birth weight',
-                hint: 'kg',
-                unit: 'kg',
+                label: 'Enter birth weight in grams',
+                hint: 'e.g. 1500',
+                unit: 'g',
               ),
               const FECalcGap(),
               FECalcNumberField(

@@ -55,7 +55,8 @@ class _PETCalculatorScreenState extends State<PETCalculatorScreen>
   void _calculate() {
     if (!_formKey.currentState!.validate()) return;
 
-    final weight  = double.parse(_weightCtrl.text.trim());
+    final weightG = double.parse(_weightCtrl.text.trim());
+    final weight  = weightG / 1000.0; // grams → kg for the mL/kg blood-volume math
     final obsHct  = double.parse(_obsCtr.text.trim());
     final desHct  = double.parse(_desCtr.text.trim());
 
@@ -135,15 +136,15 @@ class _PETCalculatorScreenState extends State<PETCalculatorScreen>
                   children: [
                     _NumField(
                       ctrl: _weightCtrl,
-                      label: 'Birth Weight (kg)',
-                      hint: 'e.g. 3.2',
+                      label: 'Birth Weight (grams)',
+                      hint: 'e.g. 3200',
                       allowDecimal: true,
                       onSurface: onSurface,
                       subText: subText,
                       validator: (v) {
                         final d = double.tryParse(v ?? '');
                         if (d == null || d <= 0) return 'Enter valid weight';
-                        if (d > 10) return 'Weight seems too high';
+                        if (d > 10000) return 'Weight seems too high';
                         return null;
                       },
                     ),
