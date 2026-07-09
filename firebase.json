@@ -1,0 +1,1 @@
+{"flutter":{"platforms":{"android":{"default":{"projectId":"pediaid-app","appId":"1:11076606207:android:5c369fa248f512acf2d4ca","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"pediaid-app","configurations":{"android":"1:11076606207:android:5c369fa248f512acf2d4ca","web":"1:11076606207:web:fb572f5ad2c6d487f2d4ca"}}}}}}

@@ -13,8 +13,14 @@ import 'services/profile_store.dart';
 import 'services/review_service.dart';
 import 'services/guidelines_search_service.dart';
 import 'services/recents_service.dart';
+import 'services/push_service.dart';
 import 'utils/prefs_keys.dart';
 import 'widgets/report_issue_overlay.dart';
+
+/// Lets foreground push notifications surface a SnackBar on whatever screen
+/// is currently open, without per-screen wiring.
+final GlobalKey<ScaffoldMessengerState> rootMessengerKey =
+    GlobalKey<ScaffoldMessengerState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -79,6 +85,12 @@ void main() async {
     debugPrint('[boot] RecentsService load failed: $e');
   }
 
+  // Push notifications (Android + web only for now — see push_service.dart).
+  // Fire-and-forget: a slow Firebase handshake must never block app start.
+  PushService.messengerKey = rootMessengerKey;
+  // ignore: unawaited_futures
+  PushService.instance.init();
+
   try {
     await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
@@ -106,6 +118,7 @@ class PediAidApp extends StatelessWidget {
     return MaterialApp(
       title: 'PediAid',
       debugShowCheckedModeBanner: false,
+      scaffoldMessengerKey: rootMessengerKey,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: themeProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light,
