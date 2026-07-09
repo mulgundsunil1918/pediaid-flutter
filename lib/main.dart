@@ -14,6 +14,7 @@ import 'services/review_service.dart';
 import 'services/guidelines_search_service.dart';
 import 'services/recents_service.dart';
 import 'utils/prefs_keys.dart';
+import 'widgets/report_issue_overlay.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -116,6 +117,10 @@ class PediAidApp extends StatelessWidget {
       // Wrapped in an OnboardingGate so first-launch users see the slides
       // before the home screen.
       home: const _OnboardingGate(child: HomeScreen()),
+      // Floats a small "report an issue" button above every screen in the
+      // app (calculators, guides, lab reference, formulary, everything)
+      // without needing to touch each of those screen files individually.
+      builder: (context, child) => ReportIssueOverlay(child: child!),
     );
   }
 }
