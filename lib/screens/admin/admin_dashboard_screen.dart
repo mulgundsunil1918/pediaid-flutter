@@ -17,6 +17,7 @@ import '../../services/admin_service.dart';
 import 'admin_pending_cme_screen.dart';
 import 'admin_pending_chapters_screen.dart';
 import 'admin_pending_roles_screen.dart';
+import 'admin_send_notification_screen.dart';
 
 class AdminDashboardScreen extends StatefulWidget {
   const AdminDashboardScreen({super.key});
@@ -173,6 +174,34 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                             ),
                           );
                           _refresh();
+                        },
+                      ),
+                      const SizedBox(height: 18),
+
+                      // Section header
+                      Text(
+                        'Broadcast',
+                        style: GoogleFonts.plusJakartaSans(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w800,
+                          color: cs.onSurface.withValues(alpha: 0.85),
+                          letterSpacing: 0.3,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      _ActionCard(
+                        icon: Icons.campaign_rounded,
+                        color: const Color(0xFFDC2626),
+                        title: 'Send Notification',
+                        subtitle:
+                            'Push an announcement to every PediAid user',
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) =>
+                                  const AdminSendNotificationScreen(),
+                            ),
+                          );
                         },
                       ),
                       const SizedBox(height: 18),
@@ -388,6 +417,90 @@ class _SummaryCard extends StatelessWidget {
                   ),
                 ),
               const SizedBox(width: 6),
+              Icon(
+                Icons.chevron_right_rounded,
+                color: cs.onSurface.withValues(alpha: 0.35),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Action card — like _SummaryCard but without the pending-count badge, for
+// dashboard entries that trigger an action rather than review a queue.
+// ---------------------------------------------------------------------------
+
+class _ActionCard extends StatelessWidget {
+  const _ActionCard({
+    required this.icon,
+    required this.color,
+    required this.title,
+    required this.subtitle,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final Color color;
+  final String title;
+  final String subtitle;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return Material(
+      color: cs.surfaceContainerHighest,
+      borderRadius: BorderRadius.circular(16),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: cs.outlineVariant),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 44,
+                height: 44,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(icon, color: color, size: 22),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w800,
+                        color: cs.onSurface,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      subtitle,
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 12,
+                        color: cs.onSurface.withValues(alpha: 0.65),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 8),
               Icon(
                 Icons.chevron_right_rounded,
                 color: cs.onSurface.withValues(alpha: 0.35),
