@@ -168,7 +168,13 @@ class _BPCalculatorState extends State<BPCalculator> {
   final _dbpCtrl = TextEditingController(text: '65');
   final _heightCtrl = TextEditingController(text: '128');
 
+  // Snapshot of the inputs at the moment "Assess" was pressed — results read
+  // these, never the live fields, so an empty/edited field can't retroactively
+  // change a displayed result.
   bool _calculated = false;
+  bool _calcIsBoy = true;
+  int _calcAge = 8;
+  double _calcHeightCm = 128.0;
   int _enteredSBP = 0, _enteredDBP = 0;
 
   @override
@@ -180,11 +186,39 @@ class _BPCalculatorState extends State<BPCalculator> {
     super.dispose();
   }
 
+  // ── Input validity (parsed from the text fields so blanks are detected) ──
+  int? get _ageInput {
+    final v = int.tryParse(_ageCtrl.text.trim());
+    return (v != null && v >= 1 && v <= 17) ? v : null;
+  }
+
+  double? get _heightInput {
+    final v = double.tryParse(_heightCtrl.text.trim());
+    return (v != null && v >= 50 && v <= 200) ? v : null;
+  }
+
+  int? get _sbpInput {
+    final v = int.tryParse(_sbpCtrl.text.trim());
+    return (v != null && v >= 50 && v <= 220) ? v : null;
+  }
+
+  int? get _dbpInput {
+    final v = int.tryParse(_dbpCtrl.text.trim());
+    return (v != null && v >= 30 && v <= 140) ? v : null;
+  }
+
+  bool get _allValid =>
+      _ageInput != null && _heightInput != null && _sbpInput != null && _dbpInput != null;
+
   void _calculate() {
+    if (!_allValid) return;
     setState(() {
+      _calcIsBoy = _isBoy;
+      _calcAge = _ageInput!;
+      _calcHeightCm = _heightInput!;
+      _enteredSBP = _sbpInput!;
+      _enteredDBP = _dbpInput!;
       _calculated = true;
-      _enteredSBP = _sbp;
-      _enteredDBP = _dbp;
     });
   }
 
@@ -192,14 +226,13 @@ class _BPCalculatorState extends State<BPCalculator> {
   // The 2017 tables print the actual measured height (cm) for each of the 7
   // height-percentile columns, so we pick the column whose tabulated height is
   // closest to the child's measured height (the "or Measured Height" feature).
-  AgeBP get _bp => (_isBoy ? bpBoys2017 : bpGirls2017)[_age]!;
+  AgeBP _bpData(bool isBoy, int age) => (isBoy ? bpBoys2017 : bpGirls2017)[age]!;
 
-  int _heightColIndex() {
-    final h = _bp.heightCm;
+  int _colFor(AgeBP bp, double h) {
     var best = 0;
-    var bestDiff = (h[0] - _heightCm).abs();
-    for (var i = 1; i < h.length; i++) {
-      final d = (h[i] - _heightCm).abs();
+    var bestDiff = (bp.heightCm[0] - h).abs();
+    for (var i = 1; i < bp.heightCm.length; i++) {
+      final d = (bp.heightCm[i] - h).abs();
       if (d < bestDiff) {
         bestDiff = d;
         best = i;
@@ -207,6 +240,10 @@ class _BPCalculatorState extends State<BPCalculator> {
     }
     return best;
   }
+
+  // Results read the snapshot; the input-card preview reads live values.
+  AgeBP get _bp => _bpData(_calcIsBoy, _calcAge);
+  int _heightColIndex() => _colFor(_bp, _calcHeightCm);
 
   static const _htLabels = ['5th', '10th', '25th', '50th', '75th', '90th', '95th'];
 
@@ -236,7 +273,7 @@ class _BPCalculatorState extends State<BPCalculator> {
     final pctCat = sCat > dCat ? sCat : dCat;
     final absCat = _absoluteCat(_enteredSBP, _enteredDBP);
     // ≥13 yr: adolescents are staged by the adult absolute thresholds only.
-    if (_age >= 13) return absCat;
+    if (_calcAge >= 13) return absCat;
     return pctCat > absCat ? pctCat : absCat;
   }
 
@@ -349,11 +386,24 @@ class _BPCalculatorState extends State<BPCalculator> {
               ]);
             }),
             const SizedBox(height: 4),
-            Builder(builder: (context) => Text(
-              'Nearest height column for age $_age: ~${_htLabels[_heightColIndex()]} percentile '
-              '(${_bp.heightCm[_heightColIndex()].toStringAsFixed(0)} cm)',
-              style: TextStyle(fontSize: 11, color: Theme.of(context).colorScheme.primary),
-            )),
+            Builder(builder: (context) {
+              final age = _ageInput, h = _heightInput;
+              if (age == null || h == null) {
+                return Text(
+                  h == null && _heightCtrl.text.trim().isEmpty
+                      ? 'Enter a height to pick the reference column'
+                      : 'Enter a valid age (1–17) and height (50–200 cm)',
+                  style: TextStyle(fontSize: 11, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)),
+                );
+              }
+              final bp = _bpData(_isBoy, age);
+              final col = _colFor(bp, h);
+              return Text(
+                'Nearest height column for age $age: ~${_htLabels[col]} percentile '
+                '(${bp.heightCm[col].toStringAsFixed(0)} cm)',
+                style: TextStyle(fontSize: 11, color: Theme.of(context).colorScheme.primary),
+              );
+            }),
             const SizedBox(height: 16),
             _stepper(
               label: 'Systolic BP (mmHg)',
@@ -370,11 +420,19 @@ class _BPCalculatorState extends State<BPCalculator> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: _calculate,
+                onPressed: _allValid ? _calculate : null,
                 child: const Text('Assess Blood Pressure',
                     style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
               ),
             ),
+            if (!_allValid) ...[
+              const SizedBox(height: 8),
+              Builder(builder: (context) => Text(
+                'Enter sex, age, height, systolic and diastolic BP to assess.',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 11.5, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.55)),
+              )),
+            ],
           ],
         ),
       ),
@@ -414,7 +472,7 @@ class _BPCalculatorState extends State<BPCalculator> {
       ('Stage 2 Hypertension', Color(0xFFE53935), '≥95th + 12 mmHg, or ≥140/90. Evaluate/refer within 1 week.'),
     ];
     final (label, color, desc) = cats[_categoryIndex()];
-    final basis = _age >= 13
+    final basis = _calcAge >= 13
         ? 'Staged by adult thresholds (≥13 yr).'
         : 'Staged by percentile for age/sex/height, or absolute cutoff — whichever is lower.';
     return Builder(builder: (context) {
@@ -514,7 +572,7 @@ class _BPCalculatorState extends State<BPCalculator> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Thresholds for age $_age ${_isBoy ? 'boy' : 'girl'}, ~${_htLabels[col]} height',
+            Text('Thresholds for age $_calcAge ${_calcIsBoy ? 'boy' : 'girl'}, ~${_htLabels[col]} height',
                 style: TextStyle(color: cs.onSurface, fontSize: 13, fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
             Table(
@@ -539,7 +597,7 @@ class _BPCalculatorState extends State<BPCalculator> {
 
   // ── Hypotension (PALS) ──
   Widget _buildHypotensionInfo() {
-    final clinicalMin = _age <= 10 ? 70 + (2 * _age) : 90;
+    final clinicalMin = _calcAge <= 10 ? 70 + (2 * _calcAge) : 90;
     final isHypo = _enteredSBP < clinicalMin;
     return Builder(builder: (context) {
       final cs = Theme.of(context).colorScheme;
@@ -554,10 +612,10 @@ class _BPCalculatorState extends State<BPCalculator> {
             children: [
               const Text('Hypotension Reference (PALS)', style: TextStyle(color: amber, fontSize: 12, fontWeight: FontWeight.bold)),
               const SizedBox(height: 6),
-              Text('Minimum acceptable SBP for age $_age: $clinicalMin mmHg',
+              Text('Minimum acceptable SBP for age $_calcAge: $clinicalMin mmHg',
                   style: TextStyle(color: cs.onSurface, fontSize: 12)),
               const SizedBox(height: 4),
-              Text(_age <= 10 ? '1–10 yr: 70 + (2 × age)' : '> 10 yr: fixed 90 mmHg',
+              Text(_calcAge <= 10 ? '1–10 yr: 70 + (2 × age)' : '> 10 yr: fixed 90 mmHg',
                   style: TextStyle(color: cs.onSurface.withValues(alpha: 0.7), fontSize: 11)),
             ],
           ),
@@ -590,7 +648,7 @@ class _BPCalculatorState extends State<BPCalculator> {
               style: TextStyle(color: cs.onSurface.withValues(alpha: 0.5), fontSize: 11, fontWeight: FontWeight.w800, letterSpacing: 0.8)),
           const SizedBox(height: 8),
           _expandable('BP categories & staging (Table 3)', Icons.category_outlined, _table3Content()),
-          _expandable('Full BP table for age $_age (Table 4/5)', Icons.table_chart_outlined, _fullAgeTable()),
+          _expandable('Full BP table for age $_calcAge (Table 4/5)', Icons.table_chart_outlined, _fullAgeTable()),
           _expandable('Simplified screening values (Table 6)', Icons.speed_outlined, _table6Content()),
           _expandable('Evaluation & management (Table 11)', Icons.assignment_outlined, _table11Content()),
           _expandable('Initial workup (Table 10)', Icons.science_outlined, _table10Content()),
@@ -680,7 +738,7 @@ class _BPCalculatorState extends State<BPCalculator> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('SBP/DBP (mmHg) by height percentile — age $_age ${_isBoy ? 'boys' : 'girls'}',
+          Text('SBP/DBP (mmHg) by height percentile — age $_calcAge ${_calcIsBoy ? 'boys' : 'girls'}',
               style: TextStyle(fontSize: 11, color: cs.onSurface.withValues(alpha: 0.6))),
           const SizedBox(height: 6),
           SingleChildScrollView(
@@ -702,7 +760,7 @@ class _BPCalculatorState extends State<BPCalculator> {
             ),
           ),
           const SizedBox(height: 6),
-          Text('Highlighted column = nearest to entered height (${_heightCm.toStringAsFixed(0)} cm).',
+          Text('Highlighted column = nearest to entered height (${_calcHeightCm.toStringAsFixed(0)} cm).',
               style: TextStyle(fontSize: 10.5, color: cs.onSurface.withValues(alpha: 0.5))),
         ],
       );
@@ -710,9 +768,9 @@ class _BPCalculatorState extends State<BPCalculator> {
   }
 
   Widget _table6Content() {
-    final s = bpScreen2017[_age >= 13 ? 13 : _age]!;
-    final sbp = _isBoy ? s[0] : s[2];
-    final dbp = _isBoy ? s[1] : s[3];
+    final s = bpScreen2017[_calcAge >= 13 ? 13 : _calcAge]!;
+    final sbp = _calcIsBoy ? s[0] : s[2];
+    final dbp = _calcIsBoy ? s[1] : s[3];
     return Builder(builder: (context) {
       final cs = Theme.of(context).colorScheme;
       return Column(
@@ -721,7 +779,7 @@ class _BPCalculatorState extends State<BPCalculator> {
           Text('A quick screen: if BP is at or above this value, do the full-table lookup above.',
               style: TextStyle(fontSize: 12, color: cs.onSurface.withValues(alpha: 0.75), height: 1.35)),
           const SizedBox(height: 8),
-          Text('Age ${_age >= 13 ? '≥13' : '$_age'} ${_isBoy ? 'boy' : 'girl'}: screen at $sbp/$dbp mmHg',
+          Text('Age ${_calcAge >= 13 ? '≥13' : '$_calcAge'} ${_calcIsBoy ? 'boy' : 'girl'}: screen at $sbp/$dbp mmHg',
               style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: cs.primary)),
         ],
       );
@@ -909,6 +967,9 @@ class _BPCalculatorState extends State<BPCalculator> {
                 onChanged: (v) {
                   final parsed = int.tryParse(v);
                   if (parsed != null && parsed >= min && parsed <= max) onChanged(parsed);
+                  // Refresh on every keystroke so the Assess button and the
+                  // height-column preview react to a cleared/invalid field.
+                  setState(() {});
                 },
               ),
             ),
