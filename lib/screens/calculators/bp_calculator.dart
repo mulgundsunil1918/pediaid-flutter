@@ -647,12 +647,12 @@ class _BPCalculatorState extends State<BPCalculator> {
           Text('ADDITIONAL INFORMATION',
               style: TextStyle(color: cs.onSurface.withValues(alpha: 0.5), fontSize: 11, fontWeight: FontWeight.w800, letterSpacing: 0.8)),
           const SizedBox(height: 8),
-          _expandable('BP categories & staging (Table 3)', Icons.category_outlined, _table3Content()),
-          _expandable('Full BP table for age $_calcAge (Table 4/5)', Icons.table_chart_outlined, _fullAgeTable()),
-          _expandable('Simplified screening values (Table 6)', Icons.speed_outlined, _table6Content()),
-          _expandable('Evaluation & management (Table 11)', Icons.assignment_outlined, _table11Content()),
-          _expandable('Initial workup (Table 10)', Icons.science_outlined, _table10Content()),
-          _expandable('DASH diet recommendations (Table 16)', Icons.restaurant_outlined, _table16Content()),
+          _expandable('BP categories & staging', Icons.category_outlined, _table3Content()),
+          _expandable('Full BP table for age $_calcAge', Icons.table_chart_outlined, _fullAgeTable()),
+          _expandable('Simplified screening values', Icons.speed_outlined, _table6Content()),
+          _expandable('Evaluation & management', Icons.assignment_outlined, _table11Content()),
+          _expandable('Initial workup', Icons.science_outlined, _table10Content()),
+          _expandable('DASH diet recommendations', Icons.restaurant_outlined, _table16Content()),
         ],
       );
     });
