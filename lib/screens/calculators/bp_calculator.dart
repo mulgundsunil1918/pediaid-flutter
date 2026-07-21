@@ -1,225 +1,11 @@
 import 'package:flutter/material.dart';
+import 'bp_aap2017_data.dart';
 
-// ══════════════════════════════════════════════════════════════
-// NHBPEP 4th Report 2004 — Boys BP Reference
-// age → bp_percentile → 'sbp'/'dbp' → [ht5,ht10,ht25,ht50,ht75,ht90,ht95]
-// ══════════════════════════════════════════════════════════════
-const Map<int, Map<String, Map<String, List<int>>>> _bpBoys = {
-  1: {
-    '50th': {'sbp': [80,81,83,85,87,88,89],  'dbp': [34,35,36,37,38,39,39]},
-    '90th': {'sbp': [94,95,97,99,100,102,103],'dbp': [49,50,51,52,53,53,54]},
-    '95th': {'sbp': [98,99,101,103,104,106,106],'dbp':[54,54,55,56,57,58,58]},
-    '99th': {'sbp': [105,106,108,110,112,113,114],'dbp':[61,62,63,64,65,66,66]},
-  },
-  2: {
-    '50th': {'sbp': [84,85,87,88,90,92,92],  'dbp': [39,40,41,42,43,44,44]},
-    '90th': {'sbp': [97,99,100,102,104,105,106],'dbp':[54,55,56,57,58,58,59]},
-    '95th': {'sbp': [101,102,104,106,108,109,110],'dbp':[59,59,60,61,62,63,63]},
-    '99th': {'sbp': [109,110,111,113,115,117,117],'dbp':[66,67,68,69,70,71,71]},
-  },
-  3: {
-    '50th': {'sbp': [86,87,89,91,93,94,95],  'dbp': [44,44,45,46,47,48,48]},
-    '90th': {'sbp': [100,101,103,105,107,108,109],'dbp':[59,59,60,61,62,63,63]},
-    '95th': {'sbp': [104,105,107,109,110,112,113],'dbp':[63,63,64,65,66,67,67]},
-    '99th': {'sbp': [111,112,114,116,118,119,120],'dbp':[71,71,72,73,74,75,75]},
-  },
-  4: {
-    '50th': {'sbp': [88,89,91,93,95,96,97],  'dbp': [47,48,49,50,51,51,52]},
-    '90th': {'sbp': [102,103,105,107,109,110,111],'dbp':[62,63,64,65,66,66,67]},
-    '95th': {'sbp': [106,107,109,111,112,114,115],'dbp':[66,67,68,69,70,71,71]},
-    '99th': {'sbp': [113,114,116,118,120,121,122],'dbp':[74,75,76,77,78,78,79]},
-  },
-  5: {
-    '50th': {'sbp': [90,91,93,95,96,98,98],  'dbp': [50,51,52,53,54,55,55]},
-    '90th': {'sbp': [104,105,106,108,110,111,112],'dbp':[65,66,67,68,69,69,70]},
-    '95th': {'sbp': [108,109,110,112,114,115,116],'dbp':[69,70,71,72,73,74,74]},
-    '99th': {'sbp': [115,116,118,120,121,123,123],'dbp':[77,78,79,80,81,81,82]},
-  },
-  6: {
-    '50th': {'sbp': [91,92,94,96,98,99,100], 'dbp': [53,53,54,55,56,57,57]},
-    '90th': {'sbp': [105,106,108,110,111,113,113],'dbp':[68,68,69,70,71,72,72]},
-    '95th': {'sbp': [109,110,112,114,115,117,117],'dbp':[72,72,73,74,75,76,76]},
-    '99th': {'sbp': [116,117,119,121,123,124,125],'dbp':[80,80,81,82,83,84,84]},
-  },
-  7: {
-    '50th': {'sbp': [92,94,95,97,99,100,101], 'dbp': [55,55,56,57,58,59,59]},
-    '90th': {'sbp': [106,107,109,111,113,114,115],'dbp':[70,70,71,72,73,74,74]},
-    '95th': {'sbp': [110,111,113,115,117,118,119],'dbp':[74,74,75,76,77,78,78]},
-    '99th': {'sbp': [117,118,120,122,124,125,126],'dbp':[82,82,83,84,85,86,86]},
-  },
-  8: {
-    '50th': {'sbp': [94,95,97,99,100,102,102], 'dbp': [56,57,58,59,60,60,61]},
-    '90th': {'sbp': [107,109,110,112,114,115,116],'dbp':[71,72,72,73,74,75,76]},
-    '95th': {'sbp': [111,112,114,116,118,119,120],'dbp':[75,76,77,78,79,79,80]},
-    '99th': {'sbp': [119,120,122,123,125,127,127],'dbp':[83,84,85,86,87,87,88]},
-  },
-  9: {
-    '50th': {'sbp': [95,96,98,100,102,103,104], 'dbp': [57,58,59,60,61,61,62]},
-    '90th': {'sbp': [109,110,112,114,115,117,118],'dbp':[72,73,74,75,76,76,77]},
-    '95th': {'sbp': [113,114,116,118,119,121,121],'dbp':[76,77,78,79,80,81,81]},
-    '99th': {'sbp': [120,121,123,125,127,128,129],'dbp':[84,85,86,87,88,88,89]},
-  },
-  10: {
-    '50th': {'sbp': [97,98,100,102,103,105,106], 'dbp': [58,59,60,61,61,62,63]},
-    '90th': {'sbp': [111,112,114,115,117,119,119],'dbp':[73,73,74,75,76,77,78]},
-    '95th': {'sbp': [115,116,117,119,121,122,123],'dbp':[77,78,79,80,81,81,82]},
-    '99th': {'sbp': [122,123,125,127,128,130,130],'dbp':[85,86,86,88,88,89,90]},
-  },
-  11: {
-    '50th': {'sbp': [99,100,102,104,105,107,107], 'dbp': [59,59,60,61,62,63,63]},
-    '90th': {'sbp': [113,114,115,117,119,120,121],'dbp':[74,74,75,76,77,78,78]},
-    '95th': {'sbp': [117,118,119,121,123,124,125],'dbp':[78,78,79,80,81,82,82]},
-    '99th': {'sbp': [124,125,127,129,130,132,132],'dbp':[86,86,87,88,89,90,90]},
-  },
-  12: {
-    '50th': {'sbp': [101,102,104,106,108,109,110], 'dbp': [59,60,61,62,63,63,64]},
-    '90th': {'sbp': [115,116,118,120,121,123,123],'dbp':[74,75,75,76,77,78,79]},
-    '95th': {'sbp': [119,120,122,123,125,127,127],'dbp':[78,79,80,81,82,82,83]},
-    '99th': {'sbp': [126,127,129,131,133,134,135],'dbp':[86,87,88,89,90,90,91]},
-  },
-  13: {
-    '50th': {'sbp': [104,105,106,108,110,111,112], 'dbp': [60,60,61,62,63,64,64]},
-    '90th': {'sbp': [117,118,120,122,124,125,126],'dbp':[75,75,76,77,78,79,79]},
-    '95th': {'sbp': [121,122,124,126,128,129,130],'dbp':[79,79,80,81,82,83,83]},
-    '99th': {'sbp': [128,130,131,133,135,136,137],'dbp':[87,87,88,89,90,91,91]},
-  },
-  14: {
-    '50th': {'sbp': [106,107,109,111,113,114,115], 'dbp': [60,61,62,63,64,65,65]},
-    '90th': {'sbp': [120,121,123,125,126,128,128],'dbp':[75,76,77,78,79,79,80]},
-    '95th': {'sbp': [124,125,127,128,130,132,132],'dbp':[80,80,81,82,83,84,84]},
-    '99th': {'sbp': [131,132,134,136,138,139,140],'dbp':[87,88,89,90,91,92,92]},
-  },
-  15: {
-    '50th': {'sbp': [109,110,112,113,115,117,117], 'dbp': [61,62,63,64,65,66,66]},
-    '90th': {'sbp': [122,124,125,127,129,130,131],'dbp':[76,77,78,79,80,80,81]},
-    '95th': {'sbp': [126,127,129,131,133,134,135],'dbp':[81,81,82,83,84,85,85]},
-    '99th': {'sbp': [134,135,136,138,140,142,142],'dbp':[88,89,90,91,92,93,93]},
-  },
-  16: {
-    '50th': {'sbp': [111,112,114,116,118,119,120], 'dbp': [63,63,64,65,66,67,67]},
-    '90th': {'sbp': [125,126,128,130,131,133,134],'dbp':[78,78,79,80,81,82,82]},
-    '95th': {'sbp': [129,130,132,134,135,137,137],'dbp':[82,83,83,84,85,86,87]},
-    '99th': {'sbp': [136,137,139,141,143,144,145],'dbp':[90,90,91,92,93,94,94]},
-  },
-  17: {
-    '50th': {'sbp': [114,115,116,118,120,121,122], 'dbp': [65,66,66,67,68,69,70]},
-    '90th': {'sbp': [127,128,130,132,134,135,136],'dbp':[80,80,81,82,83,84,84]},
-    '95th': {'sbp': [131,132,134,136,138,139,140],'dbp':[84,85,86,87,87,88,89]},
-    '99th': {'sbp': [139,140,141,143,145,146,147],'dbp':[92,93,93,94,95,96,97]},
-  },
-};
-
-// ══════════════════════════════════════════════════════════════
-// NHBPEP 4th Report 2004 — Girls BP Reference
-// ══════════════════════════════════════════════════════════════
-const Map<int, Map<String, Map<String, List<int>>>> _bpGirls = {
-  1: {
-    '50th': {'sbp': [83,84,85,86,88,89,90],  'dbp': [38,39,39,40,41,41,42]},
-    '90th': {'sbp': [97,97,98,100,101,102,103],'dbp':[52,53,53,54,55,55,56]},
-    '95th': {'sbp': [100,101,102,104,105,106,107],'dbp':[56,57,57,58,59,59,60]},
-    '99th': {'sbp': [108,108,109,111,112,113,114],'dbp':[64,64,65,65,66,67,67]},
-  },
-  2: {
-    '50th': {'sbp': [85,85,87,88,89,91,91],  'dbp': [43,44,44,45,46,46,47]},
-    '90th': {'sbp': [98,99,100,101,103,104,105],'dbp':[57,58,58,59,60,61,61]},
-    '95th': {'sbp': [102,103,104,105,107,108,109],'dbp':[61,62,62,63,64,65,65]},
-    '99th': {'sbp': [109,110,111,112,114,115,116],'dbp':[69,69,70,70,71,72,72]},
-  },
-  3: {
-    '50th': {'sbp': [86,87,88,89,91,92,93],  'dbp': [47,48,48,49,50,50,51]},
-    '90th': {'sbp': [100,100,102,103,104,106,106],'dbp':[61,62,62,63,64,64,65]},
-    '95th': {'sbp': [104,104,105,107,108,109,110],'dbp':[65,66,66,67,68,68,69]},
-    '99th': {'sbp': [111,111,113,114,115,116,117],'dbp':[73,73,74,74,75,76,76]},
-  },
-  4: {
-    '50th': {'sbp': [88,88,90,91,92,94,94],  'dbp': [50,50,51,52,52,53,54]},
-    '90th': {'sbp': [101,102,103,104,106,107,108],'dbp':[64,64,65,66,67,67,68]},
-    '95th': {'sbp': [105,106,107,108,110,111,112],'dbp':[68,68,69,70,71,71,72]},
-    '99th': {'sbp': [112,113,114,115,117,118,119],'dbp':[76,76,76,77,78,79,79]},
-  },
-  5: {
-    '50th': {'sbp': [89,90,91,93,94,95,96],  'dbp': [52,53,53,54,55,55,56]},
-    '90th': {'sbp': [103,103,105,106,107,109,109],'dbp':[66,67,67,68,69,69,70]},
-    '95th': {'sbp': [107,107,108,110,111,112,113],'dbp':[70,71,71,72,73,73,74]},
-    '99th': {'sbp': [114,114,116,117,118,120,120],'dbp':[78,78,79,79,80,81,81]},
-  },
-  6: {
-    '50th': {'sbp': [91,92,93,94,96,97,98],  'dbp': [54,54,55,56,56,57,58]},
-    '90th': {'sbp': [104,105,106,108,109,110,111],'dbp':[68,68,69,70,70,71,72]},
-    '95th': {'sbp': [108,109,110,111,113,114,115],'dbp':[72,72,73,74,74,75,76]},
-    '99th': {'sbp': [115,116,117,119,120,121,122],'dbp':[80,80,80,81,82,83,83]},
-  },
-  7: {
-    '50th': {'sbp': [93,93,95,96,97,99,99],  'dbp': [55,56,56,57,58,58,59]},
-    '90th': {'sbp': [106,107,108,109,111,112,113],'dbp':[69,70,70,71,72,72,73]},
-    '95th': {'sbp': [110,111,112,113,115,116,116],'dbp':[73,74,74,75,76,76,77]},
-    '99th': {'sbp': [117,118,119,120,122,123,124],'dbp':[81,81,82,82,83,84,84]},
-  },
-  8: {
-    '50th': {'sbp': [95,95,96,98,99,100,101], 'dbp': [57,57,57,58,59,60,60]},
-    '90th': {'sbp': [108,109,110,111,113,114,114],'dbp':[71,71,71,72,73,74,74]},
-    '95th': {'sbp': [112,112,114,115,116,118,118],'dbp':[75,75,75,76,77,78,78]},
-    '99th': {'sbp': [119,120,121,122,123,125,125],'dbp':[82,82,83,83,84,85,86]},
-  },
-  9: {
-    '50th': {'sbp': [96,97,98,100,101,102,103], 'dbp': [58,58,58,59,60,61,61]},
-    '90th': {'sbp': [110,110,112,113,114,116,116],'dbp':[72,72,72,73,74,75,75]},
-    '95th': {'sbp': [114,114,115,117,118,119,120],'dbp':[76,76,76,77,78,79,79]},
-    '99th': {'sbp': [121,121,123,124,125,127,127],'dbp':[83,83,84,84,85,86,87]},
-  },
-  10: {
-    '50th': {'sbp': [98,99,100,102,103,104,105], 'dbp': [59,59,59,60,61,62,62]},
-    '90th': {'sbp': [112,112,114,115,116,118,118],'dbp':[73,73,73,74,75,76,76]},
-    '95th': {'sbp': [116,116,117,119,120,121,122],'dbp':[77,77,77,78,79,80,80]},
-    '99th': {'sbp': [123,123,125,126,127,129,129],'dbp':[84,84,85,86,86,87,88]},
-  },
-  11: {
-    '50th': {'sbp': [100,101,102,103,105,106,107], 'dbp': [60,60,60,61,62,63,63]},
-    '90th': {'sbp': [114,114,116,117,118,119,120],'dbp':[74,74,74,75,76,77,77]},
-    '95th': {'sbp': [118,118,119,121,122,123,124],'dbp':[78,78,78,79,80,81,81]},
-    '99th': {'sbp': [125,125,126,128,129,130,131],'dbp':[85,85,86,87,87,88,89]},
-  },
-  12: {
-    '50th': {'sbp': [102,103,104,105,107,108,109], 'dbp': [61,61,61,62,63,64,64]},
-    '90th': {'sbp': [116,116,117,119,120,121,122],'dbp':[75,75,75,76,77,78,78]},
-    '95th': {'sbp': [119,120,121,123,124,125,126],'dbp':[79,79,79,80,81,82,82]},
-    '99th': {'sbp': [127,127,128,130,131,132,133],'dbp':[86,86,87,88,88,89,90]},
-  },
-  13: {
-    '50th': {'sbp': [104,105,106,107,109,110,110], 'dbp': [62,62,62,63,64,65,65]},
-    '90th': {'sbp': [117,118,119,121,122,123,124],'dbp':[76,76,76,77,78,79,79]},
-    '95th': {'sbp': [121,122,123,124,126,127,128],'dbp':[80,80,80,81,82,83,83]},
-    '99th': {'sbp': [128,129,130,132,133,134,135],'dbp':[87,87,88,89,89,90,91]},
-  },
-  14: {
-    '50th': {'sbp': [106,106,107,109,110,111,112], 'dbp': [63,63,63,64,65,66,66]},
-    '90th': {'sbp': [119,120,121,122,124,125,125],'dbp':[77,77,77,78,79,80,80]},
-    '95th': {'sbp': [123,123,125,126,127,129,129],'dbp':[81,81,81,82,83,84,84]},
-    '99th': {'sbp': [130,131,132,133,135,136,136],'dbp':[88,88,89,90,90,91,92]},
-  },
-  15: {
-    '50th': {'sbp': [107,108,109,110,111,113,113], 'dbp': [64,64,64,65,66,67,67]},
-    '90th': {'sbp': [120,121,122,123,125,126,127],'dbp':[78,78,78,79,80,81,81]},
-    '95th': {'sbp': [124,125,126,127,129,130,131],'dbp':[82,82,82,83,84,85,85]},
-    '99th': {'sbp': [131,132,133,134,136,137,138],'dbp':[89,89,90,91,91,92,93]},
-  },
-  16: {
-    '50th': {'sbp': [108,108,110,111,112,114,114], 'dbp': [64,64,65,66,66,67,68]},
-    '90th': {'sbp': [121,122,123,124,126,127,128],'dbp':[78,78,79,80,81,81,82]},
-    '95th': {'sbp': [125,126,127,128,130,131,132],'dbp':[82,82,83,84,85,85,86]},
-    '99th': {'sbp': [132,133,134,135,137,138,139],'dbp':[90,90,90,91,92,93,93]},
-  },
-  17: {
-    '50th': {'sbp': [108,109,110,111,113,114,115], 'dbp': [64,65,65,66,67,67,68]},
-    '90th': {'sbp': [122,122,123,125,126,127,128],'dbp':[78,79,79,80,81,81,82]},
-    '95th': {'sbp': [125,126,127,129,130,131,132],'dbp':[82,83,83,84,85,85,86]},
-    '99th': {'sbp': [133,133,134,136,137,138,139],'dbp':[90,90,91,91,92,93,93]},
-  },
-};
-
-// ══════════════════════════════════════════════════════════════
-// BP CHARTS HUB SCREEN
-// ══════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════════════════════
+// Pediatric BP — AAP 2017 Clinical Practice Guideline (Flynn et al,
+// Pediatrics 2017;140(3):e20171904). Data lives in bp_aap2017_data.dart,
+// generated directly from the source tables.
+// ══════════════════════════════════════════════════════════════════════════
 
 class BPChartsScreen extends StatelessWidget {
   const BPChartsScreen({super.key});
@@ -234,10 +20,8 @@ class BPChartsScreen extends StatelessWidget {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
-          'Blood Pressure Charts',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-        ),
+        title: const Text('Blood Pressure Charts',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -245,19 +29,11 @@ class BPChartsScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const SizedBox(height: 8),
-            Text(
-              'Select Age Group',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-                color: cs.onSurface,
-              ),
-            ),
+            Text('Select Age Group',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: cs.onSurface)),
             const SizedBox(height: 4),
-            Text(
-              'Age-specific BP norms using validated reference tables',
-              style: TextStyle(fontSize: 12, color: cs.onSurface.withValues(alpha: 0.5)),
-            ),
+            Text('Age-specific BP norms using validated reference tables',
+                style: TextStyle(fontSize: 12, color: cs.onSurface.withValues(alpha: 0.5))),
             const SizedBox(height: 16),
             _BPHubCard(
               icon: Icons.child_care,
@@ -271,7 +47,7 @@ class BPChartsScreen extends StatelessWidget {
             _BPHubCard(
               icon: Icons.monitor_heart,
               title: 'Children & Adolescents',
-              subtitle: 'NHBPEP 4th Report 2004 · AAP 2017\nAges 1–17 years',
+              subtitle: 'AAP 2017 Guideline · Ages 1–17 years',
               color: const Color(0xFF26648E),
               comingSoon: false,
               onTap: () => Navigator.push(context,
@@ -317,13 +93,10 @@ class _BPHubCard extends StatelessWidget {
                 width: 52,
                 height: 52,
                 decoration: BoxDecoration(
-                  color: comingSoon
-                      ? Colors.grey.withValues(alpha: 0.1)
-                      : color.withValues(alpha: 0.12),
+                  color: comingSoon ? Colors.grey.withValues(alpha: 0.1) : color.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(icon,
-                    color: comingSoon ? Colors.grey : color, size: 26),
+                child: Icon(icon, color: comingSoon ? Colors.grey : color, size: 26),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -332,51 +105,37 @@ class _BPHubCard extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        Text(
-                          title,
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            color: comingSoon
-                                ? Colors.grey
-                                : Theme.of(context).colorScheme.onSurface,
-                          ),
-                        ),
+                        Text(title,
+                            style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                                color: comingSoon ? Colors.grey : Theme.of(context).colorScheme.onSurface)),
                         if (comingSoon) ...[
                           const SizedBox(width: 8),
                           Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 2),
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                             decoration: BoxDecoration(
                               color: Colors.grey.withValues(alpha: 0.15),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: const Text('Coming Soon',
-                                style: TextStyle(
-                                    fontSize: 10,
-                                    color: Colors.grey,
-                                    fontWeight: FontWeight.w600)),
+                                style: TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.w600)),
                           ),
                         ],
                       ],
                     ),
                     const SizedBox(height: 4),
-                    Text(
-                      subtitle,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: comingSoon
-                            ? Colors.grey.withValues(alpha: 0.6)
-                            : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
-                        height: 1.4,
-                      ),
-                    ),
+                    Text(subtitle,
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: comingSoon
+                                ? Colors.grey.withValues(alpha: 0.6)
+                                : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                            height: 1.4)),
                   ],
                 ),
               ),
-              if (!comingSoon)
-                Icon(Icons.chevron_right,
-                    color: color.withValues(alpha: 0.5)),
+              if (!comingSoon) Icon(Icons.chevron_right, color: color.withValues(alpha: 0.5)),
             ],
           ),
         ),
@@ -385,9 +144,9 @@ class _BPHubCard extends StatelessWidget {
   }
 }
 
-// ══════════════════════════════════════════════════════════════
-// BP CALCULATOR — Children (AAP 2017 / NHBPEP 2004)
-// ══════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════════════════════
+// BP CALCULATOR — Children & Adolescents (AAP 2017)
+// ══════════════════════════════════════════════════════════════════════════
 
 class BPCalculator extends StatefulWidget {
   const BPCalculator({super.key});
@@ -402,13 +161,15 @@ class _BPCalculatorState extends State<BPCalculator> {
   int _age = 8;
   int _sbp = 100;
   int _dbp = 65;
-  double _heightCm = 120.0;
+  double _heightCm = 128.0;
 
-  // ── Controllers ──
   final _ageCtrl = TextEditingController(text: '8');
   final _sbpCtrl = TextEditingController(text: '100');
   final _dbpCtrl = TextEditingController(text: '65');
-  final _heightCtrl = TextEditingController(text: '120');
+  final _heightCtrl = TextEditingController(text: '128');
+
+  bool _calculated = false;
+  int _enteredSBP = 0, _enteredDBP = 0;
 
   @override
   void dispose() {
@@ -419,34 +180,6 @@ class _BPCalculatorState extends State<BPCalculator> {
     super.dispose();
   }
 
-  // ── Height percentile conversion ──
-  static const Map<int, double> _heightP50Boys = {1:75.7,2:87.8,3:96.1,4:102.9,5:109.2,6:115.1,7:120.6,8:125.9,9:130.9,10:135.7,11:140.4,12:145.3,13:151.8,14:158.7,15:164.9,16:168.5,17:170.6};
-  static const Map<int, double> _heightP50Girls = {1:74.0,2:86.4,3:94.4,4:101.2,5:107.2,6:113.0,7:118.5,8:123.8,9:128.7,10:133.3,11:138.3,12:144.8,13:152.2,14:154.6,15:156.2,16:157.4,17:158.1};
-  static const Map<int, double> _heightSDBoys = {1:2.6,2:3.1,3:3.4,4:3.7,5:4.0,6:4.3,7:4.7,8:5.1,9:5.5,10:5.9,11:6.3,12:7.3,13:8.4,14:8.5,15:7.5,16:6.5,17:6.0};
-  static const Map<int, double> _heightSDGirls = {1:2.6,2:3.2,3:3.5,4:3.8,5:4.1,6:4.5,7:4.9,8:5.3,9:5.7,10:6.1,11:6.6,12:7.0,13:6.8,14:6.0,15:5.7,16:5.4,17:5.4};
-
-  int _cmToHeightPercentileIndex(double heightCm, int age, String gender) {
-    final p50 = gender == 'boy' ? (_heightP50Boys[age] ?? 120.0) : (_heightP50Girls[age] ?? 120.0);
-    final sd = gender == 'boy' ? (_heightSDBoys[age] ?? 5.0) : (_heightSDGirls[age] ?? 5.0);
-    final z = (heightCm - p50) / sd;
-    if (z <= -1.645) return 0; // 5th
-    if (z <= -1.28) return 1;  // 10th
-    if (z <= -0.68) return 2;  // 25th
-    if (z <= 0) return 3;      // 50th
-    if (z <= 0.68) return 4;   // 75th
-    if (z <= 1.28) return 5;   // 90th
-    return 6;                   // 95th
-  }
-
-  String _heightPercentileLabel(int idx) {
-    const labels = ['5th','10th','25th','50th','75th','90th','95th'];
-    return labels[idx];
-  }
-
-  // ── Results ──
-  bool _calculated = false;
-  int _enteredSBP = 0;
-  int _enteredDBP = 0;
   void _calculate() {
     setState(() {
       _calculated = true;
@@ -455,86 +188,59 @@ class _BPCalculatorState extends State<BPCalculator> {
     });
   }
 
-  // ── Bedside hypotension ──
-  int bedsideMinSBP(int ageYears) {
-    if (ageYears < 1) return 60;
-    return (2 * ageYears) + 70;
+  // ── Height → column ──────────────────────────────────────────────────────
+  // The 2017 tables print the actual measured height (cm) for each of the 7
+  // height-percentile columns, so we pick the column whose tabulated height is
+  // closest to the child's measured height (the "or Measured Height" feature).
+  AgeBP get _bp => (_isBoy ? bpBoys2017 : bpGirls2017)[_age]!;
+
+  int _heightColIndex() {
+    final h = _bp.heightCm;
+    var best = 0;
+    var bestDiff = (h[0] - _heightCm).abs();
+    for (var i = 1; i < h.length; i++) {
+      final d = (h[i] - _heightCm).abs();
+      if (d < bestDiff) {
+        bestDiff = d;
+        best = i;
+      }
+    }
+    return best;
   }
 
-  bool isHypotensive(int sbp, int ageYears) => sbp < bedsideMinSBP(ageYears);
+  static const _htLabels = ['5th', '10th', '25th', '50th', '75th', '90th', '95th'];
 
-  // ── Stepper widget ──
-  Widget _stepper({
-    required String label,
-    required int value,
-    required int min,
-    required int max,
-    required String hint,
-    required ValueChanged<int> onChanged,
-    TextEditingController? controller,
-  }) {
-    return Builder(builder: (context) {
-      final cs = Theme.of(context).colorScheme;
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(label,
-              style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: cs.onSurface)),
-          const SizedBox(height: 6),
-          Row(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.remove_circle_outline),
-                color: value > min ? cs.primary : cs.onSurface.withValues(alpha: 0.3),
-                onPressed: value > min ? () {
-                  final newVal = value - 1;
-                  onChanged(newVal);
-                  controller?.text = newVal.toString();
-                } : null,
-              ),
-              Expanded(
-                child: TextFormField(
-                  controller: controller,
-                  keyboardType: TextInputType.number,
-                  textAlign: TextAlign.center,
-                  decoration: InputDecoration(labelText: hint, isDense: true),
-                  onChanged: (v) {
-                    final parsed = int.tryParse(v);
-                    if (parsed != null && parsed >= min && parsed <= max) {
-                      onChanged(parsed);
-                    }
-                  },
-                ),
-              ),
-              IconButton(
-                icon: const Icon(Icons.add_circle_outline),
-                color: value < max ? cs.primary : cs.onSurface.withValues(alpha: 0.3),
-                onPressed: value < max ? () {
-                  final newVal = value + 1;
-                  onChanged(newVal);
-                  controller?.text = newVal.toString();
-                } : null,
-              ),
-            ],
-          ),
-        ],
-      );
-    });
+  // ── Classification (AAP 2017 Table 3) ────────────────────────────────────
+  // 0 Normal · 1 Elevated · 2 Stage 1 HTN · 3 Stage 2 HTN
+  int _percentileCat(int val, int p90, int p95) {
+    if (val >= p95 + 12) return 3;
+    if (val >= p95) return 2;
+    if (val >= p90) return 1;
+    return 0;
   }
 
-  // ── Section label helper ──
-  Widget _sectionLabel(String text) {
-    return Builder(builder: (context) => Text(text,
-        style: TextStyle(
-            fontSize: 13,
-            fontWeight: FontWeight.w600,
-            color: Theme.of(context).colorScheme.onSurface)));
+  // Adult / adolescent absolute thresholds (also the "whichever is lower"
+  // floor for children < 13).
+  int _absoluteCat(int sbp, int dbp) {
+    if (sbp >= 140 || dbp >= 90) return 3;
+    if (sbp >= 130 || dbp >= 80) return 2;
+    if (sbp >= 120) return 1; // elevated is systolic 120–129 with DBP < 80
+    return 0;
   }
 
-  // ── Build ──
+  int _categoryIndex() {
+    final col = _heightColIndex();
+    final bp = _bp;
+    final sCat = _percentileCat(_enteredSBP, bp.sbp90[col], bp.sbp95[col]);
+    final dCat = _percentileCat(_enteredDBP, bp.dbp90[col], bp.dbp95[col]);
+    final pctCat = sCat > dCat ? sCat : dCat;
+    final absCat = _absoluteCat(_enteredSBP, _enteredDBP);
+    // ≥13 yr: adolescents are staged by the adult absolute thresholds only.
+    if (_age >= 13) return absCat;
+    return pctCat > absCat ? pctCat : absCat;
+  }
+
+  // ── Build ─────────────────────────────────────────────────────────────────
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -543,10 +249,8 @@ class _BPCalculatorState extends State<BPCalculator> {
         title: const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('BP Calculator',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            Text('Children · NHBPEP 4th Report 2004',
-                style: TextStyle(fontSize: 11)),
+            Text('BP Calculator', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            Text('Children · AAP 2017 Guideline', style: TextStyle(fontSize: 11)),
           ],
         ),
       ),
@@ -562,11 +266,11 @@ class _BPCalculatorState extends State<BPCalculator> {
               const SizedBox(height: 12),
               _buildBPResultCards(),
               const SizedBox(height: 12),
-              _buildCentileStatement(),
+              _buildThresholdCard(),
               const SizedBox(height: 12),
               _buildHypotensionInfo(),
-              const SizedBox(height: 12),
-              _buildHeightPercentileInfo(),
+              const SizedBox(height: 16),
+              _buildAdditionalInfo(),
               const SizedBox(height: 12),
               _buildReference(),
             ],
@@ -588,18 +292,10 @@ class _BPCalculatorState extends State<BPCalculator> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Builder(builder: (context) => Text('Blood Pressure Assessment',
-                style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.primary))),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.primary))),
             const SizedBox(height: 16),
-
-            // Gender toggle
-            Builder(builder: (context) => Text('Gender',
-                style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: Theme.of(context).colorScheme.onSurface))),
+            Builder(builder: (context) => Text('Sex',
+                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface))),
             const SizedBox(height: 8),
             Row(
               children: [
@@ -608,7 +304,6 @@ class _BPCalculatorState extends State<BPCalculator> {
               ],
             ),
             const SizedBox(height: 16),
-
             _stepper(
               label: 'Age (years)',
               value: _age,
@@ -619,7 +314,6 @@ class _BPCalculatorState extends State<BPCalculator> {
               onChanged: (v) => setState(() => _age = v),
             ),
             const SizedBox(height: 16),
-
             _sectionLabel('Height (cm)'),
             const SizedBox(height: 6),
             Builder(builder: (context) {
@@ -656,40 +350,29 @@ class _BPCalculatorState extends State<BPCalculator> {
             }),
             const SizedBox(height: 4),
             Builder(builder: (context) => Text(
-              'Height percentile used: ${_heightPercentileLabel(_cmToHeightPercentileIndex(_heightCm, _age, _isBoy ? 'boy' : 'girl'))} for age $_age yrs',
+              'Nearest height column for age $_age: ~${_htLabels[_heightColIndex()]} percentile '
+              '(${_bp.heightCm[_heightColIndex()].toStringAsFixed(0)} cm)',
               style: TextStyle(fontSize: 11, color: Theme.of(context).colorScheme.primary),
             )),
             const SizedBox(height: 16),
-
             _stepper(
               label: 'Systolic BP (mmHg)',
-              value: _sbp,
-              min: 50,
-              max: 200,
-              hint: 'e.g. 118',
-              controller: _sbpCtrl,
-              onChanged: (v) => setState(() => _sbp = v),
+              value: _sbp, min: 50, max: 220, hint: 'e.g. 112',
+              controller: _sbpCtrl, onChanged: (v) => setState(() => _sbp = v),
             ),
             const SizedBox(height: 16),
-
             _stepper(
               label: 'Diastolic BP (mmHg)',
-              value: _dbp,
-              min: 30,
-              max: 130,
-              hint: 'e.g. 72',
-              controller: _dbpCtrl,
-              onChanged: (v) => setState(() => _dbp = v),
+              value: _dbp, min: 30, max: 140, hint: 'e.g. 72',
+              controller: _dbpCtrl, onChanged: (v) => setState(() => _dbp = v),
             ),
             const SizedBox(height: 20),
-
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: _calculate,
                 child: const Text('Assess Blood Pressure',
-                    style: TextStyle(
-                        fontSize: 15, fontWeight: FontWeight.bold)),
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
               ),
             ),
           ],
@@ -714,54 +397,26 @@ class _BPCalculatorState extends State<BPCalculator> {
               right: isBoy ? Radius.zero : const Radius.circular(10),
             ),
           ),
-          child: Text(
-            label,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: active ? Colors.white : cs.primary,
-              fontWeight: FontWeight.w600,
-              fontSize: 14,
-            ),
-          ),
+          child: Text(label,
+              textAlign: TextAlign.center,
+              style: TextStyle(color: active ? Colors.white : cs.primary, fontWeight: FontWeight.w600, fontSize: 14)),
         ),
       );
     });
   }
 
-  // ── New results: two BP result boxes side by side ──────────────────────────
-  // ── 4th Report classification ──────────────────────────────────────────────
-  // Category is driven by whichever of SBP/DBP falls in the higher band.
-  //   Normal        : both < 90th percentile
-  //   Prehypertension: 90th–<95th, OR BP ≥ 120/80 even if below 90th
-  //   Stage 1 HTN   : 95th up to (99th + 5 mmHg)
-  //   Stage 2 HTN   : > 99th + 5 mmHg
-  int _bpCategoryIndex() {
-    final htIdx = _cmToHeightPercentileIndex(_heightCm, _age, _isBoy ? 'boy' : 'girl');
-    final ageData = (_isBoy ? _bpBoys : _bpGirls)[_age]!;
-    int catFor(int val, int p90, int p95, int p99) {
-      if (val > p99 + 5) return 3; // Stage 2
-      if (val >= p95) return 2;    // Stage 1
-      if (val >= p90) return 1;    // Prehypertension
-      return 0;                    // Normal
-    }
-    final s = catFor(_enteredSBP, ageData['90th']!['sbp']![htIdx],
-        ageData['95th']!['sbp']![htIdx], ageData['99th']!['sbp']![htIdx]);
-    final d = catFor(_enteredDBP, ageData['90th']!['dbp']![htIdx],
-        ageData['95th']!['dbp']![htIdx], ageData['99th']!['dbp']![htIdx]);
-    var cat = s > d ? s : d;
-    // Adolescent absolute rule: ≥120/80 is at least prehypertension.
-    if (cat < 1 && (_enteredSBP >= 120 || _enteredDBP >= 80)) cat = 1;
-    return cat;
-  }
-
+  // ── Category banner ──
   Widget _buildCategoryBanner() {
     const cats = [
-      ('Normal', Color(0xFF2DBD8C), 'Both SBP and DBP below the 90th percentile.'),
-      ('Prehypertension', Color(0xFFD4820A), '90th–<95th percentile (or ≥120/80 mmHg).'),
-      ('Stage 1 Hypertension', Color(0xFFF97316), '95th percentile up to 99th + 5 mmHg. Confirm on repeat visits.'),
-      ('Stage 2 Hypertension', Color(0xFFE53935), 'Above 99th percentile + 5 mmHg. Prompt evaluation warranted.'),
+      ('Normal BP', Color(0xFF2DBD8C), 'Below the 90th percentile (and < 120/80).'),
+      ('Elevated BP', Color(0xFFD4820A), '90th–<95th percentile, or ≥120/<80 mmHg. Lifestyle counselling; recheck in 6 months.'),
+      ('Stage 1 Hypertension', Color(0xFFF97316), '95th percentile to <95th + 12 mmHg, or 130/80–139/89. Recheck in 1–2 weeks.'),
+      ('Stage 2 Hypertension', Color(0xFFE53935), '≥95th + 12 mmHg, or ≥140/90. Evaluate/refer within 1 week.'),
     ];
-    final (label, color, desc) = cats[_bpCategoryIndex()];
+    final (label, color, desc) = cats[_categoryIndex()];
+    final basis = _age >= 13
+        ? 'Staged by adult thresholds (≥13 yr).'
+        : 'Staged by percentile for age/sex/height, or absolute cutoff — whichever is lower.';
     return Builder(builder: (context) {
       final cs = Theme.of(context).colorScheme;
       return Container(
@@ -775,56 +430,50 @@ class _BPCalculatorState extends State<BPCalculator> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('CLASSIFICATION',
+            Text('AAP 2017 CLASSIFICATION',
                 style: TextStyle(color: cs.onSurface.withValues(alpha: 0.5), fontSize: 10, fontWeight: FontWeight.w700, letterSpacing: 0.8)),
             const SizedBox(height: 4),
-            Text(label, style: TextStyle(color: color, fontSize: 20, fontWeight: FontWeight.bold)),
+            Text(label, style: TextStyle(color: color, fontSize: 21, fontWeight: FontWeight.bold)),
             const SizedBox(height: 4),
-            Text(desc, style: TextStyle(color: cs.onSurface.withValues(alpha: 0.75), fontSize: 12, height: 1.4)),
+            Text(desc, style: TextStyle(color: cs.onSurface.withValues(alpha: 0.78), fontSize: 12.5, height: 1.4)),
+            const SizedBox(height: 6),
+            Text(basis, style: TextStyle(color: cs.onSurface.withValues(alpha: 0.5), fontSize: 11, fontStyle: FontStyle.italic)),
           ],
         ),
       );
     });
   }
 
+  // ── SBP / DBP boxes ──
   Widget _buildBPResultCards() {
-    final htIdx = _cmToHeightPercentileIndex(_heightCm, _age, _isBoy ? 'boy' : 'girl');
-    final data = _isBoy ? _bpBoys : _bpGirls;
-    final ageData = data[_age]!;
-    final r90sbp = ageData['90th']!['sbp']![htIdx];
-    final r95sbp = ageData['95th']!['sbp']![htIdx];
-    final r99sbp = ageData['99th']!['sbp']![htIdx];
-    final r90dbp = ageData['90th']!['dbp']![htIdx];
-    final r95dbp = ageData['95th']!['dbp']![htIdx];
-    final r99dbp = ageData['99th']!['dbp']![htIdx];
-
-    final sbpCentile = _getCentileText(_enteredSBP, r90sbp, r95sbp, r99sbp);
-    final dbpCentile = _getCentileText(_enteredDBP, r90dbp, r95dbp, r99dbp);
-
+    final col = _heightColIndex();
+    final bp = _bp;
+    final sbpText = _centileText(_enteredSBP, bp.sbp90[col], bp.sbp95[col]);
+    final dbpText = _centileText(_enteredDBP, bp.dbp90[col], bp.dbp95[col]);
     return Row(
       children: [
-        Expanded(child: _bpResultBox('Systolic BP', '$_enteredSBP mmHg', sbpCentile, _getBPBoxColor(sbpCentile))),
+        Expanded(child: _bpBox('Systolic', '$_enteredSBP mmHg', sbpText, _boxColor(sbpText))),
         const SizedBox(width: 12),
-        Expanded(child: _bpResultBox('Diastolic BP', '$_enteredDBP mmHg', dbpCentile, _getBPBoxColor(dbpCentile))),
+        Expanded(child: _bpBox('Diastolic', '$_enteredDBP mmHg', dbpText, _boxColor(dbpText))),
       ],
     );
   }
 
-  String _getCentileText(int val, int p90, int p95, int p99) {
-    if (val >= p99) return '≥99th centile';
-    if (val >= p95) return '95th–99th centile';
-    if (val >= p90) return '90th–95th centile';
+  String _centileText(int v, int p90, int p95) {
+    if (v >= p95 + 12) return '≥95th + 12 mmHg';
+    if (v >= p95) return '95th–(95th+12)';
+    if (v >= p90) return '90th–95th';
     return '<90th centile';
   }
 
-  Color _getBPBoxColor(String centile) {
-    if (centile.contains('≥99th')) return const Color(0xFFE53935);
-    if (centile.contains('95th–99th')) return const Color(0xFFF97316);
-    if (centile.contains('90th–95th')) return const Color(0xFFD4820A);
+  Color _boxColor(String t) {
+    if (t.contains('+ 12')) return const Color(0xFFE53935);
+    if (t.contains('95th–(')) return const Color(0xFFF97316);
+    if (t.contains('90th–95th')) return const Color(0xFFD4820A);
     return const Color(0xFF2DBD8C);
   }
 
-  Widget _bpResultBox(String label, String value, String centile, Color color) {
+  Widget _bpBox(String label, String value, String centile, Color color) {
     return Builder(builder: (context) {
       final cs = Theme.of(context).colorScheme;
       return Container(
@@ -848,107 +497,352 @@ class _BPCalculatorState extends State<BPCalculator> {
     });
   }
 
-  Widget _buildCentileStatement() {
-    final htIdx = _cmToHeightPercentileIndex(_heightCm, _age, _isBoy ? 'boy' : 'girl');
-    final data = _isBoy ? _bpBoys : _bpGirls;
-    final ageData = data[_age]!;
-    final r90sbp = ageData['90th']!['sbp']![htIdx];
-    final r95sbp = ageData['95th']!['sbp']![htIdx];
-    final r99sbp = ageData['99th']!['sbp']![htIdx];
-    final r90dbp = ageData['90th']!['dbp']![htIdx];
-    final r95dbp = ageData['95th']!['dbp']![htIdx];
-    final r99dbp = ageData['99th']!['dbp']![htIdx];
-
-    final sbpCentile = _getCentileText(_enteredSBP, r90sbp, r95sbp, r99sbp);
-    final dbpCentile = _getCentileText(_enteredDBP, r90dbp, r95dbp, r99dbp);
-
+  // ── Thresholds used ──
+  Widget _buildThresholdCard() {
+    final col = _heightColIndex();
+    final bp = _bp;
     return Builder(builder: (context) {
       final cs = Theme.of(context).colorScheme;
+      TableRow row(String label, int sbp, int dbp, [bool bold = false]) => TableRow(children: [
+            _cell(label, bold: bold, color: cs.onSurface),
+            _cell('$sbp', bold: bold, color: cs.onSurface),
+            _cell('$dbp', bold: bold, color: cs.onSurface),
+          ]);
       return Container(
         padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: cs.surface,
-          border: Border.all(color: cs.outline),
-          borderRadius: BorderRadius.circular(10),
-        ),
+        decoration: BoxDecoration(color: cs.surface, border: Border.all(color: cs.outline), borderRadius: BorderRadius.circular(10)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Centile Position', style: TextStyle(color: cs.onSurface, fontSize: 13, fontWeight: FontWeight.bold)),
+            Text('Thresholds for age $_age ${_isBoy ? 'boy' : 'girl'}, ~${_htLabels[col]} height',
+                style: TextStyle(color: cs.onSurface, fontSize: 13, fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
-            Text('SBP is $sbpCentile', style: TextStyle(color: cs.onSurface, fontSize: 13)),
-            const SizedBox(height: 4),
-            Text('DBP is $dbpCentile', style: TextStyle(color: cs.onSurface, fontSize: 13)),
+            Table(
+              border: TableBorder.all(color: cs.outline, width: 0.5, borderRadius: BorderRadius.circular(6)),
+              columnWidths: const {0: FlexColumnWidth(1.7), 1: FlexColumnWidth(1), 2: FlexColumnWidth(1)},
+              children: [
+                TableRow(
+                  decoration: BoxDecoration(color: cs.primary),
+                  children: [_cell('Percentile', header: true), _cell('SBP', header: true), _cell('DBP', header: true)],
+                ),
+                row('50th', bp.sbp50[col], bp.dbp50[col]),
+                row('90th (Elevated)', bp.sbp90[col], bp.dbp90[col]),
+                row('95th (Stage 1)', bp.sbp95[col], bp.dbp95[col]),
+                row('95th + 12 (Stage 2)', bp.sbp95[col] + 12, bp.dbp95[col] + 12, true),
+              ],
+            ),
           ],
         ),
       );
     });
   }
 
+  // ── Hypotension (PALS) ──
   Widget _buildHypotensionInfo() {
-    // PALS minimum acceptable SBP for age (5th percentile approximation):
-    //   < 1 mo: 60 · 1-12 mo: 70 · 1-10 yr: 70 + 2×age · > 10 yr: 90
-    final int clinicalMin = _age <= 10 ? 70 + (2 * _age) : 90;
+    final clinicalMin = _age <= 10 ? 70 + (2 * _age) : 90;
     final isHypo = _enteredSBP < clinicalMin;
-
     return Builder(builder: (context) {
       final cs = Theme.of(context).colorScheme;
       const amber = Color(0xFFD4820A);
       const red = Color(0xFFE53935);
-      return Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(
-              color: amber.withValues(alpha: 0.08),
-              border: Border.all(color: amber.withValues(alpha: 0.4)),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Hypotension Reference (PALS)', style: TextStyle(color: amber, fontSize: 12, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 6),
-                Text('Minimum acceptable SBP for age $_age: $clinicalMin mmHg',
-                    style: TextStyle(color: cs.onSurface, fontSize: 12)),
-                const SizedBox(height: 4),
-                Text(_age <= 10 ? '1–10 yr: 70 + (2 × age in years)' : '> 10 yr: fixed 90 mmHg',
-                    style: TextStyle(color: cs.onSurface.withValues(alpha: 0.7), fontSize: 11)),
-              ],
-            ),
+      return Column(children: [
+        Container(
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(color: amber.withValues(alpha: 0.08), border: Border.all(color: amber.withValues(alpha: 0.4)), borderRadius: BorderRadius.circular(10)),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Hypotension Reference (PALS)', style: TextStyle(color: amber, fontSize: 12, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 6),
+              Text('Minimum acceptable SBP for age $_age: $clinicalMin mmHg',
+                  style: TextStyle(color: cs.onSurface, fontSize: 12)),
+              const SizedBox(height: 4),
+              Text(_age <= 10 ? '1–10 yr: 70 + (2 × age)' : '> 10 yr: fixed 90 mmHg',
+                  style: TextStyle(color: cs.onSurface.withValues(alpha: 0.7), fontSize: 11)),
+            ],
           ),
-          if (isHypo) ...[
-            const SizedBox(height: 8),
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: red.withValues(alpha: 0.1),
-                border: Border.all(color: red.withValues(alpha: 0.5)),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Row(
-                children: [
-                  const Icon(Icons.warning_rounded, color: red, size: 18),
-                  const SizedBox(width: 8),
-                  Expanded(child: Text('SBP below the PALS minimum ($clinicalMin mmHg) — assess for hypotension',
-                      style: const TextStyle(color: red, fontSize: 13, fontWeight: FontWeight.w600))),
-                ],
-              ),
-            ),
-          ],
+        ),
+        if (isHypo) ...[
+          const SizedBox(height: 8),
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(color: red.withValues(alpha: 0.1), border: Border.all(color: red.withValues(alpha: 0.5)), borderRadius: BorderRadius.circular(10)),
+            child: Row(children: [
+              const Icon(Icons.warning_rounded, color: red, size: 18),
+              const SizedBox(width: 8),
+              Expanded(child: Text('SBP below the PALS minimum ($clinicalMin mmHg) — assess for hypotension',
+                  style: const TextStyle(color: red, fontSize: 13, fontWeight: FontWeight.w600))),
+            ]),
+          ),
+        ],
+      ]);
+    });
+  }
+
+  // ── Additional information (collapsed by default) ──
+  Widget _buildAdditionalInfo() {
+    return Builder(builder: (context) {
+      final cs = Theme.of(context).colorScheme;
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('ADDITIONAL INFORMATION',
+              style: TextStyle(color: cs.onSurface.withValues(alpha: 0.5), fontSize: 11, fontWeight: FontWeight.w800, letterSpacing: 0.8)),
+          const SizedBox(height: 8),
+          _expandable('BP categories & staging (Table 3)', Icons.category_outlined, _table3Content()),
+          _expandable('Full BP table for age $_age (Table 4/5)', Icons.table_chart_outlined, _fullAgeTable()),
+          _expandable('Simplified screening values (Table 6)', Icons.speed_outlined, _table6Content()),
+          _expandable('Evaluation & management (Table 11)', Icons.assignment_outlined, _table11Content()),
+          _expandable('Initial workup (Table 10)', Icons.science_outlined, _table10Content()),
+          _expandable('DASH diet recommendations (Table 16)', Icons.restaurant_outlined, _table16Content()),
         ],
       );
     });
   }
 
-  Widget _buildHeightPercentileInfo() {
-    final htIdx = _cmToHeightPercentileIndex(_heightCm, _age, _isBoy ? 'boy' : 'girl');
-    final htLabel = _heightPercentileLabel(htIdx);
+  Widget _expandable(String title, IconData icon, Widget child) {
     return Builder(builder: (context) {
       final cs = Theme.of(context).colorScheme;
-      return Text(
-        'Height ${_heightCm.toStringAsFixed(0)} cm → ~$htLabel height centile used for lookup',
-        style: TextStyle(color: cs.onSurface.withValues(alpha: 0.5), fontSize: 11),
+      return Card(
+        elevation: 0,
+        margin: const EdgeInsets.only(bottom: 8),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10), side: BorderSide(color: cs.outline)),
+        child: Theme(
+          data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+          child: ExpansionTile(
+            tilePadding: const EdgeInsets.symmetric(horizontal: 14),
+            childrenPadding: const EdgeInsets.fromLTRB(14, 0, 14, 14),
+            leading: Icon(icon, size: 20, color: cs.primary),
+            title: Text(title, style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700, color: cs.onSurface)),
+            children: [child],
+          ),
+        ),
+      );
+    });
+  }
+
+  // ── Table content builders ──
+  Widget _table3Content() {
+    return Builder(builder: (context) {
+      final cs = Theme.of(context).colorScheme;
+      Widget block(String heading, List<String> rows) => Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(heading, style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w800, color: cs.primary)),
+              const SizedBox(height: 4),
+              ...rows.map((r) => Padding(
+                    padding: const EdgeInsets.only(bottom: 3),
+                    child: Text(r, style: TextStyle(fontSize: 12, color: cs.onSurface.withValues(alpha: 0.8), height: 1.35)),
+                  )),
+            ],
+          );
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          block('Children aged 1–13 y', [
+            'Normal: <90th percentile',
+            'Elevated: ≥90th to <95th, or 120/80 to <95th (whichever is lower)',
+            'Stage 1 HTN: ≥95th to <95th + 12 mmHg, or 130/80–139/89 (whichever lower)',
+            'Stage 2 HTN: ≥95th + 12 mmHg, or ≥140/90 (whichever lower)',
+          ]),
+          const SizedBox(height: 12),
+          block('Children aged ≥13 y', [
+            'Normal: <120/<80 mmHg',
+            'Elevated: 120/<80 to 129/<80 mmHg',
+            'Stage 1 HTN: 130/80 to 139/89 mmHg',
+            'Stage 2 HTN: ≥140/90 mmHg',
+          ]),
+        ],
+      );
+    });
+  }
+
+  Widget _fullAgeTable() {
+    final col = _heightColIndex();
+    final bp = _bp;
+    return Builder(builder: (context) {
+      final cs = Theme.of(context).colorScheme;
+      Widget cell(String t, {bool header = false, bool hi = false}) => Container(
+            color: hi ? const Color(0xFFE6F5F3) : null,
+            padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 5),
+            child: Text(t,
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: header ? 9.5 : 10.5, fontWeight: header || hi ? FontWeight.bold : FontWeight.normal, color: header ? Colors.white : (hi ? const Color(0xFF0d7a6e) : cs.onSurface))),
+          );
+      List<Widget> bpRow(String label, List<int> sbp, List<int> dbp, {bool plus12 = false}) {
+        final s = plus12 ? sbp.map((e) => e + 12).toList() : sbp;
+        final d = plus12 ? dbp.map((e) => e + 12).toList() : dbp;
+        return [
+          cell(label),
+          for (var i = 0; i < 7; i++) cell('${s[i]}/${d[i]}', hi: i == col),
+        ];
+      }
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('SBP/DBP (mmHg) by height percentile — age $_age ${_isBoy ? 'boys' : 'girls'}',
+              style: TextStyle(fontSize: 11, color: cs.onSurface.withValues(alpha: 0.6))),
+          const SizedBox(height: 6),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Table(
+              defaultColumnWidth: const FixedColumnWidth(52),
+              columnWidths: const {0: FixedColumnWidth(46)},
+              border: TableBorder.all(color: cs.outline, width: 0.4),
+              children: [
+                TableRow(decoration: BoxDecoration(color: cs.primary), children: [
+                  cell('%ile', header: true),
+                  ..._htLabels.map((l) => cell(l, header: true)),
+                ]),
+                TableRow(children: bpRow('50th', bp.sbp50, bp.dbp50)),
+                TableRow(children: bpRow('90th', bp.sbp90, bp.dbp90)),
+                TableRow(children: bpRow('95th', bp.sbp95, bp.dbp95)),
+                TableRow(children: bpRow('95+12', bp.sbp95, bp.dbp95, plus12: true)),
+              ],
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text('Highlighted column = nearest to entered height (${_heightCm.toStringAsFixed(0)} cm).',
+              style: TextStyle(fontSize: 10.5, color: cs.onSurface.withValues(alpha: 0.5))),
+        ],
+      );
+    });
+  }
+
+  Widget _table6Content() {
+    final s = bpScreen2017[_age >= 13 ? 13 : _age]!;
+    final sbp = _isBoy ? s[0] : s[2];
+    final dbp = _isBoy ? s[1] : s[3];
+    return Builder(builder: (context) {
+      final cs = Theme.of(context).colorScheme;
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('A quick screen: if BP is at or above this value, do the full-table lookup above.',
+              style: TextStyle(fontSize: 12, color: cs.onSurface.withValues(alpha: 0.75), height: 1.35)),
+          const SizedBox(height: 8),
+          Text('Age ${_age >= 13 ? '≥13' : '$_age'} ${_isBoy ? 'boy' : 'girl'}: screen at $sbp/$dbp mmHg',
+              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: cs.primary)),
+        ],
+      );
+    });
+  }
+
+  Widget _table11Content() {
+    return _bulletBlock({
+      'Normal': ['Recheck at next well-child visit (annual).', 'Lifestyle & nutrition counselling.'],
+      'Elevated BP': [
+        'Lifestyle counselling; recheck in 6 months.',
+        'Still elevated at 6 mo → check upper & lower limb BP, recheck in 6 mo.',
+        'Still elevated at 12 mo → ABPM, diagnostic evaluation, consider referral.',
+      ],
+      'Stage 1 HTN': [
+        'Lifestyle counselling; recheck in 1–2 weeks.',
+        'Persists → upper & lower limb BP, recheck in 3 months.',
+        'Third visit → ABPM, diagnostic evaluation, start treatment, consider referral.',
+      ],
+      'Stage 2 HTN': [
+        'Upper & lower limb BP at first visit; evaluate/refer to specialty care within 1 week.',
+        'ABPM, diagnostic evaluation, initiate treatment, referral.',
+        'If symptomatic, or BP >30 mmHg above the 95th (or >180/120 in an adolescent) → send to ED.',
+      ],
+    });
+  }
+
+  Widget _table10Content() {
+    return Builder(builder: (context) {
+      final cs = Theme.of(context).colorScheme;
+      Widget li(String t) => Padding(
+            padding: const EdgeInsets.only(bottom: 4),
+            child: Text('• $t', style: TextStyle(fontSize: 12, color: cs.onSurface.withValues(alpha: 0.8), height: 1.35)),
+          );
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('All patients', style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w800, color: cs.primary)),
+          const SizedBox(height: 4),
+          li('Urinalysis'),
+          li('Chemistry panel — electrolytes, BUN, creatinine'),
+          li('Lipid profile (fasting or non-fasting: HDL + total cholesterol)'),
+          li('Renal ultrasound if < 6 yr, or abnormal urinalysis / renal function'),
+          const SizedBox(height: 8),
+          Text('If obese (BMI ≥95th percentile), add', style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w800, color: cs.primary)),
+          const SizedBox(height: 4),
+          li('HbA1c (diabetes screen)'),
+          li('AST & ALT (fatty liver screen)'),
+          li('Fasting lipid panel (dyslipidemia screen)'),
+        ],
+      );
+    });
+  }
+
+  Widget _table16Content() {
+    return Builder(builder: (context) {
+      final cs = Theme.of(context).colorScheme;
+      const rows = [
+        ('Fruits & vegetables', '4–5 servings/day'),
+        ('Low-fat milk products', '≥2 servings/day'),
+        ('Whole grains', '6 servings/day'),
+        ('Fish, poultry, lean red meats', '≤2 servings/day'),
+        ('Legumes & nuts', '1 serving/day'),
+        ('Oils & fats', '2–3 servings/day'),
+        ('Added sugar & sweets', '≤1 serving/day'),
+        ('Dietary sodium', '<2300 mg/day'),
+      ];
+      return Column(
+        children: rows
+            .map((r) => Padding(
+                  padding: const EdgeInsets.only(bottom: 5),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(child: Text(r.$1, style: TextStyle(fontSize: 12, color: cs.onSurface.withValues(alpha: 0.85)))),
+                      Text(r.$2, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: cs.primary)),
+                    ],
+                  ),
+                ))
+            .toList(),
+      );
+    });
+  }
+
+  Widget _bulletBlock(Map<String, List<String>> sections) {
+    return Builder(builder: (context) {
+      final cs = Theme.of(context).colorScheme;
+      final curName = ['Normal', 'Elevated BP', 'Stage 1 HTN', 'Stage 2 HTN'][_categoryIndex()];
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: sections.entries.map((e) {
+          final isCurrent = e.key == curName;
+          return Container(
+            margin: const EdgeInsets.only(bottom: 8),
+            padding: const EdgeInsets.all(8),
+            decoration: isCurrent
+                ? BoxDecoration(color: cs.primary.withValues(alpha: 0.06), borderRadius: BorderRadius.circular(6), border: Border.all(color: cs.primary.withValues(alpha: 0.3)))
+                : null,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(children: [
+                  Text(e.key, style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w800, color: cs.primary)),
+                  if (isCurrent) ...[
+                    const SizedBox(width: 6),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                      decoration: BoxDecoration(color: cs.primary, borderRadius: BorderRadius.circular(4)),
+                      child: const Text('THIS PATIENT', style: TextStyle(fontSize: 8.5, color: Colors.white, fontWeight: FontWeight.w700)),
+                    ),
+                  ],
+                ]),
+                const SizedBox(height: 3),
+                ...e.value.map((r) => Padding(
+                      padding: const EdgeInsets.only(bottom: 3),
+                      child: Text('• $r', style: TextStyle(fontSize: 12, color: cs.onSurface.withValues(alpha: 0.8), height: 1.35)),
+                    )),
+              ],
+            ),
+          );
+        }).toList(),
       );
     });
   }
@@ -958,18 +852,77 @@ class _BPCalculatorState extends State<BPCalculator> {
       final cs = Theme.of(context).colorScheme;
       return Container(
         padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: cs.surface,
-          border: Border.all(color: cs.outline),
-          borderRadius: BorderRadius.circular(10),
-        ),
+        decoration: BoxDecoration(color: cs.surface, border: Border.all(color: cs.outline), borderRadius: BorderRadius.circular(10)),
         child: Text(
-          'BP reference table & classification: National High Blood Pressure\n'
-          'Education Program (NHBPEP) 4th Report on the Diagnosis, Evaluation,\n'
-          'and Treatment of High Blood Pressure in Children and Adolescents.\n'
-          'Pediatrics. 2004;114(2 Suppl 4th Report):555–576.',
+          'Flynn JT, Kaelber DC, Baker-Smith CM, et al. Clinical Practice\n'
+          'Guideline for Screening and Management of High Blood Pressure\n'
+          'in Children and Adolescents. Pediatrics. 2017;140(3):e20171904.',
           style: TextStyle(color: cs.onSurface.withValues(alpha: 0.6), fontSize: 11, height: 1.5),
         ),
+      );
+    });
+  }
+
+  // ── shared helpers ──
+  Widget _sectionLabel(String text) => Builder(builder: (context) => Text(text,
+      style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface)));
+
+  Widget _cell(String t, {bool header = false, bool bold = false, Color? color}) => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+        child: Text(t,
+            textAlign: header ? TextAlign.center : TextAlign.start,
+            style: TextStyle(fontSize: header ? 11 : 12, fontWeight: header || bold ? FontWeight.bold : FontWeight.normal, color: header ? Colors.white : color)),
+      );
+
+  Widget _stepper({
+    required String label,
+    required int value,
+    required int min,
+    required int max,
+    required String hint,
+    required ValueChanged<int> onChanged,
+    TextEditingController? controller,
+  }) {
+    return Builder(builder: (context) {
+      final cs = Theme.of(context).colorScheme;
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: cs.onSurface)),
+          const SizedBox(height: 6),
+          Row(children: [
+            IconButton(
+              icon: const Icon(Icons.remove_circle_outline),
+              color: value > min ? cs.primary : cs.onSurface.withValues(alpha: 0.3),
+              onPressed: value > min ? () {
+                final n = value - 1;
+                onChanged(n);
+                controller?.text = n.toString();
+              } : null,
+            ),
+            Expanded(
+              child: TextFormField(
+                controller: controller,
+                keyboardType: TextInputType.number,
+                textAlign: TextAlign.center,
+                decoration: InputDecoration(labelText: hint, isDense: true),
+                onChanged: (v) {
+                  final parsed = int.tryParse(v);
+                  if (parsed != null && parsed >= min && parsed <= max) onChanged(parsed);
+                },
+              ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.add_circle_outline),
+              color: value < max ? cs.primary : cs.onSurface.withValues(alpha: 0.3),
+              onPressed: value < max ? () {
+                final n = value + 1;
+                onChanged(n);
+                controller?.text = n.toString();
+              } : null,
+            ),
+          ]),
+        ],
       );
     });
   }
