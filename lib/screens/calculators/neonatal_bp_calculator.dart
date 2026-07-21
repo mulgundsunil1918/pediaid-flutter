@@ -433,9 +433,6 @@ class _NeonatalBPCalculatorState extends State<NeonatalBPCalculator> {
   }
 
   Widget _buildQuickBedsideCard() {
-    final start = (_pma - 2).clamp(24, 46);
-    final end = (_pma + 2).clamp(24, 46);
-
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
@@ -451,7 +448,7 @@ class _NeonatalBPCalculatorState extends State<NeonatalBPCalculator> {
             children: const [
               Icon(Icons.info_outline, color: Color(0xFFF5A623), size: 18),
               SizedBox(width: 8),
-              Text('NEARBY WEEKS REFERENCE',
+              Text('FULL BP REFERENCE — 24 TO 46 WK',
                   style: TextStyle(
                       fontSize: 10,
                       fontWeight: FontWeight.w700,
@@ -459,56 +456,68 @@ class _NeonatalBPCalculatorState extends State<NeonatalBPCalculator> {
                       color: Color(0xFFF5A623))),
             ],
           ),
-          const SizedBox(height: 10),
-          Table(
-            border: TableBorder.all(
-                color: Theme.of(context).colorScheme.outline,
-                width: 0.5,
-                borderRadius: BorderRadius.circular(6)),
-            columnWidths: const {
-              0: FlexColumnWidth(1),
-              1: FlexColumnWidth(1),
-              2: FlexColumnWidth(1),
-              3: FlexColumnWidth(1),
-            },
-            children: [
-              TableRow(
-                decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary),
-                children: [
-                  _tc('PMA', isHeader: true),
-                  _tc('SBP 5th', isHeader: true),
-                  _tc('SBP 50th', isHeader: true),
-                  _tc('SBP 95th', isHeader: true),
-                ],
-              ),
-              for (int w = start; w <= end; w++)
-                TableRow(
-                  decoration: BoxDecoration(
-                    color: w == _pma
-                        ? const Color(0xFFE6F5F3)
-                        : (w % 2 == 0
-                            ? Theme.of(context).colorScheme.surface
-                            : Theme.of(context).cardColor),
-                  ),
-                  children: [
-                    _tc('$w wk',
-                        isBold: w == _pma,
-                        color: w == _pma ? const Color(0xFF0d7a6e) : null),
-                    _tc('${_neoData[w]!['S']![0]}',
-                        isBold: w == _pma,
-                        color: w == _pma ? const Color(0xFF0d7a6e) : null),
-                    _tc('${_neoData[w]!['S']![1]}',
-                        isBold: w == _pma,
-                        color: w == _pma ? const Color(0xFF0d7a6e) : null),
-                    _tc('${_neoData[w]!['S']![2]}',
-                        isBold: w == _pma,
-                        color: w == _pma ? const Color(0xFF0d7a6e) : null),
-                  ],
-                ),
-            ],
-          ),
+          const SizedBox(height: 6),
+          Text('Values shown as 5th / 50th / 95th centile (mmHg)',
+              style: TextStyle(
+                  fontSize: 10.5,
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.55))),
+          const SizedBox(height: 8),
+          _fullReferenceTable(_pma),
         ],
       ),
+    );
+  }
+
+  // Full Zubrow table (24-46 wk), all three parameters, highlighted at the
+  // given PMA. Shared by quick mode and calculator mode.
+  Widget _fullReferenceTable(int highlightPma) {
+    String trip(List<int> c) => '${c[0]}/${c[1]}/${c[2]}';
+    return Table(
+      border: TableBorder.all(
+          color: Theme.of(context).colorScheme.outline,
+          width: 0.5,
+          borderRadius: BorderRadius.circular(6)),
+      columnWidths: const {
+        0: FlexColumnWidth(0.8),
+        1: FlexColumnWidth(1.1),
+        2: FlexColumnWidth(1.1),
+        3: FlexColumnWidth(1.1),
+      },
+      children: [
+        TableRow(
+          decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary),
+          children: [
+            _tc('PMA', isHeader: true),
+            _tc('SBP', isHeader: true),
+            _tc('DBP', isHeader: true),
+            _tc('MAP', isHeader: true),
+          ],
+        ),
+        for (int w = 24; w <= 46; w++)
+          TableRow(
+            decoration: BoxDecoration(
+              color: w == highlightPma
+                  ? const Color(0xFFE6F5F3)
+                  : (w % 2 == 0
+                      ? Theme.of(context).colorScheme.surface
+                      : Theme.of(context).cardColor),
+            ),
+            children: [
+              _tc('$w wk',
+                  isBold: w == highlightPma,
+                  color: w == highlightPma ? const Color(0xFF0d7a6e) : null),
+              _tc(trip(_neoData[w]!['S']!),
+                  isBold: w == highlightPma,
+                  color: w == highlightPma ? const Color(0xFF0d7a6e) : null),
+              _tc(trip(_neoData[w]!['D']!),
+                  isBold: w == highlightPma,
+                  color: w == highlightPma ? const Color(0xFF0d7a6e) : null),
+              _tc(trip(_neoData[w]!['M']!),
+                  isBold: w == highlightPma,
+                  color: w == highlightPma ? const Color(0xFF0d7a6e) : null),
+            ],
+          ),
+      ],
     );
   }
 
@@ -906,9 +915,6 @@ class _NeonatalBPCalculatorState extends State<NeonatalBPCalculator> {
   }
 
   Widget _buildBedsideCard() {
-    final start = (_calcPMA - 2).clamp(24, 46);
-    final end = (_calcPMA + 2).clamp(24, 46);
-
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
@@ -924,7 +930,7 @@ class _NeonatalBPCalculatorState extends State<NeonatalBPCalculator> {
             children: const [
               Icon(Icons.info_outline, color: Color(0xFFF5A623), size: 18),
               SizedBox(width: 8),
-              Text('BEDSIDE QUICK REFERENCE',
+              Text('FULL BP REFERENCE — 24 TO 46 WK',
                   style: TextStyle(
                       fontSize: 10,
                       fontWeight: FontWeight.w700,
@@ -932,68 +938,13 @@ class _NeonatalBPCalculatorState extends State<NeonatalBPCalculator> {
                       color: Color(0xFFF5A623))),
             ],
           ),
-          const SizedBox(height: 10),
-          Text('SBP centiles — PMA $start–$end weeks:',
-              style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w600,
-                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6))),
           const SizedBox(height: 6),
-          Table(
-            border: TableBorder.all(
-                color: Theme.of(context).colorScheme.outline,
-                width: 0.5,
-                borderRadius: BorderRadius.circular(6)),
-            columnWidths: const {
-              0: FlexColumnWidth(1),
-              1: FlexColumnWidth(1),
-              2: FlexColumnWidth(1),
-              3: FlexColumnWidth(1),
-            },
-            children: [
-              TableRow(
-                decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary),
-                children: [
-                  _tc('PMA', isHeader: true),
-                  _tc('SBP 5th', isHeader: true),
-                  _tc('SBP 50th', isHeader: true),
-                  _tc('SBP 95th', isHeader: true),
-                ],
-              ),
-              for (int w = start; w <= end; w++)
-                TableRow(
-                  decoration: BoxDecoration(
-                    color: w == _calcPMA
-                        ? const Color(0xFFE6F5F3)
-                        : (w % 2 == 0
-                            ? Theme.of(context).colorScheme.surface
-                            : Theme.of(context).cardColor),
-                  ),
-                  children: [
-                    _tc('$w wk',
-                        isBold: w == _calcPMA,
-                        color: w == _calcPMA
-                            ? const Color(0xFF0d7a6e)
-                            : null),
-                    _tc('${_neoData[w]!['S']![0]}',
-                        isBold: w == _calcPMA,
-                        color: w == _calcPMA
-                            ? const Color(0xFF0d7a6e)
-                            : null),
-                    _tc('${_neoData[w]!['S']![1]}',
-                        isBold: w == _calcPMA,
-                        color: w == _calcPMA
-                            ? const Color(0xFF0d7a6e)
-                            : null),
-                    _tc('${_neoData[w]!['S']![2]}',
-                        isBold: w == _calcPMA,
-                        color: w == _calcPMA
-                            ? const Color(0xFF0d7a6e)
-                            : null),
-                  ],
-                ),
-            ],
-          ),
+          Text('Values shown as 5th / 50th / 95th centile (mmHg)',
+              style: TextStyle(
+                  fontSize: 10.5,
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.55))),
+          const SizedBox(height: 8),
+          _fullReferenceTable(_calcPMA),
           const SizedBox(height: 10),
           Container(
             width: double.infinity,
