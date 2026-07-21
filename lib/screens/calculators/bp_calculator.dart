@@ -545,7 +545,7 @@ class _BPCalculatorState extends State<BPCalculator> {
           children: [
             Text('BP Calculator',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            Text('Children · AAP BP Guidelines 2017',
+            Text('Children · NHBPEP 4th Report 2004',
                 style: TextStyle(fontSize: 11)),
           ],
         ),
@@ -558,6 +558,8 @@ class _BPCalculatorState extends State<BPCalculator> {
             _buildInputCard(),
             if (_calculated) ...[
               const SizedBox(height: 16),
+              _buildCategoryBanner(),
+              const SizedBox(height: 12),
               _buildBPResultCards(),
               const SizedBox(height: 12),
               _buildCentileStatement(),
@@ -727,6 +729,64 @@ class _BPCalculatorState extends State<BPCalculator> {
   }
 
   // ── New results: two BP result boxes side by side ──────────────────────────
+  // ── 4th Report classification ──────────────────────────────────────────────
+  // Category is driven by whichever of SBP/DBP falls in the higher band.
+  //   Normal        : both < 90th percentile
+  //   Prehypertension: 90th–<95th, OR BP ≥ 120/80 even if below 90th
+  //   Stage 1 HTN   : 95th up to (99th + 5 mmHg)
+  //   Stage 2 HTN   : > 99th + 5 mmHg
+  int _bpCategoryIndex() {
+    final htIdx = _cmToHeightPercentileIndex(_heightCm, _age, _isBoy ? 'boy' : 'girl');
+    final ageData = (_isBoy ? _bpBoys : _bpGirls)[_age]!;
+    int catFor(int val, int p90, int p95, int p99) {
+      if (val > p99 + 5) return 3; // Stage 2
+      if (val >= p95) return 2;    // Stage 1
+      if (val >= p90) return 1;    // Prehypertension
+      return 0;                    // Normal
+    }
+    final s = catFor(_enteredSBP, ageData['90th']!['sbp']![htIdx],
+        ageData['95th']!['sbp']![htIdx], ageData['99th']!['sbp']![htIdx]);
+    final d = catFor(_enteredDBP, ageData['90th']!['dbp']![htIdx],
+        ageData['95th']!['dbp']![htIdx], ageData['99th']!['dbp']![htIdx]);
+    var cat = s > d ? s : d;
+    // Adolescent absolute rule: ≥120/80 is at least prehypertension.
+    if (cat < 1 && (_enteredSBP >= 120 || _enteredDBP >= 80)) cat = 1;
+    return cat;
+  }
+
+  Widget _buildCategoryBanner() {
+    const cats = [
+      ('Normal', Color(0xFF2DBD8C), 'Both SBP and DBP below the 90th percentile.'),
+      ('Prehypertension', Color(0xFFD4820A), '90th–<95th percentile (or ≥120/80 mmHg).'),
+      ('Stage 1 Hypertension', Color(0xFFF97316), '95th percentile up to 99th + 5 mmHg. Confirm on repeat visits.'),
+      ('Stage 2 Hypertension', Color(0xFFE53935), 'Above 99th percentile + 5 mmHg. Prompt evaluation warranted.'),
+    ];
+    final (label, color, desc) = cats[_bpCategoryIndex()];
+    return Builder(builder: (context) {
+      final cs = Theme.of(context).colorScheme;
+      return Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.10),
+          border: Border.all(color: color.withValues(alpha: 0.5)),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('CLASSIFICATION',
+                style: TextStyle(color: cs.onSurface.withValues(alpha: 0.5), fontSize: 10, fontWeight: FontWeight.w700, letterSpacing: 0.8)),
+            const SizedBox(height: 4),
+            Text(label, style: TextStyle(color: color, fontSize: 20, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 4),
+            Text(desc, style: TextStyle(color: cs.onSurface.withValues(alpha: 0.75), fontSize: 12, height: 1.4)),
+          ],
+        ),
+      );
+    });
+  }
+
   Widget _buildBPResultCards() {
     final htIdx = _cmToHeightPercentileIndex(_heightCm, _age, _isBoy ? 'boy' : 'girl');
     final data = _isBoy ? _bpBoys : _bpGirls;
@@ -826,12 +886,10 @@ class _BPCalculatorState extends State<BPCalculator> {
   }
 
   Widget _buildHypotensionInfo() {
-    final htIdx = _cmToHeightPercentileIndex(_heightCm, _age, _isBoy ? 'boy' : 'girl');
-    final data = _isBoy ? _bpBoys : _bpGirls;
-    final ageData = data[_age]!;
-    final fifth5thSBP = ageData['50th']!['sbp']![htIdx] - 15; // approximate 5th centile
-    final clinicalMin = 70 + (2 * _age);
-    final isHypo = _enteredSBP < fifth5thSBP || _enteredSBP < clinicalMin;
+    // PALS minimum acceptable SBP for age (5th percentile approximation):
+    //   < 1 mo: 60 · 1-12 mo: 70 · 1-10 yr: 70 + 2×age · > 10 yr: 90
+    final int clinicalMin = _age <= 10 ? 70 + (2 * _age) : 90;
+    final isHypo = _enteredSBP < clinicalMin;
 
     return Builder(builder: (context) {
       final cs = Theme.of(context).colorScheme;
@@ -849,13 +907,13 @@ class _BPCalculatorState extends State<BPCalculator> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Hypotension Reference', style: TextStyle(color: amber, fontSize: 12, fontWeight: FontWeight.bold)),
+                Text('Hypotension Reference (PALS)', style: TextStyle(color: amber, fontSize: 12, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 6),
-                Text('Approx. 5th centile SBP (age $_age, ${_isBoy ? 'boy' : 'girl'}, ${_heightCm.toStringAsFixed(0)} cm): ~$fifth5thSBP mmHg',
+                Text('Minimum acceptable SBP for age $_age: $clinicalMin mmHg',
                     style: TextStyle(color: cs.onSurface, fontSize: 12)),
                 const SizedBox(height: 4),
-                Text('Clinical minimum (70 + 2×age): $clinicalMin mmHg',
-                    style: TextStyle(color: cs.onSurface, fontSize: 12)),
+                Text(_age <= 10 ? '1–10 yr: 70 + (2 × age in years)' : '> 10 yr: fixed 90 mmHg',
+                    style: TextStyle(color: cs.onSurface.withValues(alpha: 0.7), fontSize: 11)),
               ],
             ),
           ),
@@ -872,8 +930,8 @@ class _BPCalculatorState extends State<BPCalculator> {
                 children: [
                   const Icon(Icons.warning_rounded, color: red, size: 18),
                   const SizedBox(width: 8),
-                  const Expanded(child: Text('SBP below 5th centile — assess for hypotension',
-                      style: TextStyle(color: red, fontSize: 13, fontWeight: FontWeight.w600))),
+                  Expanded(child: Text('SBP below the PALS minimum ($clinicalMin mmHg) — assess for hypotension',
+                      style: const TextStyle(color: red, fontSize: 13, fontWeight: FontWeight.w600))),
                 ],
               ),
             ),
@@ -906,7 +964,10 @@ class _BPCalculatorState extends State<BPCalculator> {
           borderRadius: BorderRadius.circular(10),
         ),
         child: Text(
-          'Flynn JT et al. AAP Clinical Practice Guideline.\nPediatrics. 2017;140(3):e20171904.\nData: NHBPEP 4th Report. Pediatrics. 2004;114(2 Suppl):555-576.',
+          'BP reference table & classification: National High Blood Pressure\n'
+          'Education Program (NHBPEP) 4th Report on the Diagnosis, Evaluation,\n'
+          'and Treatment of High Blood Pressure in Children and Adolescents.\n'
+          'Pediatrics. 2004;114(2 Suppl 4th Report):555–576.',
           style: TextStyle(color: cs.onSurface.withValues(alpha: 0.6), fontSize: 11, height: 1.5),
         ),
       );
