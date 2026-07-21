@@ -506,29 +506,26 @@ class _BPCalculatorState extends State<BPCalculator> {
   Widget _buildBPResultCards() {
     final col = _heightColIndex();
     final bp = _bp;
-    final sbpText = _centileText(_enteredSBP, bp.sbp90[col], bp.sbp95[col]);
-    final dbpText = _centileText(_enteredDBP, bp.dbp90[col], bp.dbp95[col]);
+    final sbp = _centileBand(_enteredSBP, bp.sbp50[col], bp.sbp90[col], bp.sbp95[col]);
+    final dbp = _centileBand(_enteredDBP, bp.dbp50[col], bp.dbp90[col], bp.dbp95[col]);
     return Row(
       children: [
-        Expanded(child: _bpBox('Systolic', '$_enteredSBP mmHg', sbpText, _boxColor(sbpText))),
+        Expanded(child: _bpBox('Systolic', '$_enteredSBP mmHg', sbp.$1, sbp.$2)),
         const SizedBox(width: 12),
-        Expanded(child: _bpBox('Diastolic', '$_enteredDBP mmHg', dbpText, _boxColor(dbpText))),
+        Expanded(child: _bpBox('Diastolic', '$_enteredDBP mmHg', dbp.$1, dbp.$2)),
       ],
     );
   }
 
-  String _centileText(int v, int p90, int p95) {
-    if (v >= p95 + 12) return '≥95th + 12 mmHg';
-    if (v >= p95) return '95th–(95th+12)';
-    if (v >= p90) return '90th–95th';
-    return '<90th centile';
-  }
-
-  Color _boxColor(String t) {
-    if (t.contains('+ 12')) return const Color(0xFFE53935);
-    if (t.contains('95th–(')) return const Color(0xFFF97316);
-    if (t.contains('90th–95th')) return const Color(0xFFD4820A);
-    return const Color(0xFF2DBD8C);
+  // Which centile band a reading falls in, anchored to the table's own 50th /
+  // 90th / 95th values (and the derived 95th+12 Stage-2 line).
+  (String, Color) _centileBand(int v, int p50, int p90, int p95) {
+    const green = Color(0xFF2DBD8C), amber = Color(0xFFD4820A), orange = Color(0xFFF97316), red = Color(0xFFE53935);
+    if (v >= p95 + 12) return ('≥ 95th + 12 mmHg', red);
+    if (v >= p95) return ('95th–(95th + 12)', orange);
+    if (v >= p90) return ('90th–95th centile', amber);
+    if (v >= p50) return ('50th–90th centile', green);
+    return ('< 50th centile', green);
   }
 
   Widget _bpBox(String label, String value, String centile, Color color) {
