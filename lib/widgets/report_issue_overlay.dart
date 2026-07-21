@@ -5,10 +5,16 @@ import 'package:http/http.dart' as http;
 import 'package:package_info_plus/package_info_plus.dart';
 import '../services/auth_service.dart';
 
+/// Root navigator key — set on MaterialApp.navigatorKey in main.dart.
+/// The overlay lives ABOVE the Navigator (MaterialApp.builder wraps it),
+/// so its own BuildContext cannot reach a Navigator; the sheet must be
+/// pushed through this key instead.
+final GlobalKey<NavigatorState> reportNavigatorKey = GlobalKey<NavigatorState>();
+
 /// Wraps the whole app (via `MaterialApp.builder`) with a small floating
-/// "report an issue" button that appears on every screen — calculators,
-/// guides, lab reference, formulary, everything — without touching any of
-/// those 140+ screen files individually.
+/// "Report" button that appears on every screen — calculators, guides,
+/// lab reference, formulary, everything — without touching any of those
+/// 140+ screen files individually.
 class ReportIssueOverlay extends StatelessWidget {
   final Widget child;
   const ReportIssueOverlay({super.key, required this.child});
@@ -59,15 +65,14 @@ class _ReportFab extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        borderRadius: BorderRadius.circular(24),
-        onTap: () => _openSheet(context),
+        borderRadius: BorderRadius.circular(20),
+        onTap: _openSheet,
         child: Container(
-          width: 40,
-          height: 40,
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           decoration: BoxDecoration(
-            color: cs.surface.withValues(alpha: 0.85),
-            shape: BoxShape.circle,
-            border: Border.all(color: cs.outline.withValues(alpha: 0.3)),
+            color: cs.surface.withValues(alpha: 0.92),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: cs.outline.withValues(alpha: 0.35)),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.12),
@@ -76,19 +81,34 @@ class _ReportFab extends StatelessWidget {
               ),
             ],
           ),
-          child: Icon(Icons.flag_outlined, size: 19, color: cs.onSurface.withValues(alpha: 0.65)),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.flag_outlined, size: 15, color: cs.onSurface.withValues(alpha: 0.7)),
+              const SizedBox(width: 5),
+              Text('Report',
+                  style: TextStyle(
+                      fontSize: 12.5,
+                      fontWeight: FontWeight.w600,
+                      color: cs.onSurface.withValues(alpha: 0.75))),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  void _openSheet(BuildContext context) {
+  void _openSheet() {
+    // Must go through the root navigator key — this widget sits above the
+    // Navigator, so showModalBottomSheet(context) would find no Navigator
+    // and silently fail (the original "button does nothing" bug).
+    final nav = reportNavigatorKey.currentState;
+    if (nav == null) return;
     final screenGuess = _guessScreenTitle();
-    showModalBottomSheet(
-      context: context,
+    nav.push(ModalBottomSheetRoute(
       isScrollControlled: true,
       builder: (_) => _ReportSheet(initialScreen: screenGuess),
-    );
+    ));
   }
 }
 
@@ -145,8 +165,11 @@ class _ReportSheetState extends State<_ReportSheet> {
 
     if (!mounted) return;
     setState(() => _sending = false);
+    // Grab the messenger BEFORE popping — after pop this context is
+    // deactivated and ScaffoldMessenger.of(context) would throw.
+    final messenger = ScaffoldMessenger.of(context);
     Navigator.of(context).pop();
-    ScaffoldMessenger.of(context).showSnackBar(
+    messenger.showSnackBar(
       SnackBar(
         content: Text(ok
             ? 'Thanks — your report was sent.'

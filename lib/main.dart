@@ -119,6 +119,9 @@ class PediAidApp extends StatelessWidget {
       title: 'PediAid',
       debugShowCheckedModeBanner: false,
       scaffoldMessengerKey: rootMessengerKey,
+      // Lets the report-issue overlay (which lives above the Navigator via
+      // `builder`) push its bottom sheet onto the root navigator.
+      navigatorKey: reportNavigatorKey,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: themeProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light,
