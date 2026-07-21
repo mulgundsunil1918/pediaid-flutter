@@ -348,7 +348,7 @@ class _DoubleVolumeExchangeState extends State<DoubleVolumeExchange>
           const SizedBox(height: 6),
           const Text(
             'This is a high-risk procedure requiring NICU expertise, informed consent, and immediate resuscitation capability. '
-            'Procedure time: Minimum 2 hours (preferably 1.5-2 hours). Complete all calculations before starting.',
+            'Recommended procedure time is about 1.5-2 hours. Complete all calculations before starting.',
             style: TextStyle(fontSize: 12, color: Color(0xFF78350f), height: 1.5),
           ),
         ],
@@ -621,13 +621,20 @@ class _DoubleVolumeExchangeState extends State<DoubleVolumeExchange>
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: _danger.withValues(alpha: .08),
-                    border: Border.all(color: _danger.withValues(alpha: .4)),
+                    color: const Color(0xFFf1f5f9),
+                    border: Border.all(color: const Color(0xFFcbd5e1)),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Text(
-                    '⚠️ CRITICAL: Total procedure time must be 1.5-2 hours. Do NOT exceed 2 hours due to risk of NEC, infection, and hemodynamic instability.',
-                    style: TextStyle(fontSize: 11.5, color: _danger, height: 1.5),
+                  child: Text(
+                    'ℹ️ Guideline recommendation: aim to complete the exchange in about '
+                    '1.5–2 hours where feasible. The total above assumes 5 min per cycle — '
+                    'pace each cycle according to the baby\'s stability and your unit\'s practice; '
+                    'prolonged exchanges carry higher risk of NEC, infection, and hemodynamic instability.',
+                    style: TextStyle(
+                      fontSize: 11.5,
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.75),
+                      height: 1.5,
+                    ),
                   ),
                 ),
               ],
