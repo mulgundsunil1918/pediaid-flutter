@@ -83,9 +83,9 @@ class BPHubScreen extends StatelessWidget {
               tag: 'INFANT',
               tagColor: cs.primary,
               details: const [
+                '📈 50th · 90th · 95th centiles',
                 '🩺 Hypotension screen (<70 mmHg)',
                 '📋 Second Task Force 1987',
-                '🚧 Percentile data pending',
               ],
             ),
             const SizedBox(height: 14),

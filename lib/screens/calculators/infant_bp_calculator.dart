@@ -173,7 +173,7 @@ class _InfantBPCalculatorState extends State<InfantBPCalculator> {
             const SizedBox(height: 16),
             _numField('Systolic BP (mmHg)', _sbpCtrl, 'e.g. 85'),
             const SizedBox(height: 14),
-            _numField('Diastolic BP (mmHg) — optional', _dbpCtrl, 'recorded, not yet classified'),
+            _numField('Diastolic BP (mmHg) — optional', _dbpCtrl, 'e.g. 55'),
             const SizedBox(height: 20),
             SizedBox(
               width: double.infinity,
@@ -269,29 +269,112 @@ class _InfantBPCalculatorState extends State<InfantBPCalculator> {
           const SizedBox(height: 6),
           Text('PALS hypotension floor, infant 1–12 months: SBP < $infantHypotensionSbp mmHg.',
               style: TextStyle(color: cs.onSurface.withValues(alpha: 0.55), fontSize: 11.5, fontStyle: FontStyle.italic)),
-          if (_enteredDBP != null) ...[
-            const SizedBox(height: 8),
-            Text('Diastolic recorded: $_enteredDBP mmHg (no verified percentile reference for this age band yet).',
-                style: TextStyle(color: cs.onSurface.withValues(alpha: 0.55), fontSize: 11.5)),
-          ],
         ],
       ),
     );
   }
 
-  // ── Percentile result (only reachable when infantBpDataReady == true) ──
+  // ── Percentile classification (Second Task Force 1987) ──
+  int _bandFor(int v, int p90, int p95) {
+    if (v >= p95) return 2; // hypertension
+    if (v >= p90) return 1; // elevated / high-normal
+    return 0;               // normal
+  }
+
+  String _bandLabel(int v, int p90, int p95) {
+    if (v >= p95) return '≥ 95th centile';
+    if (v >= p90) return '90th–95th centile';
+    return '< 90th centile';
+  }
+
   Widget _percentileResult() {
-    // Placeholder for the future percentile layer. When infant_bp_1987_data.dart
-    // is populated and infantBpDataReady flips true, build the AAP-style
-    // classification here using infantBp1987[_months][sex].
-    final row = infantBp1987[_months]?[_isBoy ? 'boy' : 'girl'];
     final cs = Theme.of(context).colorScheme;
+    final row = infantBp1987[_months]?[_isBoy ? 'boy' : 'girl'];
     if (row == null || !row.isPopulated) return const SizedBox.shrink();
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(color: cs.surface, border: Border.all(color: cs.outline), borderRadius: BorderRadius.circular(10)),
-      child: Text('Percentile classification — Second Task Force 1987 (age $_months mo).',
-          style: TextStyle(color: cs.onSurface, fontSize: 13, fontWeight: FontWeight.w600)),
+    final s50 = row.sbp50!, s90 = row.sbp90!, s95 = row.sbp95!;
+    final d50 = row.dbp50!, d90 = row.dbp90!, d95 = row.dbp95!;
+    final sCat = _bandFor(_enteredSBP, s90, s95);
+    final dCat = _enteredDBP != null ? _bandFor(_enteredDBP!, d90, d95) : 0;
+    final cat = sCat > dCat ? sCat : dCat;
+
+    const cats = [
+      ('Normal BP', Color(0xFF2DBD8C), 'Below the 90th percentile for age & sex.'),
+      ('Elevated BP', Color(0xFFD4820A), '90th–<95th percentile (high-normal). Recheck.'),
+      ('Hypertension', Color(0xFFE53935), '≥ 95th percentile. Confirm on repeated visits.'),
+    ];
+    final (label, color, desc) = cats[cat];
+
+    TableRow trow(String p, int sbp, int dbp, [bool bold = false]) => TableRow(children: [
+          _tCell(p, bold: bold), _tCell('$sbp', bold: bold), _tCell('$dbp', bold: bold),
+        ]);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: color.withValues(alpha: 0.10),
+            border: Border.all(color: color.withValues(alpha: 0.5)),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('TASK FORCE 1987 CLASSIFICATION',
+                  style: TextStyle(color: cs.onSurface.withValues(alpha: 0.5), fontSize: 10, fontWeight: FontWeight.w700, letterSpacing: 0.6)),
+              const SizedBox(height: 4),
+              Text(label, style: TextStyle(color: color, fontSize: 21, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 4),
+              Text(desc, style: TextStyle(color: cs.onSurface.withValues(alpha: 0.78), fontSize: 12.5, height: 1.4)),
+              const SizedBox(height: 8),
+              Text('Systolic $_enteredSBP → ${_bandLabel(_enteredSBP, s90, s95)}',
+                  style: TextStyle(color: cs.onSurface, fontSize: 12.5)),
+              if (_enteredDBP != null)
+                Text('Diastolic $_enteredDBP → ${_bandLabel(_enteredDBP!, d90, d95)}',
+                    style: TextStyle(color: cs.onSurface, fontSize: 12.5))
+              else
+                Text('Diastolic not entered — classified on systolic only.',
+                    style: TextStyle(color: cs.onSurface.withValues(alpha: 0.6), fontSize: 11.5)),
+            ],
+          ),
+        ),
+        const SizedBox(height: 12),
+        Container(
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(color: cs.surface, border: Border.all(color: cs.outline), borderRadius: BorderRadius.circular(10)),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Reference at $_months months, ${_isBoy ? 'boy' : 'girl'}',
+                  style: TextStyle(color: cs.onSurface, fontSize: 13, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 8),
+              Table(
+                border: TableBorder.all(color: cs.outline, width: 0.5, borderRadius: BorderRadius.circular(6)),
+                columnWidths: const {0: FlexColumnWidth(1.7), 1: FlexColumnWidth(1), 2: FlexColumnWidth(1)},
+                children: [
+                  TableRow(decoration: BoxDecoration(color: cs.primary), children: [
+                    _tCell('Percentile', header: true), _tCell('SBP', header: true), _tCell('DBP', header: true),
+                  ]),
+                  trow('50th', s50, d50),
+                  trow('90th (Elevated)', s90, d90),
+                  trow('95th (Hypertension)', s95, d95, true),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _tCell(String t, {bool header = false, bool bold = false}) {
+    final cs = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+      child: Text(t,
+          textAlign: header ? TextAlign.center : TextAlign.start,
+          style: TextStyle(fontSize: header ? 11 : 12, fontWeight: header || bold ? FontWeight.bold : FontWeight.normal, color: header ? Colors.white : cs.onSurface)),
     );
   }
 
@@ -314,9 +397,10 @@ class _InfantBPCalculatorState extends State<InfantBPCalculator> {
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(color: cs.surface, border: Border.all(color: cs.outline), borderRadius: BorderRadius.circular(10)),
       child: Text(
-        'Report of the Second Task Force on Blood Pressure Control in Children.\n'
-        'Pediatrics. 1987;79(1):1–25. (Infant 1–12 mo norms are a plotted curve,\n'
-        'not a numeric table — percentile layer pending digitisation.)\n'
+        'Percentiles: Report of the Second Task Force on Blood Pressure Control\n'
+        'in Children. Pediatrics. 1987;79(1):1–25 (Fig 1 & 2 curves).\n'
+        'Digitised by Lee Yingtong Li (2025), CC BY-SA 4.0 (yingtongli.me),\n'
+        'validated against the report’s 90th-centile table.\n'
         'Hypotension floor: Pediatric Advanced Life Support (PALS).',
         style: TextStyle(color: cs.onSurface.withValues(alpha: 0.6), fontSize: 11, height: 1.5),
       ),
