@@ -98,6 +98,10 @@ class _InfantBPCalculatorState extends State<InfantBPCalculator> {
                 const SizedBox(height: 12),
                 _percentileResult(),
               ],
+              const SizedBox(height: 16),
+              _chartCard(),
+              const SizedBox(height: 16),
+              _studyCaveats(),
             ],
             const SizedBox(height: 14),
             _whichCardNote(),
@@ -317,6 +321,95 @@ class _InfantBPCalculatorState extends State<InfantBPCalculator> {
     );
   }
 
+  // ── Centile chart ──────────────────────────────────────────────────────
+  // Working chart against the one real number we have (the 70 mmHg
+  // hypotension floor): plots the patient's SBP across the 1–12 month axis
+  // with the sub-70 danger zone shaded. Percentile curves (50/90/95) draw
+  // automatically once infantBp1987 is populated and infantBpDataReady=true.
+  Widget _chartCard() {
+    final cs = Theme.of(context).colorScheme;
+    final hasCurves = infantBpDataReady;
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(color: cs.surface, border: Border.all(color: cs.outline), borderRadius: BorderRadius.circular(12)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Systolic BP vs age (1–12 months)',
+              style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: cs.onSurface)),
+          const SizedBox(height: 4),
+          Text(hasCurves
+                  ? 'Percentile curves: Second Task Force 1987.'
+                  : 'Percentile curves pending verified data — the red band and your patient’s point are real.',
+              style: TextStyle(fontSize: 11, color: cs.onSurface.withValues(alpha: 0.55))),
+          const SizedBox(height: 12),
+          SizedBox(
+            height: 240,
+            width: double.infinity,
+            child: CustomPaint(
+              painter: _InfantBpChartPainter(
+                month: _months,
+                sbp: _enteredSBP,
+                axis: cs.onSurface.withValues(alpha: 0.45),
+                textColor: cs.onSurface.withValues(alpha: 0.7),
+                grid: cs.onSurface.withValues(alpha: 0.12),
+                dataReady: hasCurves,
+                boy: _isBoy,
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+          Row(children: [
+            _legendDot(const Color(0xFFE53935)),
+            const SizedBox(width: 5),
+            Text('Hypotension zone (< $infantHypotensionSbp)', style: TextStyle(fontSize: 10.5, color: cs.onSurface.withValues(alpha: 0.65))),
+            const SizedBox(width: 14),
+            _legendDot(cs.primary),
+            const SizedBox(width: 5),
+            Text('This patient', style: TextStyle(fontSize: 10.5, color: cs.onSurface.withValues(alpha: 0.65))),
+          ]),
+        ],
+      ),
+    );
+  }
+
+  Widget _legendDot(Color c) => Container(width: 10, height: 10, decoration: BoxDecoration(color: c, shape: BoxShape.circle));
+
+  // ── Caveats & points of the study/chart (below results) ──
+  Widget _studyCaveats() {
+    final cs = Theme.of(context).colorScheme;
+    const points = [
+      'Source: Report of the Second Task Force on Blood Pressure Control in Children, Pediatrics 1987;79(1):1–25 — the reference AAP 2017 itself points to for infants 1–12 months (AAP 2017 publishes no infant data of its own).',
+      'The 1987 infant norms are presented as a PLOTTED CURVE (figure), not a numeric percentile table — so exact by-month values require digitising the figure or a cited textbook reproduction.',
+      'Original values were auscultatory/Doppler; today’s oscillometric monitors can read differently, especially diastolic.',
+      'Infant BP swings with state — crying, feeding, pain and wakefulness raise it. Measure calm/supine, right arm, and repeat.',
+      'Cuff size matters: bladder should encircle 80–100% of the arm circumference; a small cuff over-reads.',
+      'Only hard threshold shipped today: systolic < $infantHypotensionSbp mmHg = hypotension (PALS), for screening. A reading above 70 is NOT confirmed normal-for-age until the percentile layer is populated.',
+    ];
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(color: cs.surface, border: Border.all(color: cs.outline), borderRadius: BorderRadius.circular(12)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('About this reference — caveats',
+              style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: cs.onSurface)),
+          const SizedBox(height: 10),
+          ...points.map((p) => Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('•  ', style: TextStyle(fontSize: 12.5, color: cs.onSurface.withValues(alpha: 0.7))),
+                    Expanded(child: Text(p, style: TextStyle(fontSize: 12, color: cs.onSurface.withValues(alpha: 0.8), height: 1.4))),
+                  ],
+                ),
+              )),
+        ],
+      ),
+    );
+  }
+
   // ── stepper (matches the other BP calculators) ──
   Widget _stepper({
     required String label,
@@ -369,4 +462,123 @@ class _InfantBPCalculatorState extends State<InfantBPCalculator> {
       ],
     );
   }
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// Chart painter — SBP (y) vs age in months (x). Draws the real hypotension
+// zone + the patient's point now; percentile curves only when data exists.
+// ══════════════════════════════════════════════════════════════════════════
+class _InfantBpChartPainter extends CustomPainter {
+  final int month;
+  final int sbp;
+  final Color axis;
+  final Color textColor;
+  final Color grid;
+  final bool dataReady;
+  final bool boy;
+
+  _InfantBpChartPainter({
+    required this.month,
+    required this.sbp,
+    required this.axis,
+    required this.textColor,
+    required this.grid,
+    required this.dataReady,
+    required this.boy,
+  });
+
+  static const double yMin = 40, yMax = 120;
+  static const int xMin = 1, xMax = 12;
+  static const double hypo = 70;
+  static const Color red = Color(0xFFE53935);
+  static const Color primary = Color(0xFF26648E);
+
+  void _text(Canvas c, String s, Offset o, Color col, {double size = 9, bool right = false, bool center = false}) {
+    final tp = TextPainter(
+      text: TextSpan(text: s, style: TextStyle(color: col, fontSize: size)),
+      textDirection: TextDirection.ltr,
+    )..layout();
+    var dx = o.dx;
+    if (right) dx -= tp.width;
+    if (center) dx -= tp.width / 2;
+    tp.paint(c, Offset(dx, o.dy));
+  }
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    const left = 30.0, bottom = 26.0, top = 8.0, rightPad = 8.0;
+    final plotW = size.width - left - rightPad;
+    final plotH = size.height - top - bottom;
+    double xFor(double m) => left + (m - xMin) / (xMax - xMin) * plotW;
+    double yFor(double v) => top + (yMax - v) / (yMax - yMin) * plotH;
+
+    // Hypotension zone (below 70) — real.
+    canvas.drawRect(
+      Rect.fromLTRB(left, yFor(hypo), left + plotW, top + plotH),
+      Paint()..color = red.withValues(alpha: 0.10),
+    );
+
+    // Horizontal gridlines + y labels (40..120 step 10).
+    final gridPaint = Paint()..color = grid..strokeWidth = 0.6;
+    for (var v = 40; v <= 120; v += 10) {
+      final y = yFor(v.toDouble());
+      canvas.drawLine(Offset(left, y), Offset(left + plotW, y), gridPaint);
+      _text(canvas, '$v', Offset(left - 4, y - 6), textColor, right: true);
+    }
+
+    // X labels (months).
+    for (var m = xMin; m <= xMax; m++) {
+      _text(canvas, '$m', Offset(xFor(m.toDouble()), top + plotH + 6), textColor, center: true);
+    }
+    _text(canvas, 'Age (months)', Offset(left + plotW / 2, top + plotH + 15), textColor, center: true, size: 9);
+
+    // 70 mmHg hypotension line (dashed red) + label.
+    final y70 = yFor(hypo);
+    final linePaint = Paint()..color = red..strokeWidth = 1.4;
+    for (double x = left; x < left + plotW; x += 8) {
+      canvas.drawLine(Offset(x, y70), Offset(x + 4, y70), linePaint);
+    }
+    _text(canvas, '70 · hypotension floor', Offset(left + 4, y70 + 2), red, size: 9);
+
+    // Percentile curves (only when real data is present).
+    if (dataReady) {
+      final sex = boy ? 'boy' : 'girl';
+      void curve(int? Function(InfantBP) pick, Color col) {
+        final pts = <Offset>[];
+        for (var m = xMin; m <= xMax; m++) {
+          final row = infantBp1987[m]?[sex];
+          final v = row == null ? null : pick(row);
+          if (v != null) pts.add(Offset(xFor(m.toDouble()), yFor(v.toDouble())));
+        }
+        if (pts.length < 2) return;
+        final path = Path()..moveTo(pts.first.dx, pts.first.dy);
+        for (final p in pts.skip(1)) {
+          path.lineTo(p.dx, p.dy);
+        }
+        canvas.drawPath(path, Paint()..color = col..style = PaintingStyle.stroke..strokeWidth = 1.6);
+      }
+      curve((r) => r.sbp50, primary.withValues(alpha: 0.9));
+      curve((r) => r.sbp90, const Color(0xFFD4820A));
+      curve((r) => r.sbp95, red.withValues(alpha: 0.9));
+    }
+
+    // Plot frame.
+    canvas.drawRect(
+      Rect.fromLTRB(left, top, left + plotW, top + plotH),
+      Paint()..color = axis..style = PaintingStyle.stroke..strokeWidth = 1,
+    );
+
+    // Patient point.
+    final pm = month.clamp(xMin, xMax).toDouble();
+    final pv = sbp.clamp(yMin.toInt(), yMax.toInt()).toDouble();
+    final px = xFor(pm), py = yFor(pv);
+    final pointColor = sbp < hypo ? red : primary;
+    canvas.drawCircle(Offset(px, py), 5.5, Paint()..color = pointColor);
+    canvas.drawCircle(Offset(px, py), 5.5, Paint()..color = Colors.white..style = PaintingStyle.stroke..strokeWidth = 1.5);
+    _text(canvas, '$sbp', Offset(px + 8, py - 6), pointColor, size: 10);
+  }
+
+  @override
+  bool shouldRepaint(covariant _InfantBpChartPainter old) =>
+      old.month != month || old.sbp != sbp || old.dataReady != dataReady || old.boy != boy;
 }
