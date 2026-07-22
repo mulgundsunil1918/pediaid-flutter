@@ -408,58 +408,60 @@ class _InfantBPCalculatorState extends State<InfantBPCalculator> {
   }
 
   // ── Centile chart ──────────────────────────────────────────────────────
-  // Working chart against the one real number we have (the 70 mmHg
-  // hypotension floor): plots the patient's SBP across the 1–12 month axis
-  // with the sub-70 danger zone shaded. Percentile curves (50/90/95) draw
-  // automatically once infantBp1987 is populated and infantBpDataReady=true.
+  // Plots the SBP and DBP percentile families (50/90/95) across 1–12 months
+  // for the selected sex, with the patient's SBP (and DBP, if entered) marked
+  // and the sub-70 hypotension zone shaded. Curves come from the digitized
+  // 1987 Task Force data (see infant_bp_1987_data.dart).
   Widget _chartCard() {
     final cs = Theme.of(context).colorScheme;
-    final hasCurves = infantBpDataReady;
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(color: cs.surface, border: Border.all(color: cs.outline), borderRadius: BorderRadius.circular(12)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Systolic BP vs age (1–12 months)',
+          Text('Blood pressure vs age — ${_isBoy ? 'boys' : 'girls'} (1–12 months)',
               style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: cs.onSurface)),
           const SizedBox(height: 4),
-          Text(hasCurves
-                  ? 'Percentile curves: Second Task Force 1987.'
-                  : 'Percentile curves pending verified data — the red band and your patient’s point are real.',
+          Text('Percentile curves: Second Task Force 1987 (digitised). ● = this patient.',
               style: TextStyle(fontSize: 11, color: cs.onSurface.withValues(alpha: 0.55))),
           const SizedBox(height: 12),
           SizedBox(
-            height: 240,
+            height: 300,
             width: double.infinity,
             child: CustomPaint(
               painter: _InfantBpChartPainter(
                 month: _months,
                 sbp: _enteredSBP,
+                dbp: _enteredDBP ?? -1,
                 axis: cs.onSurface.withValues(alpha: 0.45),
                 textColor: cs.onSurface.withValues(alpha: 0.7),
                 grid: cs.onSurface.withValues(alpha: 0.12),
-                dataReady: hasCurves,
+                dataReady: infantBpDataReady,
                 boy: _isBoy,
               ),
             ),
           ),
           const SizedBox(height: 10),
-          Row(children: [
-            _legendDot(const Color(0xFFE53935)),
-            const SizedBox(width: 5),
-            Text('Hypotension zone (< $infantHypotensionSbp)', style: TextStyle(fontSize: 10.5, color: cs.onSurface.withValues(alpha: 0.65))),
-            const SizedBox(width: 14),
-            _legendDot(cs.primary),
-            const SizedBox(width: 5),
-            Text('This patient', style: TextStyle(fontSize: 10.5, color: cs.onSurface.withValues(alpha: 0.65))),
+          Wrap(spacing: 14, runSpacing: 6, children: [
+            _legendItem(const Color(0xFFE53935), '95th'),
+            _legendItem(const Color(0xFFD4820A), '90th'),
+            _legendItem(const Color(0xFF2196A6), '50th'),
+            _legendItem(const Color(0xFF26648E), 'This patient'),
           ]),
         ],
       ),
     );
   }
 
-  Widget _legendDot(Color c) => Container(width: 10, height: 10, decoration: BoxDecoration(color: c, shape: BoxShape.circle));
+  Widget _legendItem(Color c, String label) {
+    final cs = Theme.of(context).colorScheme;
+    return Row(mainAxisSize: MainAxisSize.min, children: [
+      Container(width: 14, height: 3, color: c),
+      const SizedBox(width: 5),
+      Text(label, style: TextStyle(fontSize: 10.5, color: cs.onSurface.withValues(alpha: 0.65))),
+    ]);
+  }
 
   // ── AAP status disclaimer ──
   Widget _aapStatusNote() {
@@ -584,12 +586,13 @@ class _InfantBPCalculatorState extends State<InfantBPCalculator> {
 }
 
 // ══════════════════════════════════════════════════════════════════════════
-// Chart painter — SBP (y) vs age in months (x). Draws the real hypotension
-// zone + the patient's point now; percentile curves only when data exists.
+// Chart painter — SBP & DBP percentile families (50/90/95) vs age in months,
+// with the patient's SBP/DBP points and the sub-70 hypotension zone.
 // ══════════════════════════════════════════════════════════════════════════
 class _InfantBpChartPainter extends CustomPainter {
   final int month;
   final int sbp;
+  final int dbp; // -1 = not entered
   final Color axis;
   final Color textColor;
   final Color grid;
@@ -599,6 +602,7 @@ class _InfantBpChartPainter extends CustomPainter {
   _InfantBpChartPainter({
     required this.month,
     required this.sbp,
+    required this.dbp,
     required this.axis,
     required this.textColor,
     required this.grid,
@@ -610,11 +614,13 @@ class _InfantBpChartPainter extends CustomPainter {
   static const int xMin = 1, xMax = 12;
   static const double hypo = 70;
   static const Color red = Color(0xFFE53935);
+  static const Color orange = Color(0xFFD4820A);
+  static const Color teal = Color(0xFF2196A6);
   static const Color primary = Color(0xFF26648E);
 
-  void _text(Canvas c, String s, Offset o, Color col, {double size = 9, bool right = false, bool center = false}) {
+  void _text(Canvas c, String s, Offset o, Color col, {double size = 9, bool right = false, bool center = false, bool bold = false}) {
     final tp = TextPainter(
-      text: TextSpan(text: s, style: TextStyle(color: col, fontSize: size)),
+      text: TextSpan(text: s, style: TextStyle(color: col, fontSize: size, fontWeight: bold ? FontWeight.bold : FontWeight.normal)),
       textDirection: TextDirection.ltr,
     )..layout();
     var dx = o.dx;
@@ -625,16 +631,16 @@ class _InfantBpChartPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    const left = 30.0, bottom = 26.0, top = 8.0, rightPad = 8.0;
+    const left = 30.0, bottom = 26.0, top = 10.0, rightPad = 8.0;
     final plotW = size.width - left - rightPad;
     final plotH = size.height - top - bottom;
     double xFor(double m) => left + (m - xMin) / (xMax - xMin) * plotW;
     double yFor(double v) => top + (yMax - v) / (yMax - yMin) * plotH;
 
-    // Hypotension zone (below 70) — real.
+    // Hypotension zone (below 70).
     canvas.drawRect(
       Rect.fromLTRB(left, yFor(hypo), left + plotW, top + plotH),
-      Paint()..color = red.withValues(alpha: 0.10),
+      Paint()..color = red.withValues(alpha: 0.08),
     );
 
     // Horizontal gridlines + y labels (40..120 step 10).
@@ -644,41 +650,50 @@ class _InfantBpChartPainter extends CustomPainter {
       canvas.drawLine(Offset(left, y), Offset(left + plotW, y), gridPaint);
       _text(canvas, '$v', Offset(left - 4, y - 6), textColor, right: true);
     }
-
-    // X labels (months).
+    // Vertical gridlines.
     for (var m = xMin; m <= xMax; m++) {
+      canvas.drawLine(Offset(xFor(m.toDouble()), top), Offset(xFor(m.toDouble()), top + plotH), gridPaint);
       _text(canvas, '$m', Offset(xFor(m.toDouble()), top + plotH + 6), textColor, center: true);
     }
-    _text(canvas, 'Age (months)', Offset(left + plotW / 2, top + plotH + 15), textColor, center: true, size: 9);
+    _text(canvas, 'Age (months)', Offset(left + plotW / 2, top + plotH + 15), textColor, center: true);
 
-    // 70 mmHg hypotension line (dashed red) + label.
+    // 70 mmHg hypotension line (dashed red).
     final y70 = yFor(hypo);
-    final linePaint = Paint()..color = red..strokeWidth = 1.4;
+    final dash = Paint()..color = red..strokeWidth = 1.2;
     for (double x = left; x < left + plotW; x += 8) {
-      canvas.drawLine(Offset(x, y70), Offset(x + 4, y70), linePaint);
+      canvas.drawLine(Offset(x, y70), Offset(x + 4, y70), dash);
     }
-    _text(canvas, '70 · hypotension floor', Offset(left + 4, y70 + 2), red, size: 9);
+    _text(canvas, '70 · hypotension', Offset(left + 3, y70 + 1), red, size: 8.5);
 
-    // Percentile curves (only when real data is present).
-    if (dataReady) {
-      final sex = boy ? 'boy' : 'girl';
-      void curve(int? Function(InfantBP) pick, Color col) {
-        final pts = <Offset>[];
-        for (var m = xMin; m <= xMax; m++) {
-          final row = infantBp1987[m]?[sex];
-          final v = row == null ? null : pick(row);
-          if (v != null) pts.add(Offset(xFor(m.toDouble()), yFor(v.toDouble())));
-        }
-        if (pts.length < 2) return;
-        final path = Path()..moveTo(pts.first.dx, pts.first.dy);
-        for (final p in pts.skip(1)) {
-          path.lineTo(p.dx, p.dy);
-        }
-        canvas.drawPath(path, Paint()..color = col..style = PaintingStyle.stroke..strokeWidth = 1.6);
+    // Percentile curve families.
+    final sex = boy ? 'boy' : 'girl';
+    void curve(int? Function(InfantBP) pick, Color col) {
+      final pts = <Offset>[];
+      for (var m = xMin; m <= xMax; m++) {
+        final row = infantBp1987[m]?[sex];
+        final v = row == null ? null : pick(row);
+        if (v != null) pts.add(Offset(xFor(m.toDouble()), yFor(v.toDouble())));
       }
-      curve((r) => r.sbp50, primary.withValues(alpha: 0.9));
-      curve((r) => r.sbp90, const Color(0xFFD4820A));
-      curve((r) => r.sbp95, red.withValues(alpha: 0.9));
+      if (pts.length < 2) return;
+      final path = Path()..moveTo(pts.first.dx, pts.first.dy);
+      for (final p in pts.skip(1)) {
+        path.lineTo(p.dx, p.dy);
+      }
+      canvas.drawPath(path, Paint()..color = col..style = PaintingStyle.stroke..strokeWidth = 1.6..strokeJoin = StrokeJoin.round);
+    }
+    if (dataReady) {
+      // SBP family (upper) + DBP family (lower).
+      curve((r) => r.sbp50, teal);
+      curve((r) => r.sbp90, orange);
+      curve((r) => r.sbp95, red);
+      curve((r) => r.dbp50, teal);
+      curve((r) => r.dbp90, orange);
+      curve((r) => r.dbp95, red);
+      // Family labels at the right edge.
+      final sbp95end = infantBp1987[xMax]?[sex]?.sbp95;
+      final dbp95end = infantBp1987[xMax]?[sex]?.dbp95;
+      if (sbp95end != null) _text(canvas, 'SBP', Offset(left + plotW - 24, yFor(sbp95end.toDouble()) - 12), textColor, bold: true, size: 9);
+      if (dbp95end != null) _text(canvas, 'DBP', Offset(left + plotW - 24, yFor(dbp95end.toDouble()) - 12), textColor, bold: true, size: 9);
     }
 
     // Plot frame.
@@ -687,17 +702,20 @@ class _InfantBpChartPainter extends CustomPainter {
       Paint()..color = axis..style = PaintingStyle.stroke..strokeWidth = 1,
     );
 
-    // Patient point.
-    final pm = month.clamp(xMin, xMax).toDouble();
-    final pv = sbp.clamp(yMin.toInt(), yMax.toInt()).toDouble();
-    final px = xFor(pm), py = yFor(pv);
-    final pointColor = sbp < hypo ? red : primary;
-    canvas.drawCircle(Offset(px, py), 5.5, Paint()..color = pointColor);
-    canvas.drawCircle(Offset(px, py), 5.5, Paint()..color = Colors.white..style = PaintingStyle.stroke..strokeWidth = 1.5);
-    _text(canvas, '$sbp', Offset(px + 8, py - 6), pointColor, size: 10);
+    // Patient points.
+    void point(int val, Color col, {bool ring = true}) {
+      final pm = month.clamp(xMin, xMax).toDouble();
+      final pv = val.clamp(yMin.toInt(), yMax.toInt()).toDouble();
+      final px = xFor(pm), py = yFor(pv);
+      canvas.drawCircle(Offset(px, py), 5.5, Paint()..color = col);
+      if (ring) canvas.drawCircle(Offset(px, py), 5.5, Paint()..color = Colors.white..style = PaintingStyle.stroke..strokeWidth = 1.5);
+      _text(canvas, '$val', Offset(px + 8, py - 6), col, size: 10, bold: true);
+    }
+    point(sbp, sbp < hypo ? red : primary);
+    if (dbp >= 0) point(dbp, primary);
   }
 
   @override
   bool shouldRepaint(covariant _InfantBpChartPainter old) =>
-      old.month != month || old.sbp != sbp || old.dataReady != dataReady || old.boy != boy;
+      old.month != month || old.sbp != sbp || old.dbp != dbp || old.dataReady != dataReady || old.boy != boy;
 }
