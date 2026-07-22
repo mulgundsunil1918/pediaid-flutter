@@ -100,6 +100,8 @@ class _InfantBPCalculatorState extends State<InfantBPCalculator> {
               ],
               const SizedBox(height: 16),
               _chartCard(),
+              const SizedBox(height: 12),
+              _aapStatusNote(),
               const SizedBox(height: 16),
               _studyCaveats(),
             ],
@@ -374,6 +376,39 @@ class _InfantBPCalculatorState extends State<InfantBPCalculator> {
   }
 
   Widget _legendDot(Color c) => Container(width: 10, height: 10, decoration: BoxDecoration(color: c, shape: BoxShape.circle));
+
+  // ── AAP status disclaimer ──
+  Widget _aapStatusNote() {
+    final cs = Theme.of(context).colorScheme;
+    return Container(
+      padding: const EdgeInsets.all(13),
+      decoration: BoxDecoration(
+        color: cs.primary.withValues(alpha: 0.06),
+        border: Border.all(color: cs.primary.withValues(alpha: 0.35)),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(children: [
+            Icon(Icons.verified_outlined, size: 16, color: cs.primary),
+            const SizedBox(width: 6),
+            Text('AAP-endorsed reference', style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w800, color: cs.primary)),
+          ]),
+          const SizedBox(height: 6),
+          Text(
+            'For infants 1–12 months the AAP 2017 guideline defers to the Second Task Force (1987) '
+            'report — it has no infant data of its own, so this is the current AAP-recommended '
+            'standard for this age band, not an older alternative. AAP cites it by reference (not as '
+            'a digitised table, which is why exact percentile numbers aren’t pre-loaded). The AAP 2017 '
+            'guideline expired in 2022 and is under AHRQ/AAP revision, but remains the current standard '
+            'until that update lands.',
+            style: TextStyle(fontSize: 11.5, color: cs.onSurface.withValues(alpha: 0.8), height: 1.45),
+          ),
+        ],
+      ),
+    );
+  }
 
   // ── Caveats & points of the study/chart (below results) ──
   Widget _studyCaveats() {
