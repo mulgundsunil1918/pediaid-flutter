@@ -320,8 +320,6 @@ class _BPCalculatorState extends State<BPCalculator> {
               ],
             ] else if (_calculated) ...[
               const SizedBox(height: 16),
-              _buildCategoryBanner(),
-              const SizedBox(height: 12),
               _buildBPResultCards(),
               const SizedBox(height: 12),
               _buildThresholdCard(),
@@ -518,45 +516,6 @@ class _BPCalculatorState extends State<BPCalculator> {
     });
   }
 
-  // ── Category banner ──
-  Widget _buildCategoryBanner() {
-    const cats = [
-      ('Normal BP', Color(0xFF2DBD8C), 'Below the 90th percentile (and < 120/80).'),
-      ('Elevated BP', Color(0xFFD4820A), '90th–<95th percentile, or ≥120/<80 mmHg. Lifestyle counselling; recheck in 6 months.'),
-      ('Stage 1 Hypertension', Color(0xFFF97316), '95th percentile to <95th + 12 mmHg, or 130/80–139/89. Recheck in 1–2 weeks.'),
-      ('Stage 2 Hypertension', Color(0xFFE53935), '≥95th + 12 mmHg, or ≥140/90. Evaluate/refer within 1 week.'),
-    ];
-    final (label, color, desc) = cats[_categoryIndex()];
-    final basis = _effAge >= 13
-        ? 'Staged by adult thresholds (≥13 yr).'
-        : 'Staged by percentile for age/sex/height, or absolute cutoff — whichever is lower.';
-    return Builder(builder: (context) {
-      final cs = Theme.of(context).colorScheme;
-      return Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.10),
-          border: Border.all(color: color.withValues(alpha: 0.5)),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('AAP 2017 CLASSIFICATION',
-                style: TextStyle(color: cs.onSurface.withValues(alpha: 0.5), fontSize: 10, fontWeight: FontWeight.w700, letterSpacing: 0.8)),
-            const SizedBox(height: 4),
-            Text(label, style: TextStyle(color: color, fontSize: 21, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 4),
-            Text(desc, style: TextStyle(color: cs.onSurface.withValues(alpha: 0.78), fontSize: 12.5, height: 1.4)),
-            const SizedBox(height: 6),
-            Text(basis, style: TextStyle(color: cs.onSurface.withValues(alpha: 0.5), fontSize: 11, fontStyle: FontStyle.italic)),
-          ],
-        ),
-      );
-    });
-  }
-
   // ── SBP / DBP boxes ──
   Widget _buildBPResultCards() {
     final col = _heightColIndex();
@@ -647,7 +606,7 @@ class _BPCalculatorState extends State<BPCalculator> {
     });
   }
 
-  // ── Hypotension (PALS) ──
+  // ── Hypotension threshold (≈ 5th-centile SBP, PALS) ──
   Widget _buildHypotensionInfo() {
     final clinicalMin = _effAge <= 10 ? 70 + (2 * _effAge) : 90;
     final isHypo = _enteredSBP < clinicalMin;
@@ -655,37 +614,59 @@ class _BPCalculatorState extends State<BPCalculator> {
       final cs = Theme.of(context).colorScheme;
       const amber = Color(0xFFD4820A);
       const red = Color(0xFFE53935);
-      return Column(children: [
-        Container(
-          padding: const EdgeInsets.all(14),
-          decoration: BoxDecoration(color: amber.withValues(alpha: 0.08), border: Border.all(color: amber.withValues(alpha: 0.4)), borderRadius: BorderRadius.circular(10)),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text('Hypotension Reference (PALS)', style: TextStyle(color: amber, fontSize: 12, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 6),
-              Text('Minimum acceptable SBP for age $_effAge: $clinicalMin mmHg',
-                  style: TextStyle(color: cs.onSurface, fontSize: 12)),
-              const SizedBox(height: 4),
-              Text(_effAge <= 10 ? '1–10 yr: 70 + (2 × age)' : '> 10 yr: fixed 90 mmHg',
-                  style: TextStyle(color: cs.onSurface.withValues(alpha: 0.7), fontSize: 11)),
-            ],
-          ),
+      final color = isHypo ? red : amber;
+      return Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(18),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.10),
+          border: Border.all(color: color.withValues(alpha: 0.55), width: 1.4),
+          borderRadius: BorderRadius.circular(14),
         ),
-        if (isHypo) ...[
-          const SizedBox(height: 8),
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(color: red.withValues(alpha: 0.1), border: Border.all(color: red.withValues(alpha: 0.5)), borderRadius: BorderRadius.circular(10)),
-            child: Row(children: [
-              const Icon(Icons.warning_rounded, color: red, size: 18),
-              const SizedBox(width: 8),
-              Expanded(child: Text('SBP below the PALS minimum ($clinicalMin mmHg) — assess for hypotension',
-                  style: const TextStyle(color: red, fontSize: 13, fontWeight: FontWeight.w600))),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(children: [
+              Icon(Icons.arrow_downward_rounded, color: color, size: 20),
+              const SizedBox(width: 6),
+              Text('LOWER LIMIT — HYPOTENSION',
+                  style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w800, letterSpacing: 0.6)),
             ]),
-          ),
-        ],
-      ]);
+            const SizedBox(height: 10),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              textBaseline: TextBaseline.alphabetic,
+              children: [
+                Text('$clinicalMin', style: TextStyle(color: color, fontSize: 40, fontWeight: FontWeight.w800, height: 1.0)),
+                const SizedBox(width: 6),
+                Text('mmHg SBP', style: TextStyle(color: cs.onSurface.withValues(alpha: 0.7), fontSize: 15, fontWeight: FontWeight.w600)),
+              ],
+            ),
+            const SizedBox(height: 4),
+            Text('≈ 5th-centile systolic BP for age $_effAge — below this is hypotension.',
+                style: TextStyle(color: cs.onSurface.withValues(alpha: 0.8), fontSize: 13, height: 1.35)),
+            const SizedBox(height: 3),
+            Text(_effAge <= 10 ? 'PALS: 70 + (2 × age in years)' : 'PALS: fixed 90 mmHg above 10 yr',
+                style: TextStyle(color: cs.onSurface.withValues(alpha: 0.55), fontSize: 11.5)),
+            if (isHypo) ...[
+              const SizedBox(height: 12),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(color: red.withValues(alpha: 0.14), borderRadius: BorderRadius.circular(10)),
+                child: Row(children: [
+                  const Icon(Icons.warning_amber_rounded, color: red, size: 22),
+                  const SizedBox(width: 10),
+                  Expanded(child: Text(
+                    'Entered SBP $_enteredSBP is BELOW $clinicalMin mmHg — this child is hypotensive. Assess urgently.',
+                    style: const TextStyle(color: red, fontSize: 14, fontWeight: FontWeight.w700, height: 1.3),
+                  )),
+                ]),
+              ),
+            ],
+          ],
+        ),
+      );
     });
   }
 
