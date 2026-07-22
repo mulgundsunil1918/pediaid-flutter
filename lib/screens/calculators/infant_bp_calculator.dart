@@ -92,14 +92,14 @@ class _InfantBPCalculatorState extends State<InfantBPCalculator> {
             const SizedBox(height: 14),
             _inputCard(),
             if (_assessed) ...[
-              const SizedBox(height: 16),
-              _hypotensionResult(),
               if (infantBpDataReady) ...[
-                const SizedBox(height: 12),
+                const SizedBox(height: 16),
                 _percentileResult(),
+                const SizedBox(height: 16),
+                _chartCard(),
               ],
               const SizedBox(height: 16),
-              _chartCard(),
+              _hypotensionResult(),
               const SizedBox(height: 12),
               _aapStatusNote(),
               const SizedBox(height: 16),
