@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'neonatal_bp_calculator.dart';
+import 'infant_bp_calculator.dart';
 import 'bp_calculator.dart';
 
 class BPHubScreen extends StatelessWidget {
@@ -19,7 +20,7 @@ class BPHubScreen extends StatelessWidget {
         ),
       ),
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -73,6 +74,24 @@ class BPHubScreen extends StatelessWidget {
 
             _BPOptionCard(
               onTap: () => Navigator.push(context,
+                  MaterialPageRoute(builder: (_) => const InfantBPCalculator())),
+              icon: Icons.baby_changing_station,
+              iconBgColor: cs.primary,
+              title: 'Infant BP',
+              subtitle: '1–12 Months',
+              description: 'Postnatal age 1–12 months\nSecond Task Force 1987',
+              tag: 'INFANT',
+              tagColor: cs.primary,
+              details: const [
+                '🩺 Hypotension screen (<70 mmHg)',
+                '📋 Second Task Force 1987',
+                '🚧 Percentile data pending',
+              ],
+            ),
+            const SizedBox(height: 14),
+
+            _BPOptionCard(
+              onTap: () => Navigator.push(context,
                   MaterialPageRoute(builder: (_) => const BPCalculator())),
               icon: Icons.boy,
               iconBgColor: cs.primary,
@@ -87,7 +106,7 @@ class BPHubScreen extends StatelessWidget {
                 '👦 Boys & Girls separate tables',
               ],
             ),
-            const Spacer(),
+            const SizedBox(height: 24),
 
             Container(
               width: double.infinity,
