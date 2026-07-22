@@ -156,6 +156,11 @@ class BPCalculator extends StatefulWidget {
 }
 
 class _BPCalculatorState extends State<BPCalculator> {
+  // ── Mode ──
+  // Quick: age + sex + height → reference table only (no BP entry).
+  // Full: also enter SBP/DBP → classification.
+  bool _quickMode = true;
+
   // ── Inputs ──
   bool _isBoy = true;
   int _age = 8;
@@ -241,9 +246,14 @@ class _BPCalculatorState extends State<BPCalculator> {
     return best;
   }
 
-  // Results read the snapshot; the input-card preview reads live values.
-  AgeBP get _bp => _bpData(_calcIsBoy, _calcAge);
-  int _heightColIndex() => _colFor(_bp, _calcHeightCm);
+  // Reference/threshold builders read the "effective" values: live inputs in
+  // quick mode, the assessed snapshot in full mode.
+  bool get _effIsBoy => _quickMode ? _isBoy : _calcIsBoy;
+  int get _effAge => _quickMode ? (_ageInput ?? _age) : _calcAge;
+  double get _effHeight => _quickMode ? (_heightInput ?? _heightCm) : _calcHeightCm;
+
+  AgeBP get _bp => _bpData(_effIsBoy, _effAge);
+  int _heightColIndex() => _colFor(_bp, _effHeight);
 
   static const _htLabels = ['5th', '10th', '25th', '50th', '75th', '90th', '95th'];
 
@@ -273,7 +283,7 @@ class _BPCalculatorState extends State<BPCalculator> {
     final pctCat = sCat > dCat ? sCat : dCat;
     final absCat = _absoluteCat(_enteredSBP, _enteredDBP);
     // ≥13 yr: adolescents are staged by the adult absolute thresholds only.
-    if (_calcAge >= 13) return absCat;
+    if (_effAge >= 13) return absCat;
     return pctCat > absCat ? pctCat : absCat;
   }
 
@@ -296,8 +306,19 @@ class _BPCalculatorState extends State<BPCalculator> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            _buildModeToggle(),
+            const SizedBox(height: 16),
             _buildInputCard(),
-            if (_calculated) ...[
+            if (_quickMode) ...[
+              if (_ageInput != null && _heightInput != null) ...[
+                const SizedBox(height: 16),
+                _buildThresholdCard(),
+                const SizedBox(height: 16),
+                _buildAdditionalInfo(),
+                const SizedBox(height: 12),
+                _buildReference(),
+              ],
+            ] else if (_calculated) ...[
               const SizedBox(height: 16),
               _buildCategoryBanner(),
               const SizedBox(height: 12),
@@ -316,6 +337,36 @@ class _BPCalculatorState extends State<BPCalculator> {
         ),
       ),
     );
+  }
+
+  Widget _buildModeToggle() {
+    return Builder(builder: (context) {
+      final cs = Theme.of(context).colorScheme;
+      Widget btn(String label, bool quick) {
+        final active = _quickMode == quick;
+        return Expanded(
+          child: GestureDetector(
+            onTap: () => setState(() => _quickMode = quick),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 160),
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              decoration: BoxDecoration(
+                color: active ? cs.primary : Colors.transparent,
+                borderRadius: BorderRadius.circular(9),
+              ),
+              child: Text(label,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: active ? Colors.white : cs.onSurface.withValues(alpha: 0.6))),
+            ),
+          ),
+        );
+      }
+      return Container(
+        padding: const EdgeInsets.all(4),
+        decoration: BoxDecoration(color: cs.surface, borderRadius: BorderRadius.circular(12), border: Border.all(color: cs.outline)),
+        child: Row(children: [btn('Quick Reference', true), btn('Full Assessment', false)]),
+      );
+    });
   }
 
   // ── Input card ──
@@ -404,34 +455,38 @@ class _BPCalculatorState extends State<BPCalculator> {
                 style: TextStyle(fontSize: 11, color: Theme.of(context).colorScheme.primary),
               );
             }),
-            const SizedBox(height: 16),
-            _stepper(
-              label: 'Systolic BP (mmHg)',
-              value: _sbp, min: 50, max: 220, hint: 'e.g. 112',
-              controller: _sbpCtrl, onChanged: (v) => setState(() => _sbp = v),
-            ),
-            const SizedBox(height: 16),
-            _stepper(
-              label: 'Diastolic BP (mmHg)',
-              value: _dbp, min: 30, max: 140, hint: 'e.g. 72',
-              controller: _dbpCtrl, onChanged: (v) => setState(() => _dbp = v),
-            ),
-            const SizedBox(height: 20),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: _allValid ? _calculate : null,
-                child: const Text('Assess Blood Pressure',
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+            // Quick mode: the reference table shows live below — no BP entry,
+            // no button. Full mode: enter BP and assess.
+            if (!_quickMode) ...[
+              const SizedBox(height: 16),
+              _stepper(
+                label: 'Systolic BP (mmHg)',
+                value: _sbp, min: 50, max: 220, hint: 'e.g. 112',
+                controller: _sbpCtrl, onChanged: (v) => setState(() => _sbp = v),
               ),
-            ),
-            if (!_allValid) ...[
-              const SizedBox(height: 8),
-              Builder(builder: (context) => Text(
-                'Enter sex, age, height, systolic and diastolic BP to assess.',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 11.5, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.55)),
-              )),
+              const SizedBox(height: 16),
+              _stepper(
+                label: 'Diastolic BP (mmHg)',
+                value: _dbp, min: 30, max: 140, hint: 'e.g. 72',
+                controller: _dbpCtrl, onChanged: (v) => setState(() => _dbp = v),
+              ),
+              const SizedBox(height: 20),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _allValid ? _calculate : null,
+                  child: const Text('Assess Blood Pressure',
+                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                ),
+              ),
+              if (!_allValid) ...[
+                const SizedBox(height: 8),
+                Builder(builder: (context) => Text(
+                  'Enter sex, age, height, systolic and diastolic BP to assess.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 11.5, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.55)),
+                )),
+              ],
             ],
           ],
         ),
@@ -472,7 +527,7 @@ class _BPCalculatorState extends State<BPCalculator> {
       ('Stage 2 Hypertension', Color(0xFFE53935), '≥95th + 12 mmHg, or ≥140/90. Evaluate/refer within 1 week.'),
     ];
     final (label, color, desc) = cats[_categoryIndex()];
-    final basis = _calcAge >= 13
+    final basis = _effAge >= 13
         ? 'Staged by adult thresholds (≥13 yr).'
         : 'Staged by percentile for age/sex/height, or absolute cutoff — whichever is lower.';
     return Builder(builder: (context) {
@@ -569,7 +624,7 @@ class _BPCalculatorState extends State<BPCalculator> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Thresholds for age $_calcAge ${_calcIsBoy ? 'boy' : 'girl'}, ~${_htLabels[col]} height',
+            Text('Thresholds for age $_effAge ${_effIsBoy ? 'boy' : 'girl'}, ~${_htLabels[col]} height',
                 style: TextStyle(color: cs.onSurface, fontSize: 13, fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
             Table(
@@ -594,7 +649,7 @@ class _BPCalculatorState extends State<BPCalculator> {
 
   // ── Hypotension (PALS) ──
   Widget _buildHypotensionInfo() {
-    final clinicalMin = _calcAge <= 10 ? 70 + (2 * _calcAge) : 90;
+    final clinicalMin = _effAge <= 10 ? 70 + (2 * _effAge) : 90;
     final isHypo = _enteredSBP < clinicalMin;
     return Builder(builder: (context) {
       final cs = Theme.of(context).colorScheme;
@@ -609,10 +664,10 @@ class _BPCalculatorState extends State<BPCalculator> {
             children: [
               const Text('Hypotension Reference (PALS)', style: TextStyle(color: amber, fontSize: 12, fontWeight: FontWeight.bold)),
               const SizedBox(height: 6),
-              Text('Minimum acceptable SBP for age $_calcAge: $clinicalMin mmHg',
+              Text('Minimum acceptable SBP for age $_effAge: $clinicalMin mmHg',
                   style: TextStyle(color: cs.onSurface, fontSize: 12)),
               const SizedBox(height: 4),
-              Text(_calcAge <= 10 ? '1–10 yr: 70 + (2 × age)' : '> 10 yr: fixed 90 mmHg',
+              Text(_effAge <= 10 ? '1–10 yr: 70 + (2 × age)' : '> 10 yr: fixed 90 mmHg',
                   style: TextStyle(color: cs.onSurface.withValues(alpha: 0.7), fontSize: 11)),
             ],
           ),
@@ -645,7 +700,7 @@ class _BPCalculatorState extends State<BPCalculator> {
               style: TextStyle(color: cs.onSurface.withValues(alpha: 0.5), fontSize: 11, fontWeight: FontWeight.w800, letterSpacing: 0.8)),
           const SizedBox(height: 8),
           _expandable('BP categories & staging', Icons.category_outlined, _table3Content()),
-          _expandable('Full BP table for age $_calcAge', Icons.table_chart_outlined, _fullAgeTable()),
+          _expandable('Full BP table for age $_effAge', Icons.table_chart_outlined, _fullAgeTable()),
           _expandable('Simplified screening values', Icons.speed_outlined, _table6Content()),
           _expandable('Evaluation & management', Icons.assignment_outlined, _table11Content()),
           _expandable('Initial workup', Icons.science_outlined, _table10Content()),
@@ -735,7 +790,7 @@ class _BPCalculatorState extends State<BPCalculator> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('SBP/DBP (mmHg) by height percentile — age $_calcAge ${_calcIsBoy ? 'boys' : 'girls'}',
+          Text('SBP/DBP (mmHg) by height percentile — age $_effAge ${_effIsBoy ? 'boys' : 'girls'}',
               style: TextStyle(fontSize: 11, color: cs.onSurface.withValues(alpha: 0.6))),
           const SizedBox(height: 6),
           SingleChildScrollView(
@@ -757,7 +812,7 @@ class _BPCalculatorState extends State<BPCalculator> {
             ),
           ),
           const SizedBox(height: 6),
-          Text('Highlighted column = nearest to entered height (${_calcHeightCm.toStringAsFixed(0)} cm).',
+          Text('Highlighted column = nearest to entered height (${_effHeight.toStringAsFixed(0)} cm).',
               style: TextStyle(fontSize: 10.5, color: cs.onSurface.withValues(alpha: 0.5))),
         ],
       );
@@ -765,9 +820,9 @@ class _BPCalculatorState extends State<BPCalculator> {
   }
 
   Widget _table6Content() {
-    final s = bpScreen2017[_calcAge >= 13 ? 13 : _calcAge]!;
-    final sbp = _calcIsBoy ? s[0] : s[2];
-    final dbp = _calcIsBoy ? s[1] : s[3];
+    final s = bpScreen2017[_effAge >= 13 ? 13 : _effAge]!;
+    final sbp = _effIsBoy ? s[0] : s[2];
+    final dbp = _effIsBoy ? s[1] : s[3];
     return Builder(builder: (context) {
       final cs = Theme.of(context).colorScheme;
       return Column(
@@ -776,7 +831,7 @@ class _BPCalculatorState extends State<BPCalculator> {
           Text('A quick screen: if BP is at or above this value, do the full-table lookup above.',
               style: TextStyle(fontSize: 12, color: cs.onSurface.withValues(alpha: 0.75), height: 1.35)),
           const SizedBox(height: 8),
-          Text('Age ${_calcAge >= 13 ? '≥13' : '$_calcAge'} ${_calcIsBoy ? 'boy' : 'girl'}: screen at $sbp/$dbp mmHg',
+          Text('Age ${_effAge >= 13 ? '≥13' : '$_effAge'} ${_effIsBoy ? 'boy' : 'girl'}: screen at $sbp/$dbp mmHg',
               style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: cs.primary)),
         ],
       );
@@ -864,7 +919,8 @@ class _BPCalculatorState extends State<BPCalculator> {
   Widget _bulletBlock(Map<String, List<String>> sections) {
     return Builder(builder: (context) {
       final cs = Theme.of(context).colorScheme;
-      final curName = ['Normal', 'Elevated BP', 'Stage 1 HTN', 'Stage 2 HTN'][_categoryIndex()];
+      // Only flag "this patient" in Full mode — Quick mode has no BP entered.
+      final curName = _quickMode ? '' : ['Normal', 'Elevated BP', 'Stage 1 HTN', 'Stage 2 HTN'][_categoryIndex()];
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: sections.entries.map((e) {
