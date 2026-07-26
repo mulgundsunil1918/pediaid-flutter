@@ -3,6 +3,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'who_chart_selection_screen.dart';
 import 'iap_chart_screen.dart';
 import 'fenton_chart_screen.dart';
+import '../calculators/bp_hub_screen.dart';
+import '../calculators/jaundice_hub_screen.dart';
 
 const _intergrowthUrl =
     'https://intergrowth21.ndog.ox.ac.uk/en/ManualEntry';
@@ -79,15 +81,30 @@ class GrowthChartsScreen extends StatelessWidget {
               onTap: () => _launchIntergrowth(context),
             ),
             const SizedBox(height: 14),
-            // ── CARD 5: Other Charts (LOCKED) ─────────────────────────────
-            _LockedChartCard(
-              icon: Icons.bar_chart,
-              title: 'Other Reference Charts',
-              ageRange: 'Additional clinical charts',
-              chips: const ['BP', 'Bilirubin', 'OFC'],
-              measurements: '',
-              onTap: () =>
-                  _showSnackBar(context, 'Other charts — Coming Soon.'),
+            // ── CARD 5: Blood Pressure centiles (ACTIVE) ──────────────────
+            _SimpleChartCard(
+              icon: Icons.monitor_heart_outlined,
+              accent: const Color(0xFFC2410C),
+              title: 'Blood Pressure Centiles',
+              subtitle: 'Neonatal (Zubrow) · Infant (1987) · Paediatric (AAP 2017)',
+              chips: const ['Neonatal', 'Infant', 'Child'],
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const BPHubScreen()),
+              ),
+            ),
+            const SizedBox(height: 14),
+            // ── CARD 6: Bilirubin / phototherapy charts (ACTIVE) ──────────
+            _SimpleChartCard(
+              icon: Icons.wb_sunny_outlined,
+              accent: const Color(0xFFCA8A04),
+              title: 'Bilirubin Charts',
+              subtitle: 'Phototherapy & exchange thresholds (NICE / AAP)',
+              chips: const ['NICE', 'Nomogram'],
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const JaundiceHubScreen()),
+              ),
             ),
             const SizedBox(height: 24),
           ],
@@ -455,125 +472,84 @@ class _IntergrowthCard extends StatelessWidget {
 
 // ── Locked Card ───────────────────────────────────────────────────────────────
 
-const Color _warningAmber = Color(0xFFF5A623);
 
-class _LockedChartCard extends StatelessWidget {
+// Generic active chart card (BP, Bilirubin, …).
+class _SimpleChartCard extends StatelessWidget {
   final IconData icon;
+  final Color accent;
   final String title;
-  final String ageRange;
+  final String subtitle;
   final List<String> chips;
-  final String measurements;
   final VoidCallback onTap;
-
-  const _LockedChartCard({
+  const _SimpleChartCard({
     required this.icon,
+    required this.accent,
     required this.title,
-    required this.ageRange,
+    required this.subtitle,
     required this.chips,
-    required this.measurements,
     required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
-    final disabledText = cs.onSurface.withValues(alpha: 0.4);
-    final disabledBorder = cs.outline.withValues(alpha: 0.4);
-    final disabledBg = cs.onSurface.withValues(alpha: 0.04);
-
     return Material(
       color: Theme.of(context).cardColor,
       borderRadius: BorderRadius.circular(16),
-      elevation: 0,
+      elevation: 1,
       child: InkWell(
-        borderRadius: BorderRadius.circular(16),
         onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
         child: Container(
+          padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
-            border: Border(
-              left: BorderSide(color: disabledBorder, width: 4),
-            ),
-            color: disabledBg,
+            border: Border(left: BorderSide(color: accent, width: 4)),
           ),
-          padding: const EdgeInsets.all(16),
           child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Icon circle
               Container(
-                width: 52,
-                height: 52,
+                width: 48,
+                height: 48,
                 decoration: BoxDecoration(
-                  color: disabledBorder,
-                  shape: BoxShape.circle,
+                  color: accent.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(icon, color: disabledText, size: 26),
+                child: Icon(icon, color: accent, size: 26),
               ),
-              const SizedBox(width: 16),
-              // Content
+              const SizedBox(width: 14),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      title,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 17,
-                        color: disabledText,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(ageRange,
+                    Text(title,
                         style: TextStyle(
-                            fontSize: 13, color: disabledText)),
-                    const SizedBox(height: 6),
+                            fontSize: 16, fontWeight: FontWeight.bold, color: cs.onSurface)),
+                    const SizedBox(height: 3),
+                    Text(subtitle,
+                        style: TextStyle(
+                            fontSize: 12, color: cs.onSurface.withValues(alpha: 0.6), height: 1.3)),
+                    const SizedBox(height: 8),
                     Wrap(
                       spacing: 6,
                       runSpacing: 4,
                       children: chips
-                          .map((c) => _Chip(c, disabledText))
+                          .map((c) => Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                decoration: BoxDecoration(
+                                  color: accent.withValues(alpha: 0.10),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Text(c,
+                                    style: TextStyle(
+                                        fontSize: 10, fontWeight: FontWeight.w600, color: accent)),
+                              ))
                           .toList(),
                     ),
-                    if (measurements.isNotEmpty) ...[
-                      const SizedBox(height: 6),
-                      Text(
-                        measurements,
-                        style: TextStyle(
-                            fontSize: 12, color: disabledText),
-                      ),
-                    ],
                   ],
                 ),
               ),
-              const SizedBox(width: 8),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.lock_outline,
-                      color: disabledText, size: 20),
-                  const SizedBox(height: 6),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 7, vertical: 3),
-                    decoration: BoxDecoration(
-                      color: _warningAmber.withValues(alpha: 0.15),
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
-                          color: _warningAmber.withValues(alpha: 0.4)),
-                    ),
-                    child: Text(
-                      'Coming\nSoon',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 9,
-                          fontWeight: FontWeight.w700,
-                          color: _warningAmber),
-                    ),
-                  ),
-                ],
-              ),
+              Icon(Icons.chevron_right, color: cs.onSurface.withValues(alpha: 0.35)),
             ],
           ),
         ),
@@ -581,9 +557,6 @@ class _LockedChartCard extends StatelessWidget {
     );
   }
 }
-
-// ── Small chip ────────────────────────────────────────────────────────────────
-
 class _Chip extends StatelessWidget {
   final String label;
   final Color color;

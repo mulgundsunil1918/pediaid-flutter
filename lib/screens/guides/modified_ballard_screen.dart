@@ -15,6 +15,36 @@ class _Param {
   const _Param({required this.id, required this.name, required this.options});
 }
 
+// How to elicit each sign at the bedside. Keyed by _Param.id.
+const Map<String, String> _ballardHowTo = {
+  'posture':
+      'Observe the quiet infant lying supine and undisturbed. Score the resting flexion of the arms and legs — the more mature the infant, the more flexed the posture.',
+  'sq_window':
+      'Flex the wrist, gently pressing the palm toward the ventral forearm without rotating it. Measure the angle between the palm and forearm — a smaller angle means greater maturity.',
+  'arm_recoil':
+      'With the infant supine, fully flex both elbows and hold ~5 s, fully extend the arms, then release. Score how briskly and completely the arms spring back into flexion.',
+  'popliteal':
+      'With the infant supine and pelvis flat, hold the thigh flexed onto the abdomen, then extend the leg at the knee until resistance. Measure the angle behind the knee — smaller = more mature.',
+  'scarf':
+      'Take the infant’s hand and draw it across the chest toward the opposite shoulder. Note how far the elbow travels past the midline — less crossing means greater maturity.',
+  'heel_ear':
+      'With the infant supine and pelvis flat, gently draw the foot toward the same-side ear without forcing. Score the distance of the foot from the ear and knee extension — more resistance = more mature.',
+  'skin':
+      'Inspect skin texture, thickness and vessel visibility. Sticky/transparent skin is very immature; smooth pink with few vessels is term; cracked, peeling, leathery skin is post-mature.',
+  'lanugo':
+      'Inspect the back for fine downy hair. Absent in the very preterm, abundant in mid-gestation, then thinning with bald areas near term.',
+  'plantar':
+      'Inspect the sole for creases; if none, measure heel-to-toe length. Creases start at the anterior sole and spread toward the heel with maturity.',
+  'breast':
+      'Inspect and gently pinch the breast tissue. Score the areola (flat vs stippled/raised) and the palpable bud diameter — a larger raised bud means greater maturity.',
+  'eye_ear':
+      'Check whether the eyelids are fused or open. Fold the pinna forward and release: note cartilage firmness and speed of recoil — slow/absent recoil and a soft pinna indicate immaturity.',
+  'gen_male':
+      'Male: palpate for testicular descent and inspect the scrotum for rugae — high/undescended testes with a smooth scrotum are immature; fully descended with deep rugae are mature.',
+  'gen_female':
+      'Female: inspect the labia and clitoris — a prominent clitoris with flat labia is immature; labia majora fully covering the minora indicates maturity.',
+};
+
 // ── Parameter definitions ─────────────────────────────────────────────────────
 
 const List<_Param> _neuroParams = [
@@ -506,6 +536,27 @@ class _ParamCard extends StatelessWidget {
                 ],
               ],
             ),
+            // How to perform this manoeuvre.
+            if (_ballardHowTo[param.id] != null) ...[
+              const SizedBox(height: 6),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(Icons.info_outline, size: 13, color: cs.primary.withValues(alpha: 0.7)),
+                  const SizedBox(width: 5),
+                  Expanded(
+                    child: Text(
+                      _ballardHowTo[param.id]!,
+                      style: TextStyle(
+                        fontSize: 11.5,
+                        height: 1.35,
+                        color: cs.onSurface.withValues(alpha: 0.6),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
             const SizedBox(height: 9),
 
             // Options chips

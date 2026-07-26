@@ -175,11 +175,13 @@ class _LabReferenceScreenState extends State<LabReferenceScreen> {
           GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
+            // Max-extent (not fixed count) so tiles stay a sensible size on
+            // wide viewports instead of stretching into giant tall cards.
+            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 220,
               crossAxisSpacing: 10,
               mainAxisSpacing: 10,
-              childAspectRatio: 1.55,
+              mainAxisExtent: 132,
             ),
             itemCount: systems.length,
             itemBuilder: (context, index) {
