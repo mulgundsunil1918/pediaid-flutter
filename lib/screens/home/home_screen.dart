@@ -85,7 +85,7 @@ const List<_ChipDef> _allChips = [
   _ChipDef('dve',        'DVE',             Icons.sync_alt_rounded),
   _ChipDef('allcalc',    'All Calculators', Icons.calculate_rounded),
   // Charts
-  _ChipDef('growth',     'Growth Charts',   Icons.show_chart_rounded),
+  _ChipDef('growth',     'Charts',          Icons.show_chart_rounded),
   // Developmental
   _ChipDef('devmile',    'Dev Milestones',  Icons.child_friendly_rounded),
   _ChipDef('tdsc',       'TDSC',            Icons.assignment_turned_in_outlined),

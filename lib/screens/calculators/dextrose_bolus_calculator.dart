@@ -72,54 +72,59 @@ class _DextroseBolusCalculatorState extends State<DextroseBolusCalculator> {
         if (_r != null) ...[
           const FECalcGap(16),
           FECalcResultCard(
-            label: 'D10W bolus (preferred — peripheral)',
+            label: '10% dextrose bolus (preferred — peripheral)',
             value: _r!['d10_mL']!.toStringAsFixed(0),
-            unit: 'mL D10',
-            formula: '5 mL/kg D10W IV bolus = 0.5 g/kg dextrose. PIV-friendly.',
+            unit: 'mL of 10% dextrose',
+            formula: '5 mL/kg of 10% dextrose intravenous bolus = 0.5 g/kg dextrose. '
+                'Safe through a peripheral intravenous line.',
           ),
           const FECalcGap(),
           FECalcResultCard(
-            label: 'D25W bolus (CVL only)',
+            label: '25% dextrose bolus (central line only)',
             value: _r!['d25_mL']!.toStringAsFixed(0),
-            unit: 'mL D25',
-            formula: '2 mL/kg D25W = 0.5 g/kg dextrose. Sclerosing — CVL only.',
+            unit: 'mL of 25% dextrose',
+            formula: '2 mL/kg of 25% dextrose = 0.5 g/kg dextrose. '
+                'Sclerosing — central venous line only.',
           ),
           const FECalcGap(),
           FECalcResultCard(
-            label: 'D50W bolus (CVL, adult-style)',
+            label: '50% dextrose bolus (central line, adult-style)',
             value: _r!['d50_mL']!.toStringAsFixed(1),
-            unit: 'mL D50',
-            formula: '1 mL/kg D50W = 0.5 g/kg dextrose. Sclerosing — CVL only.',
+            unit: 'mL of 50% dextrose',
+            formula: '1 mL/kg of 50% dextrose = 0.5 g/kg dextrose. '
+                'Sclerosing — central venous line only.',
           ),
           const FECalcGap(),
           FECalcResultCard(
-            label: 'D10 maintenance infusion (GIR 6–8 mg/kg/min)',
+            label: '10% dextrose maintenance infusion (glucose infusion rate 6–8 mg/kg/min)',
             value:
                 '${_r!['gir_low_d10_mLhr']!.toStringAsFixed(1)} – ${_r!['gir_high_d10_mLhr']!.toStringAsFixed(1)}',
-            unit: 'mL/hr D10',
-            formula: 'GIR 6–8 mg/kg/min of D10W. '
-                'Use the GIR Calculator for two-stock mixing.',
+            unit: 'mL/hr of 10% dextrose',
+            formula: 'Glucose infusion rate 6–8 mg/kg/min of 10% dextrose. '
+                'Use the Glucose Infusion Rate (GIR) Calculator for two-stock mixing.',
           ),
           const FECalcGap(),
           FECalcResultCard(
-            label: 'No IV access — IM/SQ rescue',
+            label: 'No intravenous access — intramuscular / subcutaneous rescue',
             value:
-                'Glucagon ${_r!['glucagon_mg']!.toStringAsFixed(2)} mg  +  Epi ${_r!['epi_mg']!.toStringAsFixed(2)} mg',
-            unit: 'IM / SQ',
+                'Glucagon ${_r!['glucagon_mg']!.toStringAsFixed(2)} mg  +  Adrenaline ${_r!['epi_mg']!.toStringAsFixed(2)} mg',
+            unit: 'intramuscular / subcutaneous',
             formula:
-                'Glucagon 0.003 mg/kg  +  Epi 0.01 mg/kg IM/SQ as bridging '
-                'while IV access is established.',
+                'Glucagon 0.003 mg/kg  +  Adrenaline (epinephrine) 0.01 mg/kg '
+                'intramuscular or subcutaneous, as a bridge while intravenous '
+                'access is established.',
           ),
           const FECalcGap(),
           FECalcResultCard(
             label: 'If requirement > 10 mg/kg/min — adjuncts',
             value:
                 'Diazoxide ${_r!['diazoxide_low_mg']!.toStringAsFixed(0)}–${_r!['diazoxide_high_mg']!.toStringAsFixed(0)} mg/day  ·  Octreotide ${_r!['octreotide_mcg']!.toStringAsFixed(0)} mcg',
-            unit: 'PO / IV',
+            unit: 'oral / intravenous',
             formula:
-                'Diazoxide 3–8 mg/kg/day PO q 12 h. Octreotide 10 mcg/kg '
-                'IV or SQ q 8 h. Workup hyperinsulinism (insulin, '
-                'C-peptide, cortisol, GH, FFA, lactate, β-OHB).',
+                'Diazoxide 3–8 mg/kg/day orally, divided every 12 h. '
+                'Octreotide 10 mcg/kg intravenous or subcutaneous every 8 h. '
+                'Work up hyperinsulinism (insulin, C-peptide, cortisol, growth '
+                'hormone, free fatty acids, lactate, beta-hydroxybutyrate).',
           ),
           const FECalcGap(),
           const FECalcInsightCard(
@@ -137,11 +142,12 @@ class _DextroseBolusCalculatorState extends State<DextroseBolusCalculator> {
         const FECalcReferenceCard(
           text:
               'Reference: "Electrolyte Corrections" — '
-              'D10 5 mL/kg PIV, D25 2 mL/kg CVL, D50 1 mL/kg CVL. '
-              'Infusion 6–8 mg/kg/min of D10. No IV: Glucagon 0.003 + Epi '
-              '0.01 mg/kg IM/SQ. > 10 mg/kg/min: diazoxide 3–8 mg/kg/day '
-              'q 12 or octreotide 10 mcg/kg IV/SQ q 8 h. For use by '
-              'qualified clinicians only.',
+              '10% dextrose 5 mL/kg peripheral, 25% dextrose 2 mL/kg central line, '
+              '50% dextrose 1 mL/kg central line. Infusion 6–8 mg/kg/min of 10% '
+              'dextrose. No intravenous access: Glucagon 0.003 + Adrenaline 0.01 '
+              'mg/kg intramuscular/subcutaneous. > 10 mg/kg/min: diazoxide 3–8 '
+              'mg/kg/day every 12 h or octreotide 10 mcg/kg intravenous/subcutaneous '
+              'every 8 h. For use by qualified clinicians only.',
         ),
       ],
     );

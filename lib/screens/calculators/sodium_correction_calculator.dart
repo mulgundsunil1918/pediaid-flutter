@@ -1,8 +1,8 @@
 // =============================================================================
 // sodium_correction_calculator.dart  —  Hyponatraemia (↓Na) correction
 // Symptomatic: 3 % saline 6 mL/kg → raises Na by ≈ 5 mEq/L
-// Slow correction: 0.5 mEq/L/hr (max 10–12 mEq/L per 24 hr)
-// Sodium deficit = (Na_goal − Na_meas) × wt × 1.2
+// Slow correction: 0.5 mEq/L/hr (max ~10 mEq/L per 24 hr)
+// Sodium deficit = (Na_goal − Na_meas) × wt × 0.6  (0.6 = total body water fraction)
 // =============================================================================
 
 import 'package:flutter/material.dart';
@@ -42,7 +42,7 @@ class _SodiumCorrectionCalculatorState
     final na = double.parse(_na.text);
     final g = double.parse(_goal.text);
     setState(() {
-      _deficit = (g - na) * w * 1.2; // mEq
+      _deficit = (g - na) * w * 0.6; // mEq — 0.6 = total body water fraction
       _hyperVolMl = 6.0 * w; // 3 % saline 6 mL/kg = symptomatic bolus
     });
   }
@@ -90,7 +90,7 @@ class _SodiumCorrectionCalculatorState
             label: 'Sodium deficit',
             value: _deficit!.toStringAsFixed(1),
             unit: 'mEq',
-            formula: 'Na = (Na_goal − Na_meas) × wt × 1.2',
+            formula: 'Na = (Na_goal − Na_meas) × wt × 0.6',
           ),
           const FECalcGap(),
           FECalcResultCard(
@@ -104,7 +104,7 @@ class _SodiumCorrectionCalculatorState
           const FECalcInsightCard(
             title: 'Correction safety',
             body:
-                '• Slow correction: 0.5 mEq/L/hr or 15 mEq/L/day.\n'
+                '• Slow correction: 0.5 mEq/L/hr, max ~10 mEq/L per 24 h.\n'
                 '• Symptomatic (seizing / GCS drop): 3 % NaCl 4–6 mL/kg '
                 '(max 100 mL) IV over 10–30 min — repeat to control symptoms.\n'
                 '• Over-rapid correction → osmotic demyelination syndrome '
@@ -119,7 +119,7 @@ class _SodiumCorrectionCalculatorState
         const FECalcReferenceCard(
           text:
               'Reference: "Electrolyte Corrections" — '
-              'Na in mEq = (Na_goal − Na_meas)(Wt)(1.2). Symptomatic 3 % '
+              'Na in mEq = (Na_goal − Na_meas)(Wt)(0.6). Symptomatic 3 % '
               'saline 6 mL/kg → ↑ Na 5 mEq/L. For use by qualified '
               'clinicians only.',
         ),
