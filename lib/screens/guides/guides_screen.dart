@@ -17,12 +17,10 @@ import 'fetal_development_screen.dart';
 import 'nrp_pdf_viewer.dart';
 import '../vaccines/vaccine_screen.dart';
 import 'neonatal_scores/neonatal_scores_screen.dart';
-import 'modified_ballard_screen.dart';
 import 'pals/pals_algorithms_screen.dart';
 import 'neonatal_echo_screen.dart';
 import '../tools/paediatric_parameters_screen.dart';
 import 'polycythemia_guide_screen.dart';
-import 'pofras_screen.dart';
 import 'can_score_screen.dart';
 import 'ga_classification_screen.dart';
 import 'birthweight_classification_screen.dart';
@@ -65,6 +63,17 @@ class _GuidesScreenState extends State<GuidesScreen> {
   String _selected = _kAll;
 
   late final List<_GuideItem> _guides = [
+    // Neonatal Scores — surfaced first and highlighted; bundles all the
+    // neonatal scoring tools (incl. LATCH, POFRAS, Modified Ballard).
+    _GuideItem(
+      title: 'Neonatal Scores',
+      subtitle: 'Apgar, Downes, Sarnat, Thompson, LATCH, POFRAS, Ballard & more',
+      icon: Icons.assessment,
+      categories: const [_kNeonatal, _kScoring],
+      highlight: true,
+      badge: '13 scores',
+      build: (_) => const NeonatalScoresScreen(),
+    ),
     _GuideItem(
       title: 'GA Classification',
       subtitle: 'Gestational Age Definitions · Table 6-2',
@@ -108,20 +117,7 @@ class _GuidesScreenState extends State<GuidesScreen> {
       categories: const [_kReference],
       build: (_) => const VaccineScreen(),
     ),
-    _GuideItem(
-      title: 'Neonatal Scores',
-      subtitle: 'Apgar, Downes, Sarnat, Thompson & more',
-      icon: Icons.assessment,
-      categories: const [_kNeonatal, _kScoring],
-      build: (_) => const NeonatalScoresScreen(),
-    ),
-    _GuideItem(
-      title: 'Modified Ballard Score',
-      subtitle: 'Gestational Age Assessment',
-      icon: Icons.child_care,
-      categories: const [_kNeonatal, _kScoring],
-      build: (_) => const ModifiedBallardScreen(),
-    ),
+    // Modified Ballard & POFRAS now live inside "Neonatal Scores" (above).
     _GuideItem(
       title: 'PALS Algorithms',
       subtitle: 'Pediatric Advanced Life Support',
@@ -149,13 +145,6 @@ class _GuidesScreenState extends State<GuidesScreen> {
       icon: Icons.bloodtype,
       categories: const [_kNeonatal],
       build: (_) => const PolycythemiaGuideScreen(),
-    ),
-    _GuideItem(
-      title: 'POFRAS',
-      subtitle: 'Preterm Oral Feeding Readiness Assessment Scale',
-      icon: Icons.child_care_outlined,
-      categories: const [_kNeonatal, _kScoring],
-      build: (_) => const PofrasScreen(),
     ),
     _GuideItem(
       title: 'CAN Score',
@@ -327,6 +316,8 @@ class _GuidesScreenState extends State<GuidesScreen> {
                                   subtitle: g.subtitle,
                                   icon: g.icon,
                                   comingSoon: g.comingSoon,
+                                  highlight: g.highlight,
+                                  badge: g.badge,
                                   onTap: () {
                                     if (g.comingSoon || g.build == null) {
                                       _showComingSoon(context, g.title);
@@ -493,6 +484,8 @@ class _GuideItem {
   final List<String> categories;
   final WidgetBuilder? build;
   final bool comingSoon;
+  final bool highlight;
+  final String? badge;
 
   _GuideItem({
     required this.title,
@@ -501,6 +494,8 @@ class _GuideItem {
     required this.categories,
     required this.build,
     this.comingSoon = false,
+    this.highlight = false,
+    this.badge,
   });
 }
 
@@ -509,6 +504,8 @@ class _GuideCard extends StatelessWidget {
   final String subtitle;
   final IconData icon;
   final bool comingSoon;
+  final bool highlight;
+  final String? badge;
   final VoidCallback onTap;
 
   const _GuideCard({
@@ -517,16 +514,25 @@ class _GuideCard extends StatelessWidget {
     required this.icon,
     required this.onTap,
     this.comingSoon = false,
+    this.highlight = false,
+    this.badge,
   });
 
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
-    final primary = comingSoon ? cs.onSurface.withValues(alpha: 0.35) : cs.primary;
+    // Highlighted tiles get a distinct accent colour + filled background.
+    const accent = Color(0xFF7C3AED); // violet — stands out from the primary blue
+    final primary = comingSoon
+        ? cs.onSurface.withValues(alpha: 0.35)
+        : (highlight ? accent : cs.primary);
     return Card(
-      elevation: 2,
-      color: Theme.of(context).cardColor,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      elevation: highlight ? 3 : 2,
+      color: highlight ? accent.withValues(alpha: 0.10) : Theme.of(context).cardColor,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: highlight ? const BorderSide(color: accent, width: 1.4) : BorderSide.none,
+      ),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
@@ -546,7 +552,18 @@ class _GuideCard extends StatelessWidget {
                     ),
                     child: Icon(icon, color: primary, size: 22),
                   ),
-                  if (comingSoon)
+                  if (badge != null)
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+                      decoration: BoxDecoration(
+                        color: accent,
+                        borderRadius: BorderRadius.circular(999),
+                      ),
+                      child: Text(badge!,
+                          style: const TextStyle(
+                              fontSize: 9.5, fontWeight: FontWeight.w800, color: Colors.white)),
+                    )
+                  else if (comingSoon)
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                       decoration: BoxDecoration(

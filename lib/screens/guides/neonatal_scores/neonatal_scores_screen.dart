@@ -3,6 +3,8 @@ import '../../../data/scores_data_loader.dart';
 import 'score_detail_screen.dart';
 import 'nichd_hie_screen.dart';
 import 'lus_score_screen.dart';
+import '../modified_ballard_screen.dart';
+import '../pofras_screen.dart';
 
 class NeonatalScoresScreen extends StatefulWidget {
   const NeonatalScoresScreen({super.key});
@@ -90,7 +92,7 @@ class _NeonatalScoresScreenState extends State<NeonatalScoresScreen> {
         Expanded(
           child: ListView.separated(
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
-            itemCount: scores.length + 2,
+            itemCount: scores.length + 4,
             separatorBuilder: (context, i) => const SizedBox(height: 8),
             itemBuilder: (context, i) {
               // NICHD HIE Assessment — hardcoded card at top
@@ -111,7 +113,27 @@ class _NeonatalScoresScreenState extends State<NeonatalScoresScreen> {
                   ),
                 );
               }
-              final score = scores[i - 2];
+              // Modified Ballard — gestational age assessment
+              if (i == 2) {
+                return _ExtraScoreCard(
+                  title: 'Modified Ballard Score',
+                  subtitle: 'Gestational age assessment (neuromuscular + physical maturity)',
+                  icon: Icons.child_care,
+                  onTap: () => Navigator.push(context,
+                      MaterialPageRoute(builder: (_) => const ModifiedBallardScreen())),
+                );
+              }
+              // POFRAS — preterm oral feeding readiness
+              if (i == 3) {
+                return _ExtraScoreCard(
+                  title: 'POFRAS',
+                  subtitle: 'Preterm Oral Feeding Readiness Assessment Scale',
+                  icon: Icons.child_care_outlined,
+                  onTap: () => Navigator.push(context,
+                      MaterialPageRoute(builder: (_) => const PofrasScreen())),
+                );
+              }
+              final score = scores[i - 4];
               return _ScoreCard(
                 score: score,
                 index: i,
@@ -205,6 +227,78 @@ class _LusCard extends StatelessWidget {
               ),
               Icon(Icons.chevron_right,
                   color: cs.onSurface.withValues(alpha: 0.35), size: 20),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ── Extra score card (Ballard, POFRAS — link to their own screens) ───────────
+
+class _ExtraScoreCard extends StatelessWidget {
+  final String title;
+  final String subtitle;
+  final IconData icon;
+  final VoidCallback onTap;
+  const _ExtraScoreCard({
+    required this.title,
+    required this.subtitle,
+    required this.icon,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Material(
+      color: Theme.of(context).cardColor,
+      borderRadius: BorderRadius.circular(12),
+      elevation: isDark ? 0 : 1,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: onTap,
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            border: Border(
+              left: BorderSide(color: cs.primary.withValues(alpha: 0.7), width: 3),
+            ),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          child: Row(
+            children: [
+              Container(
+                width: 28,
+                height: 28,
+                decoration: BoxDecoration(
+                  color: cs.primary.withValues(alpha: 0.12),
+                  shape: BoxShape.circle,
+                ),
+                alignment: Alignment.center,
+                child: Icon(icon, size: 16, color: cs.primary),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(title,
+                        style: TextStyle(
+                            fontSize: 14.5,
+                            fontWeight: FontWeight.w700,
+                            color: cs.onSurface)),
+                    const SizedBox(height: 2),
+                    Text(subtitle,
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: cs.onSurface.withValues(alpha: 0.6))),
+                  ],
+                ),
+              ),
+              Icon(Icons.chevron_right, color: cs.onSurface.withValues(alpha: 0.35)),
             ],
           ),
         ),
