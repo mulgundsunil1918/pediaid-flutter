@@ -77,13 +77,13 @@ class _CalciumCorrectionCalculatorState
           ),
           const FECalcGap(),
           FECalcResultCard(
-            label: 'Calcium gluconate 10 % (peripheral OK)',
+            label: 'Calcium gluconate 10 % (peripheral vein acceptable)',
             value:
-                '${_r!['gluc_low_mg']!.toStringAsFixed(0)} – ${_r!['gluc_high_mg']!.toStringAsFixed(0)}',
-            unit: 'mg / dose',
+                '${(_r!['gluc_low_mg']! / 100).toStringAsFixed(1)} – ${(_r!['gluc_high_mg']! / 100).toStringAsFixed(1)}',
+            unit: 'mL / dose (10 %)',
             formula:
-                'Ca-gluconate 100 mg/kg IV q 10 min, max 4 g/dose. '
-                '10 % = 100 mg/mL = 9.3 mg elemental Ca/mL.',
+                'Calcium gluconate 10 % — 1 mL/kg IV over 10 minutes (= 100 mg/kg), '
+                'maximum 40 mL (4 g) per dose. 10 % = 100 mg/mL = 9.3 mg elemental calcium/mL.',
           ),
           const FECalcGap(),
           FECalcResultCard(

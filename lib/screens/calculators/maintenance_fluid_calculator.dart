@@ -9,7 +9,7 @@ const Color _teal   = Color(0xFF39d0c8);
 
 // ── Fluid tables ──────────────────────────────────────────────────────────────
 
-// Table 48.2 — first week — (low, high) mL/kg/day indexed by day-1 (0=Day1 … 5=Day6+)
+// First postnatal week — (low, high) mL/kg/day indexed by day-1 (0=Day1 … 5=Day6+)
 const _kTermTable = [
   (60.0, 80.0),
   (80.0, 100.0),
@@ -26,7 +26,7 @@ const _kPreTermTable = [
   (140.0, 160.0),
   (160.0, 180.0), // Day 6+
 ];
-// After first postnatal week (Table 48.3): same for both groups
+// After the first postnatal week: same for both groups
 const double _kPostWeekLow  = 140.0;
 const double _kPostWeekHigh = 160.0;
 
@@ -119,7 +119,7 @@ class _MaintenanceFluidCalculatorState extends State<MaintenanceFluidCalculator>
       }
 
       result = _FluidResult(
-        formulaUsed : 'Neonatal Fluid Table (Table 48.2 / 48.3)',
+        formulaUsed : 'Neonatal fluid requirements',
         formulaTag  : 'neonatal',
         lowDaily    : low  * weightKg,
         highDaily   : high * weightKg,
@@ -238,9 +238,6 @@ class _MaintenanceFluidCalculatorState extends State<MaintenanceFluidCalculator>
                     ),
                   ),
                 ],
-
-                const SizedBox(height: 24),
-                _buildReferenceTable(cs, isDark),
               ],
             ),
           ),
@@ -276,7 +273,7 @@ class _MaintenanceFluidCalculatorState extends State<MaintenanceFluidCalculator>
                 fontWeight: FontWeight.bold)),
         const SizedBox(height: 4),
         Text(
-            'Neonatal Table (Table 48.2/48.3) · Holliday-Segar (>1 month)',
+            'Neonatal fluid requirements · Holliday-Segar (>1 month)',
             style: TextStyle(
                 color: cs.onSurface.withValues(alpha: 0.6), fontSize: 12.5)),
       ],
@@ -356,7 +353,7 @@ class _MaintenanceFluidCalculatorState extends State<MaintenanceFluidCalculator>
               border: Border.all(color: _accent.withValues(alpha: 0.2)),
             ),
             child: Text(
-              '≤ 28 days → Neonatal fluid table  ·  > 28 days / ≥ 3.5 kg → Holliday-Segar',
+              '≤ 28 days → Neonatal fluid requirements  ·  > 28 days / ≥ 3.5 kg → Holliday-Segar',
               style: TextStyle(
                   color: _accent,
                   fontSize: 11.5,
@@ -614,142 +611,6 @@ class _MaintenanceFluidCalculatorState extends State<MaintenanceFluidCalculator>
     if (wt <= 10)  return '${wt.toStringAsFixed(2)} kg × 100 = ${(wt * 100).toStringAsFixed(0)} mL';
     if (wt <= 20)  return '1000 + ${(wt - 10).toStringAsFixed(1)} kg × 50 = ${(1000 + (wt - 10) * 50).toStringAsFixed(0)} mL';
     return '1500 + ${(wt - 20).toStringAsFixed(1)} kg × 20 = ${(1500 + (wt - 20) * 20).toStringAsFixed(0)} mL';
-  }
-
-  // ── Reference table ───────────────────────────────────────────────────────────
-
-  Widget _buildReferenceTable(ColorScheme cs, bool isDark) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        border: Border.all(color: cs.onSurface.withValues(alpha: 0.1)),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Theme(
-        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
-        child: ExpansionTile(
-          title: Text('Reference — Fluid Tables',
-              style: TextStyle(
-                  color: cs.onSurface,
-                  fontSize: 13.5,
-                  fontWeight: FontWeight.bold)),
-          tilePadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
-          childrenPadding:
-              const EdgeInsets.fromLTRB(14, 0, 14, 14),
-          children: [
-            // ── Table 48.2 ─────────────────────────────────────────────────
-            _refSubtitle('Table 48.2 — Parenteral Fluid Requirements (First Week)', cs),
-            const SizedBox(height: 8),
-            _table482(cs, isDark),
-            const SizedBox(height: 14),
-
-            // ── Table 48.3 ─────────────────────────────────────────────────
-            _refSubtitle('Table 48.3 — After First Postnatal Week', cs),
-            const SizedBox(height: 8),
-            _table483(cs, isDark),
-            const SizedBox(height: 14),
-
-            // ── Holliday-Segar ─────────────────────────────────────────────
-            _refSubtitle('Holliday-Segar — 100/50/20 Rule (>1 month, ≥3.5 kg)', cs),
-            const SizedBox(height: 8),
-            _tableHS(cs, isDark),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _refSubtitle(String text, ColorScheme cs) => Text(text,
-      style: TextStyle(
-          color: cs.primary,
-          fontSize: 12,
-          fontWeight: FontWeight.w700));
-
-  Widget _table482(ColorScheme cs, bool isDark) {
-    const headers = ['Day', '>1500 g\nmL/kg/day', '<1500 g\nmL/kg/day'];
-    const rows = [
-      ['1', '60 – 80', '80 – 90'],
-      ['2', '80 – 100', '100 – 110'],
-      ['3', '100 – 120', '120 – 130'],
-      ['4', '120 – 150', '130 – 150'],
-      ['5', '140 – 160', '140 – 160'],
-      ['6+', '140 – 160', '160 – 180'],
-    ];
-    return _refTable(headers: headers, rows: rows, cs: cs, isDark: isDark);
-  }
-
-  Widget _table483(ColorScheme cs, bool isDark) {
-    const headers = ['Group', 'mL/kg/day'];
-    const rows = [
-      ['Term neonates',    '140 – 160'],
-      ['Preterm neonates', '140 – 160'],
-    ];
-    return _refTable(headers: headers, rows: rows, cs: cs, isDark: isDark);
-  }
-
-  Widget _tableHS(ColorScheme cs, bool isDark) {
-    const headers = ['Weight', 'Fluid rate'];
-    const rows = [
-      ['First 10 kg',    '100 mL/kg/day'],
-      ['Next 10 kg',     '+50 mL/kg/day  (10–20 kg)'],
-      ['Above 20 kg',    '+20 mL/kg/day'],
-      ['e.g. 25 kg', '1500 + 5×20 = 1600 mL/day'],
-    ];
-    return _refTable(headers: headers, rows: rows, cs: cs, isDark: isDark);
-  }
-
-  Widget _refTable({
-    required List<String> headers,
-    required List<List<String>> rows,
-    required ColorScheme cs,
-    required bool isDark,
-  }) {
-    final headerBg = cs.primary.withValues(alpha: isDark ? 0.22 : 0.1);
-    final altBg    = cs.onSurface.withValues(alpha: 0.03);
-    final border   = cs.onSurface.withValues(alpha: 0.12);
-
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(8),
-      child: Table(
-        border: TableBorder.all(color: border, width: 0.8,
-            borderRadius: BorderRadius.circular(8)),
-        columnWidths: {
-          for (int i = 0; i < headers.length; i++)
-            i: const FlexColumnWidth(),
-        },
-        children: [
-          // Header row
-          TableRow(
-            decoration: BoxDecoration(color: headerBg),
-            children: headers.map((h) => Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-              child: Text(h,
-                  style: TextStyle(
-                      color: cs.primary,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 11.5)),
-            )).toList(),
-          ),
-          // Data rows
-          ...rows.asMap().entries.map((e) {
-            final idx = e.key;
-            final row = e.value;
-            return TableRow(
-              decoration: BoxDecoration(
-                  color: idx.isOdd ? altBg : null),
-              children: row.map((cell) => Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                child: Text(cell,
-                    style: TextStyle(
-                        color: cs.onSurface,
-                        fontSize: 12)),
-              )).toList(),
-            );
-          }),
-        ],
-      ),
-    );
   }
 
   // ── Shared helpers ────────────────────────────────────────────────────────────

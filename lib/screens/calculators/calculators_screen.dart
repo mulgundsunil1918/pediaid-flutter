@@ -285,13 +285,15 @@ class _CalculatorsScreenState extends State<CalculatorsScreen> {
       categories: [_kFluids],
       iosHidden: true,
     ),
-    _CalculatorItem(
-      title: 'Phosphate Correction (↓PO₄)',
-      subtitle: 'NaPhos / KPhos / oral',
-      icon: Icons.calculate,
-      categories: [_kFluids],
-      iosHidden: true,
-    ),
+    // Phosphate Correction — hidden for now (per request); re-enable by
+    // uncommenting. Route + import below are kept so it re-enables cleanly.
+    // _CalculatorItem(
+    //   title: 'Phosphate Correction (↓PO₄)',
+    //   subtitle: 'NaPhos / KPhos / oral',
+    //   icon: Icons.calculate,
+    //   categories: [_kFluids],
+    //   iosHidden: true,
+    // ),
     _CalculatorItem(
       title: 'Hypoglycaemia Bolus',
       subtitle: 'D10/D25/D50 + GIR + adjuncts',
