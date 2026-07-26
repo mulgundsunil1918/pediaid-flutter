@@ -35587,7 +35587,7 @@ _.b=0
 _.c=a
 _.Q=_.r=_.f=0},
 adP:function adP(){this.y=this.b=this.a=0},
-vx(a,b){return(B.vb[a>>>8]<<17|B.vb[b>>>8]<<16|B.vb[a&255]<<1|B.vb[b&255])>>>0},
+vx(a,b){return(B.va[a>>>8]<<17|B.va[b>>>8]<<16|B.va[a&255]<<1|B.va[b&255])>>>0},
 ox:function ox(a){var _=this
 _.a=a
 _.b=0
@@ -42544,7 +42544,7 @@ break
 case 1:s="TDSC 3\u20136 years"
 break
 default:s=null}return s},
-bXC(){var s=A.Q(B.va,t.T6)
+bXC(){var s=A.Q(B.v9,t.T6)
 B.h.A(s,B.vk)
 return s},
 cuX(a){var s=A.bXC(),r=A.a7(s).j("aC<1>")
@@ -68161,14 +68161,14 @@ break}s=q===2
 if(s||q===3)o.e=666
 if(q===0||s)return 0
 if(q===1){if(a===1){o.iq(2,3)
-o.yP(256,B.v7)
+o.yP(256,B.v6)
 o.aib()
 s=o.a4
 s===$&&A.b()
 r=o.ak
 r===$&&A.b()
 if(1+s+10-r<9){o.iq(2,3)
-o.yP(256,B.v7)
+o.yP(256,B.v6)
 o.aib()}o.a4=7}else{o.afM(0,0,!1)
 if(a===3){s=o.db
 s===$&&A.b()
@@ -68380,7 +68380,7 @@ m===$&&A.b()
 s=n.fx
 s===$&&A.b()
 for(r=n.p3,o=0;o<30;++o){r===$&&A.b()
-p+=r[o*2]*(5+B.v5[o])}p=A.mI(p,3)
+p+=r[o*2]*(5+B.v4[o])}p=A.mI(p,3)
 r=n.V
 r===$&&A.b()
 q=n.aP
@@ -68407,7 +68407,7 @@ n=B.PF[o]
 if(n!==0)m.iq(p-B.aRy[o],n);--q
 o=A.c4q(q)
 m.yP(o,b)
-n=B.v5[o]
+n=B.v4[o]
 if(n!==0)m.iq(q-B.bh9[o],n)}}while(s<m.aP)}m.yP(256,a)
 m.a4=a[513]},
 aql(){var s,r,q,p
@@ -68457,7 +68457,7 @@ if(o<=p)p=o}else{o=m+5
 p=o
 q=0}if(m+4<=p&&s!==-1)n.afM(s,m,a)
 else if(o===p){n.iq(2+(a?1:0),3)
-n.a6N(B.v7,B.RR)}else{n.iq(4+(a?1:0),3)
+n.a6N(B.v6,B.RR)}else{n.iq(4+(a?1:0),3)
 m=n.R8.b
 m===$&&A.b()
 s=n.RG.b
@@ -69099,7 +69099,7 @@ continue}q=r-257
 p=B.bvS[q]+l.mU(B.byC[q])
 o=l.Wl(b)
 if(o<0||o>29)return-1
-n=B.bw8[o]+l.mU(B.v5[o])
+n=B.bw8[o]+l.mU(B.v4[o])
 for(m=-n;p>n;){s.Qo(s.h0(m))
 p-=n}if(p===n)s.Qo(s.h0(m))
 else s.Qo(s.rG(m,p-n))}while(s=l.e,s>=8){l.e=s-8
@@ -69996,7 +69996,7 @@ s=d.f
 if(s.aI(0,i)){r={}
 q=l.aHO()
 p=s.h(0,i)
-if(p!=null)A.f6(new A.h9(p),"Relationships",k).ga2(0).fn$.I(0,A.bW5(A.Mv("Relationship"),A.a([A.zg(A.Mv("Id"),"rId"+q,B.jN),A.zg(A.Mv("Type"),u.bO,B.jN),A.zg(A.Mv("Target"),j,B.jN)],t.Fd),B.ve,!0))
+if(p!=null)A.f6(new A.h9(p),"Relationships",k).ga2(0).fn$.I(0,A.bW5(A.Mv("Relationship"),A.a([A.zg(A.Mv("Id"),"rId"+q,B.jN),A.zg(A.Mv("Type"),u.bO,B.jN),A.zg(A.Mv("Target"),j,B.jN)],t.Fd),B.vd,!0))
 p=l.b
 o="rId"+q
 if(!B.h.q(p,o))p.push(o)
@@ -70004,7 +70004,7 @@ r.a=!0
 p=s.h(0,g)
 if(p!=null)A.f6(new A.h9(p),f,k).aq(0,new A.aTG(r,h))
 if(r.a){s=s.h(0,g)
-if(s!=null)A.f6(new A.h9(s),"Types",k).ga2(0).fn$.I(0,A.bW5(A.Mv(f),A.a([A.zg(A.Mv("PartName"),"/xl/sharedStrings.xml",B.jN),A.zg(A.Mv("ContentType"),h,B.jN)],t.Fd),B.ve,!0))}}n=B.ic.dr('<sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" count="0" uniqueCount="0"/>')
+if(s!=null)A.f6(new A.h9(s),"Types",k).ga2(0).fn$.I(0,A.bW5(A.Mv(f),A.a([A.zg(A.Mv("PartName"),"/xl/sharedStrings.xml",B.jN),A.zg(A.Mv("ContentType"),h,B.jN)],t.Fd),B.vd,!0))}}n=B.ic.dr('<sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" count="0" uniqueCount="0"/>')
 c.ahB(0,A.cdd(e,n.length,n,0))
 b=c.qT(e)}b.tG()
 m=A.Y6(B.bz.ca(0,b.gqz(0)))
@@ -86395,10 +86395,10 @@ Ub(a){if(a<10)return"0"+a
 return""+a},
 Fd(a){var s=a.b
 return s<10?"0"+s:B.p.k(s)},
-a_8(a){var s=B.uU[A.co(a)-1]
+a_8(a){var s=B.uT[A.co(a)-1]
 return B.bjq[A.Kw(a)-1]+", "+s+" "+A.dJ(a)+", "+A.cb(a)},
 a_9(a){var s=B.p.k(A.cb(a))
-return B.uU[A.co(a)-1]+" "+s},
+return B.uT[A.co(a)-1]+" "+s},
 bcE(a){var s,r,q,p,o,n,m=null
 if(a==null)return m
 p=a.split("/")
@@ -120215,7 +120215,7 @@ r=A.a([],s)
 q=c.y
 q.toString
 p=J.H(q,null)
-if(p==null)p=B.vd
+if(p==null)p=B.vc
 o=A.U(t.ob,t.UX)
 q=c.y
 q.toString
@@ -120235,8 +120235,8 @@ if(j){r=A.a([],s)
 i=c.y
 i.toString
 p=J.H(i,h.gfG())
-if(p==null)p=B.vd}else{r=B.vd
-p=B.vd}l=h
+if(p==null)p=B.vc}else{r=B.vc
+p=B.vc}l=h
 continue}if(j){i=h.b
 i=i==null?b:i.galY()
 j=i===!0}else j=!1
@@ -136830,7 +136830,7 @@ k.d=0
 for(s=k.a,r=!0;c<s;){while(r){q=k.t9(10)
 p=B.Si[q]
 o=B.p.U(p,1)&15
-if(o===12){p=B.vc[(q<<2&12|k.lc(2))>>>0]
+if(o===12){p=B.vb[(q<<2&12|k.lc(2))>>>0]
 n=B.p.U(p,1)
 c+=B.p.U(p,4)&4095
 k.ir(4-(n&7))}else if(o===0)throw A.n(A.bH("TIFFFaxDecoder0"))
@@ -136848,7 +136848,7 @@ if(m===100){p=B.RH[k.t9(9)]
 o=B.p.U(p,1)&15
 m=B.p.U(p,5)&2047
 if(o===12){k.ir(5)
-p=B.vc[k.lc(4)]
+p=B.vb[k.lc(4)]
 n=B.p.U(p,1)
 m=B.p.U(p,4)&4095
 k.mi(a,b,c,m)
@@ -137008,7 +137008,7 @@ IL(){var s,r,q,p,o,n,m=this
 for(s=0,r=!0;r;){q=m.t9(10)
 p=B.Si[q]
 o=B.p.U(p,1)&15
-if(o===12){p=B.vc[(q<<2&12|m.lc(2))>>>0]
+if(o===12){p=B.vb[(q<<2&12|m.lc(2))>>>0]
 n=B.p.U(p,1)
 s+=B.p.U(p,4)&4095
 m.ir(4-(n&7))}else if(o===0)throw A.n(A.bH("TIFFFaxDecoder0"))
@@ -137023,7 +137023,7 @@ if(p===100){q=B.RH[m.t9(9)]
 o=B.p.U(q,1)&15
 n=B.p.U(q,5)
 if(o===12){m.ir(5)
-q=B.vc[m.lc(4)]
+q=B.vb[m.lc(4)]
 n=B.p.U(q,1)
 s+=B.p.U(q,4)&4095
 m.ir(4-(n&7))}else if(o===15)throw A.n(A.bH("TIFFFaxDecoder2"))
@@ -144074,7 +144074,7 @@ if(!f.e)b=A.bu(A.AN(e,b,e,e,e,e,e,e,e,e),e,e)
 else{s=B.cv.i(0.12)
 r=A.h(4)
 q=d.k3
-a=A.a([A.t(A.a([A.i(e,B.bZJ,B.l,e,e,new A.j(s,e,A.K(B.cv.i(0.5),1),r,e,e,B.r),e,e,e,e,B.dv,e,e,e)],a0),B.v,B.e,B.f,0,e,e),B.P,A.c("Neonatal Jaundice",e,e,e,e,A.f(e,e,q,e,e,e,e,e,e,e,e,22,e,e,B.w,e,e,!0,e,e,e,e,e,e,e,e),e,e,e),A.c("\u226535 weeks gestation \xb7 TSB threshold calculator",e,e,e,e,A.f(e,e,q.i(0.6),e,e,e,e,e,e,e,e,13,e,e,e,e,e,!0,e,e,e,e,e,e,e,e),e,e,e),B.a1,f.az0(),B.I,f.aAR(),B.I,f.azu(),B.a1,A.b0(A.md(B.c03,f.gaz1(),A.fC(e,e,b,e,e,e,e,e,e,a,e,e,B.co,e,new A.aH(A.h(12),B.C),e,e,e,e,e)),e,1/0)],a0)
+a=A.a([A.t(A.a([A.i(e,B.bZK,B.l,e,e,new A.j(s,e,A.K(B.cv.i(0.5),1),r,e,e,B.r),e,e,e,e,B.dv,e,e,e)],a0),B.v,B.e,B.f,0,e,e),B.P,A.c("Neonatal Jaundice",e,e,e,e,A.f(e,e,q,e,e,e,e,e,e,e,e,22,e,e,B.w,e,e,!0,e,e,e,e,e,e,e,e),e,e,e),A.c("\u226535 weeks gestation \xb7 TSB threshold calculator",e,e,e,e,A.f(e,e,q.i(0.6),e,e,e,e,e,e,e,e,13,e,e,e,e,e,!0,e,e,e,e,e,e,e,e),e,e,e),B.a1,f.az0(),B.I,f.aAR(),B.I,f.azu(),B.a1,A.b0(A.md(B.c03,f.gaz1(),A.fC(e,e,b,e,e,e,e,e,e,a,e,e,B.co,e,new A.aH(A.h(12),B.C),e,e,e,e,e)),e,1/0)],a0)
 if(f.cy){b=f.gaYp()
 s=A.h(16)
 r=A.K(f.gLi().i(0.4),1.5)
@@ -144690,7 +144690,7 @@ d2=a2.dx
 d2===$&&A.b()
 d2.ig(0,0)
 A.uI(B.dk,new A.b9n(a2),t.a)},
-p(b8){var s,r,q,p,o,n,m,l,k,j,i,h,g,f,e,d,c,b,a,a0,a1,a2,a3,a4,a5,a6,a7=this,a8=null,a9="Normal range",b0=A.d(b8),b1=A.bp(a8,a8,a8,!0,!0,a8,a8,1,a8,a8,0,!1,a8,!1,a8,a8,a8,a8,!0,a8,a8,a8,a8,a8,B.c_q,a8,a8,a8,1,a8,!0),b2=A.kC(!0,a8,!0,!0,a8,a8,!1),b3=a7.az4(),b4=a7.aB3(),b5=a7.azq(),b6=A.h(10),b7=t.p
+p(b8){var s,r,q,p,o,n,m,l,k,j,i,h,g,f,e,d,c,b,a,a0,a1,a2,a3,a4,a5,a6,a7=this,a8=null,a9="Normal range",b0=A.d(b8),b1=A.bp(a8,a8,a8,!0,!0,a8,a8,1,a8,a8,0,!1,a8,!1,a8,a8,a8,a8,!0,a8,a8,a8,a8,a8,B.c_r,a8,a8,a8,1,a8,!0),b2=A.kC(!0,a8,!0,!0,a8,a8,!1),b3=a7.az4(),b4=a7.aB3(),b5=a7.azq(),b6=A.h(10),b7=t.p
 b6=A.a([b3,B.a1,b4,B.I,b5,B.a1,A.i(a8,A.dI(!1,B.at,!0,a8,A.c_(!1,A.h(10),!0,B.aby,a8,!0,a8,a8,a8,a8,a8,a8,a8,a8,a8,a8,a8,a7.gayA(),a8,a8,a8,a8,a8,a8,a8),B.l,B.a6,0,a8,a8,a8,a8,a8,B.cj),B.l,a8,a8,new A.j(a8,a8,a8,b6,a8,B.axG,B.r),a8,50,a8,a8,a8,a8,a8,a8)],b7)
 if(a7.ch&&a7.CW!=null){b3=a7.dy
 b3===$&&A.b()
@@ -145753,7 +145753,7 @@ r=this.b
 q=r.b
 p=t.p
 n=A.a([A.c(n,o,o,o,o,A.f(o,o,q,o,o,o,o,o,o,o,o,12.5,o,o,B.M,o,o,!0,o,o,o,o,o,o,o,o),o,o,o)],p)
-if(m)B.h.A(n,A.a([B.aD,A.i(o,B.bZC,B.l,o,o,new A.j(q,o,o,A.h(4),o,o,B.r),o,o,o,o,B.op,o,o,o)],p))
+if(m)B.h.A(n,A.a([B.aD,A.i(o,B.bZD,B.l,o,o,new A.j(q,o,o,A.h(4),o,o,B.r),o,o,o,o,B.op,o,o,o)],p))
 n=A.a([A.t(n,B.v,B.e,B.f,0,o,o),B.e8],p)
 B.h.A(n,J.e_(a.b,new A.b7N(r),t.l))
 return A.i(o,A.l(n,B.y,B.e,B.f,0,B.t),B.l,o,o,s,o,o,o,B.cn,B.c0,o,o,o)},
@@ -146072,7 +146072,7 @@ if(s>110)return new A.FY("Very High Mortality","Score > 110 \xb7 >90% predicted"
 if(s>=90)return new A.FY("High Mortality","Score 90\u2013110 \xb7 50\u201375% predicted","High predicted mortality. Requires burn ICU care and multidisciplinary team.",B.ay,B.ay,B.L0)
 if(s>=70)return new A.FY("Moderate Mortality","Score 70\u201390 \xb7 10\u201350% predicted","Moderate predicted mortality. Close monitoring and early intervention essential.",B.fB,B.fB,B.KT)
 return new A.FY("Low Mortality","Score < 70 \xb7 <5% predicted","Low predicted mortality. Standard burn unit care recommended.",B.ae,B.ae,B.oK)},
-p(a3){var s,r,q,p,o,n,m,l,k,j,i,h,g,f=this,e=null,d=A.d(a3).ax,c=A.d(a3).ax.a===B.b3,b=A.d(a3),a=t.p,a0=A.bp(A.a([A.kS(B.Le,B.ld,f.gaBL(),A.jF(e,e,e,e,e,e,e,e,e,B.cm,e,e,e,e,e,e,e,e,e,e))],a),e,e,!0,!0,e,e,1,e,e,0,!1,e,!1,e,e,e,e,!0,e,e,e,e,e,B.c_d,e,e,e,1,e,!0),a1=d.k3,a2=A.a([A.l(A.a([A.i(e,B.c17,B.l,e,e,new A.j(B.cm.i(0.12),e,e,A.h(20),e,e,B.r),e,e,e,e,B.dv,e,e,e),B.K,A.c("Revised Baux Score",e,e,e,e,A.f(e,e,a1,e,e,e,e,e,e,e,e,22,e,e,B.w,e,e,!0,e,e,e,e,e,e,e,e),e,e,e),B.Z,A.c("Predicted mortality from burn injury",e,e,e,e,A.f(e,e,a1.i(0.6),e,e,e,e,e,e,e,e,12.5,e,e,e,e,e,!0,e,e,e,e,e,e,e,e),e,e,e)],a),B.y,B.e,B.f,0,B.t),B.aj],a)
+p(a3){var s,r,q,p,o,n,m,l,k,j,i,h,g,f=this,e=null,d=A.d(a3).ax,c=A.d(a3).ax.a===B.b3,b=A.d(a3),a=t.p,a0=A.bp(A.a([A.kS(B.Le,B.ld,f.gaBL(),A.jF(e,e,e,e,e,e,e,e,e,B.cm,e,e,e,e,e,e,e,e,e,e))],a),e,e,!0,!0,e,e,1,e,e,0,!1,e,!1,e,e,e,e,!0,e,e,e,e,e,B.c_e,e,e,e,1,e,!0),a1=d.k3,a2=A.a([A.l(A.a([A.i(e,B.c17,B.l,e,e,new A.j(B.cm.i(0.12),e,e,A.h(20),e,e,B.r),e,e,e,e,B.dv,e,e,e),B.K,A.c("Revised Baux Score",e,e,e,e,A.f(e,e,a1,e,e,e,e,e,e,e,e,22,e,e,B.w,e,e,!0,e,e,e,e,e,e,e,e),e,e,e),B.Z,A.c("Predicted mortality from burn injury",e,e,e,e,A.f(e,e,a1.i(0.6),e,e,e,e,e,e,e,e,12.5,e,e,e,e,e,!0,e,e,e,e,e,e,e,e),e,e,e)],a),B.y,B.e,B.f,0,B.t),B.aj],a)
 if(f.a.c!=null){s=B.cm.i(c?0.12:0.07)
 r=A.K(B.cm.i(0.3),1)
 q=A.h(8)
@@ -146781,7 +146781,7 @@ l.toString
 l=A.c("Post-Menstrual Age (PMA)",a,a,a,a,A.f(a,a,A.d(l).ax.k3,a,a,a,a,a,a,a,a,14,a,a,B.w,a,a,!0,a,a,a,a,a,a,a,a),a,a,a)
 m=b.c
 m.toString
-m=A.t(A.a([B.c_n,B.an,A.l(A.a([l,A.c("Also called: Postconceptional Age (PCA)",a,a,a,a,A.f(a,a,A.d(m).ax.k3.i(0.6),a,a,a,a,a,a,a,a,11.5,a,a,a,a,a,!0,a,a,a,a,a,a,a,a),a,a,a)],n),B.y,B.e,B.f,0,B.t)],n),B.v,B.e,B.f,0,a,a)
+m=A.t(A.a([B.c_o,B.an,A.l(A.a([l,A.c("Also called: Postconceptional Age (PCA)",a,a,a,a,A.f(a,a,A.d(m).ax.k3.i(0.6),a,a,a,a,a,a,a,a,11.5,a,a,a,a,a,!0,a,a,a,a,a,a,a,a),a,a,a)],n),B.y,B.e,B.f,0,B.t)],n),B.v,B.e,B.f,0,a,a)
 l=b.a64("PMA = GA at Birth (weeks) + Chronological Age (weeks)")
 o=b.c
 o.toString
@@ -146851,7 +146851,7 @@ q=A.x(A.c("What is CGA & PMA? \u2014 Formulas & Clinical Use",m,m,m,m,A.f(m,m,A.
 p=n.x?0.5:0
 o=n.c
 o.toString
-return A.bW(m,A.i(m,A.t(A.a([B.bZG,B.Y,q,A.bTu(A.aa(B.oB,A.d(o).ax.b,m,20),B.at,p)],t.p),B.v,B.e,B.f,0,m,m),B.l,m,m,new A.j(l.at,m,s,r,m,m,B.r),m,m,m,m,B.cx,m,m,m),B.S,!1,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,new A.baX(n),m,m,m,m,m,m,!1,B.aF)},
+return A.bW(m,A.i(m,A.t(A.a([B.bZH,B.Y,q,A.bTu(A.aa(B.oB,A.d(o).ax.b,m,20),B.at,p)],t.p),B.v,B.e,B.f,0,m,m),B.l,m,m,new A.j(l.at,m,s,r,m,m,B.r),m,m,m,m,B.cx,m,m,m),B.S,!1,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,new A.baX(n),m,m,m,m,m,m,!1,B.aF)},
 aDf(){var s,r,q,p=this,o=null,n=t.s,m=A.a([A.a(["Reference","Term (40 weeks)","Last Menstrual Period"],n),A.a(["Units","Weeks / months","Always weeks"],n),A.a(["Used for","Development & growth","Medical thresholds"],n),A.a(["Formula","PMA \u2212 40w","GA at birth + age"],n),A.a(["Duration","Until 2 years","Entire NICU stay"],n)],t.rj)
 n=p.c
 n.toString
@@ -147179,7 +147179,7 @@ l.toString
 l=B.i.B(l,0)
 k=j.e.h(0,"octreotide_mcg")
 k.toString
-B.h.A(g,A.a([B.bK,new A.eq("D10W bolus (preferred \u2014 peripheral)",h,"mL D10","5 mL/kg D10W IV bolus = 0.5 g/kg dextrose. PIV-friendly.",i),B.aY,new A.eq("D25W bolus (CVL only)",s,"mL D25","2 mL/kg D25W = 0.5 g/kg dextrose. Sclerosing \u2014 CVL only.",i),B.aY,new A.eq("D50W bolus (CVL, adult-style)",r,"mL D50","1 mL/kg D50W = 0.5 g/kg dextrose. Sclerosing \u2014 CVL only.",i),B.aY,new A.eq("D10 maintenance infusion (GIR 6\u20138 mg/kg/min)",q+" \u2013 "+p,"mL/hr D10","GIR 6\u20138 mg/kg/min of D10W. Use the GIR Calculator for two-stock mixing.",i),B.aY,new A.eq("No IV access \u2014 IM/SQ rescue","Glucagon "+o+" mg  +  Epi "+n+" mg","IM / SQ","Glucagon 0.003 mg/kg  +  Epi 0.01 mg/kg IM/SQ as bridging while IV access is established.",i),B.aY,new A.eq("If requirement > 10 mg/kg/min \u2014 adjuncts","Diazoxide "+m+"\u2013"+l+" mg/day  \xb7  Octreotide "+B.i.B(k,0)+" mcg","PO / IV","Diazoxide 3\u20138 mg/kg/day PO q 12 h. Octreotide 10 mcg/kg IV or SQ q 8 h. Workup hyperinsulinism (insulin, C-peptide, cortisol, GH, FFA, lactate, \u03b2-OHB).",i),B.aY,B.aq0],f))}g.push(B.bK)
+B.h.A(g,A.a([B.bK,new A.eq("10% dextrose bolus (preferred \u2014 peripheral)",h,"mL of 10% dextrose","5 mL/kg of 10% dextrose intravenous bolus = 0.5 g/kg dextrose. Safe through a peripheral intravenous line.",i),B.aY,new A.eq("25% dextrose bolus (central line only)",s,"mL of 25% dextrose","2 mL/kg of 25% dextrose = 0.5 g/kg dextrose. Sclerosing \u2014 central venous line only.",i),B.aY,new A.eq("50% dextrose bolus (central line, adult-style)",r,"mL of 50% dextrose","1 mL/kg of 50% dextrose = 0.5 g/kg dextrose. Sclerosing \u2014 central venous line only.",i),B.aY,new A.eq("10% dextrose maintenance infusion (glucose infusion rate 6\u20138 mg/kg/min)",q+" \u2013 "+p,"mL/hr of 10% dextrose","Glucose infusion rate 6\u20138 mg/kg/min of 10% dextrose. Use the Glucose Infusion Rate (GIR) Calculator for two-stock mixing.",i),B.aY,new A.eq("No intravenous access \u2014 intramuscular / subcutaneous rescue","Glucagon "+o+" mg  +  Adrenaline "+n+" mg","intramuscular / subcutaneous","Glucagon 0.003 mg/kg  +  Adrenaline (epinephrine) 0.01 mg/kg intramuscular or subcutaneous, as a bridge while intravenous access is established.",i),B.aY,new A.eq("If requirement > 10 mg/kg/min \u2014 adjuncts","Diazoxide "+m+"\u2013"+l+" mg/day  \xb7  Octreotide "+B.i.B(k,0)+" mcg","oral / intravenous","Diazoxide 3\u20138 mg/kg/day orally, divided every 12 h. Octreotide 10 mcg/kg intravenous or subcutaneous every 8 h. Work up hyperinsulinism (insulin, C-peptide, cortisol, growth hormone, free fatty acids, lactate, beta-hydroxybutyrate).",i),B.aY,B.aq_],f))}g.push(B.bK)
 g.push(B.aq4)
 return new A.ju("Hypoglycaemia Management (\u2193Glu)",g,i)}}
 A.bfe.prototype={
@@ -147548,7 +147548,7 @@ CM(a,b,c){var s=this,r=null,q=s.c
 q.toString
 return new A.cL(r,new A.j(A.d(q).at,r,r,r,r,r,B.r),A.a([s.fP(a,B.F),s.fP(b,B.a7),s.fP(c,B.a7)],t.p))},
 aB8(){var s=null
-return this.nL(A.l(A.a([A.i(s,B.c_k,B.l,s,s,new A.j(B.bS,s,s,A.h(6),s,s,B.r),s,s,s,s,B.cE,s,s,s),B.a1,A.hK(new A.bgb(this))],t.p),B.y,B.e,B.f,0,B.t))},
+return this.nL(A.l(A.a([A.i(s,B.c_l,B.l,s,s,new A.j(B.bS,s,s,A.h(6),s,s,B.r),s,s,s,s,B.cE,s,s,s),B.a1,A.hK(new A.bgb(this))],t.p),B.y,B.e,B.f,0,B.t))},
 C4(a,b,c){var s=this,r=null,q=s.c
 q.toString
 return new A.cL(r,new A.j(A.d(q).at,r,r,r,r,r,B.r),A.a([s.fP(a,B.F),s.fP(b,B.a7),s.fP(c,B.a7)],t.p))},
@@ -147778,7 +147778,7 @@ $S:70}
 A.bgi.prototype={
 $1(a){var s=null,r=this.a.c
 r.toString
-return new A.z(B.eJ,A.t(A.a([B.bZ5,A.x(A.c(a,s,s,s,s,A.f(s,s,A.d(r).ax.k3,s,s,s,s,s,s,s,s,12,s,s,s,s,1.4,!0,s,s,s,s,s,s,s,s),s,s,s),1)],t.p),B.y,B.e,B.f,0,s,s),s)},
+return new A.z(B.eJ,A.t(A.a([B.bZ6,A.x(A.c(a,s,s,s,s,A.f(s,s,A.d(r).ax.k3,s,s,s,s,s,s,s,s,12,s,s,s,s,1.4,!0,s,s,s,s,s,s,s,s),s,s,s),1)],t.p),B.y,B.e,B.f,0,s,s),s)},
 $S:24}
 A.bg3.prototype={
 $2(a,b){var s,r,q,p,o,n,m=null,l=B.bS.i(0.06),k=A.K(B.bS.i(0.3),1),j=A.h(8),i=this.a,h=i.c
@@ -147793,7 +147793,7 @@ r=A.c("\u2022 Oxygen saturation (pre/post ductal if possible)",m,m,m,m,A.f(m,m,A
 q=i.c
 q.toString
 p=t.p
-o=A.i(m,A.l(A.a([B.bZO,B.W,h,s,r,A.c("\u2022 Temperature every 30 minutes",m,m,m,m,A.f(m,m,A.d(q).ax.k3,m,m,m,m,m,m,m,m,12,m,m,m,m,m,!0,m,m,m,m,m,m,m,m),m,m,m)],p),B.y,B.e,B.f,0,B.t),B.l,m,m,new A.j(l,m,k,j,m,m,B.r),m,m,m,m,B.b9,m,m,m)
+o=A.i(m,A.l(A.a([B.bZP,B.W,h,s,r,A.c("\u2022 Temperature every 30 minutes",m,m,m,m,A.f(m,m,A.d(q).ax.k3,m,m,m,m,m,m,m,m,12,m,m,m,m,m,!0,m,m,m,m,m,m,m,m),m,m,m)],p),B.y,B.e,B.f,0,B.t),B.l,m,m,new A.j(l,m,k,j,m,m,B.r),m,m,m,m,B.b9,m,m,m)
 j=B.cu.i(0.06)
 k=A.K(B.cu.i(0.4),1)
 l=A.h(8)
@@ -150841,7 +150841,7 @@ p=s.f
 if(p!=null){p=B.i.B(p,0)
 n=s.r
 n.toString
-B.h.A(q,A.a([B.bK,new A.eq("Free water deficit",p,"mL","FWD = 0.6 \xd7 wt \xd7 ([Na]/140 \u2212 1)",r),B.aY,new A.eq("Replace over 48 hours",B.i.B(n,1),"mL/hr","Use D5W or D5 \xbcNS. Goal: \u2193 Na 10\u201315 mEq/L per 24 hr. 4 mL free water per kg \u2248 \u2193 Na by 1 mEq/L.",r),B.aY,B.apY],o))}q.push(B.bK)
+B.h.A(q,A.a([B.bK,new A.eq("Free water deficit",p,"mL","FWD = 0.6 \xd7 wt \xd7 ([Na]/140 \u2212 1)",r),B.aY,new A.eq("Replace over 48 hours",B.i.B(n,1),"mL/hr","Use D5W or D5 \xbcNS. Goal: \u2193 Na 10\u201315 mEq/L per 24 hr. 4 mL free water per kg \u2248 \u2193 Na by 1 mEq/L.",r),B.aY,B.apX],o))}q.push(B.bK)
 q.push(B.aq7)
 return new A.ju("Free Water Deficit (\u2191Na)",q,r)}}
 A.blf.prototype={
@@ -150967,7 +150967,7 @@ c=A.x(A.jZ(B.Ls,B.bYQ,h.gaHC(),A.jv(d,c,B.co,new A.aH(A.h(12),B.C),g,g)),3)
 s=f.k3
 r=f.ry
 if(r==null){r=f.t
-if(r==null)r=s}r=A.a([a,B.a1,a1,B.a1,A.t(A.a([c,B.bw,A.x(A.jd(B.jr,B.bZV,h.gaHE(),A.je(g,g,g,g,g,g,g,g,g,s,g,g,B.co,g,new A.aH(A.h(12),B.C),new A.a6(r,1,B.G,-1),g,g,g,g)),2)],a0),B.v,B.e,B.f,0,g,g)],a0)
+if(r==null)r=s}r=A.a([a,B.a1,a1,B.a1,A.t(A.a([c,B.bw,A.x(A.jd(B.jr,B.bZW,h.gaHE(),A.je(g,g,g,g,g,g,g,g,g,s,g,g,B.co,g,new A.aH(A.h(12),B.C),new A.a6(r,1,B.G,-1),g,g,g,g)),2)],a0),B.v,B.e,B.f,0,g,g)],a0)
 if(h.at&&h.ax!=null&&h.ay!=null){q=h.gaZL()
 c=B.p.b8(h.gm8(),7)
 a=B.p.aO(h.gm8(),7)
@@ -151026,7 +151026,7 @@ s=(s==null?a.k2:s).i(0.5)
 r=A.h(10)
 r=A.i(p,A.l(A.a([A.c("Week "+q.CW,p,p,p,p,A.f(p,p,n,p,p,p,p,p,p,p,p,13,p,p,B.w,p,p,!0,p,p,p,p,p,p,p,p),p,p,p),B.Z,A.c(A.c5C(q.CW),p,p,p,p,A.f(p,p,n,p,p,p,p,p,p,p,p,13,p,p,p,p,1.5,!0,p,p,p,p,p,p,p,p),p,p,p)],g),B.y,B.e,B.f,0,B.t),B.l,p,p,new A.j(s,p,p,r,p,p,B.r),p,p,p,p,B.b9,p,p,p)
 s=k.i(0.5)
-return q.yl(a,A.l(A.a([m,B.Z,l,B.aj,i,B.a1,h,j,r,B.I,A.jd(B.Lu,B.bZQ,new A.bmN(q),A.je(p,p,p,p,p,p,p,p,p,k,p,p,p,p,new A.aH(A.h(10),B.C),new A.a6(s,1,B.G,-1),p,p,p,p))],g),B.a8,B.e,B.f,0,B.t))},
+return q.yl(a,A.l(A.a([m,B.Z,l,B.aj,i,B.a1,h,j,r,B.I,A.jd(B.Lu,B.bZR,new A.bmN(q),A.je(p,p,p,p,p,p,p,p,p,k,p,p,p,p,new A.aH(A.h(10),B.C),new A.a6(s,1,B.G,-1),p,p,p,p))],g),B.a8,B.e,B.f,0,B.t))},
 aB_(a){var s,r,q,p,o,n,m,l,k,j=this,i=null,h=B.p.b8(j.gm8(),7),g=B.p.aO(j.gm8(),7),f=j.ay
 f.toString
 s=f.d_(A.cS(14,0,0,0).a)
@@ -151124,7 +151124,7 @@ o=i?$.a6b().dG(c):"Tap to select date"
 n=i?B.F:B.a7
 m=t.p
 m=A.a([r,B.an,A.x(A.l(A.a([p,B.aT,A.c(o,l,l,l,l,A.f(l,l,i?q:q.i(0.35),l,l,l,l,l,l,l,l,14,l,l,n,l,l,!0,l,l,l,l,l,l,l,l),l,l,l)],m),B.y,B.e,B.f,0,B.t),1)],m)
-if(f!=null)m.push(A.iu(B.bZY,l,l,f,l,A.jF(l,l,l,l,l,l,l,l,l,b.b,l,B.b2,B.ix,l,l,l,l,B.jx,l,l)))
+if(f!=null)m.push(A.iu(B.bZZ,l,l,f,l,A.jF(l,l,l,l,l,l,l,l,l,b.b,l,B.b2,B.ix,l,l,l,l,B.jx,l,l)))
 return A.bW(l,A.i(l,A.t(m,B.v,B.e,B.f,0,l,l),B.l,l,l,new A.j(k.at,l,s,j,l,l,B.r),l,l,l,l,B.cx,l,l,l),B.S,!1,l,l,l,l,l,l,l,l,l,l,l,l,l,l,l,l,l,l,l,e,l,l,l,l,l,l,!1,B.aF)},
 Uh(a,b,c,d){var s,r=null,q=A.a([$.Pz()],t.VS),p=a.k3,o=A.f(r,r,p,r,r,r,r,r,r,r,r,r,r,r,r,r,r,!0,r,r,r,r,r,r,r,r),n=A.f(r,r,p.i(0.65),r,r,r,r,r,r,r,r,13,r,r,r,r,r,!0,r,r,r,r,r,r,r,r),m=A.f(r,r,p.i(0.35),r,r,r,r,r,r,r,r,r,r,r,r,r,r,!0,r,r,r,r,r,r,r,r),l=A.h(10),k=A.h(10),j=a.ry
 if(j==null){j=a.t
@@ -152040,7 +152040,7 @@ g=A.bp(j,j,j,!0,!0,i.b,j,1,j,j,j,!1,j,!1,j,j,A.bw(j,j,j,A.aa(B.hN,h,j,j),j,j,new
 h=A.d(a)
 s=B.cv.i(0.12)
 r=A.h(4)
-r=A.i(j,B.bZF,B.l,j,j,new A.j(s,j,A.K(B.cv.i(0.5),1),r,j,j,B.r),j,j,j,j,B.dv,j,j,j)
+r=A.i(j,B.bZG,B.l,j,j,new A.j(s,j,A.K(B.cv.i(0.5),1),r,j,j,B.r),j,j,j,j,B.dv,j,j,j)
 s=i.k3
 q=A.c("Neonatal Jaundice\nAssessment",j,j,j,j,A.f(j,j,s,j,j,j,j,j,j,j,j,26,j,j,B.w,j,1.2,!0,j,j,j,j,j,j,j,j),j,j,j)
 p=A.c("Choose the guideline based on gestational age at birth",j,j,j,j,A.f(j,j,s.i(0.6),j,j,j,j,j,j,j,j,13,j,j,j,j,j,!0,j,j,j,j,j,j,j,j),j,j,j)
@@ -152297,7 +152297,7 @@ r=A.Q(new A.E(l,new A.ble(p,n),r),r.j("aj.E"))
 r=A.t(r,B.v,B.e,B.f,0,o,o)
 q=j.i(0.6)
 j=j.i(0.2)
-return new A.z(new A.R(20,20,20,k.f.d+24),A.l(A.a([i,B.a1,m,B.a1,s,B.I,r,B.aj,A.b0(A.jd(B.avc,B.c_h,p.r,A.je(o,o,o,o,o,o,o,o,o,q,o,o,B.f1,o,new A.aH(A.h(10),B.C),new A.a6(j,1,B.G,-1),o,o,o,o)),o,1/0)],h),B.v,B.e,B.as,0,B.t),o)}}
+return new A.z(new A.R(20,20,20,k.f.d+24),A.l(A.a([i,B.a1,m,B.a1,s,B.I,r,B.aj,A.b0(A.jd(B.avc,B.c_i,p.r,A.je(o,o,o,o,o,o,o,o,o,q,o,o,B.f1,o,new A.aH(A.h(10),B.C),new A.a6(j,1,B.G,-1),o,o,o,o)),o,1/0)],h),B.v,B.e,B.as,0,B.t),o)}}
 A.ble.prototype={
 $1(a){var s=null,r=this.a,q=Math.abs(r.e-a.a)<0.01,p=q?B.ay:B.ay.i(0.08),o=A.h(12),n=A.K(q?B.ay:B.ay.i(0.25),1),m=A.c(a.b,s,s,s,s,A.f(s,s,q?B.z:B.ay,s,s,s,s,s,s,s,s,14,s,s,B.w,s,s,!0,s,s,s,s,s,s,s,s),B.a9,s,s)
 return A.x(A.bW(s,A.ek(s,A.l(A.a([m,B.aT,A.c(a.c,s,s,s,s,A.f(s,s,q?B.bj:this.b.k3.i(0.45),s,s,s,s,s,s,s,s,11,s,s,s,s,s,!0,s,s,s,s,s,s,s,s),B.a9,s,s)],t.p),B.v,B.e,B.f,0,B.t),s,B.az,new A.j(p,s,n,o,s,s,B.r),B.agh,s,s,B.rE,B.co,s),B.S,!1,s,s,s,s,s,s,s,s,s,s,s,s,s,s,s,s,s,s,s,new A.bld(r,a),s,s,s,s,s,s,!1,B.aF),1)},
@@ -152362,7 +152362,7 @@ p.toString
 p=B.i.B(p,1)
 o=n.e.h(0,"oral_high_mmol")
 o.toString
-B.h.A(j,A.a([B.bK,new A.eq("IV bolus (standard)",k,l,"0.2 mmol/kg = 50 mg/kg = "+s+" mL of 10 % MgSO\u2084. Max 4 mmol / 1 g / 10 mL over 10 min.",m),B.aY,new A.eq("Slow IV (preferred for stable patient)",r+" \u2013 "+q,l,"MgSO\u2084 25\u201350 mg/kg IV over 2\u20134 hours.",m),B.aY,new A.eq("Oral replacement",p+" \u2013 "+B.i.B(o,1),"mmol Mg","Oral: 0.2\u20130.4 mmol/kg. Useful for chronic mild hypomagnesaemia and for ongoing maintenance after IV replacement.",m),B.aY,B.aq1],i))}j.push(B.bK)
+B.h.A(j,A.a([B.bK,new A.eq("IV bolus (standard)",k,l,"0.2 mmol/kg = 50 mg/kg = "+s+" mL of 10 % MgSO\u2084. Max 4 mmol / 1 g / 10 mL over 10 min.",m),B.aY,new A.eq("Slow IV (preferred for stable patient)",r+" \u2013 "+q,l,"MgSO\u2084 25\u201350 mg/kg IV over 2\u20134 hours.",m),B.aY,new A.eq("Oral replacement",p+" \u2013 "+B.i.B(o,1),"mmol Mg","Oral: 0.2\u20130.4 mmol/kg. Useful for chronic mild hypomagnesaemia and for ongoing maintenance after IV replacement.",m),B.aY,B.aq0],i))}j.push(B.bK)
 j.push(B.aqc)
 return new A.ju("Magnesium Correction (\u2193Mg)",j,m)}}
 A.bsz.prototype={
@@ -152606,7 +152606,7 @@ s.CW$=0
 this.Y()},
 aQ8(a,b,c,d,e,f,g){return new A.bY(new A.buz(c,g,e,f,a,b,d),null)},
 p(a){var s,r,q,p,o,n,m,l,k,j,i,h=this,g=null,f=A.d(a),e=t.p,d=A.bp(g,g,g,!0,!0,A.d(a).ax.b,g,1,g,g,g,!1,g,!1,g,g,A.bw(g,g,g,A.aa(B.hN,A.d(a).ax.c,g,g),g,g,new A.buA(a),g,g,g,g,g),g,!0,g,g,g,g,g,A.l(A.a([A.c("Neonatal BP Calculator",g,g,g,g,A.f(g,g,A.d(a).ax.c,g,g,g,g,g,g,g,g,18,g,g,B.w,g,g,!0,g,g,g,g,g,g,g,g),g,g,g),A.c("Zubrow et al. 1995 \xb7 24\u201346 weeks PMA",g,g,g,g,A.f(g,g,A.d(a).ax.c.i(0.7),g,g,g,g,g,g,g,g,11,g,g,g,g,g,!0,g,g,g,g,g,g,g,g),g,g,g)],e),B.y,B.e,B.f,0,B.t),g,g,g,1,g,!0),c=A.h(4)
-c=A.t(A.a([A.i(g,B.c_8,B.l,g,g,new A.j(B.re,g,A.K(B.acm,1),c,g,g,B.r),g,g,g,g,B.dv,g,g,g)],e),B.v,B.e,B.f,0,g,g)
+c=A.t(A.a([A.i(g,B.c_9,B.l,g,g,new A.j(B.re,g,A.K(B.acm,1),c,g,g,B.r),g,g,g,g,B.dv,g,g,g)],e),B.v,B.e,B.f,0,g,g)
 s=A.c("Neonatal Blood Pressure Centiles",g,g,g,g,A.f(g,g,A.d(a).ax.k3,g,g,g,g,g,g,g,g,22,g,g,B.w,g,g,!0,g,g,g,g,g,g,g,g),g,g,g)
 r=A.c("By postmenstrual age (PMA) \u2014 Zubrow et al. 1995",g,g,g,g,A.f(g,g,A.d(a).ax.k3.i(0.5),g,g,g,g,g,g,g,g,13,g,g,g,g,g,!0,g,g,g,g,g,g,g,g),g,g,g)
 q=h.aAI()
@@ -152829,7 +152829,7 @@ p=A.d(q).ax
 q=a1.ga5X()?a1.gaQj():a2
 o=p.k3
 n=t.p
-o=A.a([a6,B.I,s,B.I,r,B.a1,A.b0(A.ld(B.auM,B.c_c,q,A.fC(a2,a2,p.b,o.i(0.12),o.i(0.4),a2,0,a2,a2,p.c,a2,a2,a2,a2,new A.aH(A.h(8),B.C),a2,a2,a2,a2,a2)),52,a2)],n)
+o=A.a([a6,B.I,s,B.I,r,B.a1,A.b0(A.ld(B.auM,B.c_d,q,A.fC(a2,a2,p.b,o.i(0.12),o.i(0.4),a2,0,a2,a2,p.c,a2,a2,a2,a2,new A.aH(A.h(8),B.C),a2,a2,a2,a2,a2)),52,a2)],n)
 if(a1.y){a6=A.i(a2,a2,B.l,a2,a2,a2,a2,a2,a1.at,a2,a2,a2,a2,a2)
 m=a1.z.h(0,a1.d)
 l=a1.e*24+a1.f
@@ -153371,8 +153371,8 @@ p.click();(self.URL||self.webkitURL).revokeObjectURL(q)
 m=o.c
 m.toString
 A.pl(n,n,!0,n,new A.bu8(o),m,n,!0,t.z)},
-p(a){var s=this,r=null,q="Baby Weight",p=A.d(a),o=A.bp(r,r,r,!0,!0,r,r,1,r,r,0,!1,r,!1,r,r,r,r,!0,r,r,r,r,r,B.bZt,r,r,r,1,r,!0),n=t.p,m=s.ta(A.l(A.a([s.L0(q,B.hP),B.aj,s.q8(s.d,"Enter baby weight in grams","g","e.g. 1200")],n),B.y,B.e,B.f,0,B.t)),l=s.ta(s.aGM()),k=s.ta(s.aHm()),j=s.ta(s.aYA()),i=A.d(a),h=A.d(a)
-h=A.a([m,B.a1,l,B.a1,k,B.a1,j,B.bk,A.t(A.a([A.x(A.jd(B.jr,B.c_0,s.gaQt(),A.je(r,r,r,r,r,r,r,r,r,i.ax.b,r,r,B.co,r,new A.aH(A.h(10),B.C),new A.a6(h.ax.b,1,B.G,-1),r,r,r,r)),1),B.bw,A.x(A.ld(B.Ld,B.c0H,s.gaQr(),A.fC(r,r,A.d(a).ax.b,r,r,r,r,r,r,A.d(a).ax.c,r,r,B.co,r,new A.aH(A.h(10),B.C),r,r,r,r,r)),2)],n),B.v,B.e,B.f,0,r,r)],n)
+p(a){var s=this,r=null,q="Baby Weight",p=A.d(a),o=A.bp(r,r,r,!0,!0,r,r,1,r,r,0,!1,r,!1,r,r,r,r,!0,r,r,r,r,r,B.bZu,r,r,r,1,r,!0),n=t.p,m=s.ta(A.l(A.a([s.L0(q,B.hP),B.aj,s.q8(s.d,"Enter baby weight in grams","g","e.g. 1200")],n),B.y,B.e,B.f,0,B.t)),l=s.ta(s.aGM()),k=s.ta(s.aHm()),j=s.ta(s.aYA()),i=A.d(a),h=A.d(a)
+h=A.a([m,B.a1,l,B.a1,k,B.a1,j,B.bk,A.t(A.a([A.x(A.jd(B.jr,B.c_1,s.gaQt(),A.je(r,r,r,r,r,r,r,r,r,i.ax.b,r,r,B.co,r,new A.aH(A.h(10),B.C),new A.a6(h.ax.b,1,B.G,-1),r,r,r,r)),1),B.bw,A.x(A.ld(B.Ld,B.c0H,s.gaQr(),A.fC(r,r,A.d(a).ax.b,r,r,r,r,r,r,A.d(a).ax.c,r,r,B.co,r,new A.aH(A.h(10),B.C),r,r,r,r,r)),2)],n),B.v,B.e,B.f,0,r,r)],n)
 m=s.cx
 if(m!=null){l=s.c
 l.toString
@@ -153697,7 +153697,7 @@ break}},
 $S:0}
 A.bu8.prototype={
 $1(a){var s=null
-return A.tR(A.a([A.iu(B.bZN,s,s,new A.bu7(this.a),s,s)],t.p),B.bYR,B.bZh)},
+return A.tR(A.a([A.iu(B.bZO,s,s,new A.bu7(this.a),s,s)],t.p),B.bYR,B.bZi)},
 $S:92}
 A.bu7.prototype={
 $0(){var s=this.a.c
@@ -153970,7 +153970,7 @@ r.v(new A.bxz(r))
 s=r.d.ga6()
 if(s!=null)s.fd(0)},
 p(a){var s,r,q,p,o,n,m,l,k,j=this,i=null,h="Fluid: Lactated Ringer's Solution (RL)",g=A.d(a).ax,f=A.d(a).ax.a===B.b3,e=A.d(a),d=A.bw(i,i,i,B.cz,i,i,new A.bxA(a),i,i,i,i,i),c=t.p
-d=A.bp(A.a([A.kS(B.Le,B.ld,j.gaSI(),A.jF(i,i,i,i,i,i,i,i,i,B.d6,i,i,i,i,i,i,i,i,i,i))],c),i,i,!0,!0,i,i,1,i,i,0,!1,i,!1,i,i,d,i,!0,i,i,i,i,i,B.bZg,i,i,i,1,i,!0)
+d=A.bp(A.a([A.kS(B.Le,B.ld,j.gaSI(),A.jF(i,i,i,i,i,i,i,i,i,B.d6,i,i,i,i,i,i,i,i,i,i))],c),i,i,!0,!0,i,i,1,i,i,0,!1,i,!1,i,i,d,i,!0,i,i,i,i,i,B.bZh,i,i,i,1,i,!0)
 s=g.k3
 r=A.l(A.a([A.i(i,B.c_H,B.l,i,i,new A.j(B.jf.i(0.15),i,i,A.h(20),i,i,B.r),i,i,i,i,B.dv,i,i,i),B.K,A.c("Modified Parkland Formula",i,i,i,i,A.f(i,i,s,i,i,i,i,i,i,i,i,22,i,i,B.w,i,i,!0,i,i,i,i,i,i,i,i),i,i,i),B.Z,A.c("Burns fluid resuscitation \u2014 first 24 hours",i,i,i,i,A.f(i,i,s.i(0.6),i,i,i,i,i,i,i,i,12.5,i,i,i,i,i,!0,i,i,i,i,i,i,i,i),i,i,i)],c),B.y,B.e,B.f,0,B.t)
 q=B.dC.i(f?0.12:0.07)
@@ -153981,7 +153981,7 @@ p=A.cu(j.aAw(g,f),i,B.S,i,i,i,B.b7)
 q=B.f0.i(f?0.12:0.07)
 n=A.h(8)
 m=A.K(B.f0.i(0.3),1)
-n=A.a([r,B.aj,o,B.aj,j.ac8(A.l(A.a([p,B.I,A.i(i,A.t(A.a([B.bZv,A.x(A.c("Patient's palm = approximately 1% of body surface area",i,i,i,i,A.f(i,i,B.f0,i,i,i,i,i,i,i,i,12.5,i,i,B.ax,i,i,!0,i,i,i,i,i,i,i,i),i,i,i),1)],c),B.v,B.e,B.f,0,i,i),B.l,i,i,new A.j(q,i,m,n,i,i,B.r),i,i,i,i,B.fF,i,i,i)],c),B.y,B.e,B.f,0,B.t),g,"Rule of Nines \u2014 Age & Percentage Table",B.cb,B.oI),B.aj,j.aAB(g,f),B.aj,A.ro(i,j.aSF(g,f),j.d,i),B.aj,A.ld(B.Lv,B.EB,j.gaSG(),A.fC(i,i,g.b,i,i,i,0,i,i,g.c,i,i,B.co,i,new A.aH(A.h(8),B.C),i,i,i,i,i))],c)
+n=A.a([r,B.aj,o,B.aj,j.ac8(A.l(A.a([p,B.I,A.i(i,A.t(A.a([B.bZw,A.x(A.c("Patient's palm = approximately 1% of body surface area",i,i,i,i,A.f(i,i,B.f0,i,i,i,i,i,i,i,i,12.5,i,i,B.ax,i,i,!0,i,i,i,i,i,i,i,i),i,i,i),1)],c),B.v,B.e,B.f,0,i,i),B.l,i,i,new A.j(q,i,m,n,i,i,B.r),i,i,i,i,B.fF,i,i,i)],c),B.y,B.e,B.f,0,B.t),g,"Rule of Nines \u2014 Age & Percentage Table",B.cb,B.oI),B.aj,j.aAB(g,f),B.aj,A.ro(i,j.aSF(g,f),j.d,i),B.aj,A.ld(B.Lv,B.EB,j.gaSG(),A.fC(i,i,g.b,i,i,i,0,i,i,g.c,i,i,B.co,i,new A.aH(A.h(8),B.C),i,i,i,i,i))],c)
 if(j.x&&j.y!=null){r=j.Q
 r===$&&A.b()
 q=j.as
@@ -154016,7 +154016,7 @@ p=new A.da(k,t.FE)
 B.h.A(s,p.ge6(p).cP(0,new A.bxv(a,b,i),t.jH))
 return A.kQ(l,s,m,B.js,B.e9)},
 aAB(a,b){var s=null,r=B.d6.i(b?0.1:0.06),q=A.K(B.d6.i(0.35),1),p=A.h(10),o=t.p
-return A.i(s,A.l(A.a([A.t(A.a([B.c0_,A.x(A.c("For paediatric patients, Rule of Nines is less accurate.\nUse Lund & Browder Chart for precise TBSA estimation.",s,s,s,s,A.f(s,s,a.k3.i(0.8),s,s,s,s,s,s,s,s,12.5,s,s,s,s,1.45,!0,s,s,s,s,s,s,s,s),s,s,s),1)],o),B.y,B.e,B.f,0,s,s),B.P,A.b0(A.ld(B.aub,B.bZ4,new A.bxx(this),A.fC(s,s,B.d6,s,s,s,0,s,s,B.z,s,s,B.z2,s,new A.aH(A.h(8),B.C),s,s,s,B.bTJ,s)),s,1/0)],o),B.y,B.e,B.f,0,B.t),B.l,s,s,new A.j(r,s,q,p,s,s,B.r),s,s,s,s,B.aK,s,s,s)},
+return A.i(s,A.l(A.a([A.t(A.a([B.c0_,A.x(A.c("For paediatric patients, Rule of Nines is less accurate.\nUse Lund & Browder Chart for precise TBSA estimation.",s,s,s,s,A.f(s,s,a.k3.i(0.8),s,s,s,s,s,s,s,s,12.5,s,s,s,s,1.45,!0,s,s,s,s,s,s,s,s),s,s,s),1)],o),B.y,B.e,B.f,0,s,s),B.P,A.b0(A.ld(B.aub,B.bZ5,new A.bxx(this),A.fC(s,s,B.d6,s,s,s,0,s,s,B.z,s,s,B.z2,s,new A.aH(A.h(8),B.C),s,s,s,B.bTJ,s)),s,1/0)],o),B.y,B.e,B.f,0,B.t),B.l,s,s,new A.j(r,s,q,p,s,s,B.r),s,s,s,s,B.aK,s,s,s)},
 aSF(a,b){var s,r,q,p,o,n,m,l,k=this,j="[\\d.]",i=null,h=a.k3,g=k.KA("Patient Weight (kg)",a),f=t.VS,e=A.a([new A.j6(A.bK(j,!0,!1,!1),!0,"")],f)
 e=A.ec(!1,k.e,k.Kz(a,"e.g. 60","kg"),!1,i,e,B.bL,1,i,i,i,i,i,i,B.ag,B.aC,i,new A.bxp())
 s=k.KA("Burned Body Surface Area \u2014 TBSA (%)",a)
@@ -154185,7 +154185,7 @@ r.v(new A.bwS(r))
 s=r.y
 s===$&&A.b()
 s.su(0,s.a)},
-p(a){var s=this,r=null,q=A.d(a).ax.a===B.b3,p=q?B.HD:B.z,o=q?B.z:B.lR,n=q?B.o8:B.bJ,m=A.d(a),l=t.p,k=A.bp(A.a([A.kS(B.jr,B.ld,s.gaTH(),A.jF(r,r,r,r,r,r,r,r,r,B.cb,r,r,r,r,r,r,r,r,r,r))],l),r,r,!0,!0,r,r,1,r,r,r,!1,r,!1,r,r,r,r,!0,r,r,r,r,r,B.bZH,r,r,r,1,r,!0),j=A.l(A.a([A.bWn(!0,s.e,r,"e.g. 3200","Birth Weight (grams)",o,n,new A.bwU()),B.aj,new A.ani(s.w,new A.bwV(s),n,r),B.aj,A.bWn(!0,s.f,r,"e.g. 72","Observed Hematocrit (%)",o,n,new A.bwW()),B.aj,A.bWn(!0,s.r,"Target hematocrit: 50\u201355%","55","Desired Hematocrit (%)",o,n,new A.bwX()),B.bk,A.b0(A.ld(B.Lr,B.c_m,s.gaBV(),A.fC(r,r,B.cb,r,r,r,r,r,r,B.z,r,r,B.co,r,new A.aH(A.h(12),B.C),r,r,r,r,r)),r,1/0)],l),B.v,B.e,B.f,0,B.t),i=A.d(a).ax.a===B.b3?B.z:B.lR,h=A.h(14),g=A.K(B.cb.i(0.18),1)
+p(a){var s=this,r=null,q=A.d(a).ax.a===B.b3,p=q?B.HD:B.z,o=q?B.z:B.lR,n=q?B.o8:B.bJ,m=A.d(a),l=t.p,k=A.bp(A.a([A.kS(B.jr,B.ld,s.gaTH(),A.jF(r,r,r,r,r,r,r,r,r,B.cb,r,r,r,r,r,r,r,r,r,r))],l),r,r,!0,!0,r,r,1,r,r,r,!1,r,!1,r,r,r,r,!0,r,r,r,r,r,B.bZI,r,r,r,1,r,!0),j=A.l(A.a([A.bWn(!0,s.e,r,"e.g. 3200","Birth Weight (grams)",o,n,new A.bwU()),B.aj,new A.ani(s.w,new A.bwV(s),n,r),B.aj,A.bWn(!0,s.f,r,"e.g. 72","Observed Hematocrit (%)",o,n,new A.bwW()),B.aj,A.bWn(!0,s.r,"Target hematocrit: 50\u201355%","55","Desired Hematocrit (%)",o,n,new A.bwX()),B.bk,A.b0(A.ld(B.Lr,B.c_n,s.gaBV(),A.fC(r,r,B.cb,r,r,r,r,r,r,B.z,r,r,B.co,r,new A.aH(A.h(12),B.C),r,r,r,r,r)),r,1/0)],l),B.v,B.e,B.f,0,B.t),i=A.d(a).ax.a===B.b3?B.z:B.lR,h=A.h(14),g=A.K(B.cb.i(0.18),1)
 l=A.a([new A.ao5(p,o,n,r),B.a1,A.ro(r,A.i(r,A.l(A.a([A.t(A.a([A.aa(B.ts,B.cb,r,18),B.Y,A.c("Patient Details",r,r,r,r,A.f(r,r,i,r,r,r,r,r,r,r,r,14,r,r,B.w,r,r,!0,r,r,r,r,r,r,r,r),r,r,r)],l),B.v,B.e,B.f,0,r,r),B.In,j],l),B.y,B.e,B.f,0,B.t),B.l,r,r,new A.j(p,r,g,h,r,r,B.r),r,r,r,r,B.ao,r,r,r),s.d,r),B.a1],l)
 if(s.x){j=s.z
 j===$&&A.b()
@@ -154283,7 +154283,7 @@ s.CW$=0
 this.Y()},
 aTK(){var s=this,r=A.cl(s.d.a.a)
 s.v(new A.bxS(s,(s.e?0.7:0.4)*r,r))},
-p(a){var s,r,q,p,o,n,m=this,l=null,k=m.d,j=t.p,i=A.l(A.a([new A.ez("Weight","kg",k,new A.bxV(m),"e.g. 14",l),B.aY,new A.agv(m.e,new A.bxW(m),B.bYC,B.bZX,!0,B.ar,l)],j),B.v,B.e,B.f,0,B.t)
+p(a){var s,r,q,p,o,n,m=this,l=null,k=m.d,j=t.p,i=A.l(A.a([new A.ez("Weight","kg",k,new A.bxV(m),"e.g. 14",l),B.aY,new A.agv(m.e,new A.bxW(m),B.bYC,B.bZY,!0,B.ar,l)],j),B.v,B.e,B.f,0,B.t)
 k=A.ak(k.a.a)!=null&&A.cl(k.a.a)>0
 k=A.a([new A.j4("Patient",i,l),B.bK,new A.js("Calculate PO\u2084 dose",B.cR,k,m.gaTJ(),l)],j)
 i=m.f
@@ -154496,7 +154496,7 @@ i.toString
 i=B.i.B(i,1)
 s=k.f.h(0,"high_meq")
 s.toString
-B.h.A(h,A.a([B.bK,new A.eq("KCl IV replacement",i+" \u2013 "+B.i.B(s,1),"mEq","KCl 0.5 \u2013 1 mEq/kg IV over 1\u20132 hours.\nMaximum peripheral concentration: 40 mEq/L.\nMaximum infusion rate: 0.5 mEq/kg/hr (peripheral) or 1 mEq/kg/hr (central, with cardiac monitoring).",j),B.aY,B.apZ],g))}i=k.f
+B.h.A(h,A.a([B.bK,new A.eq("KCl IV replacement",i+" \u2013 "+B.i.B(s,1),"mEq","KCl 0.5 \u2013 1 mEq/kg IV over 1\u20132 hours.\nMaximum peripheral concentration: 40 mEq/L.\nMaximum infusion rate: 0.5 mEq/kg/hr (peripheral) or 1 mEq/kg/hr (central, with cardiac monitoring).",j),B.aY,B.apY],g))}i=k.f
 if(i!=null&&k.e===B.a5O){i=i.h(0,"dextrose_g_low")
 i.toString
 i=B.i.B(i,1)
@@ -154523,7 +154523,7 @@ m.toString
 m=B.i.B(m,1)
 l=k.f.h(0,"kayexalate_high_g")
 l.toString
-B.h.A(h,A.a([B.bK,new A.eq("Dextrose + insulin (cellular shift)",i+" \u2013 "+s+" g  +  "+r+" U insulin","IV","Dextrose 1\u20132 g/kg IV with Insulin 0.1 U/kg IV. Onset 15\u201330 min, lasts 2\u20134 h. Monitor BG q 1 h.",j),B.aY,new A.eq("Calcium gluconate / chloride (membrane stabiliser)",q+" \u2013 "+p,"mg CaCl\u2082","CaCl\u2082 10\u201320 mg/kg IV (max 500 mg/dose) OR Calcium gluconate 100 mg/kg IV (max 2 g/dose). For ECG changes \u2014 onset 1\u20133 min.",j),B.aY,new A.eq("Sodium bicarbonate",o+" \u2013 "+n,"mEq NaHCO\u2083","NaHCO\u2083 1\u20132 mEq/kg IV. Reserve for acidotic patients.",j),B.aY,new A.eq("Kayexalate (sodium polystyrene sulfonate)",m+" \u2013 "+B.i.B(l,1),"g (NG/PR)","Kayexalate 1\u20132 g/kg/dose NG or PR. Removes K from body. Plus loop diuretic + dialysis if oligoanuric.",j),B.aY,B.aq_],g))}h.push(B.bK)
+B.h.A(h,A.a([B.bK,new A.eq("Dextrose + insulin (cellular shift)",i+" \u2013 "+s+" g  +  "+r+" U insulin","IV","Dextrose 1\u20132 g/kg IV with Insulin 0.1 U/kg IV. Onset 15\u201330 min, lasts 2\u20134 h. Monitor BG q 1 h.",j),B.aY,new A.eq("Calcium gluconate / chloride (membrane stabiliser)",q+" \u2013 "+p,"mg CaCl\u2082","CaCl\u2082 10\u201320 mg/kg IV (max 500 mg/dose) OR Calcium gluconate 100 mg/kg IV (max 2 g/dose). For ECG changes \u2014 onset 1\u20133 min.",j),B.aY,new A.eq("Sodium bicarbonate",o+" \u2013 "+n,"mEq NaHCO\u2083","NaHCO\u2083 1\u20132 mEq/kg IV. Reserve for acidotic patients.",j),B.aY,new A.eq("Kayexalate (sodium polystyrene sulfonate)",m+" \u2013 "+B.i.B(l,1),"g (NG/PR)","Kayexalate 1\u20132 g/kg/dose NG or PR. Removes K from body. Plus loop diuretic + dialysis if oligoanuric.",j),B.aY,B.apZ],g))}h.push(B.bK)
 h.push(B.aqg)
 return new A.ju("Potassium Correction",h,j)}}
 A.bzr.prototype={
@@ -154610,7 +154610,7 @@ s.x.sbU(0,"0")
 s.y.sbU(0,"5")
 s.z.sbU(0,"0")
 s.v(new A.bDi(s))},
-p(a2){var s,r,q,p,o,n,m,l,k,j,i,h,g,f,e,d=this,c=null,b=A.d(a2),a=A.bp(c,c,c,!0,!0,c,c,1,c,c,0,!1,c,!1,c,c,c,c,!0,c,c,c,c,c,B.bZM,c,c,c,1,c,!0),a0=t.p,a1=A.a([d.aWs(),B.a1,d.aAC(),B.a1,d.azr()],a0)
+p(a2){var s,r,q,p,o,n,m,l,k,j,i,h,g,f,e,d=this,c=null,b=A.d(a2),a=A.bp(c,c,c,!0,!0,c,c,1,c,c,0,!1,c,!1,c,c,c,c,!0,c,c,c,c,c,B.bZN,c,c,c,1,c,!0),a0=t.p,a1=A.a([d.aWs(),B.a1,d.aAC(),B.a1,d.azr()],a0)
 if(d.ay&&d.ch!=null){s=d.cx
 s===$&&A.b()
 r=d.cy
@@ -154979,12 +154979,12 @@ p=s.r
 if(p!=null){p=B.i.B(p,1)
 o=s.w
 o.toString
-B.h.A(q,A.a([B.bK,new A.eq("Sodium deficit",p,"mEq","Na = (Na_goal \u2212 Na_meas) \xd7 wt \xd7 1.2",r),B.aY,new A.eq("Symptomatic bolus \u2014 3 % saline",B.i.B(o,0),"mL","3 % saline 6 mL/kg over 10\u201360 min \u2192 \u2191 Na by \u2248 5 mEq/L (use only if seizing/comatose).",r),B.aY,B.apX],n))}q.push(B.bK)
+B.h.A(q,A.a([B.bK,new A.eq("Sodium deficit",p,"mEq","Na = (Na_goal \u2212 Na_meas) \xd7 wt \xd7 0.6",r),B.aY,new A.eq("Symptomatic bolus \u2014 3 % saline",B.i.B(o,0),"mL","3 % saline 6 mL/kg over 10\u201360 min \u2192 \u2191 Na by \u2248 5 mEq/L (use only if seizing/comatose).",r),B.aY,B.aq1],n))}q.push(B.bK)
 q.push(B.aqf)
 return new A.ju("Sodium Correction (\u2193Na)",q,r)}}
 A.bFo.prototype={
 $0(){var s=this,r=s.a,q=s.d
-r.r=(s.b-s.c)*q*1.2
+r.r=(s.b-s.c)*q*0.6
 r.w=6*q},
 $S:0}
 A.bFs.prototype={
@@ -155131,8 +155131,8 @@ else if(i<=40)g.b="recommended"
 else g.b="adequate"
 h.v(new A.bJd(g,h,b4,a6,a7,a,a3,a4+a5,f,d,c,b,a4,a1,a2,a5,r,o,n,a0,s,n*4+m+p,b3,j,i))},
 p(a){var s,r,q,p,o,n,m=this,l=null,k=A.d(a),j=t.p,i=A.a([],j)
-if(m.d!=null)i.push(A.kS(B.jr,B.c_1,m.gaZC(),l))
-i=A.bp(i,l,l,!0,!0,l,l,1,l,l,0,!1,l,!1,l,l,l,l,!0,l,l,l,l,l,B.bZP,l,l,l,1,l,!0)
+if(m.d!=null)i.push(A.kS(B.jr,B.c_2,m.gaZC(),l))
+i=A.bp(i,l,l,!0,!0,l,l,1,l,l,0,!1,l,!1,l,l,l,l,!0,l,l,l,l,l,B.bZQ,l,l,l,1,l,!0)
 if(m.d==null)j=m.aBs()
 else{s=m.c
 s.toString
@@ -155158,7 +155158,7 @@ q.toString
 q=A.d(q)
 p=m.c
 p.toString
-p=A.a([s,B.I,r,B.a1,A.ld(B.Ld,B.c_4,m.gaZA(),A.fC(l,l,q.ax.b,l,l,l,l,l,l,A.d(p).ax.c,l,l,B.co,l,new A.aH(A.h(10),B.C),l,l,l,l,l))],j)
+p=A.a([s,B.I,r,B.a1,A.ld(B.Ld,B.c_5,m.gaZA(),A.fC(l,l,q.ax.b,l,l,l,l,l,l,A.d(p).ax.c,l,l,B.co,l,new A.aH(A.h(10),B.C),l,l,l,l,l))],j)
 if(m.ch!=null)B.h.A(p,A.a([B.bk,m.aAQ()],j))
 j=A.cu(A.l(p,B.a8,B.e,B.f,0,B.t),l,B.S,B.ao,l,l,B.a3)}return A.bo(i,k.fx,j,l,l,l,l)},
 aBs(){var s,r=this,q=null,p=r.c
@@ -155400,7 +155400,7 @@ case"insufficient":return B.ay
 case"adequate":return B.a_
 default:return B.hB}},
 JM(a,b){var s=null,r=b.i(0.12),q=A.h(8),p=A.K(b.i(0.4),1)
-return A.i(s,A.t(A.a([B.bZl,B.Y,A.c("Infusion Rate:",s,s,s,s,A.f(s,s,b,s,s,s,s,s,s,s,s,13,s,s,B.w,s,s,!0,s,s,s,s,s,s,s,s),s,s,s),B.cA,A.c(B.i.B(a/24,2)+" ml/hr",s,s,s,s,A.f(s,s,b,s,s,s,s,s,s,s,s,13,s,s,B.w,s,s,!0,s,s,s,s,s,s,s,s),s,s,s)],t.p),B.v,B.e,B.f,0,s,s),B.l,s,s,new A.j(r,s,p,q,s,s,B.r),s,s,s,s,B.cE,s,s,s)},
+return A.i(s,A.t(A.a([B.bZm,B.Y,A.c("Infusion Rate:",s,s,s,s,A.f(s,s,b,s,s,s,s,s,s,s,s,13,s,s,B.w,s,s,!0,s,s,s,s,s,s,s,s),s,s,s),B.cA,A.c(B.i.B(a/24,2)+" ml/hr",s,s,s,s,A.f(s,s,b,s,s,s,s,s,s,s,s,13,s,s,B.w,s,s,!0,s,s,s,s,s,s,s,s),s,s,s)],t.p),B.v,B.e,B.f,0,s,s),B.l,s,s,new A.j(r,s,p,q,s,s,B.r),s,s,s,s,B.cE,s,s,s)},
 yZ(a,b,c,d){var s=null,r=A.h(12),q=t.p
 return A.dw(A.l(A.a([A.i(s,A.t(A.a([A.aa(c,B.z,s,18),B.Y,A.x(A.c(d,s,s,s,s,B.iY,s,s,s),1)],q),B.v,B.e,B.f,0,s,s),B.l,s,s,new A.j(b,s,s,B.xU,s,s,B.r),s,s,s,s,B.zd,s,s,s),new A.z(B.aH,A.l(a,B.v,B.e,B.f,0,B.t),s)],q),B.a8,B.e,B.f,0,B.t),s,s,2,s,new A.aH(r,B.C))},
 oR(a,b,c){var s,r,q=null,p=this.c
@@ -155843,7 +155843,7 @@ r=t.p
 s=q.qk(A.t(A.a([m,B.ft,A.x(A.l(A.a([l,B.Z,A.c("Corrected OI Formula: FiO2 Input Mode Selection for Accurate Calculations",p,p,p,p,A.f(p,p,A.d(s).ax.k3.i(0.6),p,p,p,p,p,p,p,p,12,p,p,p,p,p,!0,p,p,p,p,p,p,p,p),p,p,p)],r),B.y,B.e,B.f,0,B.t),1)],r),B.v,B.e,B.f,0,p,p))
 l=A.K(B.cu,1)
 m=A.h(10)
-return A.bo(n,o.fx,A.cu(A.l(A.a([s,B.a1,A.i(p,A.l(A.a([B.c_7,B.W,B.bZ_,q.a8L("Mode A (Percentage):","OI = (MAP \xd7 FiO2%) / PaO2","\u2014 Enter FiO2 as 40 (for 40%)"),q.a8L("Mode B (Decimal):","OI = (MAP \xd7 FiO2 \xd7 100) / PaO2","\u2014 Enter FiO2 as 0.40 (for 40%)"),B.W,B.c_2],r),B.y,B.e,B.f,0,B.t),B.l,p,p,new A.j(p,p,l,m,p,B.M0,B.r),p,p,p,p,B.aH,p,p,p),B.a1,q.aBi(),B.a1,q.aBf(),B.a1,q.aB2(),B.a1,q.aA2(),B.et],r),B.a8,B.e,B.f,0,B.t),p,B.S,B.ao,p,p,B.a3),p,p,p,p)},
+return A.bo(n,o.fx,A.cu(A.l(A.a([s,B.a1,A.i(p,A.l(A.a([B.c_8,B.W,B.bZ_,q.a8L("Mode A (Percentage):","OI = (MAP \xd7 FiO2%) / PaO2","\u2014 Enter FiO2 as 40 (for 40%)"),q.a8L("Mode B (Decimal):","OI = (MAP \xd7 FiO2 \xd7 100) / PaO2","\u2014 Enter FiO2 as 0.40 (for 40%)"),B.W,B.c_3],r),B.y,B.e,B.f,0,B.t),B.l,p,p,new A.j(p,p,l,m,p,B.M0,B.r),p,p,p,p,B.aH,p,p,p),B.a1,q.aBi(),B.a1,q.aBf(),B.a1,q.aB2(),B.a1,q.aA2(),B.et],r),B.a8,B.e,B.f,0,B.t),p,B.S,B.ao,p,p,B.a3),p,p,p,p)},
 a8L(a,b,c){var s=null
 return new A.z(B.rD,A.oA(s,s,s,B.cL,s,s,!0,s,A.d8(A.a([A.d8(s,s,s,s,s,s,s,s,s,B.fv,a+" "),A.d8(s,s,s,s,s,s,s,s,s,B.bUk,b),A.d8(s,s,s,s,s,s,s,s,s,s," "+c)],t.VO),s,s,s,s,s,s,s,s,B.Ey,s),B.ag,s,s,B.b4,B.bp),s)},
 aBi(){var s,r,q,p=null,o=this.c
@@ -156007,7 +156007,7 @@ q.toString
 p=t.p
 q=A.a([m,B.P,s,B.I,r,B.K,A.l(A.a([A.c("Waveform Constant (K)",n,n,n,n,A.f(n,n,A.d(q).ax.k3,n,n,n,n,n,n,n,n,12.5,n,n,B.F,n,n,!0,n,n,n,n,n,n,n,n),n,n,n),B.W,o.aOA(),o.aOB()],p),B.y,B.e,B.f,0,B.t)],p)
 m=o.k4
-if(m!=null)B.h.A(q,A.a([B.I,o.qb(B.i.B(m,1),"cmH2O",n),B.K,o.It(o.aPj()),B.W,A.i(n,B.bZw,B.l,n,n,new A.j(B.bN.i(0.08),n,A.K(B.bN.i(0.3),1),A.h(6),n,n,B.r),n,n,n,n,B.c0,n,n,n)],p))
+if(m!=null)B.h.A(q,A.a([B.I,o.qb(B.i.B(m,1),"cmH2O",n),B.K,o.It(o.aPj()),B.W,A.i(n,B.bZx,B.l,n,n,new A.j(B.bN.i(0.08),n,A.K(B.bN.i(0.3),1),A.h(6),n,n,B.r),n,n,n,n,B.c0,n,n,n)],p))
 return o.qk(A.l(q,B.y,B.e,B.f,0,B.t))},
 aPj(){var s,r,q,p,o,n,m,l,k,j,i=this
 if(i.go==null||i.id==null||i.k1==null||i.k2==null)return""
@@ -156106,7 +156106,7 @@ o.toString
 s=t.p
 o=A.a([A.c("\ud83d\udcc8 ROX Index (Weaning Predictor)",p,p,p,p,A.f(p,p,A.d(o).ax.k3,p,p,p,p,p,p,p,p,14,p,p,B.w,p,p,!0,p,p,p,p,p,p,p,p),p,p,p),B.P,q.uU("ROX = (SpO2/FiO2) / RR"),B.I,q.fB(q.bF,"","e.g., 94","SpO2 (%)",new A.bKC(q)),B.K,q.fB(q.bs,"","e.g., 30","FiO2 (%)",new A.bKD(q)),B.K,q.fB(q.bP,"breaths/min","e.g., 45","Respiratory Rate",new A.bKE(q))],s)
 r=q.eh
-if(r!=null)B.h.A(o,A.a([B.I,q.qb(B.i.B(r,2),"ROX Index",p),B.W,A.i(p,B.bZm,B.l,p,p,new A.j(B.eH.i(0.1),p,p,A.h(6),p,p,B.r),p,p,p,p,B.dM,p,p,p)],s))
+if(r!=null)B.h.A(o,A.a([B.I,q.qb(B.i.B(r,2),"ROX Index",p),B.W,A.i(p,B.bZn,B.l,p,p,new A.j(B.eH.i(0.1),p,p,A.h(6),p,p,B.r),p,p,p,p,B.dM,p,p,p)],s))
 return q.qk(A.l(o,B.y,B.e,B.f,0,B.t))},
 aB2(){var s,r,q,p,o=this,n=null,m=o.aew(o.as),l=o.c
 l.toString
@@ -156122,7 +156122,7 @@ r=t.p
 q=A.a([new A.cL(n,new A.j(B.bY.i(0.9),n,n,n,n,n,B.r),A.a([o.tq("Severity",100),o.tq("OI Range",70),o.tq("Clinical Interpretation",160),o.tq("Recommended Actions",200)],r))],t.xR)
 p=new A.da(B.bt1,t.FE)
 B.h.A(q,p.ge6(p).cP(0,new A.bKK(o,m),t.jH))
-return o.qk(A.l(A.a([l,B.P,A.cu(A.kQ(s,q,n,B.js,B.e9),n,B.S,n,n,n,B.b7),B.P,A.i(n,B.c_p,B.l,n,n,new A.j(B.bS.i(0.08),n,A.K(B.bS.i(0.4),1),A.h(8),n,n,B.r),n,n,n,n,B.b9,n,n,n)],r),B.y,B.e,B.f,0,B.t))},
+return o.qk(A.l(A.a([l,B.P,A.cu(A.kQ(s,q,n,B.js,B.e9),n,B.S,n,n,n,B.b7),B.P,A.i(n,B.c_q,B.l,n,n,new A.j(B.bS.i(0.08),n,A.K(B.bS.i(0.4),1),A.h(8),n,n,B.r),n,n,n,n,B.b9,n,n,n)],r),B.y,B.e,B.f,0,B.t))},
 aA2(){var s=null,r=this.c
 r.toString
 return this.qk(A.l(A.a([A.c("\ud83d\udcd0 Correct Formula Reference",s,s,s,s,A.f(s,s,A.d(r).ax.k3,s,s,s,s,s,s,s,s,14,s,s,B.w,s,s,!0,s,s,s,s,s,s,s,s),s,s,s),B.I,A.hK(new A.bKg(this))],t.p),B.y,B.e,B.f,0,B.t))},
@@ -156938,7 +156938,7 @@ return A.N($async$JZ,r)},
 aeD(a,b){var s=null,r=a.aa(t.J).f,q=A.c(b,s,s,s,s,s,s,s,s)
 r.fM(A.ns(s,s,s,A.d(a).ax.b,B.hn,B.ab,s,q,s,B.dW,s,s,s,s,s,s,s,new A.aH(A.h(10),B.C),s,s))},
 p(a){var s=null,r=A.d(a)
-return A.bo(A.bp(s,s,s,!0,!0,s,s,1,s,s,s,!1,s,!1,s,s,A.bw(s,s,s,B.cz,s,s,new A.aKB(a),s,s,s,s,s),s,!0,s,s,s,s,s,B.c_r,s,s,s,1,s,!0),r.fx,A.dT(!0,A.cu(A.l(A.a([new A.aiu(new A.aKC(a),s),B.aj,new A.anF(new A.aKD(a),s),B.aj,new A.amx(new A.aKE(a),s),B.aj,new A.aoo(new A.aKF(this,a),s),B.aj,new A.ap0(B.K9,"Other Reference Charts","Additional clinical charts",B.biA,"",new A.aKG(this,a),s),B.bA],t.p),B.a8,B.e,B.f,0,B.t),s,B.S,B.ao,s,s,B.a3),B.ar,!0),s,s,s,s)}}
+return A.bo(A.bp(s,s,s,!0,!0,s,s,1,s,s,s,!1,s,!1,s,s,A.bw(s,s,s,B.cz,s,s,new A.aKB(a),s,s,s,s,s),s,!0,s,s,s,s,s,B.bZ3,s,s,s,1,s,!0),r.fx,A.dT(!0,A.cu(A.l(A.a([new A.aiu(new A.aKC(a),s),B.aj,new A.anF(new A.aKD(a),s),B.aj,new A.amx(new A.aKE(a),s),B.aj,new A.aoo(new A.aKF(this,a),s),B.aj,new A.ap0(B.K9,"Other Reference Charts","Additional clinical charts",B.biA,"",new A.aKG(this,a),s),B.bA],t.p),B.a8,B.e,B.f,0,B.t),s,B.S,B.ao,s,s,B.a3),B.ar,!0),s,s,s,s)}}
 A.aKB.prototype={
 $0(){A.a8(this.a,!1).bo(null)
 return null},
@@ -157396,7 +157396,7 @@ p=A.a([r,r.i(0.88)],t.O)
 o=A.a([new A.bS(0,B.aU,B.ad.i(0.18),B.bEV,10)],t.V)
 n=l.a.d==="boys"?"Boys":"Girls"
 m=t.p
-m=A.l(A.a([s,A.i(k,A.l(A.a([A.c(n+" \u2014 "+l.gxW(),k,k,k,k,B.iY,B.a9,k,k),B.aT,B.c0T,B.I,A.t(A.a([A.x(A.ld(B.aur,B.bZy,l.gaGE(),A.fC(k,k,q.c,k,k,k,0,k,k,r,k,k,B.z2,k,new A.aH(A.h(8),B.C),k,k,k,k,k)),1),B.bw,A.x(A.jd(B.auE,B.bZa,l.gaGF(),A.je(k,k,k,k,k,k,k,k,k,B.z,k,k,B.z2,k,new A.aH(A.h(8),B.C),B.a8b,k,k,k,k)),1)],m),B.v,B.e,B.f,0,k,k),B.K,A.c("PDF opens print dialog \xb7 Screenshot saves chart as PDF",k,k,k,k,A.f(k,k,B.z.i(0.55),k,k,k,k,k,k,k,k,10,k,k,k,k,k,!0,k,k,k,k,k,k,k,k),B.a9,k,k)],m),B.v,B.e,B.as,0,B.t),B.l,k,k,new A.j(k,k,k,k,o,new A.fa(B.eC,B.fd,B.c7,p,k,k),B.r),k,k,k,k,B.ahW,k,k,k)],m),B.v,B.e,B.f,0,B.t)
+m=A.l(A.a([s,A.i(k,A.l(A.a([A.c(n+" \u2014 "+l.gxW(),k,k,k,k,B.iY,B.a9,k,k),B.aT,B.c0T,B.I,A.t(A.a([A.x(A.ld(B.aur,B.bZz,l.gaGE(),A.fC(k,k,q.c,k,k,k,0,k,k,r,k,k,B.z2,k,new A.aH(A.h(8),B.C),k,k,k,k,k)),1),B.bw,A.x(A.jd(B.auE,B.bZb,l.gaGF(),A.je(k,k,k,k,k,k,k,k,k,B.z,k,k,B.z2,k,new A.aH(A.h(8),B.C),B.a8b,k,k,k,k)),1)],m),B.v,B.e,B.f,0,k,k),B.K,A.c("PDF opens print dialog \xb7 Screenshot saves chart as PDF",k,k,k,k,A.f(k,k,B.z.i(0.55),k,k,k,k,k,k,k,k,10,k,k,k,k,k,!0,k,k,k,k,k,k,k,k),B.a9,k,k)],m),B.v,B.e,B.as,0,B.t),B.l,k,k,new A.j(k,k,k,k,o,new A.fa(B.eC,B.fd,B.c7,p,k,k),B.r),k,k,k,k,B.ahW,k,k,k)],m),B.v,B.e,B.f,0,B.t)
 s=m}}return A.y2(A.bo(g,h.fx,s,k,k,k,k),i)},
 a5y(){var s,r,q,p=null,o=this.a.d==="boys",n=A.h(14),m=o?B.a_:B.ca
 m=A.a([m,(o?B.a_:B.ca).i(0.75)],t.O)
@@ -157497,7 +157497,7 @@ s=A.x(A.md(B.c_O,o.gb0e(),A.fC(n,n,s,n,n,n,n,n,n,B.z,n,n,B.f1,n,new A.aH(A.h(8),
 r=o.a.d==="boys"
 q=r?B.a_:B.ca
 r=r?B.a_:B.ca
-j.push(A.t(A.a([s,B.an,A.x(A.acF(B.bZE,o.gaD4(o),A.je(n,n,n,n,n,n,n,n,n,q,n,n,B.f1,n,new A.aH(A.h(8),B.C),new A.a6(r,1,B.G,-1),n,n,n,n)),1)],k),B.v,B.e,B.f,0,n,n))
+j.push(A.t(A.a([s,B.an,A.x(A.acF(B.bZF,o.gaD4(o),A.je(n,n,n,n,n,n,n,n,n,q,n,n,B.f1,n,new A.aH(A.h(8),B.C),new A.a6(r,1,B.G,-1),n,n,n,n)),1)],k),B.v,B.e,B.f,0,n,n))
 return A.dw(new A.z(B.ao,A.l(j,B.y,B.e,B.f,0,B.t),n),n,n,2,n,new A.aH(l,B.C))},
 azs(){var s,r,q,p,o,n,m,l,k=this,j=null,i=t.p,h=A.a([A.t(A.a([A.x(k.a4P("Years & Months",B.qs),1),B.Y,A.x(k.a4P("Decimal Months",B.a7f),1)],i),B.v,B.e,B.f,0,j,j),B.P],i)
 if(k.e===B.qs){s=k.y
@@ -158700,7 +158700,7 @@ $0(){return this.a.aXI(this.b)},
 $S:0}
 A.b6i.prototype={
 $1(a){var s=null,r=A.c("Syringe change",s,s,s,s,A.o().$1$fontWeight(B.w),s,s,s),q=A.c("To match the current concentration in a different total volume:\n\n\u2022 Keep drug volume proportional to total volume.\n\u2022 If going from 24 ml \u2192 50 ml at 1\xd7 concentration, scale drug volume by 50/24.\n\u2022 Keep rate in ml/hr the SAME \u2014 delivered dose stays identical.\n\nTip: use the concentration multiplier chips above (\xbdx / 2x / 3x / 4x) for common swap patterns.",s,s,s,s,A.o().$2$fontSize$height(13,1.5),s,s,s)
-return A.tR(A.a([A.iu(B.bZ7,s,s,new A.b6h(a),s,s)],t.p),q,r)},
+return A.tR(A.a([A.iu(B.bZ8,s,s,new A.b6h(a),s,s)],t.p),q,r)},
 $S:92}
 A.b6h.prototype={
 $0(){A.a8(this.a,!1).bo(null)
@@ -159971,7 +159971,7 @@ A.alo.prototype={
 p(a){var s=null,r=A.d(a).ax.k3,q=r.i(0.04),p=A.h(8),o=A.K(r.i(0.12),1)
 return A.i(s,A.c("PICU Emergency Drugs calculator. For use by qualified clinicians only \u2014 verify every dose against local protocol and current vial concentration before administration.",s,s,s,s,A.f(s,s,r.i(0.7),s,s,s,s,s,s,s,s,11,s,s,s,s,1.45,!0,s,s,s,s,s,s,s,s),s,s,s),B.l,s,s,new A.j(q,s,o,p,s,s,B.r),s,s,s,s,B.bB,s,s,s)}}
 A.IN.prototype={
-p(a){var s,r,q,p,o=null,n=A.d(a).ax,m=A.bp(o,o,o,!0,!0,o,o,1,o,o,o,!1,o,!1,o,o,A.bw(o,o,o,B.cz,o,o,new A.aI4(a),o,o,o,o,o),o,!0,o,o,o,o,o,B.bZj,o,o,o,1,o,!0),l=n.k3,k=t.p,j=A.a([A.c("Frequently asked questions",o,o,o,o,A.f(o,o,l,o,o,o,o,o,o,o,o,22,o,o,B.w,o,o,!0,o,o,o,o,o,o,o,o),o,o,o),B.Z,A.c("Tap any question to expand the answer.",o,o,o,o,A.f(o,o,l.i(0.6),o,o,o,o,o,o,o,o,13,o,o,o,o,o,!0,o,o,o,o,o,o,o,o),o,o,o),B.a1],k)
+p(a){var s,r,q,p,o=null,n=A.d(a).ax,m=A.bp(o,o,o,!0,!0,o,o,1,o,o,o,!1,o,!1,o,o,A.bw(o,o,o,B.cz,o,o,new A.aI4(a),o,o,o,o,o),o,!0,o,o,o,o,o,B.bZk,o,o,o,1,o,!0),l=n.k3,k=t.p,j=A.a([A.c("Frequently asked questions",o,o,o,o,A.f(o,o,l,o,o,o,o,o,o,o,o,22,o,o,B.w,o,o,!0,o,o,o,o,o,o,o,o),o,o,o),B.Z,A.c("Tap any question to expand the answer.",o,o,o,o,A.f(o,o,l.i(0.6),o,o,o,o,o,o,o,o,13,o,o,o,o,o,!0,o,o,o,o,o,o,o,o),o,o,o),B.a1],k)
 B.h.A(j,new A.E(B.bkg,new A.aI5(),t.nv))
 j.push(B.bA)
 s=n.b
@@ -160067,7 +160067,7 @@ m.push(new A.alq(this.d,q.f,q.r,r))
 return A.cN(m,r,B.ahx,r,B.a3,!1)}}
 A.apP.prototype={
 p(a){var s=null,r=A.d(a).ax,q=r.rx,p=q==null,o=A.aa(B.fK,p?r.k3:q,s,48)
-return A.bu(new A.z(B.ks,A.l(A.a([o,B.I,A.c("We don't have a structured record for "+this.c+" yet.",s,s,s,s,A.o().$3$color$fontSize$fontWeight(p?r.k3:q,15,B.ax),B.a9,s,s),B.aj,A.jZ(B.B3,B.bZA,this.d,s)],t.p),B.v,B.cq,B.f,0,B.t),s),s,s)}}
+return A.bu(new A.z(B.ks,A.l(A.a([o,B.I,A.c("We don't have a structured record for "+this.c+" yet.",s,s,s,s,A.o().$3$color$fontSize$fontWeight(p?r.k3:q,15,B.ax),B.a9,s,s),B.aj,A.jZ(B.B3,B.bZB,this.d,s)],t.p),B.v,B.cq,B.f,0,B.t),s),s,s)}}
 A.ans.prototype={
 p(a){var s,r,q,p,o=this,n=null,m=A.d(a).ax.b,l=A.a([m,m.i(0.78)],t.O),k=A.h(20)
 m=A.a([new A.bS(0,B.aU,m.i(0.22),B.vH,18)],t.V)
@@ -160473,7 +160473,7 @@ if(p.c!=null)p.v(new A.bl8(p,n))
 case 1:return A.M(q,r)}})
 return A.N($async$Dt,r)},
 p(a){var s,r,q=this,p=null,o=A.d(a),n=A.d(a)
-o=A.bp(p,p,p,!0,!0,o.ax.b,p,1,p,p,0,!1,p,!1,p,p,A.bw(p,p,p,B.mx,p,p,new A.blb(a),p,p,p,p,p),p,!0,p,p,p,p,p,B.bZD,p,p,p,1,p,!0)
+o=A.bp(p,p,p,!0,!0,o.ax.b,p,1,p,p,0,!1,p,!1,p,p,A.bw(p,p,p,B.mx,p,p,new A.blb(a),p,p,p,p,p),p,!0,p,p,p,p,p,B.bZE,p,p,p,1,p,!0)
 s=t.p
 r=A.a([B.zl],s)
 if(!q.z)r.push(q.aB5())
@@ -161251,7 +161251,7 @@ $2(a,b){return B.p.bA(a.b,b.b)},
 $S:404}
 A.xe.prototype={
 p(a){var s=null,r=A.pW(a)
-return A.bo(A.bp(s,s,s,!0,!0,s,s,1,s,s,s,!1,s,!1,s,s,r!=null&&r.n1()?A.bw(s,s,s,B.cz,s,s,new A.aEZ(a),s,s,s,s,s):s,s,!0,s,s,s,s,s,B.bZb,s,s,s,1,s,!0),s,A.dT(!0,A.cN(A.a([new A.zx(B.KR,B.a_,"Smart View","Pick an age \u2192 see expected milestones \xb7 OR pick what the child is doing \u2192 estimate developmental age",new A.aF_(a),s),new A.zx(B.atd,B.av,"Browse by Domain","6 domains \xb7 Gross Motor \xb7 Fine Motor \xb7 Language \xb7 Hearing \xb7 Socioadaptive \xb7 Vision",new A.aF0(a),s),new A.zx(B.ch,B.aa,"Red Flags","23 age \xd7 domain red flags \u2014 when each warrants formal developmental assessment",new A.aF1(a),s),new A.zx(B.iE,B.e3,"Developmental Quotient","DQ = (Developmental age / Chronological age) \xd7 100 \xb7 per-domain calculation with interpretation bands",new A.aF2(a),s),new A.zx(B.AI,B.ay,"Trivandrum DSC","Both charts merged \xb7 51 items \xb7 age cursor \xb7 live PASS / FAIL screen with the \u2265 2-fail rule",new A.aF3(a),s),B.e_,new A.alr(s)],t.p),s,B.m7,s,B.a3,!1),B.ar,!0),s,s,s,s)}}
+return A.bo(A.bp(s,s,s,!0,!0,s,s,1,s,s,s,!1,s,!1,s,s,r!=null&&r.n1()?A.bw(s,s,s,B.cz,s,s,new A.aEZ(a),s,s,s,s,s):s,s,!0,s,s,s,s,s,B.bZc,s,s,s,1,s,!0),s,A.dT(!0,A.cN(A.a([new A.zx(B.KR,B.a_,"Smart View","Pick an age \u2192 see expected milestones \xb7 OR pick what the child is doing \u2192 estimate developmental age",new A.aF_(a),s),new A.zx(B.atd,B.av,"Browse by Domain","6 domains \xb7 Gross Motor \xb7 Fine Motor \xb7 Language \xb7 Hearing \xb7 Socioadaptive \xb7 Vision",new A.aF0(a),s),new A.zx(B.ch,B.aa,"Red Flags","23 age \xd7 domain red flags \u2014 when each warrants formal developmental assessment",new A.aF1(a),s),new A.zx(B.iE,B.e3,"Developmental Quotient","DQ = (Developmental age / Chronological age) \xd7 100 \xb7 per-domain calculation with interpretation bands",new A.aF2(a),s),new A.zx(B.AI,B.ay,"Trivandrum DSC","Both charts merged \xb7 51 items \xb7 age cursor \xb7 live PASS / FAIL screen with the \u2265 2-fail rule",new A.aF3(a),s),B.e_,new A.alr(s)],t.p),s,B.m7,s,B.a3,!1),B.ar,!0),s,s,s,s)}}
 A.aEZ.prototype={
 $0(){A.a8(this.a,!1).bo(null)
 return null},
@@ -161320,7 +161320,7 @@ s=k.h(0,q.a)
 s.toString
 J.ho(s,q)}for(s=k.$ti,p=new A.c0(k,k.r,k.e,s.j("c0<2>"));p.E();)J.Ah(p.d,new A.aF4())
 o=A.pW(a)
-p=A.bp(l,l,l,!0,!0,l,l,1,l,l,l,!1,l,!1,l,l,o!=null&&o.n1()?A.bw(l,l,l,B.cz,l,l,new A.aF5(a),l,l,l,l,l):l,l,!0,l,l,l,l,l,B.bZ8,l,l,l,1,l,!0)
+p=A.bp(l,l,l,!0,!0,l,l,1,l,l,l,!1,l,!1,l,l,o!=null&&o.n1()?A.bw(l,l,l,B.cz,l,l,new A.aF5(a),l,l,l,l,l):l,l,!0,l,l,l,l,l,B.bZ9,l,l,l,1,l,!0)
 n=A.a([],t.p)
 for(k=new A.dr(k,s.j("dr<1,2>")).gW(0);k.E();){m=k.d
 n.push(new A.alE(m.a,m.b,l))}return A.bo(p,l,A.dT(!0,A.cN(n,l,B.m7,l,B.a3,!1),B.ar,!0),l,l,l,l)}}
@@ -161677,7 +161677,7 @@ return B.h.fF(r,new A.bf7())/r.length},
 gaP3(){var s=t.To,r=A.Q(new A.d3(new A.E(B.iI,this.ga7V(),t.xJ),s),s.j("y.E"))
 if(r.length===0)return null
 return B.h.fF(r,new A.bf8())},
-p(a7){var s,r,q,p,o,n,m,l,k,j,i,h,g,f,e,d,c,b,a=this,a0=null,a1=A.d(a7).ax,a2=a.gaNC(),a3=a.gaP3(),a4=A.pW(a7),a5=A.bp(a0,a0,a0,!0,!0,a0,a0,1,a0,a0,a0,!1,a0,!1,a0,a0,a4!=null&&a4.n1()?A.bw(a0,a0,a0,B.cz,a0,a0,new A.bfb(a7),a0,a0,a0,a0,a0):a0,a0,!0,a0,a0,a0,a0,a0,B.bZi,a0,a0,a0,1,a0,!0),a6=a1.d
+p(a7){var s,r,q,p,o,n,m,l,k,j,i,h,g,f,e,d,c,b,a=this,a0=null,a1=A.d(a7).ax,a2=a.gaNC(),a3=a.gaP3(),a4=A.pW(a7),a5=A.bp(a0,a0,a0,!0,!0,a0,a0,1,a0,a0,a0,!1,a0,!1,a0,a0,a4!=null&&a4.n1()?A.bw(a0,a0,a0,B.cz,a0,a0,new A.bfb(a7),a0,a0,a0,a0,a0):a0,a0,!0,a0,a0,a0,a0,a0,B.bZj,a0,a0,a0,1,a0,!0),a6=a1.d
 a6=(a6==null?a1.b:a6).i(0.45)
 s=A.h(12)
 r=a1.b
@@ -161910,7 +161910,7 @@ r=A.a([],s)
 if(p>0)r.push(A.x(A.ld(B.Ll,A.c("Mark all "+p+" expected as achieved",1,B.bd,q,q,A.o().$2$fontSize$fontWeight(12.5,B.M),q,q,q),this.gaPl(),A.fC(q,q,B.bN,q,q,q,0,q,q,B.z,q,q,B.bB,q,new A.aH(A.h(10),B.C),q,q,q,q,q)),1))
 if(!o)B.h.A(r,A.a([B.Y,A.jd(B.B4,A.c("Reset",q,q,q,q,A.o().$2$fontSize$fontWeight(12.5,B.M),q,q,q),new A.bHy(this),A.je(q,q,q,q,q,q,q,q,q,q,q,q,B.bB,q,new A.aH(A.h(10),B.C),q,q,q,q,q))],s))
 return A.t(r,B.v,B.e,B.f,0,q,q)},
-aIO(a5,a6){var s,r,q,p,o,n,m,l,k,j,i,h,g,f,e,d,c,b,a,a0=this,a1=null,a2=a6.a,a3=a2>=36,a4=a3?B.vk:B.va
+aIO(a5,a6){var s,r,q,p,o,n,m,l,k,j,i,h,g,f,e,d,c,b,a,a0=this,a1=null,a2=a6.a,a3=a2>=36,a4=a3?B.vk:B.v9
 if(a0.w==null)s=a4
 else{r=A.a7(a4).j("aC<1>")
 s=A.Q(new A.aC(a4,new A.bHn(a0),r),r.j("y.E"))}q=a3?36:1
@@ -162274,7 +162274,7 @@ k=A.bp(p,p,p,!0,!0,p,A.agz(j,p,p,B.z,B.ar,p,3,!1,B.z,A.o().$2$fontSize$fontWeigh
 j=q.ayw(m)
 s=q.d
 r=t.p
-return A.bo(k,p,A.dT(!0,A.l(A.a([j,A.x(A.b1V(A.a([A.cN(A.a([q.a6a(m,o,27,B.ay),q.a69(m,B.ay,B.va,34,1),B.e_,q.a6a(m,n,24,B.aa),q.a69(m,B.aa,B.vk,72,36)],r),p,B.ah9,p,B.a3,!1),A.cN(A.a([q.afc(m,o,B.va,B.ay),B.e_,q.afc(m,n,B.vk,B.aa)],r),p,B.ahe,p,B.a3,!1)],r),s),1)],r),B.v,B.e,B.f,0,B.t),B.ar,!0),p,p,p,p)},
+return A.bo(k,p,A.dT(!0,A.l(A.a([j,A.x(A.b1V(A.a([A.cN(A.a([q.a6a(m,o,27,B.ay),q.a69(m,B.ay,B.v9,34,1),B.e_,q.a6a(m,n,24,B.aa),q.a69(m,B.aa,B.vk,72,36)],r),p,B.ah9,p,B.a3,!1),A.cN(A.a([q.afc(m,o,B.v9,B.ay),B.e_,q.afc(m,n,B.vk,B.aa)],r),p,B.ahe,p,B.a3,!1)],r),s),1)],r),B.v,B.e,B.f,0,B.t),B.ar,!0),p,p,p,p)},
 ayw(a){var s=this,r=null,q=A.cuX(s.e).length,p=a.b,o=p.i(0.06),n=p.i(0.15),m=A.aa(B.oO,p,r,16),l=A.c("Age cursor",r,r,r,r,A.o().$3$color$fontSize$fontWeight(a.k3,12,B.M),r,r,r),k=A.h(999),j=t.p
 return A.i(r,A.l(A.a([A.t(A.a([m,B.aD,l,B.cA,A.i(r,A.c(B.i.B(s.e,0)+" mo \xb7 "+q+" crossed",r,r,r,r,A.fY().$3$color$fontSize$fontWeight(B.z,11,B.M),r,r,r),B.l,r,r,new A.j(p,r,r,k,r,r,B.r),r,r,r,r,B.dv,r,r,r)],j),B.v,B.e,B.f,0,r,r),A.Wo(r,72,r,72,0,new A.bHJ(s),B.i.ar(s.e,0,72))],j),B.v,B.e,B.f,0,B.t),B.l,r,r,new A.j(o,r,new A.bk(B.C,B.C,new A.a6(n,1,B.G,-1),B.C),r,r,r,B.r),r,r,r,r,B.ahA,r,r,r)},
 a6a(a,b,c,d){var s=null,r=A.i(s,s,B.l,s,s,new A.j(d,s,s,A.h(3),s,s,B.r),s,18,s,s,s,s,s,6),q=A.c(b,s,s,s,s,A.o().$3$color$fontSize$fontWeight(a.k3,14,B.M),s,s,s),p=d.i(0.15),o=A.h(6)
@@ -162461,13 +162461,13 @@ $0(){A.a8(this.a,!1).bo(null)
 return null},
 $S:0}
 A.Io.prototype={
-p(a){var s,r,q,p,o,n,m,l,k=null,j="IV Therapy",i=A.d(a),h=A.d(a).ax.a===B.b3,g=A.d(a),f=A.bp(k,k,k,!0,!0,B.av,k,1,k,k,0,!1,k,!1,B.z,k,k,k,!0,k,k,k,k,k,B.c1b,k,k,k,1,k,!0),e=t.p,d=A.i(k,A.l(A.a([B.bZZ,B.aT,A.c("Diabetic Ketoacidosis \u2014 paediatric management algorithm",k,k,k,k,A.f(k,k,B.z.i(0.85),k,k,k,k,k,k,k,k,12.5,k,k,k,k,1.4,!0,k,k,k,k,k,k,k,k),k,k,k)],e),B.y,B.e,B.f,0,B.t),B.l,B.av,k,k,k,k,k,k,B.aie,k,k,k),c=A.l(B.bju,B.y,B.e,B.f,0,B.t),b=A.h(12)
+p(a){var s,r,q,p,o,n,m,l,k=null,j="IV Therapy",i=A.d(a),h=A.d(a).ax.a===B.b3,g=A.d(a),f=A.bp(k,k,k,!0,!0,B.av,k,1,k,k,0,!1,k,!1,B.z,k,k,k,!0,k,k,k,k,k,B.c1b,k,k,k,1,k,!0),e=t.p,d=A.i(k,A.l(A.a([B.c__,B.aT,A.c("Diabetic Ketoacidosis \u2014 paediatric management algorithm",k,k,k,k,A.f(k,k,B.z.i(0.85),k,k,k,k,k,k,k,k,12.5,k,k,k,k,1.4,!0,k,k,k,k,k,k,k,k),k,k,k)],e),B.y,B.e,B.f,0,B.t),B.l,B.av,k,k,k,k,k,k,B.aie,k,k,k),c=A.l(B.bju,B.y,B.e,B.f,0,B.t),b=A.h(12)
 b=A.i(k,A.t(B.b2T,B.v,B.e,B.f,0,k,k),B.l,k,k,new A.j(B.av,k,k,b,k,k,B.r),k,k,k,k,B.aH,k,k,k)
 s=A.bWq(B.ae,h,A.a(["Tolerating oral fluid"],t.s),"\u2192 escalate to IV therapy (Path B), reassess hydration and acidosis.","If no improvement","Minimal dehydration","PATH A",B.bkP,"Therapy")
 r=A.bWq(B.dD,h,B.biG,k,k,"Dehydration > 5 %","PATH B",B.bpJ,j)
 q=A.bWq(B.aa,h,B.buC,k,k,"Shock or reduced consciousness","PATH C",B.bvJ,"Resuscitation")
 p=A.h(12)
-p=A.i(k,A.l(A.a([A.t(B.blj,B.v,B.e,B.f,0,k,k),B.P,B.c_9],e),B.y,B.e,B.f,0,B.t),B.l,k,k,new A.j(B.a_,k,k,p,k,k,B.r),k,k,k,k,B.aH,k,k,k)
+p=A.i(k,A.l(A.a([A.t(B.blj,B.v,B.e,B.f,0,k,k),B.P,B.c_a],e),B.y,B.e,B.f,0,B.t),B.l,k,k,new A.j(B.a_,k,k,p,k,k,B.r),k,k,k,k,B.aH,k,k,k)
 o=A.h(12)
 n=A.K(B.z,0)
 o=A.i(k,A.l(A.a([A.t(B.bwO,B.v,B.e,B.f,0,k,k),B.I,B.c5Y],e),B.y,B.e,B.f,0,B.t),B.l,k,k,new A.j(B.aa,k,n,o,k,k,B.r),k,k,k,k,B.aH,k,k,k)
@@ -162653,7 +162653,7 @@ s=A.U(t.N,t.yi)
 for(r=t.A,q=0;q<31;++q)s.n(0,B.St[q].a,new A.bm(null,r))
 this.e!==$&&A.bh()
 this.e=s},
-p(a0){var s,r,q,p,o,n,m,l,k=this,j=null,i=A.d(a0).ax,h=A.d(a0),g=A.bp(j,j,j,!0,!0,j,j,1,j,j,j,!1,j,!1,j,j,A.bw(j,j,j,B.cz,j,j,new A.bkn(a0),j,j,j,j,j),j,!0,j,j,j,j,j,B.c_o,j,j,j,1,j,!0),f=k.azP(i),e=i.b,d=e.i(0.05),c=A.h(12),b=i.ry,a=b==null
+p(a0){var s,r,q,p,o,n,m,l,k=this,j=null,i=A.d(a0).ax,h=A.d(a0),g=A.bp(j,j,j,!0,!0,j,j,1,j,j,j,!1,j,!1,j,j,A.bw(j,j,j,B.cz,j,j,new A.bkn(a0),j,j,j,j,j),j,!0,j,j,j,j,j,B.c_p,j,j,j,1,j,!0),f=k.azP(i),e=i.b,d=e.i(0.05),c=A.h(12),b=i.ry,a=b==null
 if(a){s=i.t
 if(s==null)s=i.k3}else s=b
 s=A.K(s.i(0.4),1)
@@ -162993,7 +162993,7 @@ s.m()
 this.avX()},
 p(a){var s=null,r=A.d(a),q=this.d
 q===$&&A.b()
-return A.bo(A.bp(s,s,s,!0,!0,B.av,A.agz(q,s,s,B.z,B.ar,s,3,!1,B.z,B.bVx,B.brN,B.bj,s),1,s,s,0,!1,s,!1,B.z,s,s,s,!0,s,s,s,s,s,B.bZ6,s,s,s,1,s,!0),r.fx,A.b1V(A.a([this.aB4(),this.aBh()],t.p),q),s,s,s,s)},
+return A.bo(A.bp(s,s,s,!0,!0,B.av,A.agz(q,s,s,B.z,B.ar,s,3,!1,B.z,B.bVx,B.brN,B.bj,s),1,s,s,0,!1,s,!1,B.z,s,s,s,!0,s,s,s,s,s,B.bZ7,s,s,s,1,s,!0),r.fx,A.b1V(A.a([this.aB4(),this.aBh()],t.p),q),s,s,s,s)},
 aB4(){var s,r,q,p,o,n,m,l,k,j,i,h,g,f=this,e=null,d=f.c
 d.toString
 s=A.d(d).ax
@@ -163165,7 +163165,7 @@ A.BS.prototype={
 P(){return new A.a_O()}}
 A.a_O.prototype={
 gJt(){var s,r=this.e
-if(r===$){s=A.a([new A.eZ("GA Classification","Gestational Age Definitions \xb7 Table 6-2",B.B_,B.v8,new A.bnl(),!1),new A.eZ("Birthweight Classification","ELBW \xb7 VLBW \xb7 LBW \xb7 NBW \xb7 Macrosomia",B.hP,B.v8,new A.bnm(),!1),new A.eZ("Fetal Development","Week-by-week from LMP",B.oF,B.v8,new A.bnn(),!1),new A.eZ("Developmental Milestones","AIIMS reference \xb7 76 milestones \xb7 23 red flags \xb7 DQ calculator",B.AS,B.bms,new A.bny(),!1),new A.eZ("NRP 9th Edition","Neonatal Resuscitation Program \u2022 9th Edition",B.Kl,B.bnZ,new A.bnF(),!1),new A.eZ("Immunisation Schedule","IAP 2022 & National (NIS)",B.oS,B.S4,new A.bnG(),!1),new A.eZ("Neonatal Scores","Apgar, Downes, Sarnat, Thompson & more",B.K7,B.v9,new A.bnH(),!1),new A.eZ("Modified Ballard Score","Gestational Age Assessment",B.hO,B.v9,new A.bnI(),!1),new A.eZ("PALS Algorithms","Pediatric Advanced Life Support",B.hQ,B.bnY,new A.bnJ(),!1),new A.eZ("Neonatal Echo","TnECHO & Neonatal Hemodynamics \u2014 23 measurements",B.hQ,B.v8,new A.bnK(),!1),new A.eZ("Paediatric Parameters","Weight-banded vital sign + equipment table",B.iD,B.S4,new A.bnL(),!1),new A.eZ("Polycythemia in Newborn","Management Algorithm \u2014 AIIMS Protocol",B.Au,B.bmr,new A.bno(),!1),new A.eZ("POFRAS",u.O,B.oF,B.v9,new A.bnp(),!1),new A.eZ("CAN Score",u.X,B.hP,B.v9,new A.bnq(),!1),new A.eZ("DKA Algorithm","Diabetic ketoacidosis \u2014 paediatric flowchart",B.hg,B.pe,new A.bnr(),!1),new A.eZ("Snake Envenomation","First aid \xb7 ASV \xb7 neuro/haem/renal features",B.ch,B.pe,new A.bns(),!1),new A.eZ("Scorpion Sting","5-stage management \xb7 ASV + Prazosin",B.oE,B.pe,new A.bnt(),!1),new A.eZ("Poisoning & Antidotes","Substance \u2192 antidote \u2192 dose \xb7 charcoal \xb7 HD",B.dY,B.v4,new A.bnu(),!1),new A.eZ("Acute Severe Asthma","Status asthmaticus \u2014 drug ladder",B.ti,B.pe,new A.bnv(),!1),new A.eZ("Hypertensive Emergency","Triage \xb7 IV labetalol/SNP \xb7 drug doses",B.mp,B.pe,new A.bnw(),!1),new A.eZ("AVPU Scale","Level of consciousness \u2014 Alert / Voice / Pain / Unresponsive",B.oH,B.S5,new A.bnx(),!1),new A.eZ("Glasgow Coma Scale","Smart scorer + paediatric reference tables",B.ms,B.S5,new A.bnz(),!1),new A.eZ("RSI \u2014 Rapid Sequence Intubation","7 P's + drug table + 5 scenario sequences",B.ti,B.bjC,new A.bnA(),!1),new A.eZ("Electrolyte Corrections","Treatment + work-up + cross-linked calculators",B.hg,B.bnX,new A.bnB(),!1),new A.eZ("Emergency ICU Drugs","Bolus + vasoactive infusion drug doses",B.iD,B.v4,new A.bnC(),!1),new A.eZ("Sedation, Analgesia & Paralytics","PICU/NICU infusion reference (18 drugs)",B.Ku,B.v4,new A.bnD(),!1),new A.eZ("Seizure Medications","Status epilepticus ladder + reference table",B.ask,B.v4,new A.bnE(),!1),new A.eZ("Sepsis Protocols","Neonatal & paediatric sepsis",B.Kv,B.bjB,null,!0)],t.vU)
+if(r===$){s=A.a([new A.eZ("GA Classification","Gestational Age Definitions \xb7 Table 6-2",B.B_,B.v7,new A.bnl(),!1),new A.eZ("Birthweight Classification","ELBW \xb7 VLBW \xb7 LBW \xb7 NBW \xb7 Macrosomia",B.hP,B.v7,new A.bnm(),!1),new A.eZ("Fetal Development","Week-by-week from LMP",B.oF,B.v7,new A.bnn(),!1),new A.eZ("Developmental Milestones","AIIMS reference \xb7 76 milestones \xb7 23 red flags \xb7 DQ calculator",B.AS,B.bms,new A.bny(),!1),new A.eZ("NRP 9th Edition","Neonatal Resuscitation Program \u2022 9th Edition",B.Kl,B.bnZ,new A.bnF(),!1),new A.eZ("Immunisation Schedule","IAP 2022 & National (NIS)",B.oS,B.S4,new A.bnG(),!1),new A.eZ("Neonatal Scores","Apgar, Downes, Sarnat, Thompson & more",B.K7,B.v8,new A.bnH(),!1),new A.eZ("Modified Ballard Score","Gestational Age Assessment",B.hO,B.v8,new A.bnI(),!1),new A.eZ("PALS Algorithms","Pediatric Advanced Life Support",B.hQ,B.bnY,new A.bnJ(),!1),new A.eZ("Neonatal Echo","TnECHO & Neonatal Hemodynamics \u2014 23 measurements",B.hQ,B.v7,new A.bnK(),!1),new A.eZ("Paediatric Parameters","Weight-banded vital sign + equipment table",B.iD,B.S4,new A.bnL(),!1),new A.eZ("Polycythemia in Newborn","Management Algorithm \u2014 AIIMS Protocol",B.Au,B.bmr,new A.bno(),!1),new A.eZ("POFRAS",u.O,B.oF,B.v8,new A.bnp(),!1),new A.eZ("CAN Score",u.X,B.hP,B.v8,new A.bnq(),!1),new A.eZ("DKA Algorithm","Diabetic ketoacidosis \u2014 paediatric flowchart",B.hg,B.pe,new A.bnr(),!1),new A.eZ("Snake Envenomation","First aid \xb7 ASV \xb7 neuro/haem/renal features",B.ch,B.pe,new A.bns(),!1),new A.eZ("Scorpion Sting","5-stage management \xb7 ASV + Prazosin",B.oE,B.pe,new A.bnt(),!1),new A.eZ("Poisoning & Antidotes","Substance \u2192 antidote \u2192 dose \xb7 charcoal \xb7 HD",B.dY,B.v3,new A.bnu(),!1),new A.eZ("Acute Severe Asthma","Status asthmaticus \u2014 drug ladder",B.ti,B.pe,new A.bnv(),!1),new A.eZ("Hypertensive Emergency","Triage \xb7 IV labetalol/SNP \xb7 drug doses",B.mp,B.pe,new A.bnw(),!1),new A.eZ("AVPU Scale","Level of consciousness \u2014 Alert / Voice / Pain / Unresponsive",B.oH,B.S5,new A.bnx(),!1),new A.eZ("Glasgow Coma Scale","Smart scorer + paediatric reference tables",B.ms,B.S5,new A.bnz(),!1),new A.eZ("RSI \u2014 Rapid Sequence Intubation","7 P's + drug table + 5 scenario sequences",B.ti,B.bjC,new A.bnA(),!1),new A.eZ("Electrolyte Corrections","Treatment + work-up + cross-linked calculators",B.hg,B.bnX,new A.bnB(),!1),new A.eZ("Emergency ICU Drugs","Bolus + vasoactive infusion drug doses",B.iD,B.v3,new A.bnC(),!1),new A.eZ("Sedation, Analgesia & Paralytics","PICU/NICU infusion reference (18 drugs)",B.Ku,B.v3,new A.bnD(),!1),new A.eZ("Seizure Medications","Status epilepticus ladder + reference table",B.ask,B.v3,new A.bnE(),!1),new A.eZ("Sepsis Protocols","Neonatal & paediatric sepsis",B.Kv,B.bjB,null,!0)],t.vU)
 this.e!==$&&A.aP()
 this.e=s
 r=s}return r},
@@ -163784,7 +163784,7 @@ this.v(new A.bse(this,a))},
 aP8(){this.v(new A.bsa(this))},
 p(a){var s,r,q,p,o,n,m,l,k=this,j=null,i=A.d(a).ax,h=A.d(a),g=A.bw(j,j,j,B.cz,j,j,new A.bsi(a),j,j,j,j,j),f=t.p,e=A.a([A.bw(j,j,j,B.avK,j,j,new A.bsj(k,a,i),j,j,j,"About LUS",j)],f),d=k.e
 if(d.a!==0){s=i.c
-e.push(A.kS(A.aa(B.oM,s.i(0.85),j,16),A.c("Reset",j,j,j,j,A.f(j,j,s.i(0.85),j,j,j,j,j,j,j,j,13,j,j,j,j,j,!0,j,j,j,j,j,j,j,j),j,j,j),k.gaP7(),j))}g=A.bp(e,j,j,!0,!0,j,j,1,j,j,j,!1,j,!1,j,j,g,j,!0,j,j,j,j,j,B.bZB,j,j,j,1,j,!0)
+e.push(A.kS(A.aa(B.oM,s.i(0.85),j,16),A.c("Reset",j,j,j,j,A.f(j,j,s.i(0.85),j,j,j,j,j,j,j,j,13,j,j,j,j,j,!0,j,j,j,j,j,j,j,j),j,j,j),k.gaP7(),j))}g=A.bp(e,j,j,!0,!0,j,j,1,j,j,j,!1,j,!1,j,j,g,j,!0,j,j,j,j,j,B.bZC,j,j,j,1,j,!0)
 e=A.c5l(d,k.d)
 s=k.d===B.hs?18:30
 r=k.gBO()
@@ -164287,7 +164287,7 @@ e=A.Q(new A.E(B.RZ,new A.bdw(j),e),d)
 e=A.l(e,B.y,B.e,B.f,0,B.t)
 d=A.l(A.a([A.c("Moderate / Severe HIE on NICHD assessment",i,i,i,i,A.f(i,i,b,i,i,i,i,i,i,i,i,12,i,i,i,i,1.4,!0,i,i,i,i,i,i,i,i),i,i,i),A.c("AND / OR",i,i,i,i,A.f(i,i,b.i(0.55),i,i,i,i,i,i,i,i,11,i,i,B.w,i,i,!0,i,i,i,i,i,i,i,i),i,i,i),A.c("Evidence of seizures (clinical and/or CFM)",i,i,i,i,A.f(i,i,b,i,i,i,i,i,i,i,i,12,i,i,i,i,1.4,!0,i,i,i,i,i,i,i,i),i,i,i)],a),B.y,B.e,B.f,0,B.t)
 s=A.c("Age < 6 hours and \u2265 35 weeks gestation",i,i,i,i,A.f(i,i,b,i,i,i,i,i,i,i,i,12,i,i,i,i,1.4,!0,i,i,i,i,i,i,i,i),i,i,i)
-r=A.t(A.a([new A.GC("YES",B.ae,i),B.Y,B.bZf],a),B.y,B.e,B.f,0,i,i)
+r=A.t(A.a([new A.GC("YES",B.ae,i),B.Y,B.bZg],a),B.y,B.e,B.f,0,i,i)
 q=B.ae.i(f?0.2:0.12)
 p=A.h(10)
 o=A.K(B.ae.i(0.5),1.5)
@@ -165698,7 +165698,7 @@ A.bgW.prototype={
 $2(a,b){var s,r,q,p,o=null
 if(b.a!==B.kb){s=this.a.d.k3
 return new A.z(B.rN,A.t(A.a([A.b0(A.AN(o,o,o,o,o,o,o,1.5,o,new A.ks(s.i(0.4),t.Jn)),12,12),B.Y,A.c("Searching drugs\u2026",o,o,o,o,A.o().$2$color$fontSize(s.i(0.5),11.5),o,o,o)],t.p),B.v,B.e,B.f,0,o,o),o)}r=b.b
-if(r==null)r=B.vf
+if(r==null)r=B.ve
 s=J.aq(r)
 if(s.gab(r))return B.b0
 q=this.a
@@ -165805,7 +165805,7 @@ if(b.a!==B.kb)return B.b0
 s=b.b
 s=s==null?p:J.H(s,1)
 t.I3.a(s)
-r=s==null?B.vf:s
+r=s==null?B.ve:s
 s=this.a
 q=s.c
 if(s.d.Hw(0,q).length!==0||J.l7(r))return B.b0
@@ -165971,7 +165971,7 @@ j.push(l.aBw(m))}m=l.c
 m.toString
 j.push(A.b0(k,A.aN(m,k,t.w).w.r.d+16,k))
 return A.bo(k,s.fx,A.c_5(l.f,A.a([new A.Wq(p,B.c0K,n,0,q,0,!0,!0,!0,k),new A.Lr(A.l(j,B.a8,B.e,B.f,0,B.t),k)],o)),k,r,k,l.d)},
-azS(a,b){var s,r=null,q=b?B.ae3:B.lN,p=A.h(18),o=A.K(b?B.h9.i(0.4):B.qT,1.5),n=t.p,m=A.t(A.a([B.bZk,B.Y,A.c("Like PediAid? Support the developer.",r,r,r,r,A.o().$3$color$fontSize$fontWeight(b?B.qM:B.h9,14,B.M),r,r,r)],n),B.v,B.e,B.f,0,r,r),l=A.c("I've done the coding on my own \u2014 the app, the academics web, the backend, everything. It costs me every month to keep the servers running. If PediAid has saved you time on a shift, consider supporting the developer. Every contribution keeps the app alive.",r,r,r,r,A.o().$3$color$fontSize$height((b?B.qM:B.jd).i(0.9),12.5,1.55),r,r,r),k=A.jv(B.cu,B.z,B.f1,new A.aH(A.h(12),B.C),r,r)
+azS(a,b){var s,r=null,q=b?B.ae3:B.lN,p=A.h(18),o=A.K(b?B.h9.i(0.4):B.qT,1.5),n=t.p,m=A.t(A.a([B.bZl,B.Y,A.c("Like PediAid? Support the developer.",r,r,r,r,A.o().$3$color$fontSize$fontWeight(b?B.qM:B.h9,14,B.M),r,r,r)],n),B.v,B.e,B.f,0,r,r),l=A.c("I've done the coding on my own \u2014 the app, the academics web, the backend, everything. It costs me every month to keep the servers running. If PediAid has saved you time on a shift, consider supporting the developer. Every contribution keeps the app alive.",r,r,r,r,A.o().$3$color$fontSize$height((b?B.qM:B.jd).i(0.9),12.5,1.55),r,r,r),k=A.jv(B.cu,B.z,B.f1,new A.aH(A.h(12),B.C),r,r)
 k=A.b0(A.jZ(B.Lc,A.c("Support the developer",r,r,r,r,A.o().$2$fontSize$fontWeight(13,B.M),r,r,r),new A.bo3(a),k),r,1/0)
 s=A.bu(A.c("Opens bridgr.co.in \u2014 no account needed.",r,r,r,r,A.o().$2$color$fontSize((b?B.qM:B.h9).i(0.55),10),r,r,r),r,r)
 return new A.z(B.aic,A.i(r,A.l(A.a([m,B.K,l,B.I,k,B.Z,s,B.Z,A.bu(A.c("\u2014 Dr. Sunil Mulgund",r,r,r,r,A.o().$3$color$fontSize$fontStyle((b?B.qM:B.h9).i(0.7),10,B.aB),r,r,r),r,r)],n),B.y,B.e,B.f,0,B.t),B.l,r,r,new A.j(q,r,o,p,r,r,B.r),r,r,r,r,B.fk,r,r,r),r)},
@@ -166004,14 +166004,14 @@ r.push(new A.qB("Never Again","Learn from real mistakes",B.arv,B.k9,new A.box(s)
 return A.IZ(null,B.S,B.bPw,new A.boy(this,r,b),r.length,null,B.kX,!0)},
 aAH(a,b){var s="Quick Access",r=null,q=A.h(8),p=A.c(s,r,r,r,r,A.o().$4$color$fontSize$fontWeight$letterSpacing(A.d(a).ax.k3,16,B.w,0.1),r,r,r),o=b.b,n=o.i(0.1),m=A.h(20),l=A.K(o.i(0.2),1),k=t.p
 return A.Wf(A.t(A.a([p,A.bW(r,A.i(r,A.t(A.a([A.aa(B.tk,o,r,13),B.es,A.c("Edit",r,r,r,r,A.o().$3$color$fontSize$fontWeight(o,12,B.F),r,r,r)],k),B.v,B.e,B.as,0,r,r),B.l,r,r,new A.j(n,r,l,m,r,r,B.r),r,r,r,r,B.m6,r,r,r),B.S,!1,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,r,new A.boO(this,a),r,r,r,r,r,r,!1,B.aF)],k),B.v,B.da,B.f,0,r,r),'Pin the calculators and tools you reach for most. Tap "Edit" to add or remove tiles.',this.y,q,B.i0,s)},
-aAG(a,b,c){var s=null,r=c?B.nV:B.z,q=c?B.lO:B.lF,p=t.WC,o=p.j("aC<y.E>"),n=A.Q(new A.aC(new A.aC(B.uK,new A.boK(this),p),new A.boL(!1),o),o.j("y.E"))
+aAG(a,b,c){var s=null,r=c?B.nV:B.z,q=c?B.lO:B.lF,p=t.WC,o=p.j("aC<y.E>"),n=A.Q(new A.aC(new A.aC(B.vg,new A.boK(this),p),new A.boL(!1),o),o.j("y.E"))
 p=n.length
 if(p===0)return new A.z(B.f2,A.c("No quick items selected. Tap Edit to add some.",s,s,s,s,A.o().$2$color$fontSize(b.k3.i(0.4),13),s,s,s),s)
 return A.b0(A.nc(s,new A.boM(this,n,a,r,q,b),p,s,B.nO,B.b7,new A.boN()),38,s)},
 aXF(a){A.qU(A.d(a).at,new A.bpw(this),a,!0,B.a1P,t.z)},
 abk(a,b){var s,r=A.ay(["gir",new A.boW(),"gas",new A.boX(),"tpn",new A.boY(),"cga",new A.bp8(),"ponderal",new A.bpj(),"bsa",new A.bpk(),"bp",new A.bpl(),"neobp",new A.bpm(),"bili",new A.bpn(),"fluid",new A.bpo(),"burn",new A.bpp(),"parkland",new A.boZ(),"lund",new A.bp_(),"pet",new A.bp0(),"egfr",new A.bp1(),"ga",new A.bp2(),"vent",new A.bp3(),"nutri",new A.bp4(),"dve",new A.bp5(),"allcalc",new A.bp6(),"growth",new A.bp7(),"devmile",new A.bp9(),"tdsc",new A.bpa(),"formulary",new A.bpb(),"labref",new A.bpc(),"guides",new A.bpd(),"cme",new A.bpe(),"academics",new A.bpf()],t.N,t.QL).h(0,b)
 if(r==null)return
-s=B.h.tV(B.uK,new A.bpg(b),new A.bph()).b
+s=B.h.tV(B.vg,new A.bpg(b),new A.bph()).b
 if(s.length!==0)$.azS().Ay(b,s)
 s=A.an(new A.bpi(r),null,t.z)
 A.a8(a,!1).X(s)},
@@ -166232,7 +166232,7 @@ r=t.p
 q=A.t(A.a([A.aa(B.oP,l.b,m,20),B.Y,A.c("Customise Quick Access",m,m,m,m,A.o().$3$color$fontSize$fontWeight(s,17,B.w),m,m,m)],r),B.v,B.e,B.f,0,m,m)
 s=A.c("Select which shortcuts appear on your home screen.",m,m,m,m,A.o().$2$color$fontSize(s.i(0.5),12),m,m,m)
 p=A.a([],r)
-for(o=this.a,n=0;n<28;++n)p.push(new A.bY(new A.bpt(o,B.uK[n],b,l),m))
+for(o=this.a,n=0;n<28;++n)p.push(new A.bY(new A.bpt(o,B.vg[n],b,l),m))
 return new A.ed(new A.ax(0,1/0,0,k.a.b*0.85),new A.z(B.J3,A.l(A.a([j,B.a1,q,B.Z,s,B.I,new A.hI(1,B.dO,A.cN(p,m,B.cn,m,B.a3,!0),m),B.K,A.b0(A.md(A.c("Done",m,m,m,m,A.o().$1$fontWeight(B.w),m,m,m),new A.bpu(a),m),m,1/0)],r),B.v,B.e,B.as,0,B.t),m),m)},
 $S:1147}
 A.bpt.prototype={
@@ -166470,7 +166470,7 @@ $2(a,b){return B.Y},
 $S:48}
 A.bAU.prototype={
 $2(a,b){var s=J.H(this.b,b)
-return new A.Og(s.b,B.h.tV(B.uK,new A.bAR(s),new A.bAS(s)).c,new A.bAT(this.a,s),null)},
+return new A.Og(s.b,B.h.tV(B.vg,new A.bAR(s),new A.bAS(s)).c,new A.bAT(this.a,s),null)},
 $S:1176}
 A.bAR.prototype={
 $1(a){return a.a===this.a.a},
@@ -166661,7 +166661,7 @@ this.Y()},
 p(a){var s,r=this,q=null,p=A.d(a).ax,o=A.d(a),n=p.b,m=A.bw(q,q,q,B.mx,q,q,new A.brv(a),q,q,q,q,q),l=p.k3,k=A.f(q,q,l,q,q,q,q,q,q,q,q,14,q,q,q,q,q,!0,q,q,q,q,q,q,q,q),j=A.f(q,q,l.i(0.5),q,q,q,q,q,q,q,q,14,q,q,q,q,q,!0,q,q,q,q,q,q,q,q),i=A.aa(B.mq,l.i(0.5),q,20)
 l=r.f.length!==0?A.bw(q,q,q,A.aa(B.tf,l.i(0.5),q,18),q,q,new A.brw(r),q,q,q,q,q):q
 s=A.d(a)
-m=A.bp(q,q,q,!0,!0,n,new A.Uy(new A.z(B.ahM,A.di(q,B.aV,!1,q,!0,B.ab,q,A.dn(),r.e,q,q,q,q,q,2,A.cO(q,new A.b9(4,A.h(10),B.C),q,B.hd,q,q,q,q,!0,q,q,q,q,q,q,s.at,!0,q,q,q,q,q,q,q,q,q,q,q,q,q,j,"Search labs & guides\u2026",q,q,q,q,q,q,q,q,q,!0,!0,!1,q,i,q,q,q,q,q,q,l,q,q,q,q,q),B.S,!0,q,!0,q,!1,q,B.bg,q,q,q,q,q,q,q,q,1,q,q,!1,"\u2022",q,r.gaRo(),q,q,q,!1,q,q,!1,q,!0,q,B.b5,q,q,q,q,q,q,q,q,q,q,q,k,!0,B.ag,q,B.aC,q,q,q,q),q),B.bP8,q),1,q,q,0,!1,q,!1,q,q,m,q,!0,q,q,q,q,q,B.c_6,q,q,q,1,q,!0)
+m=A.bp(q,q,q,!0,!0,n,new A.Uy(new A.z(B.ahM,A.di(q,B.aV,!1,q,!0,B.ab,q,A.dn(),r.e,q,q,q,q,q,2,A.cO(q,new A.b9(4,A.h(10),B.C),q,B.hd,q,q,q,q,!0,q,q,q,q,q,q,s.at,!0,q,q,q,q,q,q,q,q,q,q,q,q,q,j,"Search labs & guides\u2026",q,q,q,q,q,q,q,q,q,!0,!0,!1,q,i,q,q,q,q,q,q,l,q,q,q,q,q),B.S,!0,q,!0,q,!1,q,B.bg,q,q,q,q,q,q,q,q,1,q,q,!1,"\u2022",q,r.gaRo(),q,q,q,!1,q,q,!1,q,!0,q,B.b5,q,q,q,q,q,q,q,q,q,q,q,k,!0,B.ag,q,B.aC,q,q,q,q),q),B.bP8,q),1,q,q,0,!1,q,!1,q,q,m,q,!0,q,q,q,q,q,B.c_7,q,q,q,1,q,!0)
 if(!r.d.c)n=A.bu(A.AN(q,n,q,q,q,q,q,q,q,q),q,q)
 else n=r.f.length!==0?r.aAY():r.aBd()
 return A.bo(m,o.fx,n,q,q,q,q)},
@@ -167120,7 +167120,7 @@ return A.bW(o,new A.z(B.ku,A.t(A.a([l,B.es,A.c(q,o,o,o,o,A.o().$3$color$fontSize
 A.amh.prototype={
 p(a){var s=null,r=A.d(a).ax,q=r.k3,p=A.aa(B.asc,q.i(0.18),s,72),o=this.c
 o=o==="All"?"No posts yet":"No posts yet in "+o
-return A.bu(new A.z(B.kt,A.l(A.a([p,B.bk,A.c(o,s,s,s,s,A.o().$3$color$fontSize$fontWeight(q.i(0.45),17,B.w),B.a9,s,s),B.K,A.c("Be the first to share a lesson",s,s,s,s,A.o().$2$color$fontSize(q.i(0.35),13.5),B.a9,s,s),B.bA,A.ld(B.tv,B.c_i,this.d,A.fC(s,s,r.b,s,s,s,0,s,s,r.c,s,s,B.air,s,new A.aH(A.h(10),B.C),s,s,s,s,s))],t.p),B.v,B.e,B.as,0,B.t),s),s,s)}}
+return A.bu(new A.z(B.kt,A.l(A.a([p,B.bk,A.c(o,s,s,s,s,A.o().$3$color$fontSize$fontWeight(q.i(0.45),17,B.w),B.a9,s,s),B.K,A.c("Be the first to share a lesson",s,s,s,s,A.o().$2$color$fontSize(q.i(0.35),13.5),B.a9,s,s),B.bA,A.ld(B.tv,B.c_j,this.d,A.fC(s,s,r.b,s,s,s,0,s,s,r.c,s,s,B.air,s,new A.aH(A.h(10),B.C),s,s,s,s,s))],t.p),B.v,B.e,B.as,0,B.t),s),s,s)}}
 A.Gl.prototype={
 P(){return new A.au8(null,null)}}
 A.au8.prototype={
@@ -167692,7 +167692,7 @@ $0(){return this.a.yB("https://pediaid.bridgr.co.in/")},
 $S:0}
 A.bEg.prototype={
 $1(a){var s=null
-return A.tR(A.a([A.iu(B.c18,s,s,new A.bEf(this.a),s,s)],t.p),B.bZo,B.c_u)},
+return A.tR(A.a([A.iu(B.c18,s,s,new A.bEf(this.a),s,s)],t.p),B.bZp,B.c_u)},
 $S:92}
 A.bEf.prototype={
 $0(){var s=this.a.c
@@ -167702,7 +167702,7 @@ return null},
 $S:0}
 A.bEd.prototype={
 $1(a){var s=null,r=this.a
-return A.tR(A.a([A.iu(B.wx,s,s,new A.bEb(r),s,s),A.md(B.bZu,new A.bEc(r),s)],t.p),B.bYN,B.c1j)},
+return A.tR(A.a([A.iu(B.wx,s,s,new A.bEb(r),s,s),A.md(B.bZv,new A.bEc(r),s)],t.p),B.bYN,B.c1j)},
 $S:92}
 A.bEb.prototype={
 $0(){var s=this.a.c
@@ -167721,7 +167721,7 @@ $1(a){return new A.fH(new A.bE8(this.a),null)},
 $S:146}
 A.bE8.prototype={
 $2(a,b){var s,r,q=null,p=this.a,o=B.u.a3(p.a.a).toUpperCase()==="DELETE",n=A.t(B.bvU,B.v,B.e,B.f,0,q,q),m=t.p
-p=A.l(A.a([B.c__,B.aj,A.di(q,B.aV,!1,q,!0,B.ab,q,A.dn(),p,q,q,q,q,q,2,B.awz,B.S,!0,q,!0,q,!1,q,B.bg,q,q,q,q,q,q,q,q,1,q,q,!1,"\u2022",q,new A.bE5(b),q,q,q,!1,q,q,!1,q,!0,q,B.b5,q,q,q,q,q,q,q,q,q,q,q,q,!0,B.ag,q,B.bRU,q,q,q,q)],m),B.y,B.e,B.as,0,B.t)
+p=A.l(A.a([B.c_0,B.aj,A.di(q,B.aV,!1,q,!0,B.ab,q,A.dn(),p,q,q,q,q,q,2,B.awz,B.S,!0,q,!0,q,!1,q,B.bg,q,q,q,q,q,q,q,q,1,q,q,!1,"\u2022",q,new A.bE5(b),q,q,q,!1,q,q,!1,q,!0,q,B.b5,q,q,q,q,q,q,q,q,q,q,q,q,!0,B.ag,q,B.bRU,q,q,q,q)],m),B.y,B.e,B.as,0,B.t)
 s=A.iu(B.wx,q,q,new A.bE6(a),q,q)
 r=A.fC(q,q,o?B.mL:B.fQ,q,q,q,q,q,q,B.z,q,q,q,q,q,q,q,q,q,q)
 return A.tR(A.a([s,A.md(B.c_B,o?new A.bE7(a):q,r)],m),p,n)},
@@ -167882,7 +167882,7 @@ P(){return new A.aqi()}}
 A.aqi.prototype={
 p(a){var s,r,q,p,o,n,m,l,k,j,i=this,h=null,g=A.d(a).ax,f=i.d,e=f!=null?B.bCi.h(0,f):h
 f=A.d(a)
-s=A.bp(h,h,h,!0,!0,h,h,1,h,h,h,!1,h,!1,h,h,A.bw(h,h,h,B.cz,h,h,new A.bx0(a),h,h,h,h,h),h,!0,h,h,h,h,h,B.bZ3,h,h,h,1,h,!0)
+s=A.bp(h,h,h,!0,!0,h,h,1,h,h,h,!1,h,!1,h,h,A.bw(h,h,h,B.cz,h,h,new A.bx0(a),h,h,h,h,h),h,!0,h,h,h,h,h,B.bZ4,h,h,h,1,h,!0)
 r=g.b
 q=r.i(0.15)
 p=A.h(20)
@@ -167979,7 +167979,7 @@ break
 case 5:return A.M(null,r)
 case 1:return A.L(p.at(-1),r)}})
 return A.N($async$CR,r)},
-p(a){var s,r,q,p,o,n=this,m=null,l=A.d(a),k=A.bp(m,m,m,!0,!0,m,m,1,m,m,0,!1,m,!1,m,m,m,m,!0,m,m,m,m,m,B.bZx,m,m,m,1,m,!0)
+p(a){var s,r,q,p,o,n=this,m=null,l=A.d(a),k=A.bp(m,m,m,!0,!0,m,m,1,m,m,0,!1,m,!1,m,m,m,m,!0,m,m,m,m,m,B.bZy,m,m,m,1,m,!0)
 if(n.w){s=n.c
 s.toString
 s=A.d(s)
@@ -168880,11 +168880,11 @@ var $async$xy=A.P(function(b,c){if(b===1)return A.L(c,r)
 for(;;)switch(s){case 0:s=3
 return A.I(p.yi(),$async$xy)
 case 3:o=B.u.a3(a).toLowerCase()
-if(o.length===0){q=B.vf
+if(o.length===0){q=B.ve
 s=1
 break}n=A.a([],t.Xd)
 m=p.a
-if(m==null){q=B.vf
+if(m==null){q=B.ve
 s=1
 break}l=A.b8(t.N)
 for(k=new A.c0(m,m.r,m.e,A.A(m).j("c0<2>"));k.E();){j=k.d
@@ -168969,7 +168969,7 @@ case 9:p=8
 b=o.pop()
 h=A.aF(b)
 A.f8().$1("[GuidelinesSearch] network load failed: "+A.p(h))
-if(n.a==null)n.a=B.vg
+if(n.a==null)n.a=B.vf
 s=11
 break
 case 8:s=2
@@ -169018,7 +169018,7 @@ s=7
 return A.I(A.GP(A.d2(a.e,0,null),null).je(0,B.lZ),$async$J0)
 case 7:n=c
 if(n.b!==200){A.f8().$1("[GuidelinesSearch] "+a.a+" HTTP "+n.b)
-q=B.vg
+q=B.vf
 s=1
 break}j=n
 i=t.P
@@ -169039,7 +169039,7 @@ case 4:p=3
 f=o.pop()
 k=A.aF(f)
 A.f8().$1("[GuidelinesSearch] "+a.a+" fetch failed: "+A.p(k))
-q=B.vg
+q=B.vf
 s=1
 break
 s=6
@@ -169050,7 +169050,7 @@ case 6:case 1:return A.M(q,r)
 case 2:return A.L(o.at(-1),r)}})
 return A.N($async$J0,r)},
 Hw(a,b){var s,r,q,p,o,n,m=this.a,l=B.u.a3(b).toLowerCase()
-if(m==null||l.length===0)return B.vg
+if(m==null||l.length===0)return B.vf
 s=A.a([],t.mU)
 for(r=m.length,q=0;q<m.length;m.length===r||(0,A.X)(m),++q){p=m[q]
 o=this.aWw(p,l)
@@ -175346,7 +175346,7 @@ if(q==null)q=r.a(q)
 if(p.$1(q))return q}return null},
 gzd(a){return this.zV$}}
 A.b4Z.prototype={
-gez(a){return B.ve}}
+gez(a){return B.vd}}
 A.Mu.prototype={
 xo(a){var s,r,q,p=A.azv(a,null)
 for(s=this.gez(this).a,r=A.a7(s),s=new J.ep(s,s.length,r.j("ep<1>")),r=r.c;s.E();){q=s.d
@@ -175731,7 +175731,7 @@ s=A.bW8(o)
 this.b=s
 if(s==null)this.tB(0,o,a.o9$)},
 a1R(a){return this.tB(0,new A.Yd(a.e,a.f,null),a)},
-a1S(a){var s,r=this,q=A.c3X(a.e,r.Z3(a.f),B.ve,!0)
+a1S(a){var s,r=this,q=A.c3X(a.e,r.Z3(a.f),B.vd,!0)
 if(a.r)r.tB(0,q,a)
 else{s=r.b
 if(s!=null)s.fn$.I(0,q)
@@ -181436,11 +181436,11 @@ B.bZ0=new A.ae("Albumin",null,B.nc,null,null,null,null,null,null,null,null)
 B.aT=new A.cx(null,2,null,null)
 B.c01=new A.ae("0.5 \u2013 1 g/kg of 25 % (2 \u2013 4 mL/kg). Use 5 % for volume expansion.",null,null,null,null,null,null,null,null,null,null)
 B.I=new A.cx(null,12,null,null)
-B.c_5=new A.ae("BiCarb",null,B.nc,null,null,null,null,null,null,null,null)
+B.c_6=new A.ae("BiCarb",null,B.nc,null,null,null,null,null,null,null,null)
 B.c_P=new A.ae("0.5 \u2013 2 mEq/kg over 5\u201310 min. [(Base deficit)(wt)(0.3) = dose in mEq] (1 Amp = 50 mEq).",null,null,null,null,null,null,null,null,null,null)
 B.c1o=new A.ae("THAM",null,B.nc,null,null,null,null,null,null,null,null)
-B.bZd=new A.ae("(Base deficit)(wt)(0.5) = dose in mL. Infuse 1\u20132 mL/hr. If base deficit unknown give 3\u20136 mL/kg/dose.",null,null,null,null,null,null,null,null,null,null)
-B.boZ=s([B.bZ0,B.aT,B.c01,B.I,B.c_5,B.aT,B.c_P,B.I,B.c1o,B.aT,B.bZd],t.p)
+B.bZe=new A.ae("(Base deficit)(wt)(0.5) = dose in mL. Infuse 1\u20132 mL/hr. If base deficit unknown give 3\u20136 mL/kg/dose.",null,null,null,null,null,null,null,null,null,null)
+B.boZ=s([B.bZ0,B.aT,B.c01,B.I,B.c_6,B.aT,B.c_P,B.I,B.c1o,B.aT,B.bZe],t.p)
 B.ae7=new A.h_(B.a3,B.e,B.f,B.y,null,B.t,null,0,B.boZ,null)
 B.ajw=new A.fR(B.ae7,null)
 B.bjm=s(["Nausea","Vomiting","Malaise","Abdominal pain","Weakness","Drowsiness","Prostration"],t.s)
@@ -181470,13 +181470,13 @@ B.ajE=new A.fR(B.ajg,null)
 B.bln=s(["Bleeding from bite site","Bleeding from old or partly old wounds","Systemic spontaneous bleeding (Gums, Nose, Malena, Hematuria, Vaginal bleeding, skin bleeds, mucosal bleeding)"],t.s)
 B.ajf=new A.ma("Hematological (vipers)",B.bln,null)
 B.ajF=new A.fR(B.ajf,null)
-B.bZI=new A.ae("3 % saline",null,B.nc,null,null,null,null,null,null,null,null)
+B.bZJ=new A.ae("3 % saline",null,B.nc,null,null,null,null,null,null,null,null)
 B.c_E=new A.ae("3\u20135 mL/kg over 30\u201360 minutes \u2014 if serum osm > 320",null,null,null,null,null,null,null,null,null,null)
-B.bZe=new A.ae("Pentobarbital coma",null,B.nc,null,null,null,null,null,null,null,null)
+B.bZf=new A.ae("Pentobarbital coma",null,B.nc,null,null,null,null,null,null,null,null)
 B.c0q=new A.ae("10 mg/kg load, then infusion at 1\u20136 mg/kg/hour",null,null,null,null,null,null,null,null,null,null)
 B.bYv=new A.ae("Spinal cord injury",null,B.nc,null,null,null,null,null,null,null,null)
 B.bYJ=new A.ae("Consider Solumedrol: 30 mg/kg, then 5.4 mg/kg/hr for 23 h",null,null,null,null,null,null,null,null,null,null)
-B.bro=s([B.bZI,B.aT,B.c_E,B.I,B.bZe,B.aT,B.c0q,B.I,B.bYv,B.aT,B.bYJ],t.p)
+B.bro=s([B.bZJ,B.aT,B.c_E,B.I,B.bZf,B.aT,B.c0q,B.I,B.bYv,B.aT,B.bYJ],t.p)
 B.ae5=new A.h_(B.a3,B.e,B.f,B.y,null,B.t,null,0,B.bro,null)
 B.ajG=new A.fR(B.ae5,null)
 B.bzb=s(["No tourniquet","No cuts","No washing","No sucking of venom","No electrical shock","No herbal medicine"],t.s)
@@ -181898,16 +181898,16 @@ B.zW=new A.Bq(!1,!1,!1,!0)
 B.Jp=new A.Br(!1,!1,!1,!1)
 B.Jq=new A.Br(!1,!1,!1,!0)
 B.q3=new A.G(!0,B.z,null,null,null,null,15,B.w,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
-B.bZs=new A.ae("Check Patient Mortality",null,B.q3,null,null,null,null,null,null,null,null)
+B.bZt=new A.ae("Check Patient Mortality",null,B.q3,null,null,null,null,null,null,null,null)
 B.bY8=new A.G(!0,B.bj,null,null,null,null,11.5,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
-B.bZz=new A.ae("Revised Baux Score \u2014 mortality prediction",null,B.bY8,null,null,null,null,null,null,null,null)
-B.bwm=s([B.bZs,B.aT,B.bZz],t.p)
+B.bZA=new A.ae("Revised Baux Score \u2014 mortality prediction",null,B.bY8,null,null,null,null,null,null,null,null)
+B.bwm=s([B.bZt,B.aT,B.bZA],t.p)
 B.ae9=new A.h_(B.a3,B.e,B.f,B.y,null,B.t,null,0,B.bwm,null)
 B.apk=new A.ch(1,B.bh,B.ae9,null)
 B.Jr=new A.ch(1,B.bh,B.j9,null)
 B.bT2=new A.G(!0,B.ay,null,null,null,null,14,B.w,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
-B.bZL=new A.ae("TBSA Total",null,B.bT2,null,null,null,null,null,null,null,null)
-B.apr=new A.ch(1,B.bh,B.bZL,null)
+B.bZM=new A.ae("TBSA Total",null,B.bT2,null,null,null,null,null,null,null,null)
+B.apr=new A.ch(1,B.bh,B.bZM,null)
 B.c8u=new A.alh(null)
 B.Js=new A.ch(1,B.bh,B.c8u,null)
 B.bVE=new A.G(!0,B.cm,null,null,null,null,12.5,B.w,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
@@ -181974,16 +181974,16 @@ B.A0=new A.IL(6,null)
 B.jn=new A.IM(3,"info")
 B.apW=new A.j5("Confirm position before securing","\u2022 Equal bilateral chest rise + breath sounds ; CO\u2082 trace.\n\u2022 Listen over both axillae and stomach (no epigastric sounds, no condensation in tube while bagging).\n\u2022 CXR \u2014 tip should sit between T1\u2013T2 (above carina).\n\u2022 If R-main bronchus intubation: pull back 1 cm and reassess.\n\u2022 Cuff pressure < 25 cm H\u2082O when cuffed tubes used.",B.jn,null)
 B.iy=new A.IM(1,"warning")
-B.apX=new A.j5("Correction safety","\u2022 Slow correction: 0.5 mEq/L/hr or 15 mEq/L/day.\n\u2022 Symptomatic (seizing / GCS drop): 3 % NaCl 4\u20136 mL/kg (max 100 mL) IV over 10\u201330 min \u2014 repeat to control symptoms.\n\u2022 Over-rapid correction \u2192 osmotic demyelination syndrome (ODS).\n\u2022 Investigate cause: SIADH, hypovolaemia, CSW, water intoxication, adrenal insufficiency. Restrict water if SIADH.",B.iy,null)
-B.apY=new A.j5("Critical safety reminders","\u2022 NEVER drop Na faster than 0.5 mEq/L/hr (15 mEq/L/day) \u2014 risk of cerebral oedema.\n\u2022 Add the patient's usual maintenance fluids on top of FWD replacement.\n\u2022 Recheck Na q 2\u20134 h.\n\u2022 In central diabetes insipidus add desmopressin; in nephrogenic DI restrict salt + thiazide.",B.iy,null)
-B.apZ=new A.j5("Cautions","\u2022 Always have IV access and cardiac monitoring for K > 0.3 mEq/kg/hr.\n\u2022 Hold replacement if urine output < 0.5 mL/kg/hr.\n\u2022 Concomitant Mg replacement is essential \u2014 refractory hypokalaemia is often hypomagnesaemia.\n\u2022 Watch for urine K > 40 mEq/L \u2192 renal wasting (workup tubulopathy, diuretics, Bartter, Gitelman).",B.iy,null)
+B.apX=new A.j5("Critical safety reminders","\u2022 NEVER drop Na faster than 0.5 mEq/L/hr (15 mEq/L/day) \u2014 risk of cerebral oedema.\n\u2022 Add the patient's usual maintenance fluids on top of FWD replacement.\n\u2022 Recheck Na q 2\u20134 h.\n\u2022 In central diabetes insipidus add desmopressin; in nephrogenic DI restrict salt + thiazide.",B.iy,null)
+B.apY=new A.j5("Cautions","\u2022 Always have IV access and cardiac monitoring for K > 0.3 mEq/kg/hr.\n\u2022 Hold replacement if urine output < 0.5 mL/kg/hr.\n\u2022 Concomitant Mg replacement is essential \u2014 refractory hypokalaemia is often hypomagnesaemia.\n\u2022 Watch for urine K > 40 mEq/L \u2192 renal wasting (workup tubulopathy, diuretics, Bartter, Gitelman).",B.iy,null)
 B.ou=new A.IM(2,"danger")
-B.aq_=new A.j5("Order of intervention","1. Calcium FIRST if ECG changes (peaked T waves, widened QRS, sine wave) \u2014 stabilises myocardium.\n2. Insulin + dextrose AND/OR salbutamol \u2014 shifts K into cells.\n3. Sodium bicarbonate IF acidotic.\n4. Kayexalate / loop diuretic / dialysis \u2014 removes K from body (slower).\n5. Stop all K-containing fluids and meds. Investigate cause (renal failure, rhabdomyolysis, TLS, drugs, haemolysis).",B.ou,null)
-B.aq0=new A.j5("Critical labs (BEFORE giving glucose)",'Send the "critical sample" while hypoglycaemic: insulin, C-peptide, cortisol, GH, FFA, lactate, \u03b2-OHB, ammonia, LFTs, urine glucose + ketones, plasma amino acids, acylcarnitine profile, IGF-1. Without this sample, persistent hypoglycaemia is much harder to diagnose.',B.ou,null)
-B.aq1=new A.j5("Monitor for toxicity + workup loss","Watch for bradycardia, hypotension, loss of deep tendon reflexes (toxicity \u2265 4 mmol/L). Stop infusion if reflexes absent or BP drops.\n\nWorkup loss:  FE_Mg < 2 % \u2192 non-renal loss (GI, dietary);  24 h urine Mg > 30 mg \u2192 renal loss (loop/thiazide diuretics, tubulopathies, alcoholism, drug-induced).",B.iy,null)
+B.apZ=new A.j5("Order of intervention","1. Calcium FIRST if ECG changes (peaked T waves, widened QRS, sine wave) \u2014 stabilises myocardium.\n2. Insulin + dextrose AND/OR salbutamol \u2014 shifts K into cells.\n3. Sodium bicarbonate IF acidotic.\n4. Kayexalate / loop diuretic / dialysis \u2014 removes K from body (slower).\n5. Stop all K-containing fluids and meds. Investigate cause (renal failure, rhabdomyolysis, TLS, drugs, haemolysis).",B.ou,null)
+B.aq_=new A.j5("Critical labs (BEFORE giving glucose)",'Send the "critical sample" while hypoglycaemic: insulin, C-peptide, cortisol, GH, FFA, lactate, \u03b2-OHB, ammonia, LFTs, urine glucose + ketones, plasma amino acids, acylcarnitine profile, IGF-1. Without this sample, persistent hypoglycaemia is much harder to diagnose.',B.ou,null)
+B.aq0=new A.j5("Monitor for toxicity + workup loss","Watch for bradycardia, hypotension, loss of deep tendon reflexes (toxicity \u2265 4 mmol/L). Stop infusion if reflexes absent or BP drops.\n\nWorkup loss:  FE_Mg < 2 % \u2192 non-renal loss (GI, dietary);  24 h urine Mg > 30 mg \u2192 renal loss (loop/thiazide diuretics, tubulopathies, alcoholism, drug-induced).",B.iy,null)
+B.aq1=new A.j5("Correction safety","\u2022 Slow correction: 0.5 mEq/L/hr, max ~10 mEq/L per 24 h.\n\u2022 Symptomatic (seizing / GCS drop): 3 % NaCl 4\u20136 mL/kg (max 100 mL) IV over 10\u201330 min \u2014 repeat to control symptoms.\n\u2022 Over-rapid correction \u2192 osmotic demyelination syndrome (ODS).\n\u2022 Investigate cause: SIADH, hypovolaemia, CSW, water intoxication, adrenal insufficiency. Restrict water if SIADH.",B.iy,null)
 B.aq2=new A.j5("Workup before treating","Send: CMP, PO\u2084, Mg, PTH, Vit D, urine Ca/Cr, protein, iCa (ionised). Get an ECG (look for prolonged QTc) and a left-wrist X-ray for evidence of rickets. Calcium chloride is more potent (\xd73 elemental Ca) but also more sclerosing \u2014 prefer CVL or large peripheral vein.",B.jn,null)
 B.aq3=new A.j5("Cautions","\u2022 Risk of hypocalcaemia (PO\u2084 binds Ca) \u2014 monitor iCa.\n\u2022 Risk of metastatic calcification with rapid infusion.\n\u2022 Investigate cause: refeeding syndrome (most common in PICU), DKA, alcohol withdrawal, sepsis, vitamin D deficiency, X-linked hypophosphataemia, Fanconi syndrome.",B.iy,null)
-B.aq4=new A.jt('Reference: "Electrolyte Corrections" \u2014 D10 5 mL/kg PIV, D25 2 mL/kg CVL, D50 1 mL/kg CVL. Infusion 6\u20138 mg/kg/min of D10. No IV: Glucagon 0.003 + Epi 0.01 mg/kg IM/SQ. > 10 mg/kg/min: diazoxide 3\u20138 mg/kg/day q 12 or octreotide 10 mcg/kg IV/SQ q 8 h. For use by qualified clinicians only.',null)
+B.aq4=new A.jt('Reference: "Electrolyte Corrections" \u2014 10% dextrose 5 mL/kg peripheral, 25% dextrose 2 mL/kg central line, 50% dextrose 1 mL/kg central line. Infusion 6\u20138 mg/kg/min of 10% dextrose. No intravenous access: Glucagon 0.003 + Adrenaline 0.01 mg/kg intramuscular/subcutaneous. > 10 mg/kg/min: diazoxide 3\u20138 mg/kg/day every 12 h or octreotide 10 mcg/kg intravenous/subcutaneous every 8 h. For use by qualified clinicians only.',null)
 B.aq5=new A.jt('Reference: "Electrolyte Corrections" \u2014 0.15\u20130.3 mmol/kg NaPhos / KPhos IV over 4 h; correct if PO\u2084 < 0.8 mmol/L; 0.4 mmol/kg (>2 yr) \u2013 0.7 mmol/kg (<2 yr); oral 1\u20133 mmol/kg/day. For use by qualified clinicians only.',null)
 B.aq6=new A.jt('Reference: "Fluid and Electrolyte Formulae" \u2014 correction factor 1.6. Hillier (Am J Med 1999) showed a factor of 2.4 better fits dilutional change in hyperglycaemia > 400 mg/dL. For use by qualified clinicians only.',null)
 B.aq7=new A.jt('Reference: "Electrolyte Corrections" \u2014 FWD = 0.6(wt)([Na]/140 \u2212 1). Goal \u2193 Na 10\u201315 mEq/L per 24 hr. 4 mL FW/kg \u2248 \u2193 Na 1 mEq/L. For use by qualified clinicians only.',null)
@@ -181994,7 +181994,7 @@ B.aqb=new A.jt('Reference: "Fluid and Electrolyte Formulae" \u2014 +ve UAG \u219
 B.aqc=new A.jt('Reference: "Electrolyte Corrections" \u2014 correct if Mg < 0.75 mmol/L. 0.2 mmol/kg (50 mg/kg, 0.5 mL/kg of 10 % MgSO\u2084). 25\u201350 mg/kg over 2\u20134 h. Max 4 mmol or 1 g or 10 mL over 10 min. Oral 0.2\u20130.4 mmol/kg. For use by qualified clinicians only.',null)
 B.aqd=new A.jt('Reference: "Fluid and Electrolyte Formulae" \u2014 factor 0.25 (g/L) is equivalent to 2.5 (g/dL). Original derivation: Figge J, Crit Care Med 1998. For use by qualified clinicians only.',null)
 B.aqe=new A.jt("For use by qualified clinicians only \u2014 verify position with auscultation, capnography and chest X-ray after every intubation. Newborn weight-band sizes mirror standard NRP practice; depth methods are common bedside formulas.",null)
-B.aqf=new A.jt('Reference: "Electrolyte Corrections" \u2014 Na in mEq = (Na_goal \u2212 Na_meas)(Wt)(1.2). Symptomatic 3 % saline 6 mL/kg \u2192 \u2191 Na 5 mEq/L. For use by qualified clinicians only.',null)
+B.aqf=new A.jt('Reference: "Electrolyte Corrections" \u2014 Na in mEq = (Na_goal \u2212 Na_meas)(Wt)(0.6). Symptomatic 3 % saline 6 mL/kg \u2192 \u2191 Na 5 mEq/L. For use by qualified clinicians only.',null)
 B.aqg=new A.jt('Reference: "Electrolyte Corrections" \u2014 \u2193K: 0.5\u20131 mEq/kg KCl IV over 1\u20132 h. \u2191K: dextrose 1\u20132 g/kg + insulin 0.1 U/kg, CaCl\u2082 10\u201320 mg/kg, NaHCO\u2083 1\u20132 mEq/kg, kayexalate 1\u20132 g/kg/dose. For use by qualified clinicians only.',null)
 B.aqh=new A.jt('Reference: "Fluid and Electrolyte Formulae" \u2014 normal serum osmolality 270\u2013295 mOsm/kg. Osmolar-gap toxic alcohol screen per Goldfrank Toxicologic Emergencies, 11th ed. Use total Na (not corrected). For use by qualified clinicians only.',null)
 B.A1=new A.IM(0,"good")
@@ -182835,8 +182835,8 @@ B.aKr=s(["dextrose bolus","D10","2 mL/kg","hypoglycaemia","hypoglycemia","minibo
 B.au5=new A.az(B.oA,22,B.ae,null,null)
 B.an=new A.cx(10,null,null,null)
 B.bSt=new A.G(!0,null,null,null,null,null,13,null,null,null,null,null,1.5,null,null,null,null,null,null,null,null,null,null,null,null,null)
-B.c_a=new A.ae("All stages converge on RECOVERY when extremities are warm, dry and peripheral veins are visible easily.",null,B.bSt,null,null,null,null,null,null,null,null)
-B.apl=new A.ch(1,B.bh,B.c_a,null)
+B.c_b=new A.ae("All stages converge on RECOVERY when extremities are warm, dry and peripheral veins are visible easily.",null,B.bSt,null,null,null,null,null,null,null,null)
+B.apl=new A.ch(1,B.bh,B.c_b,null)
 B.aKt=s([B.au5,B.an,B.apl],t.p)
 B.aKw=s(["iap","indian","growth chart","height","weight","5-18 years","iap 2015","adolescent"],t.s)
 B.bL_=new A.fy(B.kx,"Weight",B.hP)
@@ -182906,42 +182906,6 @@ B.P=new A.cx(null,10,null,null)
 B.bxF=s(["R \u2014 Reassure","I \u2014 Immobilize","G.H \u2014 Get to Hospital","T \u2014 Tell doctor about specific symptoms"],t.s)
 B.ajm=new A.mb(B.bxF,!0,null)
 B.b1B=s([B.c07,B.P,B.ajm],t.p)
-B.c7X=new A.eg("gir","GIR Calc",B.tt)
-B.c8d=new A.eg("gas","Blood Gas",B.mt)
-B.c7Z=new A.eg("tpn","TPN",B.L_)
-B.c7T=new A.eg("cga","CGA / PMA",B.L8)
-B.c85=new A.eg("ponderal","Ponderal",B.tn)
-B.c7U=new A.eg("bsa","BSA",B.AY)
-B.c8f=new A.eg("bp","BP Calc",B.mu)
-B.c8i=new A.eg("neobp","Neonatal BP",B.mv)
-B.c8h=new A.eg("bili","Bili Tool",B.AW)
-B.atF=new A.a2(983718,"MaterialIcons",!1)
-B.c88=new A.eg("fluid","Maint. Fluid",B.atF)
-B.ate=new A.a2(63595,"MaterialIcons",!1)
-B.c8c=new A.eg("burn","Burn Mortality",B.ate)
-B.atH=new A.a2(983734,"MaterialIcons",!1)
-B.c81=new A.eg("parkland","Parkland",B.atH)
-B.c7V=new A.eg("lund","Lund-Browder",B.KN)
-B.c8g=new A.eg("pet","PET Calc",B.L4)
-B.asP=new A.a2(62911,"MaterialIcons",!1)
-B.c82=new A.eg("egfr","Schwartz eGFR",B.asP)
-B.asX=new A.a2(63122,"MaterialIcons",!1)
-B.c80=new A.eg("ga","GA Calc",B.asX)
-B.c84=new A.eg("vent","Ventilator",B.mt)
-B.atp=new A.a2(983304,"MaterialIcons",!1)
-B.c8a=new A.eg("nutri","Nutri Audit",B.atp)
-B.aty=new A.a2(983556,"MaterialIcons",!1)
-B.c8b=new A.eg("dve","DVE",B.aty)
-B.c8e=new A.eg("allcalc","All Calculators",B.iE)
-B.c87=new A.eg("growth","Growth Charts",B.oN)
-B.c7S=new A.eg("devmile","Dev Milestones",B.AS)
-B.c7Y=new A.eg("tdsc","TDSC",B.AI)
-B.c8_=new A.eg("formulary","Formulary",B.iF)
-B.c86=new A.eg("labref","Lab Reference",B.dY)
-B.c7W=new A.eg("guides","Guides",B.AP)
-B.c83=new A.eg("cme","CME & Webinars",B.AU)
-B.c89=new A.eg("academics","Academics",B.tq)
-B.uK=s([B.c7X,B.c8d,B.c7Z,B.c7T,B.c85,B.c7U,B.c8f,B.c8i,B.c8h,B.c88,B.c8c,B.c81,B.c7V,B.c8g,B.c82,B.c80,B.c84,B.c8a,B.c8b,B.c8e,B.c87,B.c7S,B.c7Y,B.c8_,B.c86,B.c7W,B.c83,B.c89],A.ai("D<eg>"))
 B.b2F=s(["CAN score","clinical assessment nutrition","fetal malnutrition","nutritional assessment","metcoff","IUGR","intrauterine growth restriction","fat wasting","muscle wasting","newborn nutrition","birth nutrition"],t.s)
 B.chW=new A.Gt("conference","Conferences",B.AU)
 B.chU=new A.Gt("webinar","Webinars",B.tr)
@@ -182964,8 +182928,8 @@ B.b2S=s([4,9,14,19],t.t)
 B.R9=s(["Apgar score \u2264 5 at 10 minutes","Ongoing resuscitation / ventilation \u2265 10 minutes after birth","Severe acidosis (pH < 7.1 or base excess \u2264 \u221212 mmol/L) within 60 minutes of birth"],t.s)
 B.auW=new A.az(B.AA,22,B.z,null,null)
 B.q2=new A.G(!0,B.z,null,null,null,null,14.5,B.w,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
-B.c_j=new A.ae("Diabetic Ketoacidosis confirmed \u2014 Contact Senior Staff",null,B.q2,null,null,null,null,null,null,null,null)
-B.apu=new A.ch(1,B.bh,B.c_j,null)
+B.c_k=new A.ae("Diabetic Ketoacidosis confirmed \u2014 Contact Senior Staff",null,B.q2,null,null,null,null,null,null,null,null)
+B.apu=new A.ch(1,B.bh,B.c_k,null)
 B.b2T=s([B.auW,B.an,B.apu],t.p)
 B.can=new A.jL("LUS > 4 (Preterm <34w)","Predicts surfactant need. Consider INSURE/LISA approach (Brat 2015).")
 B.cad=new A.jL("LUS > 8 (Term)","Suggests significant surfactant deficiency in term neonates.")
@@ -183144,7 +183108,7 @@ B.Fr=new A.a2o(0,"named")
 B.a6h=new A.a2o(1,"anonymous")
 B.b55=s([B.Fr,B.a6h],A.ai("D<a2o>"))
 B.b57=s(["Resident","Fellow","Senior Resident","Consultant","Nurse","Other","Prefer not to say"],t.s)
-B.uU=s(["January","February","March","April","May","June","July","August","September","October","November","December"],t.s)
+B.uT=s(["January","February","March","April","May","June","July","August","September","October","November","December"],t.s)
 B.bnO=s([0.41233895,0.35762064,0.18051042],t.n)
 B.biR=s([0.2126,0.7152,0.0722],t.n)
 B.bxQ=s([0.01932141,0.11916382,0.95034478],t.n)
@@ -183182,8 +183146,8 @@ B.F4=new A.td(0,"infantU2")
 B.c0k=new A.ae("< 1 yr",null,null,null,null,null,null,null,null,null,null)
 B.a9W=new A.fZ(B.F4,B.c0k,t._e)
 B.c4I=new A.td(1,"mid")
-B.bZU=new A.ae("2\u20135 yr",null,null,null,null,null,null,null,null,null,null)
-B.a9Q=new A.fZ(B.c4I,B.bZU,t._e)
+B.bZV=new A.ae("2\u20135 yr",null,null,null,null,null,null,null,null,null,null)
+B.a9Q=new A.fZ(B.c4I,B.bZV,t._e)
 B.a5v=new A.td(2,"over5")
 B.c0m=new A.ae("> 5 yr",null,null,null,null,null,null,null,null,null,null)
 B.a9O=new A.fZ(B.a5v,B.c0m,t._e)
@@ -183374,8 +183338,8 @@ B.au7=new A.az(B.asN,null,null,null,null)
 B.c13=new A.ae("Full reference chart",null,null,null,null,null,null,null,null,null,null)
 B.axT=new A.v_(B.au7,B.c13,null,null,null,!0,null,null,null,B.ar,!0,null,null,!1,null,null,null,!1,null,null,null,null,null,null,null,null,!0,null)
 B.bJy=new A.DV("fullChart",B.axT,null,t.wI)
-B.c_e=new A.ae("How to interpret",null,null,null,null,null,null,null,null,null,null)
-B.axR=new A.v_(B.Lh,B.c_e,null,null,null,!0,null,null,null,B.ar,!0,null,null,!1,null,null,null,!1,null,null,null,null,null,null,null,null,!0,null)
+B.c_f=new A.ae("How to interpret",null,null,null,null,null,null,null,null,null,null)
+B.axR=new A.v_(B.Lh,B.c_f,null,null,null,!0,null,null,null,B.ar,!0,null,null,!1,null,null,null,!1,null,null,null,null,null,null,null,null,!0,null)
 B.bJz=new A.DV("howTo",B.axR,null,t.wI)
 B.biO=s([B.bJA,B.bJy,B.bJz],A.ai("D<yq<k>>"))
 B.biT=s([0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.333,0.408,0.5,0.5,0.833,0.778,0.18,0.333,0.333,0.5,0.564,0.25,0.333,0.25,0.278,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.278,0.278,0.564,0.564,0.564,0.444,0.921,0.722,0.667,0.667,0.722,0.611,0.556,0.722,0.722,0.333,0.389,0.722,0.611,0.889,0.722,0.722,0.556,0.722,0.667,0.556,0.611,0.722,0.722,0.944,0.722,0.722,0.611,0.333,0.278,0.333,0.469,0.5,0.333,0.444,0.5,0.444,0.5,0.444,0.333,0.5,0.5,0.278,0.278,0.5,0.278,0.778,0.5,0.5,0.5,0.5,0.333,0.389,0.278,0.5,0.5,0.722,0.5,0.5,0.444,0.48,0.2,0.48,0.541,0.35,0.5,0.35,0.333,0.5,0.444,1,0.5,0.5,0.333,1,0.556,0.333,0.889,0.35,0.611,0.35,0.35,0.333,0.333,0.444,0.444,0.35,0.5,1,0.333,0.98,0.389,0.333,0.722,0.35,0.444,0.722,0.25,0.333,0.5,0.5,0.5,0.5,0.2,0.5,0.333,0.76,0.276,0.5,0.564,0.333,0.76,0.333,0.4,0.564,0.3,0.3,0.333,0.5,0.453,0.25,0.333,0.3,0.31,0.5,0.75,0.75,0.75,0.444,0.722,0.722,0.722,0.722,0.722,0.722,0.889,0.667,0.611,0.611,0.611,0.611,0.333,0.333,0.333,0.333,0.722,0.722,0.722,0.722,0.722,0.722,0.722,0.564,0.722,0.722,0.722,0.722,0.722,0.722,0.556,0.5,0.444,0.444,0.444,0.444,0.444,0.444,0.667,0.444,0.444,0.444,0.444,0.444,0.278,0.278,0.278,0.278,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.564,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5],t.n)
@@ -183409,7 +183373,7 @@ B.bjx=s(["Ipratropium bromide","125\u2013500 mcg (if nebulized)","administered e
 B.RH=s([62,62,30,30,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3225,3225,3225,3225,3225,3225,3225,3225,3225,3225,3225,3225,3225,3225,3225,3225,3225,3225,3225,3225,3225,3225,3225,3225,3225,3225,3225,3225,3225,3225,3225,3225,588,588,588,588,588,588,588,588,1680,1680,20499,22547,24595,26643,1776,1776,1808,1808,-24557,-22509,-20461,-18413,1904,1904,1936,1936,-16365,-14317,782,782,782,782,814,814,814,814,-12269,-10221,10257,10257,12305,12305,14353,14353,16403,18451,1712,1712,1744,1744,28691,30739,-32749,-30701,-28653,-26605,2061,2061,2061,2061,2061,2061,2061,2061,424,424,424,424,424,424,424,424,424,424,424,424,424,424,424,424,424,424,424,424,424,424,424,424,424,424,424,424,424,424,424,424,750,750,750,750,1616,1616,1648,1648,1424,1424,1456,1456,1488,1488,1520,1520,1840,1840,1872,1872,1968,1968,8209,8209,524,524,524,524,524,524,524,524,556,556,556,556,556,556,556,556,1552,1552,1584,1584,2000,2000,2032,2032,976,976,1008,1008,1040,1040,1072,1072,1296,1296,1328,1328,718,718,718,718,456,456,456,456,456,456,456,456,456,456,456,456,456,456,456,456,456,456,456,456,456,456,456,456,456,456,456,456,456,456,456,456,326,326,326,326,326,326,326,326,326,326,326,326,326,326,326,326,326,326,326,326,326,326,326,326,326,326,326,326,326,326,326,326,326,326,326,326,326,326,326,326,326,326,326,326,326,326,326,326,326,326,326,326,326,326,326,326,326,326,326,326,326,326,326,326,358,358,358,358,358,358,358,358,358,358,358,358,358,358,358,358,358,358,358,358,358,358,358,358,358,358,358,358,358,358,358,358,358,358,358,358,358,358,358,358,358,358,358,358,358,358,358,358,358,358,358,358,358,358,358,358,358,358,358,358,358,358,358,358,490,490,490,490,490,490,490,490,490,490,490,490,490,490,490,490,4113,4113,6161,6161,848,848,880,880,912,912,944,944,622,622,622,622,654,654,654,654,1104,1104,1136,1136,1168,1168,1200,1200,1232,1232,1264,1264,686,686,686,686,1360,1360,1392,1392,12,12,12,12,12,12,12,12,390,390,390,390,390,390,390,390,390,390,390,390,390,390,390,390,390,390,390,390,390,390,390,390,390,390,390,390,390,390,390,390,390,390,390,390,390,390,390,390,390,390,390,390,390,390,390,390,390,390,390,390,390,390,390,390,390,390,390,390,390,390,390,390],t.t)
 B.pe=s(["Emergency"],t.s)
 B.bjB=s(["Emergency","Neonatal"],t.s)
-B.v4=s(["Emergency","Reference"],t.s)
+B.v3=s(["Emergency","Reference"],t.s)
 B.bjC=s(["Emergency","Resuscitation"],t.s)
 B.C2=s([4,5,6,7,8,9,10,10,11,12,13,14,15,16,17,17,18,19,20,20,21,21,22,22,23,23,24,25,25,26,27,28,29,30,31,32,33,34,35,36,37,37,38,39,40,41,42,43,44,45,46,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,76,77,78,79,80,81,82,83,84,85,86,87,88,89,91,93,95,96,98,100,101,102,104,106,108,110,112,114,116,118,122,124,126,128,130,132,134,136,138,140,143,145,148,151,154,157],t.t)
 B.bjE=s(["calcium","ca correction","hypocalcaemia","hypocalcemia","corrected calcium","albumin","ionised calcium","tetany","gluconate"],t.s)
@@ -183573,8 +183537,8 @@ B.i6=new A.ti(2,"deleteIcon")
 B.bjX=s([B.fc,B.ez,B.i6],A.ai("D<ti>"))
 B.bjY=s(["ballard","gestational age","maturity","assessment","scoring","neuromuscular","physical maturity"],t.s)
 B.a43=new A.G(!0,B.z,null,null,null,null,11,B.M,null,0.4,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
-B.c_b=new A.ae("Drug",null,B.a43,null,null,null,null,null,null,null,null)
-B.Ju=new A.ch(5,B.bh,B.c_b,null)
+B.c_c=new A.ae("Drug",null,B.a43,null,null,null,null,null,null,null,null)
+B.Ju=new A.ch(5,B.bh,B.c_c,null)
 B.i3=new A.G(!0,B.z,null,null,null,null,11,B.M,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
 B.bYy=new A.ae("Initial dose",null,B.i3,null,null,null,null,null,null,null,null)
 B.apy=new A.ch(4,B.bh,B.bYy,null)
@@ -183644,7 +183608,7 @@ B.aKu=s(["Apical 4-chamber","Apical 5-chamber","Apical 2-chamber (for biplane Si
 B.bz_=s(["Parasternal long axis (PLAX)","Parasternal short axis (PSAX)"],t.s)
 B.b30=s(["Three-legged stool (RPA, LPA, DA)","Aortic arch long axis","Crab's view (pulmonary veins)"],t.s)
 B.bku=s([B.btj,B.aKu,B.bz_,B.b30],t.rj)
-B.v5=s([0,0,0,0,1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8,9,9,10,10,11,11,12,12,13,13],t.t)
+B.v4=s([0,0,0,0,1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8,9,9,10,10,11,11,12,12,13,13],t.t)
 B.a4H=new A.cD(0,0)
 B.a4L=new A.cD(1,0)
 B.a4M=new A.cD(2,0)
@@ -183709,15 +183673,15 @@ B.RP=s([B.aRF,B.bnv,B.b2G,B.bo0,B.bch,B.bpi,B.bn6,B.bza],t.rj)
 B.eS=new A.G(!0,null,null,null,null,null,17,B.w,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
 B.bYP=new A.ae("NICE Bilirubin Chart",null,B.eS,null,null,null,null,null,null,null,null)
 B.bXQ=new A.G(!0,null,null,null,null,null,11,B.ax,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
-B.bZW=new A.ae("NICE CG98 \xb7 23\u201338+ weeks",null,B.bXQ,null,null,null,null,null,null,null,null)
-B.ble=s([B.bYP,B.aT,B.bZW],t.p)
+B.bZX=new A.ae("NICE CG98 \xb7 23\u201338+ weeks",null,B.bXQ,null,null,null,null,null,null,null,null)
+B.ble=s([B.bYP,B.aT,B.bZX],t.p)
 B.ciP=new A.iR(3,"rPostUpper")
 B.ciQ=new A.iR(4,"rPostLower")
 B.C7=s([B.a6u,B.a6v,B.a6w,B.ciP,B.ciQ],t.Ry)
 B.atO=new A.a2(985004,"MaterialIcons",!1)
 B.av_=new A.az(B.atO,22,B.z,null,null)
-B.c_g=new A.ae("Continuous insulin infusion",null,B.q2,null,null,null,null,null,null,null,null)
-B.apn=new A.ch(1,B.bh,B.c_g,null)
+B.c_h=new A.ae("Continuous insulin infusion",null,B.q2,null,null,null,null,null,null,null,null)
+B.apn=new A.ch(1,B.bh,B.c_h,null)
 B.blj=s([B.av_,B.an,B.apn],t.p)
 B.bt=s([1353184337,1399144830,3282310938,2522752826,3412831035,4047871263,2874735276,2466505547,1442459680,4134368941,2440481928,625738485,4242007375,3620416197,2151953702,2409849525,1230680542,1729870373,2551114309,3787521629,41234371,317738113,2744600205,3338261355,3881799427,2510066197,3950669247,3663286933,763608788,3542185048,694804553,1154009486,1787413109,2021232372,1799248025,3715217703,3058688446,397248752,1722556617,3023752829,407560035,2184256229,1613975959,1165972322,3765920945,2226023355,480281086,2485848313,1483229296,436028815,2272059028,3086515026,601060267,3791801202,1468997603,715871590,120122290,63092015,2591802758,2768779219,4068943920,2997206819,3127509762,1552029421,723308426,2461301159,4042393587,2715969870,3455375973,3586000134,526529745,2331944644,2639474228,2689987490,853641733,1978398372,971801355,2867814464,111112542,1360031421,4186579262,1023860118,2919579357,1186850381,3045938321,90031217,1876166148,4279586912,620468249,2548678102,3426959497,2006899047,3175278768,2290845959,945494503,3689859193,1191869601,3910091388,3374220536,0,2206629897,1223502642,2893025566,1316117100,4227796733,1446544655,517320253,658058550,1691946762,564550760,3511966619,976107044,2976320012,266819475,3533106868,2660342555,1338359936,2720062561,1766553434,370807324,179999714,3844776128,1138762300,488053522,185403662,2915535858,3114841645,3366526484,2233069911,1275557295,3151862254,4250959779,2670068215,3170202204,3309004356,880737115,1982415755,3703972811,1761406390,1676797112,3403428311,277177154,1076008723,538035844,2099530373,4164795346,288553390,1839278535,1261411869,4080055004,3964831245,3504587127,1813426987,2579067049,4199060497,577038663,3297574056,440397984,3626794326,4019204898,3343796615,3251714265,4272081548,906744984,3481400742,685669029,646887386,2764025151,3835509292,227702864,2613862250,1648787028,3256061430,3904428176,1593260334,4121936770,3196083615,2090061929,2838353263,3004310991,999926984,2809993232,1852021992,2075868123,158869197,4095236462,28809964,2828685187,1701746150,2129067946,147831841,3873969647,3650873274,3459673930,3557400554,3598495785,2947720241,824393514,815048134,3227951669,935087732,2798289660,2966458592,366520115,1251476721,4158319681,240176511,804688151,2379631990,1303441219,1414376140,3741619940,3820343710,461924940,3089050817,2136040774,82468509,1563790337,1937016826,776014843,1511876531,1389550482,861278441,323475053,2355222426,2047648055,2383738969,2302415851,3995576782,902390199,3991215329,1018251130,1507840668,1064563285,2043548696,3208103795,3939366739,1537932639,342834655,2262516856,2180231114,1053059257,741614648,1598071746,1925389590,203809468,2336832552,1100287487,1895934009,3736275976,2632234200,2428589668,1636092795,1890988757,1952214088,1113045200],t.t)
 B.blp=s(["Neonatology","Critical Care","Infectious Disease","Neurology","Nutrition","Emergency Paediatrics","Hands-on Workshops","Cardiology","Pulmonology","Endocrinology","Gastroenterology","Hematology","Oncology"],t.s)
@@ -183726,7 +183690,7 @@ B.bls=s(["FE_Mg < 2 % \u2192 non-renal loss","24-hr urine Mg > 30 mg \u2192 rena
 B.blv=s(["pofras","oral feeding","preterm feeding","feeding readiness","sucking","oral motor","NNS","non nutritive sucking","oral reflexes","fujinaga","breastfeeding readiness","preterm oral"],t.s)
 B.blB=s([254,253,251,247,239,223,191,127],t.t)
 B.blC=s(["AAP Clinical Practice Guideline: Management of Hyperbilirubinemia in the Newborn Infant 35 or More Weeks of Gestation (Pediatrics 2022)","British Society for Haematology Guidelines: Transfusion for Fetuses, Neonates and Older Children (2023)","UCSF Medical Center: Neonatal Exchange Transfusion Standardized Procedure","Royal Children's Hospital Melbourne: Blood Products for Neonatal Transfusion","NHS Ashford and St. Peter's Hospitals: Double Volume Exchange Transfusion Protocol (2022)","StatPearls: Exchange Transfusion (2025)"],t.s)
-B.v7=s([12,8,140,8,76,8,204,8,44,8,172,8,108,8,236,8,28,8,156,8,92,8,220,8,60,8,188,8,124,8,252,8,2,8,130,8,66,8,194,8,34,8,162,8,98,8,226,8,18,8,146,8,82,8,210,8,50,8,178,8,114,8,242,8,10,8,138,8,74,8,202,8,42,8,170,8,106,8,234,8,26,8,154,8,90,8,218,8,58,8,186,8,122,8,250,8,6,8,134,8,70,8,198,8,38,8,166,8,102,8,230,8,22,8,150,8,86,8,214,8,54,8,182,8,118,8,246,8,14,8,142,8,78,8,206,8,46,8,174,8,110,8,238,8,30,8,158,8,94,8,222,8,62,8,190,8,126,8,254,8,1,8,129,8,65,8,193,8,33,8,161,8,97,8,225,8,17,8,145,8,81,8,209,8,49,8,177,8,113,8,241,8,9,8,137,8,73,8,201,8,41,8,169,8,105,8,233,8,25,8,153,8,89,8,217,8,57,8,185,8,121,8,249,8,5,8,133,8,69,8,197,8,37,8,165,8,101,8,229,8,21,8,149,8,85,8,213,8,53,8,181,8,117,8,245,8,13,8,141,8,77,8,205,8,45,8,173,8,109,8,237,8,29,8,157,8,93,8,221,8,61,8,189,8,125,8,253,8,19,9,275,9,147,9,403,9,83,9,339,9,211,9,467,9,51,9,307,9,179,9,435,9,115,9,371,9,243,9,499,9,11,9,267,9,139,9,395,9,75,9,331,9,203,9,459,9,43,9,299,9,171,9,427,9,107,9,363,9,235,9,491,9,27,9,283,9,155,9,411,9,91,9,347,9,219,9,475,9,59,9,315,9,187,9,443,9,123,9,379,9,251,9,507,9,7,9,263,9,135,9,391,9,71,9,327,9,199,9,455,9,39,9,295,9,167,9,423,9,103,9,359,9,231,9,487,9,23,9,279,9,151,9,407,9,87,9,343,9,215,9,471,9,55,9,311,9,183,9,439,9,119,9,375,9,247,9,503,9,15,9,271,9,143,9,399,9,79,9,335,9,207,9,463,9,47,9,303,9,175,9,431,9,111,9,367,9,239,9,495,9,31,9,287,9,159,9,415,9,95,9,351,9,223,9,479,9,63,9,319,9,191,9,447,9,127,9,383,9,255,9,511,9,0,7,64,7,32,7,96,7,16,7,80,7,48,7,112,7,8,7,72,7,40,7,104,7,24,7,88,7,56,7,120,7,4,7,68,7,36,7,100,7,20,7,84,7,52,7,116,7,3,8,131,8,67,8,195,8,35,8,163,8,99,8,227,8],t.t)
+B.v6=s([12,8,140,8,76,8,204,8,44,8,172,8,108,8,236,8,28,8,156,8,92,8,220,8,60,8,188,8,124,8,252,8,2,8,130,8,66,8,194,8,34,8,162,8,98,8,226,8,18,8,146,8,82,8,210,8,50,8,178,8,114,8,242,8,10,8,138,8,74,8,202,8,42,8,170,8,106,8,234,8,26,8,154,8,90,8,218,8,58,8,186,8,122,8,250,8,6,8,134,8,70,8,198,8,38,8,166,8,102,8,230,8,22,8,150,8,86,8,214,8,54,8,182,8,118,8,246,8,14,8,142,8,78,8,206,8,46,8,174,8,110,8,238,8,30,8,158,8,94,8,222,8,62,8,190,8,126,8,254,8,1,8,129,8,65,8,193,8,33,8,161,8,97,8,225,8,17,8,145,8,81,8,209,8,49,8,177,8,113,8,241,8,9,8,137,8,73,8,201,8,41,8,169,8,105,8,233,8,25,8,153,8,89,8,217,8,57,8,185,8,121,8,249,8,5,8,133,8,69,8,197,8,37,8,165,8,101,8,229,8,21,8,149,8,85,8,213,8,53,8,181,8,117,8,245,8,13,8,141,8,77,8,205,8,45,8,173,8,109,8,237,8,29,8,157,8,93,8,221,8,61,8,189,8,125,8,253,8,19,9,275,9,147,9,403,9,83,9,339,9,211,9,467,9,51,9,307,9,179,9,435,9,115,9,371,9,243,9,499,9,11,9,267,9,139,9,395,9,75,9,331,9,203,9,459,9,43,9,299,9,171,9,427,9,107,9,363,9,235,9,491,9,27,9,283,9,155,9,411,9,91,9,347,9,219,9,475,9,59,9,315,9,187,9,443,9,123,9,379,9,251,9,507,9,7,9,263,9,135,9,391,9,71,9,327,9,199,9,455,9,39,9,295,9,167,9,423,9,103,9,359,9,231,9,487,9,23,9,279,9,151,9,407,9,87,9,343,9,215,9,471,9,55,9,311,9,183,9,439,9,119,9,375,9,247,9,503,9,15,9,271,9,143,9,399,9,79,9,335,9,207,9,463,9,47,9,303,9,175,9,431,9,111,9,367,9,239,9,495,9,31,9,287,9,159,9,415,9,95,9,351,9,223,9,479,9,63,9,319,9,191,9,447,9,127,9,383,9,255,9,511,9,0,7,64,7,32,7,96,7,16,7,80,7,48,7,112,7,8,7,72,7,40,7,104,7,24,7,88,7,56,7,120,7,4,7,68,7,36,7,100,7,20,7,84,7,52,7,116,7,3,8,131,8,67,8,195,8,35,8,163,8,99,8,227,8],t.t)
 B.RQ=s([A.cvs(),A.cvk(),A.cvz(),A.cvx(),A.cvu(),A.cvt(),A.cvv()],t.ox)
 B.RR=s([0,5,16,5,8,5,24,5,4,5,20,5,12,5,28,5,2,5,18,5,10,5,26,5,6,5,22,5,14,5,30,5,1,5,17,5,9,5,25,5,5,5,21,5,13,5,29,5,3,5,19,5,11,5,27,5,7,5,23,5],t.t)
 B.blH=s(["Severe or progressive headache","Slowing heart rate","Irritability, confusion","Decreased consciousness","Incontinence","Specific neurological signs","","Exclude hypoglycaemia","Is it cerebral oedema?"],t.s)
@@ -183747,10 +183711,10 @@ B.bYI=new A.ae("Drug",null,B.i3,null,null,null,null,null,null,null,null)
 B.apz=new A.ch(4,B.bh,B.bYI,null)
 B.bYw=new A.ae("Dose",null,B.i3,null,null,null,null,null,null,null,null)
 B.apq=new A.ch(4,B.bh,B.bYw,null)
-B.bZ9=new A.ae("Dilution / 50 mL D5",null,B.i3,null,null,null,null,null,null,null,null)
-B.apD=new A.ch(4,B.bh,B.bZ9,null)
-B.bZr=new A.ae("1 mL/hr =",null,B.i3,null,null,null,null,null,null,null,null)
-B.apE=new A.ch(4,B.bh,B.bZr,null)
+B.bZa=new A.ae("Dilution / 50 mL D5",null,B.i3,null,null,null,null,null,null,null,null)
+B.apD=new A.ch(4,B.bh,B.bZa,null)
+B.bZs=new A.ae("1 mL/hr =",null,B.i3,null,null,null,null,null,null,null,null)
+B.apE=new A.ch(4,B.bh,B.bZs,null)
 B.blN=s([B.apz,B.apq,B.apD,B.apE],t.p)
 B.bzn=new A.v1("en",null,"US")
 B.RT=s([B.bzn],t.ss)
@@ -183781,8 +183745,8 @@ B.RW=s([B.c9w,B.c9B,B.c9z,B.c9A,B.c9y,B.c9x],A.ai("D<wn>"))
 B.auD=new A.az(B.ch,16,B.d6,null,null)
 B.aD=new A.cx(6,null,null,null)
 B.bVb=new A.G(!0,B.d6,null,null,null,null,12,B.w,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
-B.bZq=new A.ae("Make sure your TPN components match these compositions",null,B.bVb,null,null,null,null,null,null,null,null)
-B.bm5=s([B.auD,B.aD,B.bZq],t.p)
+B.bZr=new A.ae("Make sure your TPN components match these compositions",null,B.bVb,null,null,null,null,null,null,null,null)
+B.bm5=s([B.auD,B.aD,B.bZr],t.p)
 B.C9=s(["5th","10th","25th","50th","75th","90th","95th"],t.s)
 B.ED=new A.iO(0,"whiteIsZero")
 B.c1I=new A.iO(1,"blackIsZero")
@@ -183821,14 +183785,14 @@ B.Et=new A.G(!0,B.cv,null,null,null,null,10,B.w,null,0.15,null,null,null,null,nu
 B.c_V=new A.ae("FULL BP REFERENCE \u2014 24 TO 46 WK",null,B.Et,null,null,null,null,null,null,null,null)
 B.bmp=s([B.auZ,B.Y,B.c_V],t.p)
 B.bmr=s(["Neonatal"],t.s)
-B.v8=s(["Neonatal","Reference"],t.s)
-B.v9=s(["Neonatal","Scoring"],t.s)
+B.v7=s(["Neonatal","Reference"],t.s)
+B.v8=s(["Neonatal","Scoring"],t.s)
 B.bms=s(["Neonatal","Scoring","Reference"],t.s)
 B.a4m=new A.G(!0,B.av,null,null,null,null,11,B.M,null,0.4,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
-B.bZK=new A.ae("OTHER MEDICATIONS",null,B.a4m,null,null,null,null,null,null,null,null)
+B.bZL=new A.ae("OTHER MEDICATIONS",null,B.a4m,null,null,null,null,null,null,null,null)
 B.bjZ=s(["Magnesium \u2014 50 mg/kg/dose over 30 min, or infusion at a rate of 10\u201320 mg/kg/hr; can repeat once or twice after 4\u20136 hrs","Theophylline \u2014 loading dose of 5\u20137 mg/kg infused over 20 min, followed by 0.5\u20130.9 mg/kg/hr","Ketamine \u2014 1 mg/kg/hr, titrated to effect","Vecuronium \u2014 0.1 mg/kg/hr, titrated to effect"],t.s)
 B.ajl=new A.mb(B.bjZ,!1,null)
-B.bmB=s([B.bZK,B.K,B.ajl],t.p)
+B.bmB=s([B.bZL,B.K,B.ajl],t.p)
 B.chs=new A.iD("Fentanyl: 3\u20136 mcg/kg IV")
 B.chm=new A.iD("Midazolam: 0.1\u20130.2 mg/kg IV")
 B.Fv=new A.iD("Consider: Atropine 0.02 mg/kg IV (min 0.1 mg, max 1 mg) for children < 5 yr")
@@ -183998,8 +183962,8 @@ B.cgV=new A.jn("Glycopyrrolate","5\u201310 mcg/kg (Max 200 mcg)","Anti Sialogogu
 B.cgT=new A.jn("Thiopental","IV 2\u20135 mg/kg","Raised ICP","May cause cardiorespiratory depression. Decreases cerebral metabolic rate & ICP. No analgesia")
 B.cgR=new A.jn("Atracurium","0.3\u20130.6 mg/kg","\u2014","Long duration of action (40 min)")
 B.boi=s([B.cgU,B.cgK,B.cgL,B.cgM,B.cgN,B.cgS,B.cgQ,B.cgP,B.cgO,B.cgW,B.cgV,B.cgT,B.cgR],A.ai("D<jn>"))
-B.bZn=new A.ae("<72 hours",null,null,null,null,null,null,null,null,null,null)
-B.afY=new A.fA("<72 hours",B.bZn,B.eB,null,t.b7)
+B.bZo=new A.ae("<72 hours",null,null,null,null,null,null,null,null,null,null)
+B.afY=new A.fA("<72 hours",B.bZo,B.eB,null,t.b7)
 B.c0j=new A.ae(">72 hours",null,null,null,null,null,null,null,null,null,null)
 B.afZ=new A.fA(">72 hours",B.c0j,B.eB,null,t.b7)
 B.boj=s([B.afY,B.afZ],t.FG)
@@ -184267,7 +184231,7 @@ B.bRK=new A.cv(24,"Tells gender when asked",'Correctly answers "Are you a boy or
 B.bRB=new A.cv(25,"Answers at least half understandably to others","A stranger (not parent) understands at least half of what the child says.",26,34,B.dq,B.c1)
 B.bRy=new A.cv(26,"On instruction places objects 'in', 'on', & 'under'","On verbal instruction, places an object correctly in, on, and under a container.",27,34,B.dq,B.c1)
 B.bRH=new A.cv(27,"Asks simple questions",'Spontaneously asks simple "what?", "where?", or "who?" questions.',28,34,B.dq,B.c1)
-B.va=s([B.bRn,B.bR5,B.bRo,B.bRC,B.bR7,B.bRh,B.bRb,B.bRk,B.bRN,B.bRm,B.bRq,B.bRL,B.bRr,B.bR3,B.bR_,B.bRD,B.bRz,B.bRl,B.bRg,B.bRv,B.bRa,B.bRe,B.bRu,B.bRK,B.bRB,B.bRy,B.bRH],t.Sm)
+B.v9=s([B.bRn,B.bR5,B.bRo,B.bRC,B.bR7,B.bRh,B.bRb,B.bRk,B.bRN,B.bRm,B.bRq,B.bRL,B.bRr,B.bR3,B.bR_,B.bRD,B.bRz,B.bRl,B.bRg,B.bRv,B.bRa,B.bRe,B.bRu,B.bRK,B.bRB,B.bRy,B.bRH],t.Sm)
 B.bpP=s(["Assessment","Time (24h)","Age","NICHD Score","Seizures\n(Y/N)","CFM"],t.s)
 B.bpT=s(["exchange transfusion","dvet","double volume","blood exchange","jaundice treatment","ET"],t.s)
 B.bpX=s(["neonatal echo","2d echo","echocardiogram","tnecho","targeted neonatal echo","PDA","PPHN","measurements","M-mode","apical 4 chamber","parasternal","subcostal","cardiac measurements"],t.s)
@@ -184486,7 +184450,7 @@ B.nx=new A.tp(0,"hour")
 B.x7=new A.tp(1,"minute")
 B.Se=s([B.nx,B.x7],A.ai("D<tp>"))
 B.brp=s(["baux","revised baux","burn mortality","mortality score","inhalation injury","burn prognosis","tbsa age","burn survival"],t.s)
-B.vb=s([0,1,4,5,16,17,20,21,64,65,68,69,80,81,84,85,256,257,260,261,272,273,276,277,320,321,324,325,336,337,340,341,1024,1025,1028,1029,1040,1041,1044,1045,1088,1089,1092,1093,1104,1105,1108,1109,1280,1281,1284,1285,1296,1297,1300,1301,1344,1345,1348,1349,1360,1361,1364,1365,4096,4097,4100,4101,4112,4113,4116,4117,4160,4161,4164,4165,4176,4177,4180,4181,4352,4353,4356,4357,4368,4369,4372,4373,4416,4417,4420,4421,4432,4433,4436,4437,5120,5121,5124,5125,5136,5137,5140,5141,5184,5185,5188,5189,5200,5201,5204,5205,5376,5377,5380,5381,5392,5393,5396,5397,5440,5441,5444,5445,5456,5457,5460,5461,16384,16385,16388,16389,16400,16401,16404,16405,16448,16449,16452,16453,16464,16465,16468,16469,16640,16641,16644,16645,16656,16657,16660,16661,16704,16705,16708,16709,16720,16721,16724,16725,17408,17409,17412,17413,17424,17425,17428,17429,17472,17473,17476,17477,17488,17489,17492,17493,17664,17665,17668,17669,17680,17681,17684,17685,17728,17729,17732,17733,17744,17745,17748,17749,20480,20481,20484,20485,20496,20497,20500,20501,20544,20545,20548,20549,20560,20561,20564,20565,20736,20737,20740,20741,20752,20753,20756,20757,20800,20801,20804,20805,20816,20817,20820,20821,21504,21505,21508,21509,21520,21521,21524,21525,21568,21569,21572,21573,21584,21585,21588,21589,21760,21761,21764,21765,21776,21777,21780,21781,21824,21825,21828,21829,21840,21841,21844,21845],t.t)
+B.va=s([0,1,4,5,16,17,20,21,64,65,68,69,80,81,84,85,256,257,260,261,272,273,276,277,320,321,324,325,336,337,340,341,1024,1025,1028,1029,1040,1041,1044,1045,1088,1089,1092,1093,1104,1105,1108,1109,1280,1281,1284,1285,1296,1297,1300,1301,1344,1345,1348,1349,1360,1361,1364,1365,4096,4097,4100,4101,4112,4113,4116,4117,4160,4161,4164,4165,4176,4177,4180,4181,4352,4353,4356,4357,4368,4369,4372,4373,4416,4417,4420,4421,4432,4433,4436,4437,5120,5121,5124,5125,5136,5137,5140,5141,5184,5185,5188,5189,5200,5201,5204,5205,5376,5377,5380,5381,5392,5393,5396,5397,5440,5441,5444,5445,5456,5457,5460,5461,16384,16385,16388,16389,16400,16401,16404,16405,16448,16449,16452,16453,16464,16465,16468,16469,16640,16641,16644,16645,16656,16657,16660,16661,16704,16705,16708,16709,16720,16721,16724,16725,17408,17409,17412,17413,17424,17425,17428,17429,17472,17473,17476,17477,17488,17489,17492,17493,17664,17665,17668,17669,17680,17681,17684,17685,17728,17729,17732,17733,17744,17745,17748,17749,20480,20481,20484,20485,20496,20497,20500,20501,20544,20545,20548,20549,20560,20561,20564,20565,20736,20737,20740,20741,20752,20753,20756,20757,20800,20801,20804,20805,20816,20817,20820,20821,21504,21505,21508,21509,21520,21521,21524,21525,21568,21569,21572,21573,21584,21585,21588,21589,21760,21761,21764,21765,21776,21777,21780,21781,21824,21825,21828,21829,21840,21841,21844,21845],t.t)
 B.Sf=s([127,127,191,127,159,191,223,127,143,159,175,191,207,223,239,127,135,143,151,159,167,175,183,191,199,207,215,223,231,239,247,127,131,135,139,143,147,151,155,159,163,167,171,175,179,183,187,191,195,199,203,207,211,215,219,223,227,231,235,239,243,247,251,127,129,131,133,135,137,139,141,143,145,147,149,151,153,155,157,159,161,163,165,167,169,171,173,175,177,179,181,183,185,187,189,191,193,195,197,199,201,203,205,207,209,211,213,215,217,219,221,223,225,227,229,231,233,235,237,239,241,243,245,247,249,251,253,127],t.t)
 B.bjQ=s(["Subcostal","Below xiphoid, point to right shoulder (12 O'clock)","IVC, SVC, UVC, Celiac/SMA, PFO"],t.s)
 B.bqR=s(["Apical","Below left nipple, 3 O'clock, tilt 2 O'clock if needed","EF, LVO, TR Jet, E/A, IVRT, Septal deviation"],t.s)
@@ -184525,7 +184489,7 @@ B.c7I=new A.kf(B.Kr,"Weight for Height","2\u20135 yrs","wfh","boys")
 B.brE=s([B.c7K,B.c7M,B.c7L,B.c7E,B.c7H,B.c7I],t.cA)
 B.brJ=s(["asthma","acute severe asthma","status asthmaticus","salbutamol","albuterol","ipratropium","magnesium sulfate","wheeze","bronchospasm","PEF","reactive airway","GINA"],t.s)
 B.brK=s(["0.5\u20131 mEq/kg KCl IV over 1\u20132 hours"],t.s)
-B.vc=s([28679,28679,31752,-32759,-31735,-30711,-29687,-28663,29703,29703,30727,30727,-27639,-26615,-25591,-24567],t.t)
+B.vb=s([28679,28679,31752,-32759,-31735,-30711,-29687,-28663,29703,29703,30727,30727,-27639,-26615,-25591,-24567],t.t)
 B.bQO=new A.lE("Smart score",null,null,null)
 B.bQN=new A.lE("Table view",null,null,null)
 B.brN=s([B.bQO,B.bQN],t.p)
@@ -184582,18 +184546,18 @@ B.bsu=s([],t.Rz)
 B.bsx=s([],t.Ug)
 B.Sn=s([],A.ai("D<cwv>"))
 B.bsR=s([],t.E)
-B.vf=s([],A.ai("D<n_>"))
+B.ve=s([],A.ai("D<n_>"))
 B.bsA=s([],t.lX)
 B.cjv=s([],t.ij)
 B.f4=s([],A.ai("D<xx>"))
 B.bsF=s([],A.ai("D<BK>"))
-B.vg=s([],t.vb)
+B.vf=s([],t.vb)
 B.bsQ=s([],t.fJ)
 B.cjw=s([],t.HS)
 B.bsP=s([],t.ER)
 B.cjx=s([],t.ss)
 B.bsG=s([],t.tc)
-B.vd=s([],t.jl)
+B.vc=s([],t.jl)
 B.bsI=s([],t.wi)
 B.bsH=s([],A.ai("D<c1P<@>>"))
 B.bsE=s([],t.zU)
@@ -184609,7 +184573,7 @@ B.bst=s([],t.AS)
 B.Ch=s([],t.p)
 B.cjz=s([],t.n_)
 B.bsB=s([],t.Fd)
-B.ve=s([],t.ov)
+B.vd=s([],t.ov)
 B.bsw=s([],t.UY)
 B.bsz=s([],t.fd)
 B.kK=s([],t.n)
@@ -184624,6 +184588,42 @@ B.afV=new A.Ir(85,200,"Normal","Development on track for chronological age. Cont
 B.afT=new A.Ir(70,85,"At-risk / borderline","Borderline delay. Re-evaluate in 3 months; consider formal screening (TDSC, ASQ-3) and address modifiable factors (hearing, vision, nutrition, stimulation).",B.ay)
 B.afU=new A.Ir(0,70,"Significant delay","Significant developmental delay. Refer for full developmental assessment + early intervention. Look for cause (perinatal events, syndromic features, regression, sensory deficits, neglect).",B.aa)
 B.Cn=s([B.afV,B.afT,B.afU],A.ai("D<Ir>"))
+B.c7Y=new A.eg("gir","GIR Calc",B.tt)
+B.c8d=new A.eg("gas","Blood Gas",B.mt)
+B.c8_=new A.eg("tpn","TPN",B.L_)
+B.c7U=new A.eg("cga","CGA / PMA",B.L8)
+B.c86=new A.eg("ponderal","Ponderal",B.tn)
+B.c7V=new A.eg("bsa","BSA",B.AY)
+B.c8f=new A.eg("bp","BP Calc",B.mu)
+B.c8i=new A.eg("neobp","Neonatal BP",B.mv)
+B.c8h=new A.eg("bili","Bili Tool",B.AW)
+B.atF=new A.a2(983718,"MaterialIcons",!1)
+B.c88=new A.eg("fluid","Maint. Fluid",B.atF)
+B.ate=new A.a2(63595,"MaterialIcons",!1)
+B.c8c=new A.eg("burn","Burn Mortality",B.ate)
+B.atH=new A.a2(983734,"MaterialIcons",!1)
+B.c82=new A.eg("parkland","Parkland",B.atH)
+B.c7W=new A.eg("lund","Lund-Browder",B.KN)
+B.c8g=new A.eg("pet","PET Calc",B.L4)
+B.asP=new A.a2(62911,"MaterialIcons",!1)
+B.c83=new A.eg("egfr","Schwartz eGFR",B.asP)
+B.asX=new A.a2(63122,"MaterialIcons",!1)
+B.c81=new A.eg("ga","GA Calc",B.asX)
+B.c85=new A.eg("vent","Ventilator",B.mt)
+B.atp=new A.a2(983304,"MaterialIcons",!1)
+B.c8a=new A.eg("nutri","Nutri Audit",B.atp)
+B.aty=new A.a2(983556,"MaterialIcons",!1)
+B.c8b=new A.eg("dve","DVE",B.aty)
+B.c8e=new A.eg("allcalc","All Calculators",B.iE)
+B.c7S=new A.eg("growth","Charts",B.oN)
+B.c7T=new A.eg("devmile","Dev Milestones",B.AS)
+B.c7Z=new A.eg("tdsc","TDSC",B.AI)
+B.c80=new A.eg("formulary","Formulary",B.iF)
+B.c87=new A.eg("labref","Lab Reference",B.dY)
+B.c7X=new A.eg("guides","Guides",B.AP)
+B.c84=new A.eg("cme","CME & Webinars",B.AU)
+B.c89=new A.eg("academics","Academics",B.tq)
+B.vg=s([B.c7Y,B.c8d,B.c8_,B.c7U,B.c86,B.c7V,B.c8f,B.c8i,B.c8h,B.c88,B.c8c,B.c82,B.c7W,B.c8g,B.c83,B.c81,B.c85,B.c8a,B.c8b,B.c8e,B.c7S,B.c7T,B.c7Z,B.c80,B.c87,B.c7X,B.c84,B.c89],A.ai("D<eg>"))
 B.bLs=new A.ew("Normal PSV","Diastolic forward flow normally present","50\u2013100 cm/s")
 B.bt_=s([B.bLs],t.Rr)
 B.bwp=s(["Mild","< 5","Minimal lung disease","Conventional ventilation, wean as tolerated"],t.s)
@@ -185169,8 +185169,8 @@ B.no=new A.wc(0,"gPerDL")
 B.c0l=new A.ae("g/dL",null,null,null,null,null,null,null,null,null,null)
 B.a9V=new A.fZ(B.no,B.c0l,t.Sc)
 B.c4Q=new A.wc(1,"gPerL")
-B.bZp=new A.ae("g/L",null,null,null,null,null,null,null,null,null,null)
-B.a9T=new A.fZ(B.c4Q,B.bZp,t.Sc)
+B.bZq=new A.ae("g/L",null,null,null,null,null,null,null,null,null,null)
+B.a9T=new A.fZ(B.c4Q,B.bZq,t.Sc)
 B.bxz=s([B.a9V,B.a9T],A.ai("D<fZ<wc>>"))
 B.ace=new A.F(0.14901960784313725,0,0,0,B.A)
 B.hW=new A.r(0,3)
@@ -185190,8 +185190,8 @@ B.qc=new A.wl(0,"hypo")
 B.c_I=new A.ae("\u2193K (hypo)",null,null,null,null,null,null,null,null,null,null)
 B.a9N=new A.fZ(B.qc,B.c_I,t.Fn)
 B.a5O=new A.wl(1,"hyper")
-B.c_l=new A.ae("\u2191K (hyper)",null,null,null,null,null,null,null,null,null,null)
-B.a9P=new A.fZ(B.a5O,B.c_l,t.Fn)
+B.c_m=new A.ae("\u2191K (hyper)",null,null,null,null,null,null,null,null,null,null)
+B.a9P=new A.fZ(B.a5O,B.c_m,t.Fn)
 B.bxW=s([B.a9N,B.a9P],A.ai("D<fZ<wl>>"))
 B.bxY=s(["blood volume","EBV","estimated blood volume","transfusion volume","preterm","term neonate","paediatric blood volume"],t.s)
 B.bxZ=s(["DKA","diabetic ketoacidosis","ketoacidosis","insulin infusion","cerebral edema","rehydration","fluid bolus","bicarb","ISPAD","hyperglycaemia","type 1 diabetes","T1DM"],t.s)
@@ -185243,8 +185243,8 @@ B.apt=new A.ch(4,B.bh,B.c_L,null)
 B.byc=s([B.Ju,B.apx,B.apt],t.p)
 B.auJ=new A.az(B.cR,18,B.z,null,null)
 B.bTW=new A.G(!0,B.z,null,null,null,null,12.5,B.w,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
-B.bZR=new A.ae("Open PICU Drugs calculator (weight-based bolus + infusion)",null,B.bTW,null,null,null,null,null,null,null,null)
-B.apw=new A.ch(1,B.bh,B.bZR,null)
+B.bZS=new A.ae("Open PICU Drugs calculator (weight-based bolus + infusion)",null,B.bTW,null,null,null,null,null,null,null,null)
+B.apw=new A.ch(1,B.bh,B.bZS,null)
 B.avw=new A.az(B.cY,18,B.z,null,null)
 B.bye=s([B.auJ,B.Y,B.apw,B.avw],t.p)
 B.SL=s(["Score","< 1 year","> 1 year"],t.s)
@@ -185376,8 +185376,8 @@ B.ek=s([B.R8,B.aRD,B.BW,B.b7C,B.aRB,B.aKA,B.b2O,B.aXA,B.beN,B.b2P,B.aJW,B.aGI,B.
 B.mJ=s([0,-128,64,-64,32,-96,96,-32,16,-112,80,-48,48,-80,112,-16,8,-120,72,-56,40,-88,104,-24,24,-104,88,-40,56,-72,120,-8,4,-124,68,-60,36,-92,100,-28,20,-108,84,-44,52,-76,116,-12,12,-116,76,-52,44,-84,108,-20,28,-100,92,-36,60,-68,124,-4,2,-126,66,-62,34,-94,98,-30,18,-110,82,-46,50,-78,114,-14,10,-118,74,-54,42,-86,106,-22,26,-102,90,-38,58,-70,122,-6,6,-122,70,-58,38,-90,102,-26,22,-106,86,-42,54,-74,118,-10,14,-114,78,-50,46,-82,110,-18,30,-98,94,-34,62,-66,126,-2,1,-127,65,-63,33,-95,97,-31,17,-111,81,-47,49,-79,113,-15,9,-119,73,-55,41,-87,105,-23,25,-103,89,-39,57,-71,121,-7,5,-123,69,-59,37,-91,101,-27,21,-107,85,-43,53,-75,117,-11,13,-115,77,-51,45,-83,109,-19,29,-99,93,-35,61,-67,125,-3,3,-125,67,-61,35,-93,99,-29,19,-109,83,-45,51,-77,115,-13,11,-117,75,-53,43,-85,107,-21,27,-101,91,-37,59,-69,123,-5,7,-121,71,-57,39,-89,103,-25,23,-105,87,-41,55,-73,119,-9,15,-113,79,-49,47,-81,111,-17,31,-97,95,-33,63,-65,127,-1],t.t)
 B.c1l=new A.ae("IVCT + IVRT / ET",null,null,null,null,null,null,null,null,null,null)
 B.a9X=new A.fZ(0,B.c1l,t.lM)
-B.bZT=new A.ae("(a \u2212 b) / b",null,null,null,null,null,null,null,null,null,null)
-B.a9R=new A.fZ(1,B.bZT,t.lM)
+B.bZU=new A.ae("(a \u2212 b) / b",null,null,null,null,null,null,null,null,null,null)
+B.a9R=new A.fZ(1,B.bZU,t.lM)
 B.bzm=s([B.a9X,B.a9R],A.ai("D<fZ<u>>"))
 B.aL=new A.Tj(0,"ignored")
 B.el=new A.J(4294967304)
@@ -185545,22 +185545,22 @@ B.afy=new A.jX(B.tD,B.b5f)
 B.br9=s(["NS","5% Dextrose","0.45% NS"],t.s)
 B.bpx=s(["Furosemide (precipitates if mixed in same line)"],t.s)
 B.afB=new A.jX(B.br9,B.bpx)
-B.v6=s(["NS","5% Dextrose","Sterile Water"],t.s)
+B.v5=s(["NS","5% Dextrose","Sterile Water"],t.s)
 B.RL=s(["None at standard concentrations"],t.s)
-B.afx=new A.jX(B.v6,B.RL)
+B.afx=new A.jX(B.v5,B.RL)
 B.afu=new A.jX(B.tD,B.RL)
 B.byP=s(["Aminophylline","Sodium bicarbonate"],t.s)
-B.afF=new A.jX(B.v6,B.byP)
+B.afF=new A.jX(B.v5,B.byP)
 B.RE=s(["5% Dextrose (preferred)","NS"],t.s)
 B.bwF=s(["Do NOT use without dilution"],t.s)
 B.aft=new A.jX(B.RE,B.bwF)
 B.bnx=s(["Alkaline solutions","Sodium bicarbonate"],t.s)
-B.afw=new A.jX(B.v6,B.bnx)
+B.afw=new A.jX(B.v5,B.bnx)
 B.bmm=s(["NS"],t.s)
 B.aXx=s(["Milrinone (precipitates)","Acidic solutions","Dobutamine (at high concentration)"],t.s)
 B.afz=new A.jX(B.bmm,B.aXx)
 B.bn7=s(["Barbiturates (precipitates)","Diazepam"],t.s)
-B.afD=new A.jX(B.v6,B.bn7)
+B.afD=new A.jX(B.v5,B.bn7)
 B.bhW=s(["None significant"],t.s)
 B.afE=new A.jX(B.tD,B.bhW)
 B.bto=s(["None at standard dilutions"],t.s)
@@ -186165,8 +186165,8 @@ B.fo=s([32],t.t)
 B.aTN=s([32,776],t.t)
 B.pc=s([97],t.t)
 B.aTJ=s([32,772],t.t)
-B.uL=s([50],t.t)
-B.uM=s([51],t.t)
+B.uK=s([50],t.t)
+B.uL=s([51],t.t)
 B.Qo=s([32,769],t.t)
 B.bgw=s([956],t.t)
 B.aTR=s([32,807],t.t)
@@ -186470,7 +186470,7 @@ B.b9o=s([787],t.t)
 B.b94=s([776,769],t.t)
 B.b75=s([697],t.t)
 B.aTV=s([32,837],t.t)
-B.uT=s([59],t.t)
+B.uS=s([59],t.t)
 B.aJU=s([168,769],t.t)
 B.bfc=s([913,769],t.t)
 B.aK7=s([183],t.t)
@@ -186654,21 +186654,21 @@ B.b79=s([6975,6965],t.t)
 B.b7a=s([6978,6965],t.t)
 B.BM=s([65],t.t)
 B.aKh=s([198],t.t)
-B.uW=s([66],t.t)
+B.uV=s([66],t.t)
 B.p9=s([68],t.t)
-B.uX=s([69],t.t)
+B.uW=s([69],t.t)
 B.aXj=s([398],t.t)
 B.BO=s([71],t.t)
 B.mE=s([72],t.t)
 B.mF=s([73],t.t)
 B.BP=s([74],t.t)
-B.uY=s([75],t.t)
+B.uX=s([75],t.t)
 B.pa=s([76],t.t)
 B.pb=s([77],t.t)
-B.uZ=s([78],t.t)
+B.uY=s([78],t.t)
 B.BQ=s([79],t.t)
 B.b4o=s([546],t.t)
-B.v_=s([80],t.t)
+B.uZ=s([80],t.t)
 B.mG=s([82],t.t)
 B.BS=s([84],t.t)
 B.BT=s([85],t.t)
@@ -186702,7 +186702,7 @@ B.Ru=s([967],t.t)
 B.kI=s([105],t.t)
 B.aAz=s([1085],t.t)
 B.b50=s([594],t.t)
-B.v3=s([99],t.t)
+B.v2=s([99],t.t)
 B.b52=s([597],t.t)
 B.aNI=s([240],t.t)
 B.Bj=s([102],t.t)
@@ -187232,15 +187232,15 @@ B.b6_=s([63,33],t.t)
 B.aUv=s([33,63],t.t)
 B.bcA=s([8242,8242,8242,8242],t.t)
 B.uI=s([48],t.t)
-B.uN=s([52],t.t)
-B.uO=s([53],t.t)
-B.uP=s([54],t.t)
-B.uQ=s([55],t.t)
-B.uR=s([56],t.t)
-B.uS=s([57],t.t)
+B.uM=s([52],t.t)
+B.uN=s([53],t.t)
+B.uO=s([54],t.t)
+B.uP=s([55],t.t)
+B.uQ=s([56],t.t)
+B.uR=s([57],t.t)
 B.p7=s([43],t.t)
 B.Rk=s([8722],t.t)
-B.uV=s([61],t.t)
+B.uU=s([61],t.t)
 B.p5=s([40],t.t)
 B.p6=s([41],t.t)
 B.tG=s([110],t.t)
@@ -187259,7 +187259,7 @@ B.BR=s([81],t.t)
 B.bcQ=s([83,77],t.t)
 B.bcY=s([84,69,76],t.t)
 B.bd_=s([84,77],t.t)
-B.v2=s([90],t.t)
+B.v1=s([90],t.t)
 B.bfO=s([937],t.t)
 B.aKf=s([197],t.t)
 B.BN=s([70],t.t)
@@ -187290,7 +187290,7 @@ B.b2t=s([49,8260],t.t)
 B.b8e=s([73,73],t.t)
 B.b8f=s([73,73,73],t.t)
 B.b8x=s([73,86],t.t)
-B.v1=s([86],t.t)
+B.v0=s([86],t.t)
 B.bdB=s([86,73],t.t)
 B.bdC=s([86,73,73],t.t)
 B.bdD=s([86,73,73,73],t.t)
@@ -189112,7 +189112,7 @@ B.aDi=s([12302],t.t)
 B.aDj=s([12303],t.t)
 B.Rn=s([91],t.t)
 B.Rp=s([93],t.t)
-B.v0=s([8254],t.t)
+B.v_=s([8254],t.t)
 B.Qs=s([35],t.t)
 B.QH=s([38],t.t)
 B.QP=s([42],t.t)
@@ -189264,7 +189264,7 @@ B.bda=s([8594],t.t)
 B.bdc=s([8595],t.t)
 B.bgN=s([9632],t.t)
 B.bgW=s([9675],t.t)
-B.bBf=new A.bU([160,B.fo,168,B.aTN,170,B.pc,175,B.aTJ,178,B.uL,179,B.uM,180,B.Qo,181,B.bgw,184,B.aTR,185,B.uJ,186,B.mD,188,B.b2x,189,B.b2v,190,B.b3U,192,B.b6f,193,B.b6g,194,B.b6h,195,B.b6i,196,B.b6m,197,B.b6o,199,B.b6N,200,B.b7b,201,B.b7c,202,B.b7d,203,B.b7i,204,B.b8h,205,B.b8i,206,B.b8j,207,B.b8o,209,B.b9x,210,B.baR,211,B.baS,212,B.baT,213,B.baU,214,B.baY,217,B.bdf,218,B.bdg,219,B.bdh,220,B.bdl,221,B.bex,224,B.bhl,225,B.bhm,226,B.bhn,227,B.bho,228,B.bhs,229,B.bhu,231,B.bhQ,232,B.ayx,233,B.ayy,234,B.ayz,235,B.ayE,236,B.azG,237,B.azH,238,B.azI,239,B.azM,241,B.aBo,242,B.aBy,243,B.aBz,244,B.aBA,245,B.aBB,246,B.aBF,249,B.aCr,250,B.aCs,251,B.aCt,252,B.aCx,253,B.aD1,255,B.aD6,256,B.b6j,257,B.bhp,258,B.b6k,259,B.bhq,260,B.b6u,261,B.bhA,262,B.b6J,263,B.bhM,264,B.b6K,265,B.bhN,266,B.b6L,267,B.bhO,268,B.b6M,269,B.bhP,270,B.b6U,271,B.ayo,274,B.b7f,275,B.ayB,276,B.b7g,277,B.ayC,278,B.b7h,279,B.ayD,280,B.b7p,281,B.ayL,282,B.b7k,283,B.ayG,284,B.b7W,285,B.az_,286,B.b7Y,287,B.az1,288,B.b7Z,289,B.az2,290,B.b80,291,B.az4,292,B.b85,293,B.azj,296,B.b8k,297,B.azJ,298,B.b8l,299,B.azK,300,B.b8m,301,B.azL,302,B.b8u,303,B.azS,304,B.b8n,306,B.b8g,307,B.azB,308,B.b8G,309,B.aA_,310,B.b8P,311,B.aAm,313,B.b8W,314,B.aAI,315,B.b8Z,316,B.aAL,317,B.b8X,318,B.aAJ,319,B.b8U,320,B.aAG,323,B.b9w,324,B.aBn,325,B.b9B,326,B.aBs,327,B.b9z,328,B.aBq,329,B.b7P,332,B.baV,333,B.aBC,334,B.baW,335,B.aBD,336,B.bb_,337,B.aBH,340,B.bcF,341,B.aC0,342,B.bcL,343,B.aC6,344,B.bcH,345,B.aC2,346,B.bcP,347,B.aCb,348,B.bcR,349,B.aCc,350,B.bcW,351,B.aCh,352,B.bcT,353,B.aCe,354,B.bd4,355,B.aCo,356,B.bd1,357,B.aCl,360,B.bdi,361,B.aCu,362,B.bdj,363,B.aCv,364,B.bdk,365,B.aCw,366,B.bdn,367,B.aCz,368,B.bdo,369,B.aCA,370,B.bdv,371,B.aCH,372,B.bdZ,373,B.aCR,374,B.bey,375,B.aD2,376,B.beC,377,B.bf2,378,B.aDc,379,B.bf4,380,B.aDe,381,B.bf5,382,B.aDf,383,B.p1,416,B.bb3,417,B.aBL,431,B.bds,432,B.aCE,452,B.b6R,453,B.b6S,454,B.ayk,455,B.b8V,456,B.b8T,457,B.aAB,458,B.b9u,459,B.b9s,460,B.aBg,461,B.b6p,462,B.bhv,463,B.b8q,464,B.azO,465,B.bb0,466,B.aBI,467,B.bdp,468,B.aCB,469,B.aMx,470,B.aOS,471,B.aMw,472,B.aOR,473,B.aMy,474,B.aOT,475,B.aMv,476,B.aOQ,478,B.aKe,479,B.aMZ,480,B.b4u,481,B.b4v,482,B.aKj,483,B.aN4,486,B.b8_,487,B.az3,488,B.b8N,489,B.aAk,490,B.bb5,491,B.aBN,492,B.b1G,493,B.b1H,494,B.b0p,495,B.b6e,496,B.aA0,497,B.b6Z,498,B.b6Q,499,B.ayj,500,B.b7V,501,B.ayZ,504,B.b9v,505,B.aBm,506,B.aKg,507,B.aN_,508,B.aKi,509,B.aN3,510,B.aMn,511,B.aOw,512,B.b6q,513,B.bhw,514,B.b6r,515,B.bhx,516,B.b7l,517,B.ayH,518,B.b7m,519,B.ayI,520,B.b8r,521,B.azP,522,B.b8s,523,B.azQ,524,B.bb1,525,B.aBJ,526,B.bb2,527,B.aBK,528,B.bcI,529,B.aC3,530,B.bcJ,531,B.aC4,532,B.bdq,533,B.aCC,534,B.bdr,535,B.aCD,536,B.bcV,537,B.aCg,538,B.bd3,539,B.aCn,542,B.b88,543,B.azm,550,B.b6l,551,B.bhr,552,B.b7o,553,B.ayK,554,B.aMh,555,B.aOq,556,B.aM9,557,B.aOk,558,B.baX,559,B.aBE,560,B.b4y,561,B.b4z,562,B.beA,563,B.aD4,688,B.oZ,689,B.b5A,690,B.p_,691,B.tI,692,B.b5W,693,B.b5X,694,B.b61,695,B.Bk,696,B.Bl,728,B.aTL,729,B.aTM,730,B.aTO,731,B.aTS,732,B.aTI,733,B.aTP,736,B.b5y,737,B.mC,738,B.p1,739,B.p3,740,B.b6y,832,B.b8R,833,B.b8S,835,B.b9o,836,B.b94,884,B.b75,890,B.aTV,894,B.uT,900,B.Qo,901,B.aJU,902,B.bfc,903,B.aK7,904,B.bfk,905,B.bfo,906,B.bfu,908,B.bfB,910,B.bfJ,911,B.bfQ,912,B.bh4,938,B.bfx,939,B.bfM,940,B.bg2,941,B.bgd,942,B.bgh,943,B.bgo,944,B.bh7,970,B.bgr,971,B.bgS,972,B.bgH,973,B.bgP,974,B.bgY,976,B.BX,977,B.Rq,978,B.bfH,979,B.bhe,980,B.bhf,981,B.BZ,982,B.Rs,1008,B.bgv,1009,B.Rt,1010,B.bgM,1012,B.bfs,1013,B.bgb,1017,B.bfG,1024,B.az9,1025,B.azb,1027,B.az8,1031,B.ayX,1036,B.azt,1037,B.azf,1038,B.azw,1049,B.azh,1081,B.aAw,1104,B.aA4,1105,B.aA6,1107,B.aA3,1111,B.aBx,1116,B.aAy,1117,B.aAu,1118,B.aAP,1142,B.aBZ,1143,B.aC_,1217,B.azc,1218,B.aA7,1232,B.az6,1233,B.aA1,1234,B.az7,1235,B.aA2,1238,B.aza,1239,B.aA5,1242,B.aDO,1243,B.aDR,1244,B.azd,1245,B.aA8,1246,B.aze,1247,B.aA9,1250,B.azg,1251,B.aAv,1252,B.azi,1253,B.aAx,1254,B.azu,1255,B.aAA,1258,B.aFP,1259,B.aFQ,1260,B.azY,1261,B.aBf,1262,B.azv,1263,B.aAO,1264,B.azx,1265,B.aAQ,1266,B.azy,1267,B.aAR,1268,B.azW,1269,B.aAS,1272,B.azX,1273,B.aAV,1415,B.aGJ,1570,B.aHM,1571,B.aHN,1572,B.aJB,1573,B.aHO,1574,B.aJJ,1653,B.aHP,1654,B.aJC,1655,B.aJZ,1656,B.aJK,1728,B.aK1,1730,B.aJY,1747,B.aK0,2345,B.aNj,2353,B.aNq,2356,B.aNt,2392,B.aN7,2393,B.aN8,2394,B.aN9,2395,B.aNa,2396,B.aNd,2397,B.aNe,2398,B.aNk,2399,B.aNp,2507,B.aOD,2508,B.aOE,2524,B.aOn,2525,B.aOo,2527,B.aOt,2611,B.aPr,2614,B.aPv,2649,B.aP2,2650,B.aP3,2651,B.aP4,2654,B.aPm,2888,B.aQA,2891,B.aQz,2892,B.aQB,2908,B.aQs,2909,B.aQt,2964,B.aR5,3018,B.aRS,3019,B.aRU,3020,B.aRT,3144,B.aSI,3264,B.aTa,3271,B.aTf,3272,B.aTg,3274,B.aTe,3275,B.aTh,3402,B.aUp,3403,B.aUr,3404,B.aUq,3546,B.aV3,3548,B.aV4,3549,B.aV6,3550,B.aV5,3635,B.aVD,3763,B.aW8,3804,B.aW4,3805,B.aW5,3852,B.aWl,3907,B.aWR,3917,B.aWX,3922,B.aWZ,3927,B.aX_,3932,B.aX1,3945,B.aWQ,3955,B.aX6,3957,B.aX7,3958,B.aXQ,3959,B.aXR,3960,B.aXS,3961,B.aXT,3969,B.aX8,3987,B.aXl,3997,B.aXm,4002,B.aXL,4007,B.aXN,4012,B.aXO,4025,B.aXk,4134,B.b_5,4348,B.b_B,6918,B.b7_,6920,B.b70,6922,B.b71,6924,B.b72,6926,B.b73,6930,B.b74,6971,B.b76,6973,B.b77,6976,B.b78,6977,B.b79,6979,B.b7a,7468,B.BM,7469,B.aKh,7470,B.uW,7472,B.p9,7473,B.uX,7474,B.aXj,7475,B.BO,7476,B.mE,7477,B.mF,7478,B.BP,7479,B.uY,7480,B.pa,7481,B.pb,7482,B.uZ,7484,B.BQ,7485,B.b4o,7486,B.v_,7487,B.mG,7488,B.BS,7489,B.BT,7490,B.BU,7491,B.pc,7492,B.b4Z,7493,B.b5_,7494,B.b8A,7495,B.C_,7496,B.oY,7497,B.mB,7498,B.Re,7499,B.b5r,7500,B.Rf,7501,B.tE,7503,B.tF,7504,B.p0,7505,B.aTW,7506,B.mD,7507,B.b51,7508,B.b8B,7509,B.b8C,7510,B.tH,7511,B.tJ,7512,B.tK,7513,B.b8E,7514,B.b5J,7515,B.p2,7516,B.b8F,7517,B.BX,7518,B.BY,7519,B.bga,7520,B.BZ,7521,B.Ru,7522,B.kI,7523,B.tI,7524,B.tK,7525,B.p2,7526,B.BX,7527,B.BY,7528,B.Rt,7529,B.BZ,7530,B.Ru,7544,B.aAz,7579,B.b50,7580,B.v3,7581,B.b52,7582,B.aNI,7583,B.Rf,7584,B.Bj,7585,B.b5s,7586,B.b5t,7587,B.b5z,7588,B.b5B,7589,B.b5C,7590,B.b5D,7591,B.b8H,7592,B.b6A,7593,B.b5I,7594,B.b8I,7595,B.b6H,7596,B.b5L,7597,B.b5K,7598,B.b5M,7599,B.b5N,7600,B.b5O,7601,B.b5P,7602,B.b5V,7603,B.b62,7604,B.b63,7605,B.b_h,7606,B.b66,7607,B.b67,7608,B.b8D,7609,B.b68,7610,B.b69,7611,B.Bm,7612,B.b6b,7613,B.b6c,7614,B.b6d,7615,B.Rq,7680,B.b6t,7681,B.bhz,7682,B.b6D,7683,B.bhC,7684,B.b6E,7685,B.bhD,7686,B.b6F,7687,B.bhE,7688,B.aKo,7689,B.aN6,7690,B.b6T,7691,B.ayn,7692,B.b6V,7693,B.ayp,7694,B.b6Y,7695,B.ays,7696,B.b6W,7697,B.ayq,7698,B.b6X,7699,B.ayr,7700,B.aPW,7701,B.aQ2,7702,B.aPX,7703,B.aQ3,7704,B.b7q,7705,B.ayM,7706,B.b7r,7707,B.ayN,7708,B.b4w,7709,B.b4x,7710,B.b7R,7711,B.ayW,7712,B.b7X,7713,B.az0,7714,B.b86,7715,B.azk,7716,B.b8a,7717,B.azn,7718,B.b87,7719,B.azl,7720,B.b8b,7721,B.azo,7722,B.b8c,7723,B.azq,7724,B.b8v,7725,B.azT,7726,B.aLe,7727,B.aNG,7728,B.b8L,7729,B.aAj,7730,B.b8O,7731,B.aAl,7732,B.b8Q,7733,B.aAo,7734,B.b8Y,7735,B.aAK,7736,B.b92,7737,B.b93,7738,B.b90,7739,B.aAN,7740,B.b9_,7741,B.aAM,7742,B.b9b,7743,B.aB5,7744,B.b9c,7745,B.aB6,7746,B.b9d,7747,B.aB7,7748,B.b9y,7749,B.aBp,7750,B.b9A,7751,B.aBr,7752,B.b9D,7753,B.aBu,7754,B.b9C,7755,B.aBt,7756,B.aM8,7757,B.aOj,7758,B.aMa,7759,B.aOl,7760,B.aU4,7761,B.aUc,7762,B.aU5,7763,B.aUd,7764,B.bcb,7765,B.aBT,7766,B.bcc,7767,B.aBU,7768,B.bcG,7769,B.aC1,7770,B.bcK,7771,B.aC5,7772,B.b95,7773,B.b96,7774,B.bcM,7775,B.aC7,7776,B.bcS,7777,B.aCd,7778,B.bcU,7779,B.aCf,7780,B.aUJ,7781,B.aUL,7782,B.aV0,7783,B.aV2,7784,B.b97,7785,B.b98,7786,B.bd0,7787,B.aCj,7788,B.bd2,7789,B.aCm,7790,B.bd6,7791,B.aCq,7792,B.bd5,7793,B.aCp,7794,B.bdu,7795,B.aCG,7796,B.bdx,7797,B.aCJ,7798,B.bdw,7799,B.aCI,7800,B.aVu,7801,B.aVw,7802,B.aVz,7803,B.aVB,7804,B.bdE,7805,B.aCN,7806,B.bdF,7807,B.aCO,7808,B.bdX,7809,B.aCP,7810,B.bdY,7811,B.aCQ,7812,B.be0,7813,B.aCT,7814,B.be_,7815,B.aCS,7816,B.be1,7817,B.aCV,7818,B.beu,7819,B.aCY,7820,B.bev,7821,B.aCZ,7822,B.beB,7823,B.aD5,7824,B.bf3,7825,B.aDd,7826,B.bf6,7827,B.aDg,7828,B.bf7,7829,B.aDh,7830,B.azr,7831,B.aCk,7832,B.aCU,7833,B.aD8,7834,B.bhk,7835,B.aWg,7840,B.b6s,7841,B.bhy,7842,B.b6n,7843,B.bht,7844,B.aKb,7845,B.aMH,7846,B.aKa,7847,B.aMG,7848,B.aKd,7849,B.aMJ,7850,B.aKc,7851,B.aMI,7852,B.b9i,7853,B.b9k,7854,B.aP6,7855,B.aPf,7856,B.aP5,7857,B.aPe,7858,B.aP8,7859,B.aPh,7860,B.aP7,7861,B.aPg,7862,B.b9j,7863,B.b9l,7864,B.b7n,7865,B.ayJ,7866,B.b7j,7867,B.ayF,7868,B.b7e,7869,B.ayA,7870,B.aL1,7871,B.aNm,7872,B.aL0,7873,B.aNl,7874,B.aL3,7875,B.aNo,7876,B.aL2,7877,B.aNn,7878,B.b9m,7879,B.b9n,7880,B.b8p,7881,B.azN,7882,B.b8t,7883,B.azR,7884,B.bb4,7885,B.aBM,7886,B.baZ,7887,B.aBG,7888,B.aLU,7889,B.aOd,7890,B.aLT,7891,B.aOc,7892,B.aLW,7893,B.aOf,7894,B.aLV,7895,B.aOe,7896,B.b9p,7897,B.b9q,7898,B.b_7,7899,B.b_c,7900,B.b_6,7901,B.b_b,7902,B.b_9,7903,B.b_e,7904,B.b_8,7905,B.b_d,7906,B.b_a,7907,B.b_f,7908,B.bdt,7909,B.aCF,7910,B.bdm,7911,B.aCy,7912,B.b_D,7913,B.b_I,7914,B.b_C,7915,B.b_H,7916,B.b_F,7917,B.b_K,7918,B.b_E,7919,B.b_J,7920,B.b_G,7921,B.b_L,7922,B.bew,7923,B.aD0,7924,B.beE,7925,B.aD9,7926,B.beD,7927,B.aD7,7928,B.bez,7929,B.aD3,7936,B.bg5,7937,B.bg6,7938,B.b9E,7939,B.b9I,7940,B.b9F,7941,B.b9J,7942,B.b9G,7943,B.b9K,7944,B.bff,7945,B.bfg,7946,B.b9S,7947,B.b9W,7948,B.b9T,7949,B.b9X,7950,B.b9U,7951,B.b9Y,7952,B.bge,7953,B.bgf,7954,B.ba5,7955,B.ba7,7956,B.ba6,7957,B.ba8,7960,B.bfl,7961,B.bfm,7962,B.ba9,7963,B.bab,7964,B.baa,7965,B.bac,7968,B.bgi,7969,B.bgj,7970,B.bad,7971,B.bah,7972,B.bae,7973,B.bai,7974,B.baf,7975,B.baj,7976,B.bfp,7977,B.bfq,7978,B.bar,7979,B.bav,7980,B.bas,7981,B.baw,7982,B.bat,7983,B.bax,7984,B.bgs,7985,B.bgt,7986,B.baF,7987,B.baI,7988,B.baG,7989,B.baJ,7990,B.baH,7991,B.baK,7992,B.bfy,7993,B.bfz,7994,B.baL,7995,B.baO,7996,B.baM,7997,B.baP,7998,B.baN,7999,B.baQ,8000,B.bgI,8001,B.bgJ,8002,B.bbp,8003,B.bbr,8004,B.bbq,8005,B.bbs,8008,B.bfC,8009,B.bfD,8010,B.bbt,8011,B.bbv,8012,B.bbu,8013,B.bbw,8016,B.bgT,8017,B.bgU,8018,B.bbx,8019,B.bbA,8020,B.bby,8021,B.bbB,8022,B.bbz,8023,B.bbC,8025,B.bfN,8027,B.bbD,8029,B.bbE,8031,B.bbF,8032,B.bgZ,8033,B.bh_,8034,B.bbG,8035,B.bbK,8036,B.bbH,8037,B.bbL,8038,B.bbI,8039,B.bbM,8040,B.bfR,8041,B.bfS,8042,B.bbU,8043,B.bbY,8044,B.bbV,8045,B.bbZ,8046,B.bbW,8047,B.bc_,8048,B.bg1,8049,B.bfV,8050,B.bgc,8051,B.bfX,8052,B.bgg,8053,B.bfY,8054,B.bgn,8055,B.bg_,8056,B.bgG,8057,B.bha,8058,B.bgO,8059,B.bhb,8060,B.bgX,8061,B.bhc,8064,B.b9H,8065,B.b9L,8066,B.b9M,8067,B.b9N,8068,B.b9O,8069,B.b9P,8070,B.b9Q,8071,B.b9R,8072,B.b9V,8073,B.b9Z,8074,B.ba_,8075,B.ba0,8076,B.ba1,8077,B.ba2,8078,B.ba3,8079,B.ba4,8080,B.bag,8081,B.bak,8082,B.bal,8083,B.bam,8084,B.ban,8085,B.bao,8086,B.bap,8087,B.baq,8088,B.bau,8089,B.bay,8090,B.baz,8091,B.baA,8092,B.baB,8093,B.baC,8094,B.baD,8095,B.baE,8096,B.bbJ,8097,B.bbN,8098,B.bbO,8099,B.bbP,8100,B.bbQ,8101,B.bbR,8102,B.bbS,8103,B.bbT,8104,B.bbX,8105,B.bc0,8106,B.bc1,8107,B.bc2,8108,B.bc3,8109,B.bc4,8110,B.bc5,8111,B.bc6,8112,B.bg4,8113,B.bg3,8114,B.bc7,8115,B.bg8,8116,B.bfW,8118,B.bg7,8119,B.bci,8120,B.bfe,8121,B.bfd,8122,B.bfb,8123,B.beY,8124,B.bfh,8125,B.Qp,8126,B.bgm,8127,B.Qp,8128,B.aTU,8129,B.aJV,8130,B.bc8,8131,B.bgl,8132,B.bfZ,8134,B.bgk,8135,B.bcm,8136,B.bfj,8137,B.beZ,8138,B.bfn,8139,B.bf_,8140,B.bfr,8141,B.bcj,8142,B.bck,8143,B.bcl,8144,B.bgq,8145,B.bgp,8146,B.bh3,8147,B.bfa,8150,B.bgu,8151,B.bh5,8152,B.bfw,8153,B.bfv,8154,B.bft,8155,B.bf0,8157,B.bco,8158,B.bcp,8159,B.bcq,8160,B.bgR,8161,B.bgQ,8162,B.bh6,8163,B.bg0,8164,B.bgK,8165,B.bgL,8166,B.bgV,8167,B.bh8,8168,B.bfL,8169,B.bfK,8170,B.bfI,8171,B.bf8,8172,B.bfF,8173,B.aJT,8174,B.beX,8175,B.Rr,8178,B.bc9,8179,B.bh1,8180,B.bhd,8182,B.bh0,8183,B.bcn,8184,B.bfA,8185,B.bf1,8186,B.bfP,8187,B.bf9,8188,B.bfT,8189,B.aK6,8190,B.aTQ,8192,B.bcr,8193,B.bcs,8194,B.fo,8195,B.fo,8196,B.fo,8197,B.fo,8198,B.fo,8199,B.fo,8200,B.fo,8201,B.fo,8202,B.fo,8209,B.bcu,8215,B.aTT,8228,B.BJ,8229,B.b1u,8230,B.b1v,8239,B.fo,8243,B.bcy,8244,B.bcz,8246,B.bcB,8247,B.bcC,8252,B.aUs,8254,B.aTK,8263,B.b60,8264,B.b6_,8265,B.aUv,8279,B.bcA,8287,B.fo,8304,B.uI,8305,B.kI,8308,B.uN,8309,B.uO,8310,B.uP,8311,B.uQ,8312,B.uR,8313,B.uS,8314,B.p7,8315,B.Rk,8316,B.uV,8317,B.p5,8318,B.p6,8319,B.tG,8320,B.uI,8321,B.uJ,8322,B.uL,8323,B.uM,8324,B.uN,8325,B.uO,8326,B.uP,8327,B.uQ,8328,B.uR,8329,B.uS,8330,B.p7,8331,B.Rk,8332,B.uV,8333,B.p5,8334,B.p6,8336,B.pc,8337,B.mB,8338,B.mD,8339,B.p3,8340,B.Re,8341,B.oZ,8342,B.tF,8343,B.mC,8344,B.p0,8345,B.tG,8346,B.tH,8347,B.p1,8348,B.tJ,8360,B.bcE,8448,B.bhj,8449,B.bhi,8450,B.p8,8451,B.aK4,8453,B.bhK,8454,B.bhL,8455,B.aXK,8457,B.aK5,8458,B.tE,8459,B.mE,8460,B.mE,8461,B.mE,8462,B.oZ,8463,B.aR0,8464,B.mF,8465,B.mF,8466,B.pa,8467,B.mC,8469,B.uZ,8470,B.b9t,8473,B.v_,8474,B.BR,8475,B.mG,8476,B.mG,8477,B.mG,8480,B.bcQ,8481,B.bcY,8482,B.bd_,8484,B.v2,8486,B.bfO,8488,B.v2,8490,B.uY,8491,B.aKf,8492,B.uW,8493,B.p8,8495,B.mB,8496,B.uX,8497,B.BN,8499,B.pb,8500,B.mD,8501,B.N_,8502,B.aGY,8503,B.aH0,8504,B.N0,8505,B.kI,8507,B.b7Q,8508,B.Rs,8509,B.BY,8510,B.bfi,8511,B.bfE,8512,B.bdK,8517,B.p9,8518,B.oY,8519,B.mB,8520,B.kI,8521,B.p_,8528,B.b2A,8529,B.b2C,8530,B.b2u,8531,B.b2w,8532,B.b3z,8533,B.b2y,8534,B.b3A,8535,B.b3V,8536,B.b4c,8537,B.b2z,8538,B.b4l,8539,B.b2B,8540,B.b3W,8541,B.b4m,8542,B.b4H,8543,B.b2t,8544,B.mF,8545,B.b8e,8546,B.b8f,8547,B.b8x,8548,B.v1,8549,B.bdB,8550,B.bdC,8551,B.bdD,8552,B.b8y,8553,B.BV,8554,B.bes,8555,B.bet,8556,B.pa,8557,B.p8,8558,B.p9,8559,B.pb,8560,B.kI,8561,B.azz,8562,B.azA,8563,B.azD,8564,B.p2,8565,B.aCK,8566,B.aCL,8567,B.aCM,8568,B.azE,8569,B.p3,8570,B.aCW,8571,B.aCX,8572,B.mC,8573,B.v3,8574,B.oY,8575,B.p0,8585,B.b1E,8602,B.bd8,8603,B.bdb,8622,B.bdd,8653,B.bdy,8654,B.bdA,8655,B.bdz,8708,B.bdH,8713,B.bdI,8716,B.bdJ,8740,B.bdL,8742,B.bdM,8748,B.bdN,8749,B.bdO,8751,B.bdQ,8752,B.bdR,8769,B.bdS,8772,B.bdT,8775,B.bdU,8777,B.bdV,8800,B.b5H,8802,B.be3,8813,B.bdW,8814,B.b5w,8815,B.b5U,8816,B.be4,8817,B.be5,8820,B.be6,8821,B.be7,8824,B.be8,8825,B.be9,8832,B.bea,8833,B.beb,8836,B.bee,8837,B.bef,8840,B.beg,8841,B.beh,8876,B.bek,8877,B.bel,8878,B.bem,8879,B.ben,8928,B.bec,8929,B.bed,8930,B.bei,8931,B.bej,8938,B.beo,8939,B.bep,8940,B.beq,8941,B.ber,9001,B.Mb,9002,B.Mc,9312,B.uJ,9313,B.uL,9314,B.uM,9315,B.uN,9316,B.uO,9317,B.uP,9318,B.uQ,9319,B.uR,9320,B.uS,9321,B.b1N,9322,B.b1S,9323,B.b1X,9324,B.b21,9325,B.b25,9326,B.b29,9327,B.b2d,9328,B.b2h,9329,B.b2l,9330,B.b2p,9331,B.b38,9332,B.aZG,9333,B.aZR,9334,B.aZT,9335,B.aZU,9336,B.aZW,9337,B.aZY,9338,B.aZZ,9339,B.b__,9340,B.b_0,9341,B.aZH,9342,B.aZI,9343,B.aZJ,9344,B.aZK,9345,B.aZL,9346,B.aZM,9347,B.aZN,9348,B.aZO,9349,B.aZP,9350,B.aZQ,9351,B.aZS,9352,B.b1M,9353,B.b37,9354,B.b3H,9355,B.b41,9356,B.b4h,9357,B.b4s,9358,B.b4F,9359,B.b4M,9360,B.b4S,9361,B.b1R,9362,B.b1W,9363,B.b20,9364,B.b24,9365,B.b28,9366,B.b2c,9367,B.b2g,9368,B.b2k,9369,B.b2o,9370,B.b2s,9371,B.b3b,9372,B.b_2,9373,B.b_3,9374,B.b_4,9375,B.aYh,9376,B.aYi,9377,B.aYj,9378,B.aYk,9379,B.aYl,9380,B.aYm,9381,B.aYn,9382,B.aYo,9383,B.aYp,9384,B.aYq,9385,B.aYr,9386,B.aYs,9387,B.aYt,9388,B.aYu,9389,B.aYv,9390,B.aYw,9391,B.aYx,9392,B.aYy,9393,B.aYz,9394,B.aYA,9395,B.aYB,9396,B.aYC,9397,B.aYD,9398,B.BM,9399,B.uW,9400,B.p8,9401,B.p9,9402,B.uX,9403,B.BN,9404,B.BO,9405,B.mE,9406,B.mF,9407,B.BP,9408,B.uY,9409,B.pa,9410,B.pb,9411,B.uZ,9412,B.BQ,9413,B.v_,9414,B.BR,9415,B.mG,9416,B.Rj,9417,B.BS,9418,B.BT,9419,B.v1,9420,B.BU,9421,B.BV,9422,B.Rl,9423,B.v2,9424,B.pc,9425,B.C_,9426,B.v3,9427,B.oY,9428,B.mB,9429,B.Bj,9430,B.tE,9431,B.oZ,9432,B.kI,9433,B.p_,9434,B.tF,9435,B.mC,9436,B.p0,9437,B.tG,9438,B.mD,9439,B.tH,9440,B.M9,9441,B.tI,9442,B.p1,9443,B.tJ,9444,B.tK,9445,B.p2,9446,B.Bk,9447,B.p3,9448,B.Bl,9449,B.Bm,9450,B.uI,10764,B.bdP,10868,B.b4Y,10869,B.b5F,10870,B.b5G,10972,B.aAT,11388,B.p_,11389,B.v1,11631,B.aCi,11935,B.aQ1,12019,B.aYf,12032,B.By,12033,B.aKL,12034,B.aKN,12035,B.aKP,12036,B.PI,12037,B.aKS,12038,B.Bz,12039,B.aKV,12040,B.PJ,12041,B.aLd,12042,B.aLi,12043,B.PK,12044,B.aLm,12045,B.aLn,12046,B.aLp,12047,B.aLw,12048,B.aLx,12049,B.aLy,12050,B.PM,12051,B.aLO,12052,B.aLQ,12053,B.aLS,12054,B.aLX,12055,B.BA,12056,B.aM3,12057,B.aM4,12058,B.aM7,12059,B.aMb,12060,B.aMd,12061,B.aMe,12062,B.aMA,12063,B.PP,12064,B.aMN,12065,B.aMO,12066,B.aMP,12067,B.aMQ,12068,B.aMS,12069,B.BB,12070,B.aNc,12071,B.aNg,12072,B.aNs,12073,B.aNu,12074,B.aNv,12075,B.aNw,12076,B.PT,12077,B.aNB,12078,B.aNJ,12079,B.aNK,12080,B.aNM,12081,B.aNN,12082,B.aNO,12083,B.aNR,12084,B.aNT,12085,B.aO0,12086,B.aO1,12087,B.aO3,12088,B.aO4,12089,B.aO5,12090,B.aO6,12091,B.aO8,12092,B.aOg,12093,B.aOH,12094,B.aOK,12095,B.aOL,12096,B.aP9,12097,B.aPa,12098,B.PW,12099,B.aPj,12100,B.aPl,12101,B.aPn,12102,B.aPp,12103,B.PX,12104,B.aPA,12105,B.PZ,12106,B.Q0,12107,B.aPT,12108,B.aPU,12109,B.Q2,12110,B.aQ_,12111,B.aQ0,12112,B.aQ4,12113,B.aQ5,12114,B.aQ6,12115,B.aQ7,12116,B.Q4,12117,B.Q7,12118,B.aQL,12119,B.aQO,12120,B.aQP,12121,B.aQQ,12122,B.aQR,12123,B.aQS,12124,B.aQT,12125,B.aQW,12126,B.aR2,12127,B.aR3,12128,B.aRe,12129,B.aRf,12130,B.aRh,12131,B.aRi,12132,B.aRj,12133,B.aRJ,12134,B.aRQ,12135,B.aRR,12136,B.aS_,12137,B.aS0,12138,B.aS1,12139,B.aS2,12140,B.aS6,12141,B.aSc,12142,B.aSd,12143,B.aSe,12144,B.aSm,12145,B.aSz,12146,B.aSA,12147,B.aSF,12148,B.Qj,12149,B.aSJ,12150,B.aSO,12151,B.aSU,12152,B.aT5,12153,B.aT7,12154,B.aTc,12155,B.Ql,12156,B.Qm,12157,B.aTi,12158,B.aTj,12159,B.aTk,12160,B.aTo,12161,B.aTp,12162,B.aTY,12163,B.aU_,12164,B.aU1,12165,B.aU2,12166,B.aU3,12167,B.aU7,12168,B.aU8,12169,B.aU9,12170,B.aUb,12171,B.aUe,12172,B.aUF,12173,B.aUH,12174,B.aUN,12175,B.Qr,12176,B.aUO,12177,B.aUY,12178,B.Qt,12179,B.aV_,12180,B.aV1,12181,B.aVf,12182,B.aVg,12183,B.aVi,12184,B.aVj,12185,B.aVk,12186,B.aVv,12187,B.aVx,12188,B.aVy,12189,B.aVC,12190,B.QC,12191,B.aVJ,12192,B.QD,12193,B.aVK,12194,B.aVT,12195,B.aVX,12196,B.aW0,12197,B.QG,12198,B.BG,12199,B.aWc,12200,B.aWd,12201,B.aWh,12202,B.aWr,12203,B.aWu,12204,B.aWw,12205,B.aWB,12206,B.aWC,12207,B.aWD,12208,B.aWE,12209,B.aWF,12210,B.aWH,12211,B.aWI,12212,B.aWJ,12213,B.aWS,12214,B.aWT,12215,B.aWU,12216,B.aX0,12217,B.aX2,12218,B.aX3,12219,B.aX9,12220,B.aXa,12221,B.aXb,12222,B.aXd,12223,B.aXe,12224,B.aXf,12225,B.aXg,12226,B.aXh,12227,B.aXP,12228,B.aXX,12229,B.QN,12230,B.aY_,12231,B.aY0,12232,B.aY1,12233,B.aY2,12234,B.aY4,12235,B.aY5,12236,B.aY6,12237,B.aY7,12238,B.aY8,12239,B.aY9,12240,B.aYa,12241,B.aYc,12242,B.aYd,12243,B.QO,12244,B.uH,12245,B.aYg,12288,B.fo,12342,B.aDm,12344,B.BA,12345,B.aM_,12346,B.aM0,12364,B.aDq,12366,B.aDr,12368,B.aDs,12370,B.aDt,12372,B.aDu,12374,B.aDv,12376,B.aDw,12378,B.aDx,12380,B.aDy,12382,B.aDz,12384,B.aDA,12386,B.aDB,12389,B.aDC,12391,B.aDD,12393,B.aDE,12400,B.aDF,12401,B.aDG,12403,B.aDI,12404,B.aDJ,12406,B.aDK,12407,B.aDL,12409,B.aDM,12410,B.aDN,12412,B.aDP,12413,B.aDQ,12436,B.aDp,12443,B.aTr,12444,B.aTs,12446,B.aDV,12447,B.aDS,12460,B.aEb,12462,B.aEh,12464,B.aEn,12466,B.aEq,12468,B.aEs,12470,B.aEw,12472,B.aEy,12474,B.aEA,12476,B.aEB,12478,B.aEE,12480,B.aEF,12482,B.aEH,12485,B.aEJ,12487,B.aEK,12489,B.aEM,12496,B.aER,12497,B.aES,12499,B.aEW,12500,B.aEX,12502,B.aF0,12503,B.aF1,12505,B.aF4,12506,B.aF5,12508,B.aFc,12509,B.aFd,12532,B.aE4,12535,B.aFE,12536,B.aFH,12537,B.aFJ,12538,B.aFK,12542,B.aFO,12543,B.aEt,12593,B.QQ,12594,B.b_N,12595,B.b15,12596,B.QR,12597,B.b16,12598,B.b17,12599,B.QS,12600,B.b_Q,12601,B.QT,12602,B.b18,12603,B.b19,12604,B.b1a,12605,B.b1b,12606,B.b1c,12607,B.b1d,12608,B.b08,12609,B.QU,12610,B.QV,12611,B.b_U,12612,B.b0e,12613,B.QW,12614,B.b_W,12615,B.QX,12616,B.QY,12617,B.b00,12618,B.QZ,12619,B.R_,12620,B.R0,12621,B.R1,12622,B.R2,12623,B.b0D,12624,B.b0E,12625,B.b0F,12626,B.b0G,12627,B.b0H,12628,B.b0I,12629,B.b0J,12630,B.b0K,12631,B.b0L,12632,B.b0M,12633,B.b0N,12634,B.b0O,12635,B.b0P,12636,B.b0Q,12637,B.b0R,12638,B.b0S,12639,B.b0T,12640,B.b0U,12641,B.b0V,12642,B.b0W,12643,B.b0X,12644,B.b0C,12645,B.b06,12646,B.b07,12647,B.b1f,12648,B.b1g,12649,B.b1h,12650,B.b1i,12651,B.b1j,12652,B.b1k,12653,B.b1l,12654,B.b09,12655,B.b1m,12656,B.b1n,12657,B.b0a,12658,B.b0b,12659,B.b0d,12660,B.b0g,12661,B.b0h,12662,B.b0i,12663,B.b0j,12664,B.b0k,12665,B.b0l,12666,B.b0m,12667,B.b0n,12668,B.b0o,12669,B.b0u,12670,B.b0v,12671,B.b0w,12672,B.b0x,12673,B.b0y,12674,B.b1o,12675,B.b1p,12676,B.b0z,12677,B.b0A,12678,B.b0B,12679,B.b0Y,12680,B.b0Z,12681,B.b1_,12682,B.b10,12683,B.b11,12684,B.b12,12685,B.b13,12686,B.b14,12690,B.By,12691,B.Bz,12692,B.PC,12693,B.PO,12694,B.PD,12695,B.PH,12696,B.PE,12697,B.aRK,12698,B.PI,12699,B.aKn,12700,B.aKk,12701,B.aMU,12702,B.aMC,12703,B.PJ,12800,B.aZd,12801,B.aZf,12802,B.aZh,12803,B.aZj,12804,B.aZl,12805,B.aZn,12806,B.aZp,12807,B.aZr,12808,B.aZt,12809,B.aZw,12810,B.aZy,12811,B.aZA,12812,B.aZC,12813,B.aZE,12814,B.aZe,12815,B.aZg,12816,B.aZi,12817,B.aZk,12818,B.aZm,12819,B.aZo,12820,B.aZq,12821,B.aZs,12822,B.aZu,12823,B.aZx,12824,B.aZz,12825,B.aZB,12826,B.aZD,12827,B.aZF,12828,B.aZv,12829,B.blG,12830,B.bz7,12832,B.aYE,12833,B.aYI,12834,B.aYG,12835,B.aYU,12836,B.aYJ,12837,B.aYO,12838,B.aYF,12839,B.aYN,12840,B.aYH,12841,B.aYQ,12842,B.aYY,12843,B.aZ2,12844,B.aZ1,12845,B.aZ_,12846,B.aZc,12847,B.aYV,12848,B.aYX,12849,B.aZ0,12850,B.aYZ,12851,B.aZ5,12852,B.aYS,12853,B.aZ3,12854,B.aZa,12855,B.aZ6,12856,B.aYP,12857,B.aYK,12858,B.aYT,12859,B.aYW,12860,B.aZ4,12861,B.aYL,12862,B.aZb,12863,B.aYR,12864,B.aZ7,12865,B.aYM,12866,B.aZ8,12867,B.aZ9,12868,B.aMo,12869,B.aNS,12870,B.PW,12871,B.aSL,12880,B.bcf,12881,B.b3c,12882,B.b3f,12883,B.b3i,12884,B.b3l,12885,B.b3o,12886,B.b3q,12887,B.b3s,12888,B.b3u,12889,B.b3w,12890,B.b3I,12891,B.b3K,12892,B.b3M,12893,B.b3N,12894,B.b3O,12895,B.b3P,12896,B.QQ,12897,B.QR,12898,B.QS,12899,B.QT,12900,B.QU,12901,B.QV,12902,B.QW,12903,B.QX,12904,B.QY,12905,B.QZ,12906,B.R_,12907,B.R0,12908,B.R1,12909,B.R2,12910,B.b_M,12911,B.b_O,12912,B.b_P,12913,B.b_R,12914,B.b_S,12915,B.b_T,12916,B.b_V,12917,B.b_X,12918,B.b_Z,12919,B.b01,12920,B.b02,12921,B.b03,12922,B.b04,12923,B.b05,12924,B.bup,12925,B.b0_,12926,B.b_Y,12928,B.By,12929,B.Bz,12930,B.PC,12931,B.PO,12932,B.aKU,12933,B.PL,12934,B.aKl,12935,B.PK,12936,B.aKQ,12937,B.BA,12938,B.PZ,12939,B.Q7,12940,B.Q4,12941,B.Q0,12942,B.BG,12943,B.PP,12944,B.PX,12945,B.aPK,12946,B.aPC,12947,B.Qh,12948,B.aMi,12949,B.aQV,12950,B.aVp,12951,B.Qi,12952,B.aLH,12953,B.aSC,12954,B.aRL,12955,B.BB,12956,B.aVN,12957,B.aLc,12958,B.aM5,12959,B.aQb,12960,B.aWK,12961,B.aL_,12962,B.aLo,12963,B.aPV,12964,B.PD,12965,B.PH,12966,B.PE,12967,B.aNL,12968,B.aMg,12969,B.aLY,12970,B.aNi,12971,B.aNf,12972,B.aS4,12973,B.aKZ,12974,B.aVr,12975,B.aM2,12976,B.aMR,12977,B.b3Q,12978,B.b3R,12979,B.b3S,12980,B.b3T,12981,B.b42,12982,B.b43,12983,B.b44,12984,B.b45,12985,B.b46,12986,B.b47,12987,B.b48,12988,B.b49,12989,B.b4a,12990,B.b4b,12991,B.b4i,12992,B.b1K,12993,B.b35,12994,B.b3F,12995,B.b4_,12996,B.b4f,12997,B.b4q,12998,B.b4D,12999,B.b4K,13e3,B.b4Q,13001,B.b1P,13002,B.b1U,13003,B.b1Z,13004,B.b83,13005,B.ayv,13006,B.ayO,13007,B.b91,13008,B.Mh,13009,B.Mi,13010,B.Mj,13011,B.Mk,13012,B.Ml,13013,B.Mm,13014,B.Mn,13015,B.Mo,13016,B.Mp,13017,B.Mq,13018,B.Mr,13019,B.Ms,13020,B.Mt,13021,B.Mu,13022,B.Mv,13023,B.Mw,13024,B.Mx,13025,B.My,13026,B.Mz,13027,B.MA,13028,B.MB,13029,B.MC,13030,B.MD,13031,B.ME,13032,B.MF,13033,B.MG,13034,B.MH,13035,B.MI,13036,B.MJ,13037,B.MK,13038,B.ML,13039,B.MM,13040,B.MN,13041,B.MO,13042,B.MP,13043,B.MQ,13044,B.MR,13045,B.MS,13046,B.MT,13047,B.MU,13048,B.MV,13049,B.MW,13050,B.MX,13051,B.MY,13052,B.aFG,13053,B.aFI,13054,B.MZ,13056,B.aDX,13057,B.aDY,13058,B.aDZ,13059,B.aE_,13060,B.aE1,13061,B.aE2,13062,B.aE5,13063,B.buk,13064,B.aE7,13065,B.aE9,13066,B.aEa,13067,B.aEc,13068,B.aEd,13069,B.aEe,13070,B.aEf,13071,B.aEg,13072,B.aEk,13073,B.aEl,13074,B.aEi,13075,B.aEm,13076,B.aEj,13077,B.bxh,13078,B.brd,13079,B.bzl,13080,B.aEp,13081,B.aXu,13082,B.btS,13083,B.aEo,13084,B.aEr,13085,B.aEu,13086,B.aEv,13087,B.aEx,13088,B.bu5,13089,B.aEz,13090,B.aEC,13091,B.aED,13092,B.aEG,13093,B.aEL,13094,B.aEO,13095,B.aEN,13096,B.aEP,13097,B.aEQ,13098,B.aET,13099,B.bjU,13100,B.aEV,13101,B.aEU,13102,B.brP,13103,B.aEZ,13104,B.aF_,13105,B.aEY,13106,B.bk4,13107,B.aF2,13108,B.bmH,13109,B.aF3,13110,B.bot,13111,B.aF8,13112,B.aF9,13113,B.aF6,13114,B.aFa,13115,B.aFb,13116,B.aF7,13117,B.aFi,13118,B.aFh,13119,B.aFe,13120,B.aFj,13121,B.aFf,13122,B.aFg,13123,B.aFk,13124,B.aFl,13125,B.aFm,13126,B.aFn,13127,B.brv,13128,B.aFo,13129,B.aFp,13130,B.bya,13131,B.aFq,13132,B.aFr,13133,B.aFs,13134,B.aFu,13135,B.aFv,13136,B.aFx,13137,B.aFz,13138,B.aFA,13139,B.aFB,13140,B.aFC,13141,B.aFD,13142,B.bmQ,13143,B.aFF,13144,B.b1C,13145,B.b1L,13146,B.b36,13147,B.b3G,13148,B.b40,13149,B.b4g,13150,B.b4r,13151,B.b4E,13152,B.b4L,13153,B.b4R,13154,B.b1Q,13155,B.b1V,13156,B.b2_,13157,B.b23,13158,B.b27,13159,B.b2b,13160,B.b2f,13161,B.b2j,13162,B.b2n,13163,B.b2r,13164,B.b3a,13165,B.b3e,13166,B.b3h,13167,B.b3k,13168,B.b3n,13169,B.azp,13170,B.ayu,13171,B.b6v,13172,B.bhF,13173,B.aBO,13174,B.aBX,13175,B.ayg,13176,B.ayh,13177,B.ayi,13178,B.b8w,13179,B.aNP,13180,B.aPu,13181,B.aMT,13182,B.aPs,13183,B.aPL,13184,B.aBR,13185,B.aBj,13186,B.bgA,13187,B.aB4,13188,B.aAf,13189,B.b8J,13190,B.b99,13191,B.b7T,13192,B.bhR,13193,B.aAt,13194,B.aBS,13195,B.aBk,13196,B.bgB,13197,B.bgx,13198,B.aAW,13199,B.aAa,13200,B.b84,13201,B.aAi,13202,B.b9a,13203,B.b7U,13204,B.bcZ,13205,B.bgC,13206,B.aB8,13207,B.ayt,13208,B.aAp,13209,B.ayU,13210,B.aBh,13211,B.bgy,13212,B.aAY,13213,B.bhH,13214,B.aAb,13215,B.aAZ,13216,B.bhI,13217,B.aB2,13218,B.aAc,13219,B.aB_,13220,B.bhJ,13221,B.aB3,13222,B.aAd,13223,B.aBb,13224,B.aBc,13225,B.bcg,13226,B.aAn,13227,B.b9e,13228,B.b81,13229,B.aC8,13230,B.byO,13231,B.bxj,13232,B.aBP,13233,B.aBi,13234,B.bgz,13235,B.aB1,13236,B.aBV,13237,B.aBv,13238,B.bgD,13239,B.aB9,13240,B.aAq,13241,B.b9f,13242,B.aBW,13243,B.aBw,13244,B.bgE,13245,B.aBa,13246,B.aAr,13247,B.b9g,13248,B.aAs,13249,B.b9h,13250,B.bhh,13251,B.b6B,13252,B.bhS,13253,B.bhG,13254,B.b6O,13255,B.b6I,13256,B.aym,13257,B.b7S,13258,B.azs,13259,B.b89,13260,B.azC,13261,B.b8K,13262,B.b8M,13263,B.aAe,13264,B.aAC,13265,B.aAD,13266,B.aAE,13267,B.aAF,13268,B.aBd,13269,B.aAX,13270,B.aB0,13271,B.bca,13272,B.aBQ,13273,B.bcd,13274,B.bce,13275,B.aC9,13276,B.bcO,13277,B.be2,13278,B.bdG,13279,B.b6w,13280,B.b1J,13281,B.b34,13282,B.b3E,13283,B.b3Z,13284,B.b4e,13285,B.b4p,13286,B.b4C,13287,B.b4J,13288,B.b4P,13289,B.b1O,13290,B.b1T,13291,B.b1Y,13292,B.b22,13293,B.b26,13294,B.b2a,13295,B.b2e,13296,B.b2i,13297,B.b2m,13298,B.b2q,13299,B.b39,13300,B.b3d,13301,B.b3g,13302,B.b3j,13303,B.b3m,13304,B.b3p,13305,B.b3r,13306,B.b3t,13307,B.b3v,13308,B.b3x,13309,B.b3J,13310,B.b3L,13311,B.az5,42652,B.aAU,42653,B.aBe,42864,B.b_j,43e3,B.aQZ,43001,B.aUo,43868,B.b_i,43869,B.b0c,43870,B.b5E,43871,B.b0f,63744,B.aVh,63745,B.aPB,63746,B.QC,63747,B.aVs,63748,B.aQo,63749,B.aKM,63750,B.aMf,63751,B.uH,63752,B.uH,63753,B.aMX,63754,B.BG,63755,B.aMq,63756,B.aMW,63757,B.aOF,63758,B.aRZ,63759,B.aTb,63760,B.aUE,63761,B.aUK,63762,B.aUU,63763,B.aVS,63764,B.BC,63765,B.aQc,63766,B.aQC,63767,B.aR6,63768,B.aUl,63769,B.aVY,63770,B.aX4,63771,B.aKR,63772,B.aM6,63773,B.aPS,63774,B.aQK,63775,B.aUD,63776,B.aXW,63777,B.aND,63778,B.aQu,63779,B.aUz,63780,B.aUX,63781,B.aOM,63782,B.aTX,63783,B.aUM,63784,B.aNW,63785,B.Q_,63786,B.aQf,63787,B.aR_,63788,B.aVU,63789,B.aL5,63790,B.aLr,63791,B.aLL,63792,B.aP1,63793,B.aPR,63794,B.aQJ,63795,B.aS5,63796,B.Qm,63797,B.aUB,63798,B.aUG,63799,B.aVA,63800,B.aWz,63801,B.aXi,63802,B.aXV,63803,B.aSg,63804,B.aSu,63805,B.aT0,63806,B.aUi,63807,B.aW6,63808,B.QN,63809,B.aVa,63810,B.aMM,63811,B.aO2,63812,B.aSN,63813,B.aTn,63814,B.aQU,63815,B.aSi,63816,B.aVq,63817,B.aWy,63818,B.aML,63819,B.aNy,63820,B.aPQ,63821,B.aQi,63822,B.aQq,63823,B.aSZ,63824,B.aT3,63825,B.aWj,63826,B.aLK,63827,B.aTq,63828,B.aLu,63829,B.aLt,63830,B.aSD,63831,B.aT1,63832,B.aUk,63833,B.aWm,63834,B.aVd,63835,B.aON,63836,B.BC,63837,B.Qx,63838,B.aKO,63839,B.PS,63840,B.aOi,63841,B.Qb,63842,B.aRP,63843,B.aLR,63844,B.aSk,63845,B.aL8,63846,B.aOa,63847,B.aKm,63848,B.aQ9,63849,B.aPd,63850,B.aSY,63851,B.aMc,63852,B.aME,63853,B.aS8,63854,B.aUm,63855,B.Qv,63856,B.Q3,63857,B.QD,63858,B.aQ8,63859,B.aOU,63860,B.aUf,63861,B.aOW,63862,B.aRO,63863,B.aKW,63864,B.aLk,63865,B.aLs,63866,B.aPM,63867,B.aST,63868,B.aUa,63869,B.aV9,63870,B.aW1,63871,B.aLN,63872,B.aMl,63873,B.BB,63874,B.aO_,63875,B.aPo,63876,B.aQv,63877,B.aSl,63878,B.aWe,63879,B.aX5,63880,B.aXY,63881,B.aY3,63882,B.PM,63883,B.aPz,63884,B.aPY,63885,B.aVI,63886,B.aNQ,63887,B.aOB,63888,B.aOG,63889,B.aP0,63890,B.aQr,63891,B.aQG,63892,B.aRc,63893,B.aSB,63894,B.BE,63895,B.aTm,63896,B.aVE,63897,B.aUx,63898,B.aVM,63899,B.aW7,63900,B.aLC,63901,B.aLG,63902,B.aMm,63903,B.aQy,63904,B.aUR,63905,B.Qv,63906,B.aNV,63907,B.aOh,63908,B.aOV,63909,B.aPZ,63910,B.aSM,63911,B.aR1,63912,B.aKY,63913,B.aMB,63914,B.PS,63915,B.aNE,63916,B.aOm,63917,B.aR4,63918,B.aRa,63919,B.aTd,63920,B.aTl,63921,B.aW2,63922,B.aWx,63923,B.aWA,63924,B.aWM,63925,B.aL6,63926,B.aSy,63927,B.aW_,63928,B.aWt,63929,B.aOu,63930,B.aKT,63931,B.aLa,63932,B.aNr,63933,B.aNx,63934,B.aPk,63935,B.BC,63936,B.aQH,63937,B.aRY,63938,B.aUy,63939,B.aVP,63940,B.QO,63941,B.aPw,63942,B.aWi,63943,B.aLF,63944,B.aPG,63945,B.aPI,63946,B.Q5,63947,B.aQl,63948,B.aR8,63949,B.aRN,63950,B.aSf,63951,B.aSX,63952,B.aWP,63953,B.PL,63954,B.aOI,63955,B.aWn,63956,B.aL9,63957,B.aNC,63958,B.aQj,63959,B.aVF,63960,B.aO9,63961,B.aOx,63962,B.aPJ,63963,B.Qb,63964,B.aWp,63965,B.aLD,63966,B.aMj,63967,B.aNA,63968,B.aPt,63969,B.aPE,63970,B.aPO,63971,B.aQa,63972,B.aR7,63973,B.aRV,63974,B.aT9,63975,B.aUS,63976,B.aUT,63977,B.QG,63978,B.aWv,63979,B.aLZ,63980,B.aQm,63981,B.aMk,63982,B.aQI,63983,B.aRd,63984,B.aUA,63985,B.aWq,63986,B.aXM,63987,B.aXZ,63988,B.aPH,63989,B.aQh,63990,B.aTZ,63991,B.Qj,63992,B.aSK,63993,B.aSQ,63994,B.aQY,63995,B.aQx,63996,B.aVc,63997,B.aKX,63998,B.aUg,63999,B.aLE,64e3,B.aLz,64001,B.aNU,64002,B.aOO,64003,B.aSS,64004,B.aNh,64005,B.aQd,64006,B.aPy,64007,B.aVH,64008,B.Qr,64009,B.aWk,64010,B.Qt,64011,B.aNY,64012,B.aLf,64013,B.aMs,64016,B.PQ,64018,B.PY,64021,B.aLv,64022,B.Qa,64023,B.Qg,64024,B.aSn,64025,B.aSs,64026,B.aSt,64027,B.aSx,64028,B.QJ,64029,B.aSR,64030,B.Ql,64032,B.aUC,64034,B.Qw,64037,B.QE,64038,B.aVW,64042,B.aWV,64043,B.aWW,64044,B.aWY,64045,B.aXU,64046,B.aVV,64047,B.aWs,64048,B.aL7,64049,B.aLb,64050,B.aLh,64051,B.aLJ,64052,B.aLM,64053,B.aM1,64054,B.PN,64055,B.aMu,64056,B.aMz,64057,B.aMD,64058,B.aMF,64059,B.aNz,64060,B.PT,64061,B.aOr,64062,B.aOA,64063,B.PU,64064,B.PV,64065,B.aPb,64066,B.aPq,64067,B.aPx,64068,B.aPN,64069,B.aQg,64070,B.aQk,64071,B.Q6,64072,B.Q8,64073,B.aQM,64074,B.aR9,64075,B.aSh,64076,B.Qh,64077,B.aSp,64078,B.aSo,64079,B.aSq,64080,B.aSr,64081,B.Qi,64082,B.aSv,64083,B.aSw,64084,B.aSE,64085,B.aSG,64086,B.Qk,64087,B.BE,64088,B.aT2,64089,B.aT4,64090,B.aT8,64091,B.Qn,64092,B.aU0,64093,B.Qq,64094,B.Qq,64095,B.aUn,64096,B.aUV,64097,B.Qu,64098,B.Qy,64099,B.Qz,64100,B.aVt,64101,B.QB,64102,B.aVL,64103,B.QE,64104,B.QI,64105,B.QK,64106,B.QL,64107,B.aOp,64108,B.aGT,64109,B.aU6,64112,B.aKK,64113,B.aLq,64114,B.aLj,64115,B.aL4,64116,B.aLg,64117,B.aLl,64118,B.aLI,64119,B.aLP,64120,B.PN,64121,B.aMp,64122,B.aMr,64123,B.aMt,64124,B.PQ,64125,B.aMK,64126,B.aMV,64127,B.aMY,64128,B.aN5,64129,B.aNb,64130,B.aNX,64131,B.aNZ,64132,B.aO7,64133,B.aOb,64134,B.aOs,64135,B.aOy,64136,B.aOv,64137,B.PU,64138,B.aOz,64139,B.PV,64140,B.aOJ,64141,B.aOX,64142,B.aOZ,64143,B.aP_,64144,B.aPc,64145,B.PY,64146,B.Q_,64147,B.aPD,64148,B.aPF,64149,B.Q2,64150,B.Q3,64151,B.Q5,64152,B.aQp,64153,B.aQn,64154,B.Q6,64155,B.aQw,64156,B.Q8,64157,B.aSb,64158,B.aQN,64159,B.aQX,64160,B.Qa,64161,B.aRb,64162,B.aRg,64163,B.aRM,64164,B.aRW,64165,B.aRX,64166,B.Qg,64167,B.aS3,64168,B.aS7,64169,B.aSa,64170,B.aS9,64171,B.aSj,64172,B.aSH,64173,B.Qk,64174,B.aSP,64175,B.aT_,64176,B.BE,64177,B.aT6,64178,B.Qn,64179,B.aUh,64180,B.aUj,64181,B.aUI,64182,B.aUW,64183,B.aUZ,64184,B.Qu,64185,B.aV7,64186,B.Qw,64187,B.aV8,64188,B.Qy,64189,B.Qx,64190,B.aVb,64191,B.Qz,64192,B.aVe,64193,B.QB,64194,B.aVG,64195,B.aVO,64196,B.aVZ,64197,B.aW3,64198,B.aWo,64199,B.QI,64200,B.QJ,64201,B.aWG,64202,B.QK,64203,B.aWL,64204,B.QL,64205,B.aXc,64206,B.uH,64207,B.aGR,64208,B.aGQ,64209,B.aGS,64210,B.aHD,64211,B.aJO,64212,B.aJP,64213,B.aHB,64214,B.aHE,64215,B.aJN,64216,B.aYb,64217,B.aYe,64256,B.ayP,64257,B.ayS,64258,B.ayT,64259,B.ayQ,64260,B.ayR,64261,B.aWf,64262,B.aCa,64275,B.aGN,64276,B.aGK,64277,B.aGL,64278,B.aGP,64279,B.aGM,64285,B.aH9,64287,B.aHC,64288,B.aHo,64289,B.N_,64290,B.N0,64291,B.aH3,64292,B.aHc,64293,B.aHi,64294,B.aHk,64295,B.aHu,64296,B.aHz,64297,B.p7,64298,B.aHx,64299,B.aHy,64300,B.b64,64301,B.b65,64302,B.aGU,64303,B.aGV,64304,B.aGW,64305,B.aGZ,64306,B.aH1,64307,B.aH2,64308,B.aH4,64309,B.aH6,64310,B.aH7,64312,B.aH8,64313,B.aHa,64314,B.aHb,64315,B.aHd,64316,B.aHj,64318,B.aHl,64320,B.aHm,64321,B.aHn,64323,B.aHp,64324,B.aHq,64326,B.aHs,64327,B.aHt,64328,B.aHv,64329,B.aHw,64330,B.aHA,64331,B.aH5,64332,B.aH_,64333,B.aHe,64334,B.aHr,64335,B.aGX,64336,B.Pl,64337,B.Pl,64338,B.un,64339,B.un,64340,B.un,64341,B.un,64342,B.uo,64343,B.uo,64344,B.uo,64345,B.uo,64346,B.uq,64347,B.uq,64348,B.uq,64349,B.uq,64350,B.um,64351,B.um,64352,B.um,64353,B.um,64354,B.up,64355,B.up,64356,B.up,64357,B.up,64358,B.ul,64359,B.ul,64360,B.ul,64361,B.ul,64362,B.uv,64363,B.uv,64364,B.uv,64365,B.uv,64366,B.uw,64367,B.uw,64368,B.uw,64369,B.uw,64370,B.us,64371,B.us,64372,B.us,64373,B.us,64374,B.ur,64375,B.ur,64376,B.ur,64377,B.ur,64378,B.ut,64379,B.ut,64380,B.ut,64381,B.ut,64382,B.uu,64383,B.uu,64384,B.uu,64385,B.uu,64386,B.Po,64387,B.Po,64388,B.Pn,64389,B.Pn,64390,B.Pp,64391,B.Pp,64392,B.Pm,64393,B.Pm,64394,B.Pr,64395,B.Pr,64396,B.Pq,64397,B.Pq,64398,B.ux,64399,B.ux,64400,B.ux,64401,B.ux,64402,B.uz,64403,B.uz,64404,B.uz,64405,B.uz,64406,B.uB,64407,B.uB,64408,B.uB,64409,B.uB,64410,B.uA,64411,B.uA,64412,B.uA,64413,B.uA,64414,B.Ps,64415,B.Ps,64416,B.uC,64417,B.uC,64418,B.uC,64419,B.uC,64420,B.Pt,64421,B.Pt,64422,B.uE,64423,B.uE,64424,B.uE,64425,B.uE,64426,B.uD,64427,B.uD,64428,B.uD,64429,B.uD,64430,B.PA,64431,B.PA,64432,B.PB,64433,B.PB,64467,B.uy,64468,B.uy,64469,B.uy,64470,B.uy,64471,B.Pw,64472,B.Pw,64473,B.Pv,64474,B.Pv,64475,B.Px,64476,B.Px,64477,B.aJR,64478,B.Pz,64479,B.Pz,64480,B.Pu,64481,B.Pu,64482,B.Py,64483,B.Py,64484,B.uG,64485,B.uG,64486,B.uG,64487,B.uG,64488,B.ui,64489,B.ui,64490,B.N5,64491,B.N5,64492,B.Ne,64493,B.Ne,64494,B.N9,64495,B.N9,64496,B.Nc,64497,B.Nc,64498,B.Nb,64499,B.Nb,64500,B.Nd,64501,B.Nd,64502,B.Bq,64503,B.Bq,64504,B.Bq,64505,B.p4,64506,B.p4,64507,B.p4,64508,B.uF,64509,B.uF,64510,B.uF,64511,B.uF,64512,B.N6,64513,B.N7,64514,B.tM,64515,B.p4,64516,B.Na,64517,B.Nh,64518,B.Ni,64519,B.Nj,64520,B.tO,64521,B.Nl,64522,B.Nm,64523,B.No,64524,B.Np,64525,B.Nr,64526,B.tQ,64527,B.Nt,64528,B.Nu,64529,B.aI9,64530,B.tS,64531,B.Nv,64532,B.Nw,64533,B.Nx,64534,B.Ny,64535,B.NC,64536,B.ND,64537,B.NG,64538,B.aIl,64539,B.NH,64540,B.Br,64541,B.Bs,64542,B.Bt,64543,B.Bu,64544,B.O0,64545,B.O3,64546,B.O7,64547,B.O8,64548,B.O9,64549,B.Oc,64550,B.Of,64551,B.Bv,64552,B.Bw,64553,B.Oj,64554,B.Ol,64555,B.Op,64556,B.Oq,64557,B.Ot,64558,B.Ou,64559,B.Ov,64560,B.Ox,64561,B.Oy,64562,B.Oz,64563,B.OA,64564,B.OB,64565,B.OD,64566,B.OE,64567,B.OF,64568,B.OG,64569,B.OH,64570,B.OI,64571,B.ua,64572,B.ub,64573,B.OK,64574,B.OL,64575,B.OQ,64576,B.OT,64577,B.OV,64578,B.ud,64579,B.OY,64580,B.OZ,64581,B.P_,64582,B.P0,64583,B.P1,64584,B.Bx,64585,B.aJj,64586,B.aJk,64587,B.P2,64588,B.P5,64589,B.P6,64590,B.ug,64591,B.P8,64592,B.P9,64593,B.Pa,64594,B.Pb,64595,B.aJx,64596,B.aJy,64597,B.Pe,64598,B.Pf,64599,B.Pg,64600,B.uk,64601,B.Pj,64602,B.Pk,64603,B.aIm,64604,B.aIo,64605,B.Pd,64606,B.aTv,64607,B.aTx,64608,B.aTz,64609,B.aTB,64610,B.aTD,64611,B.aTF,64612,B.aHH,64613,B.aHI,64614,B.tM,64615,B.aHJ,64616,B.p4,64617,B.Na,64618,B.aHS,64619,B.aHT,64620,B.tO,64621,B.aHU,64622,B.Nl,64623,B.Nm,64624,B.aI1,64625,B.aI2,64626,B.tQ,64627,B.aI8,64628,B.Nt,64629,B.Nu,64630,B.aIa,64631,B.aIb,64632,B.tS,64633,B.aIc,64634,B.Nv,64635,B.Nw,64636,B.Oy,64637,B.Oz,64638,B.OD,64639,B.OE,64640,B.OF,64641,B.ua,64642,B.ub,64643,B.OK,64644,B.OL,64645,B.ud,64646,B.OY,64647,B.OZ,64648,B.aJ6,64649,B.Bx,64650,B.aJq,64651,B.aJr,64652,B.ug,64653,B.aJu,64654,B.P8,64655,B.P9,64656,B.Pd,64657,B.aJF,64658,B.aJG,64659,B.uk,64660,B.aJI,64661,B.Pj,64662,B.Pk,64663,B.N6,64664,B.N7,64665,B.aHG,64666,B.tM,64667,B.N8,64668,B.Nh,64669,B.Ni,64670,B.Nj,64671,B.tO,64672,B.Nk,64673,B.No,64674,B.Np,64675,B.Nr,64676,B.tQ,64677,B.Ns,64678,B.tS,64679,B.Nx,64680,B.Ny,64681,B.NC,64682,B.ND,64683,B.NG,64684,B.NH,64685,B.Br,64686,B.Bs,64687,B.Bt,64688,B.Bu,64689,B.O0,64690,B.aIz,64691,B.O3,64692,B.O7,64693,B.O8,64694,B.O9,64695,B.Oc,64696,B.Of,64697,B.Bw,64698,B.Oj,64699,B.Ol,64700,B.Op,64701,B.Oq,64702,B.Ot,64703,B.Ou,64704,B.Ov,64705,B.Ox,64706,B.OA,64707,B.OB,64708,B.OG,64709,B.OH,64710,B.OI,64711,B.ua,64712,B.ub,64713,B.OQ,64714,B.OT,64715,B.OV,64716,B.ud,64717,B.aJ5,64718,B.P_,64719,B.P0,64720,B.P1,64721,B.Bx,64722,B.P2,64723,B.P5,64724,B.P6,64725,B.ug,64726,B.P7,64727,B.Pa,64728,B.Pb,64729,B.aJz,64730,B.Pe,64731,B.Pf,64732,B.Pg,64733,B.uk,64734,B.Pi,64735,B.tM,64736,B.N8,64737,B.tO,64738,B.Nk,64739,B.tQ,64740,B.Ns,64741,B.tS,64742,B.aId,64743,B.Bu,64744,B.NR,64745,B.u0,64746,B.NY,64747,B.ua,64748,B.ub,64749,B.ud,64750,B.ug,64751,B.P7,64752,B.uk,64753,B.Pi,64754,B.aIQ,64755,B.aIS,64756,B.aIU,64757,B.Oh,64758,B.Oi,64759,B.On,64760,B.Oo,64761,B.Or,64762,B.Os,64763,B.NS,64764,B.NT,64765,B.NZ,64766,B.O_,64767,B.NE,64768,B.NF,64769,B.NA,64770,B.NB,64771,B.NI,64772,B.NJ,64773,B.O5,64774,B.O6,64775,B.Od,64776,B.Oe,64777,B.tY,64778,B.tZ,64779,B.u_,64780,B.u0,64781,B.NV,64782,B.NO,64783,B.O2,64784,B.Ob,64785,B.Oh,64786,B.Oi,64787,B.On,64788,B.Oo,64789,B.Or,64790,B.Os,64791,B.NS,64792,B.NT,64793,B.NZ,64794,B.O_,64795,B.NE,64796,B.NF,64797,B.NA,64798,B.NB,64799,B.NI,64800,B.NJ,64801,B.O5,64802,B.O6,64803,B.Od,64804,B.Oe,64805,B.tY,64806,B.tZ,64807,B.u_,64808,B.u0,64809,B.NV,64810,B.NO,64811,B.O2,64812,B.Ob,64813,B.tY,64814,B.tZ,64815,B.u_,64816,B.u0,64817,B.NR,64818,B.NY,64819,B.Bv,64820,B.Br,64821,B.Bs,64822,B.Bt,64823,B.tY,64824,B.tZ,64825,B.u_,64826,B.Bv,64827,B.Bw,64828,B.Ng,64829,B.Ng,64848,B.aHV,64849,B.Nq,64850,B.Nq,64851,B.aHY,64852,B.aHZ,64853,B.aI3,64854,B.aI4,64855,B.aI5,64856,B.Nz,64857,B.Nz,64858,B.aIk,64859,B.aIj,64860,B.aIs,64861,B.aIq,64862,B.aIr,64863,B.NP,64864,B.NP,64865,B.aIv,64866,B.NQ,64867,B.NQ,64868,B.O1,64869,B.O1,64870,B.O4,64871,B.NU,64872,B.NU,64873,B.aIw,64874,B.NW,64875,B.NW,64876,B.NX,64877,B.NX,64878,B.aID,64879,B.Oa,64880,B.Oa,64881,B.Og,64882,B.Og,64883,B.aIF,64884,B.aIG,64885,B.Ok,64886,B.Om,64887,B.Om,64888,B.aII,64889,B.aIK,64890,B.aIM,64891,B.aIL,64892,B.Ow,64893,B.Ow,64894,B.OC,64895,B.aIZ,64896,B.OU,64897,B.aJ3,64898,B.aJ2,64899,B.OR,64900,B.OR,64901,B.OW,64902,B.OW,64903,B.OX,64904,B.OX,64905,B.aJb,64906,B.aJc,64907,B.aJe,64908,B.aJ7,64909,B.aJ9,64910,B.aJf,64911,B.aJg,64914,B.aJ8,64915,B.aJv,64916,B.aJw,64917,B.aJn,64918,B.aJo,64919,B.P4,64920,B.P4,64921,B.aJl,64922,B.aJt,64923,B.aJs,64924,B.Ph,64925,B.Ph,64926,B.aHR,64927,B.aHX,64928,B.aHW,64929,B.aI0,64930,B.aI_,64931,B.aI7,64932,B.aI6,64933,B.aIh,64934,B.aIe,64935,B.aIg,64936,B.aIt,64937,B.aIy,64938,B.aIx,64939,B.aIE,64940,B.aJ1,64941,B.aJ4,64942,B.aJE,64943,B.aJD,64944,B.aJH,64945,B.aJi,64946,B.aJ_,64947,B.aJp,64948,B.OC,64949,B.OU,64950,B.aIJ,64951,B.aJ0,64952,B.P3,64953,B.aJh,64954,B.OS,64955,B.OJ,64956,B.OS,64957,B.P3,64958,B.aIf,64959,B.aIi,64960,B.aJa,64961,B.aIX,64962,B.aHQ,64963,B.OJ,64964,B.Ok,64965,B.O4,64966,B.aIu,64967,B.aJm,65008,B.aIC,65009,B.aIY,65010,B.aHL,65011,B.aHK,65012,B.aJd,65013,B.aIA,65014,B.aIn,65015,B.aIH,65016,B.aJA,65017,B.aIB,65018,B.by0,65019,B.bqn,65020,B.aIp,65040,B.BI,65041,B.Bn,65042,B.Ma,65043,B.BK,65044,B.uT,65045,B.BF,65046,B.BL,65047,B.aDn,65048,B.aDo,65049,B.bcx,65072,B.bcw,65073,B.Ri,65074,B.bcv,65075,B.mH,65076,B.mH,65077,B.p5,65078,B.p6,65079,B.Bo,65080,B.Bp,65081,B.Mf,65082,B.Mg,65083,B.aDk,65084,B.aDl,65085,B.aDa,65086,B.aDb,65087,B.Mb,65088,B.Mc,65089,B.Md,65090,B.Me,65091,B.aDi,65092,B.aDj,65095,B.Rn,65096,B.Rp,65097,B.v0,65098,B.v0,65099,B.v0,65100,B.v0,65101,B.mH,65102,B.mH,65103,B.mH,65104,B.BI,65105,B.Bn,65106,B.BJ,65108,B.uT,65109,B.BK,65110,B.BL,65111,B.BF,65112,B.Ri,65113,B.p5,65114,B.p6,65115,B.Bo,65116,B.Bp,65117,B.Mf,65118,B.Mg,65119,B.Qs,65120,B.QH,65121,B.QP,65122,B.p7,65123,B.R3,65124,B.Rd,65125,B.Rg,65126,B.uV,65128,B.Ro,65129,B.QA,65130,B.QF,65131,B.Rh,65136,B.aTt,65137,B.aIO,65138,B.aTu,65140,B.aTw,65142,B.aTy,65143,B.aIP,65144,B.aTA,65145,B.aIR,65146,B.aTC,65147,B.aIT,65148,B.aTE,65149,B.aIV,65150,B.aTG,65151,B.aIW,65152,B.aHF,65153,B.N1,65154,B.N1,65155,B.N2,65156,B.N2,65157,B.N3,65158,B.N3,65159,B.N4,65160,B.N4,65161,B.tL,65162,B.tL,65163,B.tL,65164,B.tL,65165,B.Nf,65166,B.Nf,65167,B.tN,65168,B.tN,65169,B.tN,65170,B.tN,65171,B.Nn,65172,B.Nn,65173,B.tP,65174,B.tP,65175,B.tP,65176,B.tP,65177,B.tR,65178,B.tR,65179,B.tR,65180,B.tR,65181,B.tT,65182,B.tT,65183,B.tT,65184,B.tT,65185,B.tU,65186,B.tU,65187,B.tU,65188,B.tU,65189,B.tV,65190,B.tV,65191,B.tV,65192,B.tV,65193,B.NK,65194,B.NK,65195,B.NL,65196,B.NL,65197,B.NM,65198,B.NM,65199,B.NN,65200,B.NN,65201,B.tW,65202,B.tW,65203,B.tW,65204,B.tW,65205,B.tX,65206,B.tX,65207,B.tX,65208,B.tX,65209,B.u1,65210,B.u1,65211,B.u1,65212,B.u1,65213,B.u2,65214,B.u2,65215,B.u2,65216,B.u2,65217,B.u3,65218,B.u3,65219,B.u3,65220,B.u3,65221,B.u4,65222,B.u4,65223,B.u4,65224,B.u4,65225,B.u5,65226,B.u5,65227,B.u5,65228,B.u5,65229,B.u6,65230,B.u6,65231,B.u6,65232,B.u6,65233,B.u7,65234,B.u7,65235,B.u7,65236,B.u7,65237,B.u8,65238,B.u8,65239,B.u8,65240,B.u8,65241,B.u9,65242,B.u9,65243,B.u9,65244,B.u9,65245,B.uc,65246,B.uc,65247,B.uc,65248,B.uc,65249,B.ue,65250,B.ue,65251,B.ue,65252,B.ue,65253,B.uf,65254,B.uf,65255,B.uf,65256,B.uf,65257,B.uh,65258,B.uh,65259,B.uh,65260,B.uh,65261,B.Pc,65262,B.Pc,65263,B.ui,65264,B.ui,65265,B.uj,65266,B.uj,65267,B.uj,65268,B.uj,65269,B.OM,65270,B.OM,65271,B.ON,65272,B.ON,65273,B.OO,65274,B.OO,65275,B.OP,65276,B.OP,65281,B.BF,65282,B.aUw,65283,B.Qs,65284,B.QA,65285,B.QF,65286,B.QH,65287,B.aWO,65288,B.p5,65289,B.p6,65290,B.QP,65291,B.p7,65292,B.BI,65293,B.R3,65294,B.BJ,65295,B.b1y,65296,B.uI,65297,B.uJ,65298,B.uL,65299,B.uM,65300,B.uN,65301,B.uO,65302,B.uP,65303,B.uQ,65304,B.uR,65305,B.uS,65306,B.BK,65307,B.uT,65308,B.Rd,65309,B.uV,65310,B.Rg,65311,B.BL,65312,B.Rh,65313,B.BM,65314,B.uW,65315,B.p8,65316,B.p9,65317,B.uX,65318,B.BN,65319,B.BO,65320,B.mE,65321,B.mF,65322,B.BP,65323,B.uY,65324,B.pa,65325,B.pb,65326,B.uZ,65327,B.BQ,65328,B.v_,65329,B.BR,65330,B.mG,65331,B.Rj,65332,B.BS,65333,B.BT,65334,B.v1,65335,B.BU,65336,B.BV,65337,B.Rl,65338,B.v2,65339,B.Rn,65340,B.Ro,65341,B.Rp,65342,B.bfU,65343,B.mH,65344,B.Rr,65345,B.pc,65346,B.C_,65347,B.v3,65348,B.oY,65349,B.mB,65350,B.Bj,65351,B.tE,65352,B.oZ,65353,B.kI,65354,B.p_,65355,B.tF,65356,B.mC,65357,B.p0,65358,B.tG,65359,B.mD,65360,B.tH,65361,B.M9,65362,B.tI,65363,B.p1,65364,B.tJ,65365,B.tK,65366,B.p2,65367,B.Bk,65368,B.p3,65369,B.Bl,65370,B.Bm,65371,B.Bo,65372,B.aDH,65373,B.Bp,65374,B.aFY,65375,B.azU,65376,B.azV,65377,B.Ma,65378,B.Md,65379,B.Me,65380,B.Bn,65381,B.aFM,65382,B.MZ,65383,B.aDW,65384,B.aE0,65385,B.aE3,65386,B.aE6,65387,B.aE8,65388,B.aFt,65389,B.aFw,65390,B.aFy,65391,B.aEI,65392,B.aFN,65393,B.Mh,65394,B.Mi,65395,B.Mj,65396,B.Mk,65397,B.Ml,65398,B.Mm,65399,B.Mn,65400,B.Mo,65401,B.Mp,65402,B.Mq,65403,B.Mr,65404,B.Ms,65405,B.Mt,65406,B.Mu,65407,B.Mv,65408,B.Mw,65409,B.Mx,65410,B.My,65411,B.Mz,65412,B.MA,65413,B.MB,65414,B.MC,65415,B.MD,65416,B.ME,65417,B.MF,65418,B.MG,65419,B.MH,65420,B.MI,65421,B.MJ,65422,B.MK,65423,B.ML,65424,B.MM,65425,B.MN,65426,B.MO,65427,B.MP,65428,B.MQ,65429,B.MR,65430,B.MS,65431,B.MT,65432,B.MU,65433,B.MV,65434,B.MW,65435,B.MX,65436,B.MY,65437,B.aFL,65438,B.aDT,65439,B.aDU,65440,B.aGG,65441,B.aFR,65442,B.aFS,65443,B.aFT,65444,B.aFU,65445,B.aFV,65446,B.aFW,65447,B.aFX,65448,B.aFZ,65449,B.aG_,65450,B.aG0,65451,B.aG1,65452,B.aG2,65453,B.aG3,65454,B.aG4,65455,B.aG5,65456,B.aG6,65457,B.aG7,65458,B.aG8,65459,B.aG9,65460,B.aGa,65461,B.aGb,65462,B.aGc,65463,B.aGd,65464,B.aGe,65465,B.aGf,65466,B.aGg,65467,B.aGh,65468,B.aGi,65469,B.aGj,65470,B.aGk,65474,B.aGl,65475,B.aGm,65476,B.aGn,65477,B.aGo,65478,B.aGp,65479,B.aGq,65482,B.aGr,65483,B.aGs,65484,B.aGt,65485,B.aGu,65486,B.aGv,65487,B.aGw,65490,B.aGx,65491,B.aGy,65492,B.aGz,65493,B.aGA,65494,B.aGB,65495,B.aGC,65498,B.aGD,65499,B.aGE,65500,B.aGF,65504,B.aJL,65505,B.aJM,65506,B.aJX,65507,B.aK2,65508,B.aJS,65509,B.aJQ,65510,B.bcN,65512,B.bg9,65513,B.bd7,65514,B.bd9,65515,B.bda,65516,B.bdc,65517,B.bgN,65518,B.bgW],t.eU)
+B.bBf=new A.bU([160,B.fo,168,B.aTN,170,B.pc,175,B.aTJ,178,B.uK,179,B.uL,180,B.Qo,181,B.bgw,184,B.aTR,185,B.uJ,186,B.mD,188,B.b2x,189,B.b2v,190,B.b3U,192,B.b6f,193,B.b6g,194,B.b6h,195,B.b6i,196,B.b6m,197,B.b6o,199,B.b6N,200,B.b7b,201,B.b7c,202,B.b7d,203,B.b7i,204,B.b8h,205,B.b8i,206,B.b8j,207,B.b8o,209,B.b9x,210,B.baR,211,B.baS,212,B.baT,213,B.baU,214,B.baY,217,B.bdf,218,B.bdg,219,B.bdh,220,B.bdl,221,B.bex,224,B.bhl,225,B.bhm,226,B.bhn,227,B.bho,228,B.bhs,229,B.bhu,231,B.bhQ,232,B.ayx,233,B.ayy,234,B.ayz,235,B.ayE,236,B.azG,237,B.azH,238,B.azI,239,B.azM,241,B.aBo,242,B.aBy,243,B.aBz,244,B.aBA,245,B.aBB,246,B.aBF,249,B.aCr,250,B.aCs,251,B.aCt,252,B.aCx,253,B.aD1,255,B.aD6,256,B.b6j,257,B.bhp,258,B.b6k,259,B.bhq,260,B.b6u,261,B.bhA,262,B.b6J,263,B.bhM,264,B.b6K,265,B.bhN,266,B.b6L,267,B.bhO,268,B.b6M,269,B.bhP,270,B.b6U,271,B.ayo,274,B.b7f,275,B.ayB,276,B.b7g,277,B.ayC,278,B.b7h,279,B.ayD,280,B.b7p,281,B.ayL,282,B.b7k,283,B.ayG,284,B.b7W,285,B.az_,286,B.b7Y,287,B.az1,288,B.b7Z,289,B.az2,290,B.b80,291,B.az4,292,B.b85,293,B.azj,296,B.b8k,297,B.azJ,298,B.b8l,299,B.azK,300,B.b8m,301,B.azL,302,B.b8u,303,B.azS,304,B.b8n,306,B.b8g,307,B.azB,308,B.b8G,309,B.aA_,310,B.b8P,311,B.aAm,313,B.b8W,314,B.aAI,315,B.b8Z,316,B.aAL,317,B.b8X,318,B.aAJ,319,B.b8U,320,B.aAG,323,B.b9w,324,B.aBn,325,B.b9B,326,B.aBs,327,B.b9z,328,B.aBq,329,B.b7P,332,B.baV,333,B.aBC,334,B.baW,335,B.aBD,336,B.bb_,337,B.aBH,340,B.bcF,341,B.aC0,342,B.bcL,343,B.aC6,344,B.bcH,345,B.aC2,346,B.bcP,347,B.aCb,348,B.bcR,349,B.aCc,350,B.bcW,351,B.aCh,352,B.bcT,353,B.aCe,354,B.bd4,355,B.aCo,356,B.bd1,357,B.aCl,360,B.bdi,361,B.aCu,362,B.bdj,363,B.aCv,364,B.bdk,365,B.aCw,366,B.bdn,367,B.aCz,368,B.bdo,369,B.aCA,370,B.bdv,371,B.aCH,372,B.bdZ,373,B.aCR,374,B.bey,375,B.aD2,376,B.beC,377,B.bf2,378,B.aDc,379,B.bf4,380,B.aDe,381,B.bf5,382,B.aDf,383,B.p1,416,B.bb3,417,B.aBL,431,B.bds,432,B.aCE,452,B.b6R,453,B.b6S,454,B.ayk,455,B.b8V,456,B.b8T,457,B.aAB,458,B.b9u,459,B.b9s,460,B.aBg,461,B.b6p,462,B.bhv,463,B.b8q,464,B.azO,465,B.bb0,466,B.aBI,467,B.bdp,468,B.aCB,469,B.aMx,470,B.aOS,471,B.aMw,472,B.aOR,473,B.aMy,474,B.aOT,475,B.aMv,476,B.aOQ,478,B.aKe,479,B.aMZ,480,B.b4u,481,B.b4v,482,B.aKj,483,B.aN4,486,B.b8_,487,B.az3,488,B.b8N,489,B.aAk,490,B.bb5,491,B.aBN,492,B.b1G,493,B.b1H,494,B.b0p,495,B.b6e,496,B.aA0,497,B.b6Z,498,B.b6Q,499,B.ayj,500,B.b7V,501,B.ayZ,504,B.b9v,505,B.aBm,506,B.aKg,507,B.aN_,508,B.aKi,509,B.aN3,510,B.aMn,511,B.aOw,512,B.b6q,513,B.bhw,514,B.b6r,515,B.bhx,516,B.b7l,517,B.ayH,518,B.b7m,519,B.ayI,520,B.b8r,521,B.azP,522,B.b8s,523,B.azQ,524,B.bb1,525,B.aBJ,526,B.bb2,527,B.aBK,528,B.bcI,529,B.aC3,530,B.bcJ,531,B.aC4,532,B.bdq,533,B.aCC,534,B.bdr,535,B.aCD,536,B.bcV,537,B.aCg,538,B.bd3,539,B.aCn,542,B.b88,543,B.azm,550,B.b6l,551,B.bhr,552,B.b7o,553,B.ayK,554,B.aMh,555,B.aOq,556,B.aM9,557,B.aOk,558,B.baX,559,B.aBE,560,B.b4y,561,B.b4z,562,B.beA,563,B.aD4,688,B.oZ,689,B.b5A,690,B.p_,691,B.tI,692,B.b5W,693,B.b5X,694,B.b61,695,B.Bk,696,B.Bl,728,B.aTL,729,B.aTM,730,B.aTO,731,B.aTS,732,B.aTI,733,B.aTP,736,B.b5y,737,B.mC,738,B.p1,739,B.p3,740,B.b6y,832,B.b8R,833,B.b8S,835,B.b9o,836,B.b94,884,B.b75,890,B.aTV,894,B.uS,900,B.Qo,901,B.aJU,902,B.bfc,903,B.aK7,904,B.bfk,905,B.bfo,906,B.bfu,908,B.bfB,910,B.bfJ,911,B.bfQ,912,B.bh4,938,B.bfx,939,B.bfM,940,B.bg2,941,B.bgd,942,B.bgh,943,B.bgo,944,B.bh7,970,B.bgr,971,B.bgS,972,B.bgH,973,B.bgP,974,B.bgY,976,B.BX,977,B.Rq,978,B.bfH,979,B.bhe,980,B.bhf,981,B.BZ,982,B.Rs,1008,B.bgv,1009,B.Rt,1010,B.bgM,1012,B.bfs,1013,B.bgb,1017,B.bfG,1024,B.az9,1025,B.azb,1027,B.az8,1031,B.ayX,1036,B.azt,1037,B.azf,1038,B.azw,1049,B.azh,1081,B.aAw,1104,B.aA4,1105,B.aA6,1107,B.aA3,1111,B.aBx,1116,B.aAy,1117,B.aAu,1118,B.aAP,1142,B.aBZ,1143,B.aC_,1217,B.azc,1218,B.aA7,1232,B.az6,1233,B.aA1,1234,B.az7,1235,B.aA2,1238,B.aza,1239,B.aA5,1242,B.aDO,1243,B.aDR,1244,B.azd,1245,B.aA8,1246,B.aze,1247,B.aA9,1250,B.azg,1251,B.aAv,1252,B.azi,1253,B.aAx,1254,B.azu,1255,B.aAA,1258,B.aFP,1259,B.aFQ,1260,B.azY,1261,B.aBf,1262,B.azv,1263,B.aAO,1264,B.azx,1265,B.aAQ,1266,B.azy,1267,B.aAR,1268,B.azW,1269,B.aAS,1272,B.azX,1273,B.aAV,1415,B.aGJ,1570,B.aHM,1571,B.aHN,1572,B.aJB,1573,B.aHO,1574,B.aJJ,1653,B.aHP,1654,B.aJC,1655,B.aJZ,1656,B.aJK,1728,B.aK1,1730,B.aJY,1747,B.aK0,2345,B.aNj,2353,B.aNq,2356,B.aNt,2392,B.aN7,2393,B.aN8,2394,B.aN9,2395,B.aNa,2396,B.aNd,2397,B.aNe,2398,B.aNk,2399,B.aNp,2507,B.aOD,2508,B.aOE,2524,B.aOn,2525,B.aOo,2527,B.aOt,2611,B.aPr,2614,B.aPv,2649,B.aP2,2650,B.aP3,2651,B.aP4,2654,B.aPm,2888,B.aQA,2891,B.aQz,2892,B.aQB,2908,B.aQs,2909,B.aQt,2964,B.aR5,3018,B.aRS,3019,B.aRU,3020,B.aRT,3144,B.aSI,3264,B.aTa,3271,B.aTf,3272,B.aTg,3274,B.aTe,3275,B.aTh,3402,B.aUp,3403,B.aUr,3404,B.aUq,3546,B.aV3,3548,B.aV4,3549,B.aV6,3550,B.aV5,3635,B.aVD,3763,B.aW8,3804,B.aW4,3805,B.aW5,3852,B.aWl,3907,B.aWR,3917,B.aWX,3922,B.aWZ,3927,B.aX_,3932,B.aX1,3945,B.aWQ,3955,B.aX6,3957,B.aX7,3958,B.aXQ,3959,B.aXR,3960,B.aXS,3961,B.aXT,3969,B.aX8,3987,B.aXl,3997,B.aXm,4002,B.aXL,4007,B.aXN,4012,B.aXO,4025,B.aXk,4134,B.b_5,4348,B.b_B,6918,B.b7_,6920,B.b70,6922,B.b71,6924,B.b72,6926,B.b73,6930,B.b74,6971,B.b76,6973,B.b77,6976,B.b78,6977,B.b79,6979,B.b7a,7468,B.BM,7469,B.aKh,7470,B.uV,7472,B.p9,7473,B.uW,7474,B.aXj,7475,B.BO,7476,B.mE,7477,B.mF,7478,B.BP,7479,B.uX,7480,B.pa,7481,B.pb,7482,B.uY,7484,B.BQ,7485,B.b4o,7486,B.uZ,7487,B.mG,7488,B.BS,7489,B.BT,7490,B.BU,7491,B.pc,7492,B.b4Z,7493,B.b5_,7494,B.b8A,7495,B.C_,7496,B.oY,7497,B.mB,7498,B.Re,7499,B.b5r,7500,B.Rf,7501,B.tE,7503,B.tF,7504,B.p0,7505,B.aTW,7506,B.mD,7507,B.b51,7508,B.b8B,7509,B.b8C,7510,B.tH,7511,B.tJ,7512,B.tK,7513,B.b8E,7514,B.b5J,7515,B.p2,7516,B.b8F,7517,B.BX,7518,B.BY,7519,B.bga,7520,B.BZ,7521,B.Ru,7522,B.kI,7523,B.tI,7524,B.tK,7525,B.p2,7526,B.BX,7527,B.BY,7528,B.Rt,7529,B.BZ,7530,B.Ru,7544,B.aAz,7579,B.b50,7580,B.v2,7581,B.b52,7582,B.aNI,7583,B.Rf,7584,B.Bj,7585,B.b5s,7586,B.b5t,7587,B.b5z,7588,B.b5B,7589,B.b5C,7590,B.b5D,7591,B.b8H,7592,B.b6A,7593,B.b5I,7594,B.b8I,7595,B.b6H,7596,B.b5L,7597,B.b5K,7598,B.b5M,7599,B.b5N,7600,B.b5O,7601,B.b5P,7602,B.b5V,7603,B.b62,7604,B.b63,7605,B.b_h,7606,B.b66,7607,B.b67,7608,B.b8D,7609,B.b68,7610,B.b69,7611,B.Bm,7612,B.b6b,7613,B.b6c,7614,B.b6d,7615,B.Rq,7680,B.b6t,7681,B.bhz,7682,B.b6D,7683,B.bhC,7684,B.b6E,7685,B.bhD,7686,B.b6F,7687,B.bhE,7688,B.aKo,7689,B.aN6,7690,B.b6T,7691,B.ayn,7692,B.b6V,7693,B.ayp,7694,B.b6Y,7695,B.ays,7696,B.b6W,7697,B.ayq,7698,B.b6X,7699,B.ayr,7700,B.aPW,7701,B.aQ2,7702,B.aPX,7703,B.aQ3,7704,B.b7q,7705,B.ayM,7706,B.b7r,7707,B.ayN,7708,B.b4w,7709,B.b4x,7710,B.b7R,7711,B.ayW,7712,B.b7X,7713,B.az0,7714,B.b86,7715,B.azk,7716,B.b8a,7717,B.azn,7718,B.b87,7719,B.azl,7720,B.b8b,7721,B.azo,7722,B.b8c,7723,B.azq,7724,B.b8v,7725,B.azT,7726,B.aLe,7727,B.aNG,7728,B.b8L,7729,B.aAj,7730,B.b8O,7731,B.aAl,7732,B.b8Q,7733,B.aAo,7734,B.b8Y,7735,B.aAK,7736,B.b92,7737,B.b93,7738,B.b90,7739,B.aAN,7740,B.b9_,7741,B.aAM,7742,B.b9b,7743,B.aB5,7744,B.b9c,7745,B.aB6,7746,B.b9d,7747,B.aB7,7748,B.b9y,7749,B.aBp,7750,B.b9A,7751,B.aBr,7752,B.b9D,7753,B.aBu,7754,B.b9C,7755,B.aBt,7756,B.aM8,7757,B.aOj,7758,B.aMa,7759,B.aOl,7760,B.aU4,7761,B.aUc,7762,B.aU5,7763,B.aUd,7764,B.bcb,7765,B.aBT,7766,B.bcc,7767,B.aBU,7768,B.bcG,7769,B.aC1,7770,B.bcK,7771,B.aC5,7772,B.b95,7773,B.b96,7774,B.bcM,7775,B.aC7,7776,B.bcS,7777,B.aCd,7778,B.bcU,7779,B.aCf,7780,B.aUJ,7781,B.aUL,7782,B.aV0,7783,B.aV2,7784,B.b97,7785,B.b98,7786,B.bd0,7787,B.aCj,7788,B.bd2,7789,B.aCm,7790,B.bd6,7791,B.aCq,7792,B.bd5,7793,B.aCp,7794,B.bdu,7795,B.aCG,7796,B.bdx,7797,B.aCJ,7798,B.bdw,7799,B.aCI,7800,B.aVu,7801,B.aVw,7802,B.aVz,7803,B.aVB,7804,B.bdE,7805,B.aCN,7806,B.bdF,7807,B.aCO,7808,B.bdX,7809,B.aCP,7810,B.bdY,7811,B.aCQ,7812,B.be0,7813,B.aCT,7814,B.be_,7815,B.aCS,7816,B.be1,7817,B.aCV,7818,B.beu,7819,B.aCY,7820,B.bev,7821,B.aCZ,7822,B.beB,7823,B.aD5,7824,B.bf3,7825,B.aDd,7826,B.bf6,7827,B.aDg,7828,B.bf7,7829,B.aDh,7830,B.azr,7831,B.aCk,7832,B.aCU,7833,B.aD8,7834,B.bhk,7835,B.aWg,7840,B.b6s,7841,B.bhy,7842,B.b6n,7843,B.bht,7844,B.aKb,7845,B.aMH,7846,B.aKa,7847,B.aMG,7848,B.aKd,7849,B.aMJ,7850,B.aKc,7851,B.aMI,7852,B.b9i,7853,B.b9k,7854,B.aP6,7855,B.aPf,7856,B.aP5,7857,B.aPe,7858,B.aP8,7859,B.aPh,7860,B.aP7,7861,B.aPg,7862,B.b9j,7863,B.b9l,7864,B.b7n,7865,B.ayJ,7866,B.b7j,7867,B.ayF,7868,B.b7e,7869,B.ayA,7870,B.aL1,7871,B.aNm,7872,B.aL0,7873,B.aNl,7874,B.aL3,7875,B.aNo,7876,B.aL2,7877,B.aNn,7878,B.b9m,7879,B.b9n,7880,B.b8p,7881,B.azN,7882,B.b8t,7883,B.azR,7884,B.bb4,7885,B.aBM,7886,B.baZ,7887,B.aBG,7888,B.aLU,7889,B.aOd,7890,B.aLT,7891,B.aOc,7892,B.aLW,7893,B.aOf,7894,B.aLV,7895,B.aOe,7896,B.b9p,7897,B.b9q,7898,B.b_7,7899,B.b_c,7900,B.b_6,7901,B.b_b,7902,B.b_9,7903,B.b_e,7904,B.b_8,7905,B.b_d,7906,B.b_a,7907,B.b_f,7908,B.bdt,7909,B.aCF,7910,B.bdm,7911,B.aCy,7912,B.b_D,7913,B.b_I,7914,B.b_C,7915,B.b_H,7916,B.b_F,7917,B.b_K,7918,B.b_E,7919,B.b_J,7920,B.b_G,7921,B.b_L,7922,B.bew,7923,B.aD0,7924,B.beE,7925,B.aD9,7926,B.beD,7927,B.aD7,7928,B.bez,7929,B.aD3,7936,B.bg5,7937,B.bg6,7938,B.b9E,7939,B.b9I,7940,B.b9F,7941,B.b9J,7942,B.b9G,7943,B.b9K,7944,B.bff,7945,B.bfg,7946,B.b9S,7947,B.b9W,7948,B.b9T,7949,B.b9X,7950,B.b9U,7951,B.b9Y,7952,B.bge,7953,B.bgf,7954,B.ba5,7955,B.ba7,7956,B.ba6,7957,B.ba8,7960,B.bfl,7961,B.bfm,7962,B.ba9,7963,B.bab,7964,B.baa,7965,B.bac,7968,B.bgi,7969,B.bgj,7970,B.bad,7971,B.bah,7972,B.bae,7973,B.bai,7974,B.baf,7975,B.baj,7976,B.bfp,7977,B.bfq,7978,B.bar,7979,B.bav,7980,B.bas,7981,B.baw,7982,B.bat,7983,B.bax,7984,B.bgs,7985,B.bgt,7986,B.baF,7987,B.baI,7988,B.baG,7989,B.baJ,7990,B.baH,7991,B.baK,7992,B.bfy,7993,B.bfz,7994,B.baL,7995,B.baO,7996,B.baM,7997,B.baP,7998,B.baN,7999,B.baQ,8000,B.bgI,8001,B.bgJ,8002,B.bbp,8003,B.bbr,8004,B.bbq,8005,B.bbs,8008,B.bfC,8009,B.bfD,8010,B.bbt,8011,B.bbv,8012,B.bbu,8013,B.bbw,8016,B.bgT,8017,B.bgU,8018,B.bbx,8019,B.bbA,8020,B.bby,8021,B.bbB,8022,B.bbz,8023,B.bbC,8025,B.bfN,8027,B.bbD,8029,B.bbE,8031,B.bbF,8032,B.bgZ,8033,B.bh_,8034,B.bbG,8035,B.bbK,8036,B.bbH,8037,B.bbL,8038,B.bbI,8039,B.bbM,8040,B.bfR,8041,B.bfS,8042,B.bbU,8043,B.bbY,8044,B.bbV,8045,B.bbZ,8046,B.bbW,8047,B.bc_,8048,B.bg1,8049,B.bfV,8050,B.bgc,8051,B.bfX,8052,B.bgg,8053,B.bfY,8054,B.bgn,8055,B.bg_,8056,B.bgG,8057,B.bha,8058,B.bgO,8059,B.bhb,8060,B.bgX,8061,B.bhc,8064,B.b9H,8065,B.b9L,8066,B.b9M,8067,B.b9N,8068,B.b9O,8069,B.b9P,8070,B.b9Q,8071,B.b9R,8072,B.b9V,8073,B.b9Z,8074,B.ba_,8075,B.ba0,8076,B.ba1,8077,B.ba2,8078,B.ba3,8079,B.ba4,8080,B.bag,8081,B.bak,8082,B.bal,8083,B.bam,8084,B.ban,8085,B.bao,8086,B.bap,8087,B.baq,8088,B.bau,8089,B.bay,8090,B.baz,8091,B.baA,8092,B.baB,8093,B.baC,8094,B.baD,8095,B.baE,8096,B.bbJ,8097,B.bbN,8098,B.bbO,8099,B.bbP,8100,B.bbQ,8101,B.bbR,8102,B.bbS,8103,B.bbT,8104,B.bbX,8105,B.bc0,8106,B.bc1,8107,B.bc2,8108,B.bc3,8109,B.bc4,8110,B.bc5,8111,B.bc6,8112,B.bg4,8113,B.bg3,8114,B.bc7,8115,B.bg8,8116,B.bfW,8118,B.bg7,8119,B.bci,8120,B.bfe,8121,B.bfd,8122,B.bfb,8123,B.beY,8124,B.bfh,8125,B.Qp,8126,B.bgm,8127,B.Qp,8128,B.aTU,8129,B.aJV,8130,B.bc8,8131,B.bgl,8132,B.bfZ,8134,B.bgk,8135,B.bcm,8136,B.bfj,8137,B.beZ,8138,B.bfn,8139,B.bf_,8140,B.bfr,8141,B.bcj,8142,B.bck,8143,B.bcl,8144,B.bgq,8145,B.bgp,8146,B.bh3,8147,B.bfa,8150,B.bgu,8151,B.bh5,8152,B.bfw,8153,B.bfv,8154,B.bft,8155,B.bf0,8157,B.bco,8158,B.bcp,8159,B.bcq,8160,B.bgR,8161,B.bgQ,8162,B.bh6,8163,B.bg0,8164,B.bgK,8165,B.bgL,8166,B.bgV,8167,B.bh8,8168,B.bfL,8169,B.bfK,8170,B.bfI,8171,B.bf8,8172,B.bfF,8173,B.aJT,8174,B.beX,8175,B.Rr,8178,B.bc9,8179,B.bh1,8180,B.bhd,8182,B.bh0,8183,B.bcn,8184,B.bfA,8185,B.bf1,8186,B.bfP,8187,B.bf9,8188,B.bfT,8189,B.aK6,8190,B.aTQ,8192,B.bcr,8193,B.bcs,8194,B.fo,8195,B.fo,8196,B.fo,8197,B.fo,8198,B.fo,8199,B.fo,8200,B.fo,8201,B.fo,8202,B.fo,8209,B.bcu,8215,B.aTT,8228,B.BJ,8229,B.b1u,8230,B.b1v,8239,B.fo,8243,B.bcy,8244,B.bcz,8246,B.bcB,8247,B.bcC,8252,B.aUs,8254,B.aTK,8263,B.b60,8264,B.b6_,8265,B.aUv,8279,B.bcA,8287,B.fo,8304,B.uI,8305,B.kI,8308,B.uM,8309,B.uN,8310,B.uO,8311,B.uP,8312,B.uQ,8313,B.uR,8314,B.p7,8315,B.Rk,8316,B.uU,8317,B.p5,8318,B.p6,8319,B.tG,8320,B.uI,8321,B.uJ,8322,B.uK,8323,B.uL,8324,B.uM,8325,B.uN,8326,B.uO,8327,B.uP,8328,B.uQ,8329,B.uR,8330,B.p7,8331,B.Rk,8332,B.uU,8333,B.p5,8334,B.p6,8336,B.pc,8337,B.mB,8338,B.mD,8339,B.p3,8340,B.Re,8341,B.oZ,8342,B.tF,8343,B.mC,8344,B.p0,8345,B.tG,8346,B.tH,8347,B.p1,8348,B.tJ,8360,B.bcE,8448,B.bhj,8449,B.bhi,8450,B.p8,8451,B.aK4,8453,B.bhK,8454,B.bhL,8455,B.aXK,8457,B.aK5,8458,B.tE,8459,B.mE,8460,B.mE,8461,B.mE,8462,B.oZ,8463,B.aR0,8464,B.mF,8465,B.mF,8466,B.pa,8467,B.mC,8469,B.uY,8470,B.b9t,8473,B.uZ,8474,B.BR,8475,B.mG,8476,B.mG,8477,B.mG,8480,B.bcQ,8481,B.bcY,8482,B.bd_,8484,B.v1,8486,B.bfO,8488,B.v1,8490,B.uX,8491,B.aKf,8492,B.uV,8493,B.p8,8495,B.mB,8496,B.uW,8497,B.BN,8499,B.pb,8500,B.mD,8501,B.N_,8502,B.aGY,8503,B.aH0,8504,B.N0,8505,B.kI,8507,B.b7Q,8508,B.Rs,8509,B.BY,8510,B.bfi,8511,B.bfE,8512,B.bdK,8517,B.p9,8518,B.oY,8519,B.mB,8520,B.kI,8521,B.p_,8528,B.b2A,8529,B.b2C,8530,B.b2u,8531,B.b2w,8532,B.b3z,8533,B.b2y,8534,B.b3A,8535,B.b3V,8536,B.b4c,8537,B.b2z,8538,B.b4l,8539,B.b2B,8540,B.b3W,8541,B.b4m,8542,B.b4H,8543,B.b2t,8544,B.mF,8545,B.b8e,8546,B.b8f,8547,B.b8x,8548,B.v0,8549,B.bdB,8550,B.bdC,8551,B.bdD,8552,B.b8y,8553,B.BV,8554,B.bes,8555,B.bet,8556,B.pa,8557,B.p8,8558,B.p9,8559,B.pb,8560,B.kI,8561,B.azz,8562,B.azA,8563,B.azD,8564,B.p2,8565,B.aCK,8566,B.aCL,8567,B.aCM,8568,B.azE,8569,B.p3,8570,B.aCW,8571,B.aCX,8572,B.mC,8573,B.v2,8574,B.oY,8575,B.p0,8585,B.b1E,8602,B.bd8,8603,B.bdb,8622,B.bdd,8653,B.bdy,8654,B.bdA,8655,B.bdz,8708,B.bdH,8713,B.bdI,8716,B.bdJ,8740,B.bdL,8742,B.bdM,8748,B.bdN,8749,B.bdO,8751,B.bdQ,8752,B.bdR,8769,B.bdS,8772,B.bdT,8775,B.bdU,8777,B.bdV,8800,B.b5H,8802,B.be3,8813,B.bdW,8814,B.b5w,8815,B.b5U,8816,B.be4,8817,B.be5,8820,B.be6,8821,B.be7,8824,B.be8,8825,B.be9,8832,B.bea,8833,B.beb,8836,B.bee,8837,B.bef,8840,B.beg,8841,B.beh,8876,B.bek,8877,B.bel,8878,B.bem,8879,B.ben,8928,B.bec,8929,B.bed,8930,B.bei,8931,B.bej,8938,B.beo,8939,B.bep,8940,B.beq,8941,B.ber,9001,B.Mb,9002,B.Mc,9312,B.uJ,9313,B.uK,9314,B.uL,9315,B.uM,9316,B.uN,9317,B.uO,9318,B.uP,9319,B.uQ,9320,B.uR,9321,B.b1N,9322,B.b1S,9323,B.b1X,9324,B.b21,9325,B.b25,9326,B.b29,9327,B.b2d,9328,B.b2h,9329,B.b2l,9330,B.b2p,9331,B.b38,9332,B.aZG,9333,B.aZR,9334,B.aZT,9335,B.aZU,9336,B.aZW,9337,B.aZY,9338,B.aZZ,9339,B.b__,9340,B.b_0,9341,B.aZH,9342,B.aZI,9343,B.aZJ,9344,B.aZK,9345,B.aZL,9346,B.aZM,9347,B.aZN,9348,B.aZO,9349,B.aZP,9350,B.aZQ,9351,B.aZS,9352,B.b1M,9353,B.b37,9354,B.b3H,9355,B.b41,9356,B.b4h,9357,B.b4s,9358,B.b4F,9359,B.b4M,9360,B.b4S,9361,B.b1R,9362,B.b1W,9363,B.b20,9364,B.b24,9365,B.b28,9366,B.b2c,9367,B.b2g,9368,B.b2k,9369,B.b2o,9370,B.b2s,9371,B.b3b,9372,B.b_2,9373,B.b_3,9374,B.b_4,9375,B.aYh,9376,B.aYi,9377,B.aYj,9378,B.aYk,9379,B.aYl,9380,B.aYm,9381,B.aYn,9382,B.aYo,9383,B.aYp,9384,B.aYq,9385,B.aYr,9386,B.aYs,9387,B.aYt,9388,B.aYu,9389,B.aYv,9390,B.aYw,9391,B.aYx,9392,B.aYy,9393,B.aYz,9394,B.aYA,9395,B.aYB,9396,B.aYC,9397,B.aYD,9398,B.BM,9399,B.uV,9400,B.p8,9401,B.p9,9402,B.uW,9403,B.BN,9404,B.BO,9405,B.mE,9406,B.mF,9407,B.BP,9408,B.uX,9409,B.pa,9410,B.pb,9411,B.uY,9412,B.BQ,9413,B.uZ,9414,B.BR,9415,B.mG,9416,B.Rj,9417,B.BS,9418,B.BT,9419,B.v0,9420,B.BU,9421,B.BV,9422,B.Rl,9423,B.v1,9424,B.pc,9425,B.C_,9426,B.v2,9427,B.oY,9428,B.mB,9429,B.Bj,9430,B.tE,9431,B.oZ,9432,B.kI,9433,B.p_,9434,B.tF,9435,B.mC,9436,B.p0,9437,B.tG,9438,B.mD,9439,B.tH,9440,B.M9,9441,B.tI,9442,B.p1,9443,B.tJ,9444,B.tK,9445,B.p2,9446,B.Bk,9447,B.p3,9448,B.Bl,9449,B.Bm,9450,B.uI,10764,B.bdP,10868,B.b4Y,10869,B.b5F,10870,B.b5G,10972,B.aAT,11388,B.p_,11389,B.v0,11631,B.aCi,11935,B.aQ1,12019,B.aYf,12032,B.By,12033,B.aKL,12034,B.aKN,12035,B.aKP,12036,B.PI,12037,B.aKS,12038,B.Bz,12039,B.aKV,12040,B.PJ,12041,B.aLd,12042,B.aLi,12043,B.PK,12044,B.aLm,12045,B.aLn,12046,B.aLp,12047,B.aLw,12048,B.aLx,12049,B.aLy,12050,B.PM,12051,B.aLO,12052,B.aLQ,12053,B.aLS,12054,B.aLX,12055,B.BA,12056,B.aM3,12057,B.aM4,12058,B.aM7,12059,B.aMb,12060,B.aMd,12061,B.aMe,12062,B.aMA,12063,B.PP,12064,B.aMN,12065,B.aMO,12066,B.aMP,12067,B.aMQ,12068,B.aMS,12069,B.BB,12070,B.aNc,12071,B.aNg,12072,B.aNs,12073,B.aNu,12074,B.aNv,12075,B.aNw,12076,B.PT,12077,B.aNB,12078,B.aNJ,12079,B.aNK,12080,B.aNM,12081,B.aNN,12082,B.aNO,12083,B.aNR,12084,B.aNT,12085,B.aO0,12086,B.aO1,12087,B.aO3,12088,B.aO4,12089,B.aO5,12090,B.aO6,12091,B.aO8,12092,B.aOg,12093,B.aOH,12094,B.aOK,12095,B.aOL,12096,B.aP9,12097,B.aPa,12098,B.PW,12099,B.aPj,12100,B.aPl,12101,B.aPn,12102,B.aPp,12103,B.PX,12104,B.aPA,12105,B.PZ,12106,B.Q0,12107,B.aPT,12108,B.aPU,12109,B.Q2,12110,B.aQ_,12111,B.aQ0,12112,B.aQ4,12113,B.aQ5,12114,B.aQ6,12115,B.aQ7,12116,B.Q4,12117,B.Q7,12118,B.aQL,12119,B.aQO,12120,B.aQP,12121,B.aQQ,12122,B.aQR,12123,B.aQS,12124,B.aQT,12125,B.aQW,12126,B.aR2,12127,B.aR3,12128,B.aRe,12129,B.aRf,12130,B.aRh,12131,B.aRi,12132,B.aRj,12133,B.aRJ,12134,B.aRQ,12135,B.aRR,12136,B.aS_,12137,B.aS0,12138,B.aS1,12139,B.aS2,12140,B.aS6,12141,B.aSc,12142,B.aSd,12143,B.aSe,12144,B.aSm,12145,B.aSz,12146,B.aSA,12147,B.aSF,12148,B.Qj,12149,B.aSJ,12150,B.aSO,12151,B.aSU,12152,B.aT5,12153,B.aT7,12154,B.aTc,12155,B.Ql,12156,B.Qm,12157,B.aTi,12158,B.aTj,12159,B.aTk,12160,B.aTo,12161,B.aTp,12162,B.aTY,12163,B.aU_,12164,B.aU1,12165,B.aU2,12166,B.aU3,12167,B.aU7,12168,B.aU8,12169,B.aU9,12170,B.aUb,12171,B.aUe,12172,B.aUF,12173,B.aUH,12174,B.aUN,12175,B.Qr,12176,B.aUO,12177,B.aUY,12178,B.Qt,12179,B.aV_,12180,B.aV1,12181,B.aVf,12182,B.aVg,12183,B.aVi,12184,B.aVj,12185,B.aVk,12186,B.aVv,12187,B.aVx,12188,B.aVy,12189,B.aVC,12190,B.QC,12191,B.aVJ,12192,B.QD,12193,B.aVK,12194,B.aVT,12195,B.aVX,12196,B.aW0,12197,B.QG,12198,B.BG,12199,B.aWc,12200,B.aWd,12201,B.aWh,12202,B.aWr,12203,B.aWu,12204,B.aWw,12205,B.aWB,12206,B.aWC,12207,B.aWD,12208,B.aWE,12209,B.aWF,12210,B.aWH,12211,B.aWI,12212,B.aWJ,12213,B.aWS,12214,B.aWT,12215,B.aWU,12216,B.aX0,12217,B.aX2,12218,B.aX3,12219,B.aX9,12220,B.aXa,12221,B.aXb,12222,B.aXd,12223,B.aXe,12224,B.aXf,12225,B.aXg,12226,B.aXh,12227,B.aXP,12228,B.aXX,12229,B.QN,12230,B.aY_,12231,B.aY0,12232,B.aY1,12233,B.aY2,12234,B.aY4,12235,B.aY5,12236,B.aY6,12237,B.aY7,12238,B.aY8,12239,B.aY9,12240,B.aYa,12241,B.aYc,12242,B.aYd,12243,B.QO,12244,B.uH,12245,B.aYg,12288,B.fo,12342,B.aDm,12344,B.BA,12345,B.aM_,12346,B.aM0,12364,B.aDq,12366,B.aDr,12368,B.aDs,12370,B.aDt,12372,B.aDu,12374,B.aDv,12376,B.aDw,12378,B.aDx,12380,B.aDy,12382,B.aDz,12384,B.aDA,12386,B.aDB,12389,B.aDC,12391,B.aDD,12393,B.aDE,12400,B.aDF,12401,B.aDG,12403,B.aDI,12404,B.aDJ,12406,B.aDK,12407,B.aDL,12409,B.aDM,12410,B.aDN,12412,B.aDP,12413,B.aDQ,12436,B.aDp,12443,B.aTr,12444,B.aTs,12446,B.aDV,12447,B.aDS,12460,B.aEb,12462,B.aEh,12464,B.aEn,12466,B.aEq,12468,B.aEs,12470,B.aEw,12472,B.aEy,12474,B.aEA,12476,B.aEB,12478,B.aEE,12480,B.aEF,12482,B.aEH,12485,B.aEJ,12487,B.aEK,12489,B.aEM,12496,B.aER,12497,B.aES,12499,B.aEW,12500,B.aEX,12502,B.aF0,12503,B.aF1,12505,B.aF4,12506,B.aF5,12508,B.aFc,12509,B.aFd,12532,B.aE4,12535,B.aFE,12536,B.aFH,12537,B.aFJ,12538,B.aFK,12542,B.aFO,12543,B.aEt,12593,B.QQ,12594,B.b_N,12595,B.b15,12596,B.QR,12597,B.b16,12598,B.b17,12599,B.QS,12600,B.b_Q,12601,B.QT,12602,B.b18,12603,B.b19,12604,B.b1a,12605,B.b1b,12606,B.b1c,12607,B.b1d,12608,B.b08,12609,B.QU,12610,B.QV,12611,B.b_U,12612,B.b0e,12613,B.QW,12614,B.b_W,12615,B.QX,12616,B.QY,12617,B.b00,12618,B.QZ,12619,B.R_,12620,B.R0,12621,B.R1,12622,B.R2,12623,B.b0D,12624,B.b0E,12625,B.b0F,12626,B.b0G,12627,B.b0H,12628,B.b0I,12629,B.b0J,12630,B.b0K,12631,B.b0L,12632,B.b0M,12633,B.b0N,12634,B.b0O,12635,B.b0P,12636,B.b0Q,12637,B.b0R,12638,B.b0S,12639,B.b0T,12640,B.b0U,12641,B.b0V,12642,B.b0W,12643,B.b0X,12644,B.b0C,12645,B.b06,12646,B.b07,12647,B.b1f,12648,B.b1g,12649,B.b1h,12650,B.b1i,12651,B.b1j,12652,B.b1k,12653,B.b1l,12654,B.b09,12655,B.b1m,12656,B.b1n,12657,B.b0a,12658,B.b0b,12659,B.b0d,12660,B.b0g,12661,B.b0h,12662,B.b0i,12663,B.b0j,12664,B.b0k,12665,B.b0l,12666,B.b0m,12667,B.b0n,12668,B.b0o,12669,B.b0u,12670,B.b0v,12671,B.b0w,12672,B.b0x,12673,B.b0y,12674,B.b1o,12675,B.b1p,12676,B.b0z,12677,B.b0A,12678,B.b0B,12679,B.b0Y,12680,B.b0Z,12681,B.b1_,12682,B.b10,12683,B.b11,12684,B.b12,12685,B.b13,12686,B.b14,12690,B.By,12691,B.Bz,12692,B.PC,12693,B.PO,12694,B.PD,12695,B.PH,12696,B.PE,12697,B.aRK,12698,B.PI,12699,B.aKn,12700,B.aKk,12701,B.aMU,12702,B.aMC,12703,B.PJ,12800,B.aZd,12801,B.aZf,12802,B.aZh,12803,B.aZj,12804,B.aZl,12805,B.aZn,12806,B.aZp,12807,B.aZr,12808,B.aZt,12809,B.aZw,12810,B.aZy,12811,B.aZA,12812,B.aZC,12813,B.aZE,12814,B.aZe,12815,B.aZg,12816,B.aZi,12817,B.aZk,12818,B.aZm,12819,B.aZo,12820,B.aZq,12821,B.aZs,12822,B.aZu,12823,B.aZx,12824,B.aZz,12825,B.aZB,12826,B.aZD,12827,B.aZF,12828,B.aZv,12829,B.blG,12830,B.bz7,12832,B.aYE,12833,B.aYI,12834,B.aYG,12835,B.aYU,12836,B.aYJ,12837,B.aYO,12838,B.aYF,12839,B.aYN,12840,B.aYH,12841,B.aYQ,12842,B.aYY,12843,B.aZ2,12844,B.aZ1,12845,B.aZ_,12846,B.aZc,12847,B.aYV,12848,B.aYX,12849,B.aZ0,12850,B.aYZ,12851,B.aZ5,12852,B.aYS,12853,B.aZ3,12854,B.aZa,12855,B.aZ6,12856,B.aYP,12857,B.aYK,12858,B.aYT,12859,B.aYW,12860,B.aZ4,12861,B.aYL,12862,B.aZb,12863,B.aYR,12864,B.aZ7,12865,B.aYM,12866,B.aZ8,12867,B.aZ9,12868,B.aMo,12869,B.aNS,12870,B.PW,12871,B.aSL,12880,B.bcf,12881,B.b3c,12882,B.b3f,12883,B.b3i,12884,B.b3l,12885,B.b3o,12886,B.b3q,12887,B.b3s,12888,B.b3u,12889,B.b3w,12890,B.b3I,12891,B.b3K,12892,B.b3M,12893,B.b3N,12894,B.b3O,12895,B.b3P,12896,B.QQ,12897,B.QR,12898,B.QS,12899,B.QT,12900,B.QU,12901,B.QV,12902,B.QW,12903,B.QX,12904,B.QY,12905,B.QZ,12906,B.R_,12907,B.R0,12908,B.R1,12909,B.R2,12910,B.b_M,12911,B.b_O,12912,B.b_P,12913,B.b_R,12914,B.b_S,12915,B.b_T,12916,B.b_V,12917,B.b_X,12918,B.b_Z,12919,B.b01,12920,B.b02,12921,B.b03,12922,B.b04,12923,B.b05,12924,B.bup,12925,B.b0_,12926,B.b_Y,12928,B.By,12929,B.Bz,12930,B.PC,12931,B.PO,12932,B.aKU,12933,B.PL,12934,B.aKl,12935,B.PK,12936,B.aKQ,12937,B.BA,12938,B.PZ,12939,B.Q7,12940,B.Q4,12941,B.Q0,12942,B.BG,12943,B.PP,12944,B.PX,12945,B.aPK,12946,B.aPC,12947,B.Qh,12948,B.aMi,12949,B.aQV,12950,B.aVp,12951,B.Qi,12952,B.aLH,12953,B.aSC,12954,B.aRL,12955,B.BB,12956,B.aVN,12957,B.aLc,12958,B.aM5,12959,B.aQb,12960,B.aWK,12961,B.aL_,12962,B.aLo,12963,B.aPV,12964,B.PD,12965,B.PH,12966,B.PE,12967,B.aNL,12968,B.aMg,12969,B.aLY,12970,B.aNi,12971,B.aNf,12972,B.aS4,12973,B.aKZ,12974,B.aVr,12975,B.aM2,12976,B.aMR,12977,B.b3Q,12978,B.b3R,12979,B.b3S,12980,B.b3T,12981,B.b42,12982,B.b43,12983,B.b44,12984,B.b45,12985,B.b46,12986,B.b47,12987,B.b48,12988,B.b49,12989,B.b4a,12990,B.b4b,12991,B.b4i,12992,B.b1K,12993,B.b35,12994,B.b3F,12995,B.b4_,12996,B.b4f,12997,B.b4q,12998,B.b4D,12999,B.b4K,13e3,B.b4Q,13001,B.b1P,13002,B.b1U,13003,B.b1Z,13004,B.b83,13005,B.ayv,13006,B.ayO,13007,B.b91,13008,B.Mh,13009,B.Mi,13010,B.Mj,13011,B.Mk,13012,B.Ml,13013,B.Mm,13014,B.Mn,13015,B.Mo,13016,B.Mp,13017,B.Mq,13018,B.Mr,13019,B.Ms,13020,B.Mt,13021,B.Mu,13022,B.Mv,13023,B.Mw,13024,B.Mx,13025,B.My,13026,B.Mz,13027,B.MA,13028,B.MB,13029,B.MC,13030,B.MD,13031,B.ME,13032,B.MF,13033,B.MG,13034,B.MH,13035,B.MI,13036,B.MJ,13037,B.MK,13038,B.ML,13039,B.MM,13040,B.MN,13041,B.MO,13042,B.MP,13043,B.MQ,13044,B.MR,13045,B.MS,13046,B.MT,13047,B.MU,13048,B.MV,13049,B.MW,13050,B.MX,13051,B.MY,13052,B.aFG,13053,B.aFI,13054,B.MZ,13056,B.aDX,13057,B.aDY,13058,B.aDZ,13059,B.aE_,13060,B.aE1,13061,B.aE2,13062,B.aE5,13063,B.buk,13064,B.aE7,13065,B.aE9,13066,B.aEa,13067,B.aEc,13068,B.aEd,13069,B.aEe,13070,B.aEf,13071,B.aEg,13072,B.aEk,13073,B.aEl,13074,B.aEi,13075,B.aEm,13076,B.aEj,13077,B.bxh,13078,B.brd,13079,B.bzl,13080,B.aEp,13081,B.aXu,13082,B.btS,13083,B.aEo,13084,B.aEr,13085,B.aEu,13086,B.aEv,13087,B.aEx,13088,B.bu5,13089,B.aEz,13090,B.aEC,13091,B.aED,13092,B.aEG,13093,B.aEL,13094,B.aEO,13095,B.aEN,13096,B.aEP,13097,B.aEQ,13098,B.aET,13099,B.bjU,13100,B.aEV,13101,B.aEU,13102,B.brP,13103,B.aEZ,13104,B.aF_,13105,B.aEY,13106,B.bk4,13107,B.aF2,13108,B.bmH,13109,B.aF3,13110,B.bot,13111,B.aF8,13112,B.aF9,13113,B.aF6,13114,B.aFa,13115,B.aFb,13116,B.aF7,13117,B.aFi,13118,B.aFh,13119,B.aFe,13120,B.aFj,13121,B.aFf,13122,B.aFg,13123,B.aFk,13124,B.aFl,13125,B.aFm,13126,B.aFn,13127,B.brv,13128,B.aFo,13129,B.aFp,13130,B.bya,13131,B.aFq,13132,B.aFr,13133,B.aFs,13134,B.aFu,13135,B.aFv,13136,B.aFx,13137,B.aFz,13138,B.aFA,13139,B.aFB,13140,B.aFC,13141,B.aFD,13142,B.bmQ,13143,B.aFF,13144,B.b1C,13145,B.b1L,13146,B.b36,13147,B.b3G,13148,B.b40,13149,B.b4g,13150,B.b4r,13151,B.b4E,13152,B.b4L,13153,B.b4R,13154,B.b1Q,13155,B.b1V,13156,B.b2_,13157,B.b23,13158,B.b27,13159,B.b2b,13160,B.b2f,13161,B.b2j,13162,B.b2n,13163,B.b2r,13164,B.b3a,13165,B.b3e,13166,B.b3h,13167,B.b3k,13168,B.b3n,13169,B.azp,13170,B.ayu,13171,B.b6v,13172,B.bhF,13173,B.aBO,13174,B.aBX,13175,B.ayg,13176,B.ayh,13177,B.ayi,13178,B.b8w,13179,B.aNP,13180,B.aPu,13181,B.aMT,13182,B.aPs,13183,B.aPL,13184,B.aBR,13185,B.aBj,13186,B.bgA,13187,B.aB4,13188,B.aAf,13189,B.b8J,13190,B.b99,13191,B.b7T,13192,B.bhR,13193,B.aAt,13194,B.aBS,13195,B.aBk,13196,B.bgB,13197,B.bgx,13198,B.aAW,13199,B.aAa,13200,B.b84,13201,B.aAi,13202,B.b9a,13203,B.b7U,13204,B.bcZ,13205,B.bgC,13206,B.aB8,13207,B.ayt,13208,B.aAp,13209,B.ayU,13210,B.aBh,13211,B.bgy,13212,B.aAY,13213,B.bhH,13214,B.aAb,13215,B.aAZ,13216,B.bhI,13217,B.aB2,13218,B.aAc,13219,B.aB_,13220,B.bhJ,13221,B.aB3,13222,B.aAd,13223,B.aBb,13224,B.aBc,13225,B.bcg,13226,B.aAn,13227,B.b9e,13228,B.b81,13229,B.aC8,13230,B.byO,13231,B.bxj,13232,B.aBP,13233,B.aBi,13234,B.bgz,13235,B.aB1,13236,B.aBV,13237,B.aBv,13238,B.bgD,13239,B.aB9,13240,B.aAq,13241,B.b9f,13242,B.aBW,13243,B.aBw,13244,B.bgE,13245,B.aBa,13246,B.aAr,13247,B.b9g,13248,B.aAs,13249,B.b9h,13250,B.bhh,13251,B.b6B,13252,B.bhS,13253,B.bhG,13254,B.b6O,13255,B.b6I,13256,B.aym,13257,B.b7S,13258,B.azs,13259,B.b89,13260,B.azC,13261,B.b8K,13262,B.b8M,13263,B.aAe,13264,B.aAC,13265,B.aAD,13266,B.aAE,13267,B.aAF,13268,B.aBd,13269,B.aAX,13270,B.aB0,13271,B.bca,13272,B.aBQ,13273,B.bcd,13274,B.bce,13275,B.aC9,13276,B.bcO,13277,B.be2,13278,B.bdG,13279,B.b6w,13280,B.b1J,13281,B.b34,13282,B.b3E,13283,B.b3Z,13284,B.b4e,13285,B.b4p,13286,B.b4C,13287,B.b4J,13288,B.b4P,13289,B.b1O,13290,B.b1T,13291,B.b1Y,13292,B.b22,13293,B.b26,13294,B.b2a,13295,B.b2e,13296,B.b2i,13297,B.b2m,13298,B.b2q,13299,B.b39,13300,B.b3d,13301,B.b3g,13302,B.b3j,13303,B.b3m,13304,B.b3p,13305,B.b3r,13306,B.b3t,13307,B.b3v,13308,B.b3x,13309,B.b3J,13310,B.b3L,13311,B.az5,42652,B.aAU,42653,B.aBe,42864,B.b_j,43e3,B.aQZ,43001,B.aUo,43868,B.b_i,43869,B.b0c,43870,B.b5E,43871,B.b0f,63744,B.aVh,63745,B.aPB,63746,B.QC,63747,B.aVs,63748,B.aQo,63749,B.aKM,63750,B.aMf,63751,B.uH,63752,B.uH,63753,B.aMX,63754,B.BG,63755,B.aMq,63756,B.aMW,63757,B.aOF,63758,B.aRZ,63759,B.aTb,63760,B.aUE,63761,B.aUK,63762,B.aUU,63763,B.aVS,63764,B.BC,63765,B.aQc,63766,B.aQC,63767,B.aR6,63768,B.aUl,63769,B.aVY,63770,B.aX4,63771,B.aKR,63772,B.aM6,63773,B.aPS,63774,B.aQK,63775,B.aUD,63776,B.aXW,63777,B.aND,63778,B.aQu,63779,B.aUz,63780,B.aUX,63781,B.aOM,63782,B.aTX,63783,B.aUM,63784,B.aNW,63785,B.Q_,63786,B.aQf,63787,B.aR_,63788,B.aVU,63789,B.aL5,63790,B.aLr,63791,B.aLL,63792,B.aP1,63793,B.aPR,63794,B.aQJ,63795,B.aS5,63796,B.Qm,63797,B.aUB,63798,B.aUG,63799,B.aVA,63800,B.aWz,63801,B.aXi,63802,B.aXV,63803,B.aSg,63804,B.aSu,63805,B.aT0,63806,B.aUi,63807,B.aW6,63808,B.QN,63809,B.aVa,63810,B.aMM,63811,B.aO2,63812,B.aSN,63813,B.aTn,63814,B.aQU,63815,B.aSi,63816,B.aVq,63817,B.aWy,63818,B.aML,63819,B.aNy,63820,B.aPQ,63821,B.aQi,63822,B.aQq,63823,B.aSZ,63824,B.aT3,63825,B.aWj,63826,B.aLK,63827,B.aTq,63828,B.aLu,63829,B.aLt,63830,B.aSD,63831,B.aT1,63832,B.aUk,63833,B.aWm,63834,B.aVd,63835,B.aON,63836,B.BC,63837,B.Qx,63838,B.aKO,63839,B.PS,63840,B.aOi,63841,B.Qb,63842,B.aRP,63843,B.aLR,63844,B.aSk,63845,B.aL8,63846,B.aOa,63847,B.aKm,63848,B.aQ9,63849,B.aPd,63850,B.aSY,63851,B.aMc,63852,B.aME,63853,B.aS8,63854,B.aUm,63855,B.Qv,63856,B.Q3,63857,B.QD,63858,B.aQ8,63859,B.aOU,63860,B.aUf,63861,B.aOW,63862,B.aRO,63863,B.aKW,63864,B.aLk,63865,B.aLs,63866,B.aPM,63867,B.aST,63868,B.aUa,63869,B.aV9,63870,B.aW1,63871,B.aLN,63872,B.aMl,63873,B.BB,63874,B.aO_,63875,B.aPo,63876,B.aQv,63877,B.aSl,63878,B.aWe,63879,B.aX5,63880,B.aXY,63881,B.aY3,63882,B.PM,63883,B.aPz,63884,B.aPY,63885,B.aVI,63886,B.aNQ,63887,B.aOB,63888,B.aOG,63889,B.aP0,63890,B.aQr,63891,B.aQG,63892,B.aRc,63893,B.aSB,63894,B.BE,63895,B.aTm,63896,B.aVE,63897,B.aUx,63898,B.aVM,63899,B.aW7,63900,B.aLC,63901,B.aLG,63902,B.aMm,63903,B.aQy,63904,B.aUR,63905,B.Qv,63906,B.aNV,63907,B.aOh,63908,B.aOV,63909,B.aPZ,63910,B.aSM,63911,B.aR1,63912,B.aKY,63913,B.aMB,63914,B.PS,63915,B.aNE,63916,B.aOm,63917,B.aR4,63918,B.aRa,63919,B.aTd,63920,B.aTl,63921,B.aW2,63922,B.aWx,63923,B.aWA,63924,B.aWM,63925,B.aL6,63926,B.aSy,63927,B.aW_,63928,B.aWt,63929,B.aOu,63930,B.aKT,63931,B.aLa,63932,B.aNr,63933,B.aNx,63934,B.aPk,63935,B.BC,63936,B.aQH,63937,B.aRY,63938,B.aUy,63939,B.aVP,63940,B.QO,63941,B.aPw,63942,B.aWi,63943,B.aLF,63944,B.aPG,63945,B.aPI,63946,B.Q5,63947,B.aQl,63948,B.aR8,63949,B.aRN,63950,B.aSf,63951,B.aSX,63952,B.aWP,63953,B.PL,63954,B.aOI,63955,B.aWn,63956,B.aL9,63957,B.aNC,63958,B.aQj,63959,B.aVF,63960,B.aO9,63961,B.aOx,63962,B.aPJ,63963,B.Qb,63964,B.aWp,63965,B.aLD,63966,B.aMj,63967,B.aNA,63968,B.aPt,63969,B.aPE,63970,B.aPO,63971,B.aQa,63972,B.aR7,63973,B.aRV,63974,B.aT9,63975,B.aUS,63976,B.aUT,63977,B.QG,63978,B.aWv,63979,B.aLZ,63980,B.aQm,63981,B.aMk,63982,B.aQI,63983,B.aRd,63984,B.aUA,63985,B.aWq,63986,B.aXM,63987,B.aXZ,63988,B.aPH,63989,B.aQh,63990,B.aTZ,63991,B.Qj,63992,B.aSK,63993,B.aSQ,63994,B.aQY,63995,B.aQx,63996,B.aVc,63997,B.aKX,63998,B.aUg,63999,B.aLE,64e3,B.aLz,64001,B.aNU,64002,B.aOO,64003,B.aSS,64004,B.aNh,64005,B.aQd,64006,B.aPy,64007,B.aVH,64008,B.Qr,64009,B.aWk,64010,B.Qt,64011,B.aNY,64012,B.aLf,64013,B.aMs,64016,B.PQ,64018,B.PY,64021,B.aLv,64022,B.Qa,64023,B.Qg,64024,B.aSn,64025,B.aSs,64026,B.aSt,64027,B.aSx,64028,B.QJ,64029,B.aSR,64030,B.Ql,64032,B.aUC,64034,B.Qw,64037,B.QE,64038,B.aVW,64042,B.aWV,64043,B.aWW,64044,B.aWY,64045,B.aXU,64046,B.aVV,64047,B.aWs,64048,B.aL7,64049,B.aLb,64050,B.aLh,64051,B.aLJ,64052,B.aLM,64053,B.aM1,64054,B.PN,64055,B.aMu,64056,B.aMz,64057,B.aMD,64058,B.aMF,64059,B.aNz,64060,B.PT,64061,B.aOr,64062,B.aOA,64063,B.PU,64064,B.PV,64065,B.aPb,64066,B.aPq,64067,B.aPx,64068,B.aPN,64069,B.aQg,64070,B.aQk,64071,B.Q6,64072,B.Q8,64073,B.aQM,64074,B.aR9,64075,B.aSh,64076,B.Qh,64077,B.aSp,64078,B.aSo,64079,B.aSq,64080,B.aSr,64081,B.Qi,64082,B.aSv,64083,B.aSw,64084,B.aSE,64085,B.aSG,64086,B.Qk,64087,B.BE,64088,B.aT2,64089,B.aT4,64090,B.aT8,64091,B.Qn,64092,B.aU0,64093,B.Qq,64094,B.Qq,64095,B.aUn,64096,B.aUV,64097,B.Qu,64098,B.Qy,64099,B.Qz,64100,B.aVt,64101,B.QB,64102,B.aVL,64103,B.QE,64104,B.QI,64105,B.QK,64106,B.QL,64107,B.aOp,64108,B.aGT,64109,B.aU6,64112,B.aKK,64113,B.aLq,64114,B.aLj,64115,B.aL4,64116,B.aLg,64117,B.aLl,64118,B.aLI,64119,B.aLP,64120,B.PN,64121,B.aMp,64122,B.aMr,64123,B.aMt,64124,B.PQ,64125,B.aMK,64126,B.aMV,64127,B.aMY,64128,B.aN5,64129,B.aNb,64130,B.aNX,64131,B.aNZ,64132,B.aO7,64133,B.aOb,64134,B.aOs,64135,B.aOy,64136,B.aOv,64137,B.PU,64138,B.aOz,64139,B.PV,64140,B.aOJ,64141,B.aOX,64142,B.aOZ,64143,B.aP_,64144,B.aPc,64145,B.PY,64146,B.Q_,64147,B.aPD,64148,B.aPF,64149,B.Q2,64150,B.Q3,64151,B.Q5,64152,B.aQp,64153,B.aQn,64154,B.Q6,64155,B.aQw,64156,B.Q8,64157,B.aSb,64158,B.aQN,64159,B.aQX,64160,B.Qa,64161,B.aRb,64162,B.aRg,64163,B.aRM,64164,B.aRW,64165,B.aRX,64166,B.Qg,64167,B.aS3,64168,B.aS7,64169,B.aSa,64170,B.aS9,64171,B.aSj,64172,B.aSH,64173,B.Qk,64174,B.aSP,64175,B.aT_,64176,B.BE,64177,B.aT6,64178,B.Qn,64179,B.aUh,64180,B.aUj,64181,B.aUI,64182,B.aUW,64183,B.aUZ,64184,B.Qu,64185,B.aV7,64186,B.Qw,64187,B.aV8,64188,B.Qy,64189,B.Qx,64190,B.aVb,64191,B.Qz,64192,B.aVe,64193,B.QB,64194,B.aVG,64195,B.aVO,64196,B.aVZ,64197,B.aW3,64198,B.aWo,64199,B.QI,64200,B.QJ,64201,B.aWG,64202,B.QK,64203,B.aWL,64204,B.QL,64205,B.aXc,64206,B.uH,64207,B.aGR,64208,B.aGQ,64209,B.aGS,64210,B.aHD,64211,B.aJO,64212,B.aJP,64213,B.aHB,64214,B.aHE,64215,B.aJN,64216,B.aYb,64217,B.aYe,64256,B.ayP,64257,B.ayS,64258,B.ayT,64259,B.ayQ,64260,B.ayR,64261,B.aWf,64262,B.aCa,64275,B.aGN,64276,B.aGK,64277,B.aGL,64278,B.aGP,64279,B.aGM,64285,B.aH9,64287,B.aHC,64288,B.aHo,64289,B.N_,64290,B.N0,64291,B.aH3,64292,B.aHc,64293,B.aHi,64294,B.aHk,64295,B.aHu,64296,B.aHz,64297,B.p7,64298,B.aHx,64299,B.aHy,64300,B.b64,64301,B.b65,64302,B.aGU,64303,B.aGV,64304,B.aGW,64305,B.aGZ,64306,B.aH1,64307,B.aH2,64308,B.aH4,64309,B.aH6,64310,B.aH7,64312,B.aH8,64313,B.aHa,64314,B.aHb,64315,B.aHd,64316,B.aHj,64318,B.aHl,64320,B.aHm,64321,B.aHn,64323,B.aHp,64324,B.aHq,64326,B.aHs,64327,B.aHt,64328,B.aHv,64329,B.aHw,64330,B.aHA,64331,B.aH5,64332,B.aH_,64333,B.aHe,64334,B.aHr,64335,B.aGX,64336,B.Pl,64337,B.Pl,64338,B.un,64339,B.un,64340,B.un,64341,B.un,64342,B.uo,64343,B.uo,64344,B.uo,64345,B.uo,64346,B.uq,64347,B.uq,64348,B.uq,64349,B.uq,64350,B.um,64351,B.um,64352,B.um,64353,B.um,64354,B.up,64355,B.up,64356,B.up,64357,B.up,64358,B.ul,64359,B.ul,64360,B.ul,64361,B.ul,64362,B.uv,64363,B.uv,64364,B.uv,64365,B.uv,64366,B.uw,64367,B.uw,64368,B.uw,64369,B.uw,64370,B.us,64371,B.us,64372,B.us,64373,B.us,64374,B.ur,64375,B.ur,64376,B.ur,64377,B.ur,64378,B.ut,64379,B.ut,64380,B.ut,64381,B.ut,64382,B.uu,64383,B.uu,64384,B.uu,64385,B.uu,64386,B.Po,64387,B.Po,64388,B.Pn,64389,B.Pn,64390,B.Pp,64391,B.Pp,64392,B.Pm,64393,B.Pm,64394,B.Pr,64395,B.Pr,64396,B.Pq,64397,B.Pq,64398,B.ux,64399,B.ux,64400,B.ux,64401,B.ux,64402,B.uz,64403,B.uz,64404,B.uz,64405,B.uz,64406,B.uB,64407,B.uB,64408,B.uB,64409,B.uB,64410,B.uA,64411,B.uA,64412,B.uA,64413,B.uA,64414,B.Ps,64415,B.Ps,64416,B.uC,64417,B.uC,64418,B.uC,64419,B.uC,64420,B.Pt,64421,B.Pt,64422,B.uE,64423,B.uE,64424,B.uE,64425,B.uE,64426,B.uD,64427,B.uD,64428,B.uD,64429,B.uD,64430,B.PA,64431,B.PA,64432,B.PB,64433,B.PB,64467,B.uy,64468,B.uy,64469,B.uy,64470,B.uy,64471,B.Pw,64472,B.Pw,64473,B.Pv,64474,B.Pv,64475,B.Px,64476,B.Px,64477,B.aJR,64478,B.Pz,64479,B.Pz,64480,B.Pu,64481,B.Pu,64482,B.Py,64483,B.Py,64484,B.uG,64485,B.uG,64486,B.uG,64487,B.uG,64488,B.ui,64489,B.ui,64490,B.N5,64491,B.N5,64492,B.Ne,64493,B.Ne,64494,B.N9,64495,B.N9,64496,B.Nc,64497,B.Nc,64498,B.Nb,64499,B.Nb,64500,B.Nd,64501,B.Nd,64502,B.Bq,64503,B.Bq,64504,B.Bq,64505,B.p4,64506,B.p4,64507,B.p4,64508,B.uF,64509,B.uF,64510,B.uF,64511,B.uF,64512,B.N6,64513,B.N7,64514,B.tM,64515,B.p4,64516,B.Na,64517,B.Nh,64518,B.Ni,64519,B.Nj,64520,B.tO,64521,B.Nl,64522,B.Nm,64523,B.No,64524,B.Np,64525,B.Nr,64526,B.tQ,64527,B.Nt,64528,B.Nu,64529,B.aI9,64530,B.tS,64531,B.Nv,64532,B.Nw,64533,B.Nx,64534,B.Ny,64535,B.NC,64536,B.ND,64537,B.NG,64538,B.aIl,64539,B.NH,64540,B.Br,64541,B.Bs,64542,B.Bt,64543,B.Bu,64544,B.O0,64545,B.O3,64546,B.O7,64547,B.O8,64548,B.O9,64549,B.Oc,64550,B.Of,64551,B.Bv,64552,B.Bw,64553,B.Oj,64554,B.Ol,64555,B.Op,64556,B.Oq,64557,B.Ot,64558,B.Ou,64559,B.Ov,64560,B.Ox,64561,B.Oy,64562,B.Oz,64563,B.OA,64564,B.OB,64565,B.OD,64566,B.OE,64567,B.OF,64568,B.OG,64569,B.OH,64570,B.OI,64571,B.ua,64572,B.ub,64573,B.OK,64574,B.OL,64575,B.OQ,64576,B.OT,64577,B.OV,64578,B.ud,64579,B.OY,64580,B.OZ,64581,B.P_,64582,B.P0,64583,B.P1,64584,B.Bx,64585,B.aJj,64586,B.aJk,64587,B.P2,64588,B.P5,64589,B.P6,64590,B.ug,64591,B.P8,64592,B.P9,64593,B.Pa,64594,B.Pb,64595,B.aJx,64596,B.aJy,64597,B.Pe,64598,B.Pf,64599,B.Pg,64600,B.uk,64601,B.Pj,64602,B.Pk,64603,B.aIm,64604,B.aIo,64605,B.Pd,64606,B.aTv,64607,B.aTx,64608,B.aTz,64609,B.aTB,64610,B.aTD,64611,B.aTF,64612,B.aHH,64613,B.aHI,64614,B.tM,64615,B.aHJ,64616,B.p4,64617,B.Na,64618,B.aHS,64619,B.aHT,64620,B.tO,64621,B.aHU,64622,B.Nl,64623,B.Nm,64624,B.aI1,64625,B.aI2,64626,B.tQ,64627,B.aI8,64628,B.Nt,64629,B.Nu,64630,B.aIa,64631,B.aIb,64632,B.tS,64633,B.aIc,64634,B.Nv,64635,B.Nw,64636,B.Oy,64637,B.Oz,64638,B.OD,64639,B.OE,64640,B.OF,64641,B.ua,64642,B.ub,64643,B.OK,64644,B.OL,64645,B.ud,64646,B.OY,64647,B.OZ,64648,B.aJ6,64649,B.Bx,64650,B.aJq,64651,B.aJr,64652,B.ug,64653,B.aJu,64654,B.P8,64655,B.P9,64656,B.Pd,64657,B.aJF,64658,B.aJG,64659,B.uk,64660,B.aJI,64661,B.Pj,64662,B.Pk,64663,B.N6,64664,B.N7,64665,B.aHG,64666,B.tM,64667,B.N8,64668,B.Nh,64669,B.Ni,64670,B.Nj,64671,B.tO,64672,B.Nk,64673,B.No,64674,B.Np,64675,B.Nr,64676,B.tQ,64677,B.Ns,64678,B.tS,64679,B.Nx,64680,B.Ny,64681,B.NC,64682,B.ND,64683,B.NG,64684,B.NH,64685,B.Br,64686,B.Bs,64687,B.Bt,64688,B.Bu,64689,B.O0,64690,B.aIz,64691,B.O3,64692,B.O7,64693,B.O8,64694,B.O9,64695,B.Oc,64696,B.Of,64697,B.Bw,64698,B.Oj,64699,B.Ol,64700,B.Op,64701,B.Oq,64702,B.Ot,64703,B.Ou,64704,B.Ov,64705,B.Ox,64706,B.OA,64707,B.OB,64708,B.OG,64709,B.OH,64710,B.OI,64711,B.ua,64712,B.ub,64713,B.OQ,64714,B.OT,64715,B.OV,64716,B.ud,64717,B.aJ5,64718,B.P_,64719,B.P0,64720,B.P1,64721,B.Bx,64722,B.P2,64723,B.P5,64724,B.P6,64725,B.ug,64726,B.P7,64727,B.Pa,64728,B.Pb,64729,B.aJz,64730,B.Pe,64731,B.Pf,64732,B.Pg,64733,B.uk,64734,B.Pi,64735,B.tM,64736,B.N8,64737,B.tO,64738,B.Nk,64739,B.tQ,64740,B.Ns,64741,B.tS,64742,B.aId,64743,B.Bu,64744,B.NR,64745,B.u0,64746,B.NY,64747,B.ua,64748,B.ub,64749,B.ud,64750,B.ug,64751,B.P7,64752,B.uk,64753,B.Pi,64754,B.aIQ,64755,B.aIS,64756,B.aIU,64757,B.Oh,64758,B.Oi,64759,B.On,64760,B.Oo,64761,B.Or,64762,B.Os,64763,B.NS,64764,B.NT,64765,B.NZ,64766,B.O_,64767,B.NE,64768,B.NF,64769,B.NA,64770,B.NB,64771,B.NI,64772,B.NJ,64773,B.O5,64774,B.O6,64775,B.Od,64776,B.Oe,64777,B.tY,64778,B.tZ,64779,B.u_,64780,B.u0,64781,B.NV,64782,B.NO,64783,B.O2,64784,B.Ob,64785,B.Oh,64786,B.Oi,64787,B.On,64788,B.Oo,64789,B.Or,64790,B.Os,64791,B.NS,64792,B.NT,64793,B.NZ,64794,B.O_,64795,B.NE,64796,B.NF,64797,B.NA,64798,B.NB,64799,B.NI,64800,B.NJ,64801,B.O5,64802,B.O6,64803,B.Od,64804,B.Oe,64805,B.tY,64806,B.tZ,64807,B.u_,64808,B.u0,64809,B.NV,64810,B.NO,64811,B.O2,64812,B.Ob,64813,B.tY,64814,B.tZ,64815,B.u_,64816,B.u0,64817,B.NR,64818,B.NY,64819,B.Bv,64820,B.Br,64821,B.Bs,64822,B.Bt,64823,B.tY,64824,B.tZ,64825,B.u_,64826,B.Bv,64827,B.Bw,64828,B.Ng,64829,B.Ng,64848,B.aHV,64849,B.Nq,64850,B.Nq,64851,B.aHY,64852,B.aHZ,64853,B.aI3,64854,B.aI4,64855,B.aI5,64856,B.Nz,64857,B.Nz,64858,B.aIk,64859,B.aIj,64860,B.aIs,64861,B.aIq,64862,B.aIr,64863,B.NP,64864,B.NP,64865,B.aIv,64866,B.NQ,64867,B.NQ,64868,B.O1,64869,B.O1,64870,B.O4,64871,B.NU,64872,B.NU,64873,B.aIw,64874,B.NW,64875,B.NW,64876,B.NX,64877,B.NX,64878,B.aID,64879,B.Oa,64880,B.Oa,64881,B.Og,64882,B.Og,64883,B.aIF,64884,B.aIG,64885,B.Ok,64886,B.Om,64887,B.Om,64888,B.aII,64889,B.aIK,64890,B.aIM,64891,B.aIL,64892,B.Ow,64893,B.Ow,64894,B.OC,64895,B.aIZ,64896,B.OU,64897,B.aJ3,64898,B.aJ2,64899,B.OR,64900,B.OR,64901,B.OW,64902,B.OW,64903,B.OX,64904,B.OX,64905,B.aJb,64906,B.aJc,64907,B.aJe,64908,B.aJ7,64909,B.aJ9,64910,B.aJf,64911,B.aJg,64914,B.aJ8,64915,B.aJv,64916,B.aJw,64917,B.aJn,64918,B.aJo,64919,B.P4,64920,B.P4,64921,B.aJl,64922,B.aJt,64923,B.aJs,64924,B.Ph,64925,B.Ph,64926,B.aHR,64927,B.aHX,64928,B.aHW,64929,B.aI0,64930,B.aI_,64931,B.aI7,64932,B.aI6,64933,B.aIh,64934,B.aIe,64935,B.aIg,64936,B.aIt,64937,B.aIy,64938,B.aIx,64939,B.aIE,64940,B.aJ1,64941,B.aJ4,64942,B.aJE,64943,B.aJD,64944,B.aJH,64945,B.aJi,64946,B.aJ_,64947,B.aJp,64948,B.OC,64949,B.OU,64950,B.aIJ,64951,B.aJ0,64952,B.P3,64953,B.aJh,64954,B.OS,64955,B.OJ,64956,B.OS,64957,B.P3,64958,B.aIf,64959,B.aIi,64960,B.aJa,64961,B.aIX,64962,B.aHQ,64963,B.OJ,64964,B.Ok,64965,B.O4,64966,B.aIu,64967,B.aJm,65008,B.aIC,65009,B.aIY,65010,B.aHL,65011,B.aHK,65012,B.aJd,65013,B.aIA,65014,B.aIn,65015,B.aIH,65016,B.aJA,65017,B.aIB,65018,B.by0,65019,B.bqn,65020,B.aIp,65040,B.BI,65041,B.Bn,65042,B.Ma,65043,B.BK,65044,B.uS,65045,B.BF,65046,B.BL,65047,B.aDn,65048,B.aDo,65049,B.bcx,65072,B.bcw,65073,B.Ri,65074,B.bcv,65075,B.mH,65076,B.mH,65077,B.p5,65078,B.p6,65079,B.Bo,65080,B.Bp,65081,B.Mf,65082,B.Mg,65083,B.aDk,65084,B.aDl,65085,B.aDa,65086,B.aDb,65087,B.Mb,65088,B.Mc,65089,B.Md,65090,B.Me,65091,B.aDi,65092,B.aDj,65095,B.Rn,65096,B.Rp,65097,B.v_,65098,B.v_,65099,B.v_,65100,B.v_,65101,B.mH,65102,B.mH,65103,B.mH,65104,B.BI,65105,B.Bn,65106,B.BJ,65108,B.uS,65109,B.BK,65110,B.BL,65111,B.BF,65112,B.Ri,65113,B.p5,65114,B.p6,65115,B.Bo,65116,B.Bp,65117,B.Mf,65118,B.Mg,65119,B.Qs,65120,B.QH,65121,B.QP,65122,B.p7,65123,B.R3,65124,B.Rd,65125,B.Rg,65126,B.uU,65128,B.Ro,65129,B.QA,65130,B.QF,65131,B.Rh,65136,B.aTt,65137,B.aIO,65138,B.aTu,65140,B.aTw,65142,B.aTy,65143,B.aIP,65144,B.aTA,65145,B.aIR,65146,B.aTC,65147,B.aIT,65148,B.aTE,65149,B.aIV,65150,B.aTG,65151,B.aIW,65152,B.aHF,65153,B.N1,65154,B.N1,65155,B.N2,65156,B.N2,65157,B.N3,65158,B.N3,65159,B.N4,65160,B.N4,65161,B.tL,65162,B.tL,65163,B.tL,65164,B.tL,65165,B.Nf,65166,B.Nf,65167,B.tN,65168,B.tN,65169,B.tN,65170,B.tN,65171,B.Nn,65172,B.Nn,65173,B.tP,65174,B.tP,65175,B.tP,65176,B.tP,65177,B.tR,65178,B.tR,65179,B.tR,65180,B.tR,65181,B.tT,65182,B.tT,65183,B.tT,65184,B.tT,65185,B.tU,65186,B.tU,65187,B.tU,65188,B.tU,65189,B.tV,65190,B.tV,65191,B.tV,65192,B.tV,65193,B.NK,65194,B.NK,65195,B.NL,65196,B.NL,65197,B.NM,65198,B.NM,65199,B.NN,65200,B.NN,65201,B.tW,65202,B.tW,65203,B.tW,65204,B.tW,65205,B.tX,65206,B.tX,65207,B.tX,65208,B.tX,65209,B.u1,65210,B.u1,65211,B.u1,65212,B.u1,65213,B.u2,65214,B.u2,65215,B.u2,65216,B.u2,65217,B.u3,65218,B.u3,65219,B.u3,65220,B.u3,65221,B.u4,65222,B.u4,65223,B.u4,65224,B.u4,65225,B.u5,65226,B.u5,65227,B.u5,65228,B.u5,65229,B.u6,65230,B.u6,65231,B.u6,65232,B.u6,65233,B.u7,65234,B.u7,65235,B.u7,65236,B.u7,65237,B.u8,65238,B.u8,65239,B.u8,65240,B.u8,65241,B.u9,65242,B.u9,65243,B.u9,65244,B.u9,65245,B.uc,65246,B.uc,65247,B.uc,65248,B.uc,65249,B.ue,65250,B.ue,65251,B.ue,65252,B.ue,65253,B.uf,65254,B.uf,65255,B.uf,65256,B.uf,65257,B.uh,65258,B.uh,65259,B.uh,65260,B.uh,65261,B.Pc,65262,B.Pc,65263,B.ui,65264,B.ui,65265,B.uj,65266,B.uj,65267,B.uj,65268,B.uj,65269,B.OM,65270,B.OM,65271,B.ON,65272,B.ON,65273,B.OO,65274,B.OO,65275,B.OP,65276,B.OP,65281,B.BF,65282,B.aUw,65283,B.Qs,65284,B.QA,65285,B.QF,65286,B.QH,65287,B.aWO,65288,B.p5,65289,B.p6,65290,B.QP,65291,B.p7,65292,B.BI,65293,B.R3,65294,B.BJ,65295,B.b1y,65296,B.uI,65297,B.uJ,65298,B.uK,65299,B.uL,65300,B.uM,65301,B.uN,65302,B.uO,65303,B.uP,65304,B.uQ,65305,B.uR,65306,B.BK,65307,B.uS,65308,B.Rd,65309,B.uU,65310,B.Rg,65311,B.BL,65312,B.Rh,65313,B.BM,65314,B.uV,65315,B.p8,65316,B.p9,65317,B.uW,65318,B.BN,65319,B.BO,65320,B.mE,65321,B.mF,65322,B.BP,65323,B.uX,65324,B.pa,65325,B.pb,65326,B.uY,65327,B.BQ,65328,B.uZ,65329,B.BR,65330,B.mG,65331,B.Rj,65332,B.BS,65333,B.BT,65334,B.v0,65335,B.BU,65336,B.BV,65337,B.Rl,65338,B.v1,65339,B.Rn,65340,B.Ro,65341,B.Rp,65342,B.bfU,65343,B.mH,65344,B.Rr,65345,B.pc,65346,B.C_,65347,B.v2,65348,B.oY,65349,B.mB,65350,B.Bj,65351,B.tE,65352,B.oZ,65353,B.kI,65354,B.p_,65355,B.tF,65356,B.mC,65357,B.p0,65358,B.tG,65359,B.mD,65360,B.tH,65361,B.M9,65362,B.tI,65363,B.p1,65364,B.tJ,65365,B.tK,65366,B.p2,65367,B.Bk,65368,B.p3,65369,B.Bl,65370,B.Bm,65371,B.Bo,65372,B.aDH,65373,B.Bp,65374,B.aFY,65375,B.azU,65376,B.azV,65377,B.Ma,65378,B.Md,65379,B.Me,65380,B.Bn,65381,B.aFM,65382,B.MZ,65383,B.aDW,65384,B.aE0,65385,B.aE3,65386,B.aE6,65387,B.aE8,65388,B.aFt,65389,B.aFw,65390,B.aFy,65391,B.aEI,65392,B.aFN,65393,B.Mh,65394,B.Mi,65395,B.Mj,65396,B.Mk,65397,B.Ml,65398,B.Mm,65399,B.Mn,65400,B.Mo,65401,B.Mp,65402,B.Mq,65403,B.Mr,65404,B.Ms,65405,B.Mt,65406,B.Mu,65407,B.Mv,65408,B.Mw,65409,B.Mx,65410,B.My,65411,B.Mz,65412,B.MA,65413,B.MB,65414,B.MC,65415,B.MD,65416,B.ME,65417,B.MF,65418,B.MG,65419,B.MH,65420,B.MI,65421,B.MJ,65422,B.MK,65423,B.ML,65424,B.MM,65425,B.MN,65426,B.MO,65427,B.MP,65428,B.MQ,65429,B.MR,65430,B.MS,65431,B.MT,65432,B.MU,65433,B.MV,65434,B.MW,65435,B.MX,65436,B.MY,65437,B.aFL,65438,B.aDT,65439,B.aDU,65440,B.aGG,65441,B.aFR,65442,B.aFS,65443,B.aFT,65444,B.aFU,65445,B.aFV,65446,B.aFW,65447,B.aFX,65448,B.aFZ,65449,B.aG_,65450,B.aG0,65451,B.aG1,65452,B.aG2,65453,B.aG3,65454,B.aG4,65455,B.aG5,65456,B.aG6,65457,B.aG7,65458,B.aG8,65459,B.aG9,65460,B.aGa,65461,B.aGb,65462,B.aGc,65463,B.aGd,65464,B.aGe,65465,B.aGf,65466,B.aGg,65467,B.aGh,65468,B.aGi,65469,B.aGj,65470,B.aGk,65474,B.aGl,65475,B.aGm,65476,B.aGn,65477,B.aGo,65478,B.aGp,65479,B.aGq,65482,B.aGr,65483,B.aGs,65484,B.aGt,65485,B.aGu,65486,B.aGv,65487,B.aGw,65490,B.aGx,65491,B.aGy,65492,B.aGz,65493,B.aGA,65494,B.aGB,65495,B.aGC,65498,B.aGD,65499,B.aGE,65500,B.aGF,65504,B.aJL,65505,B.aJM,65506,B.aJX,65507,B.aK2,65508,B.aJS,65509,B.aJQ,65510,B.bcN,65512,B.bg9,65513,B.bd7,65514,B.bd9,65515,B.bda,65516,B.bdc,65517,B.bgN,65518,B.bgW],t.eU)
 B.bBg=new A.bU([8,"\\b",9,"\\t",10,"\\n",11,"\\v",12,"\\f",13,"\\r",34,'\\"',39,"\\'",92,"\\\\"],t.TM)
 B.bBh=new A.bU([0,"FontWeight.w100",1,"FontWeight.w200",2,"FontWeight.w300",3,"FontWeight.w400",4,"FontWeight.w500",5,"FontWeight.w600",6,"FontWeight.w700",7,"FontWeight.w800",8,"FontWeight.w900"],t.TM)
 B.bEE={Adult:0,Child:1,Infant:2}
@@ -190663,8 +190663,8 @@ B.bj2=s([B.aup,B.Y,B.c1a],t.p)
 B.bMo=new A.no(B.b7,B.e,B.f,B.v,null,B.t,null,0,B.bj2,null)
 B.atZ=new A.az(B.ch,18,B.cv,null,null)
 B.bT1=new A.G(!0,B.cv,null,null,null,null,14,B.w,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
-B.c_3=new A.ae("Active Risk Factors",null,B.bT1,null,null,null,null,null,null,null,null)
-B.bkK=s([B.atZ,B.Y,B.c_3],t.p)
+B.c_4=new A.ae("Active Risk Factors",null,B.bT1,null,null,null,null,null,null,null,null)
+B.bkK=s([B.atZ,B.Y,B.c_4],t.p)
 B.bMp=new A.no(B.b7,B.e,B.f,B.v,null,B.t,null,0,B.bkK,null)
 B.a1S=new A.KX(null)
 B.bMq=new A.hy("allow-downloads","allow-downloads")
@@ -191053,8 +191053,8 @@ B.bPB=new A.t2(5,"timeout")
 B.bPC=new A.Ls(null,null,null,null,null,null,null,null,null,null,null,null,null,null)
 B.c0i=new A.ae("Could not open link.",null,null,null,null,null,null,null,null,null,null)
 B.bPD=new A.lz(B.c0i,null,null,null,null,null,null,null,null,null,null,null,null,B.dW,!1,null,null,null,B.ab,null)
-B.c_f=new A.ae("You have posted too many times recently. Please try again later.",null,null,null,null,null,null,null,null,null,null)
-B.bPE=new A.lz(B.c_f,B.yh,null,null,null,null,null,null,B.hn,null,null,null,null,B.dW,!1,null,null,null,B.ab,null)
+B.c_g=new A.ae("You have posted too many times recently. Please try again later.",null,null,null,null,null,null,null,null,null,null)
+B.bPE=new A.lz(B.c_g,B.yh,null,null,null,null,null,null,B.hn,null,null,null,null,B.dW,!1,null,null,null,B.ab,null)
 B.c0N=new A.ae("Posted. Thank you for sharing.",null,null,null,null,null,null,null,null,null,null)
 B.bPF=new A.lz(B.c0N,null,null,null,null,null,null,null,B.hn,null,null,null,null,B.dW,!1,null,null,null,B.ab,null)
 B.c0e=new A.ae("Something went wrong. Please try again.",null,null,null,null,null,null,null,null,null,null)
@@ -191065,10 +191065,10 @@ B.c0Z=new A.ae("Preparation summary copied to clipboard",null,null,null,null,nul
 B.bPI=new A.lz(B.c0Z,null,null,null,null,null,null,null,null,null,null,null,null,B.kh,!1,null,null,null,B.ab,null)
 B.bYx=new A.ae("Could not open the chapter PDF",null,null,null,null,null,null,null,null,null,null)
 B.bPJ=new A.lz(B.bYx,null,null,null,null,null,null,null,null,null,null,null,null,B.dW,!1,null,null,null,B.ab,null)
-B.bZS=new A.ae("Please enter a valid baby weight.",null,null,null,null,null,null,null,null,null,null)
-B.bPK=new A.lz(B.bZS,null,null,null,null,null,null,null,null,null,null,null,null,B.dW,!1,null,null,null,B.ab,null)
-B.bZc=new A.ae("Couldn't open the link.",null,null,null,null,null,null,null,null,null,null)
-B.pY=new A.lz(B.bZc,null,null,null,null,null,null,null,null,null,null,null,null,B.dW,!1,null,null,null,B.ab,null)
+B.bZT=new A.ae("Please enter a valid baby weight.",null,null,null,null,null,null,null,null,null,null)
+B.bPK=new A.lz(B.bZT,null,null,null,null,null,null,null,null,null,null,null,null,B.dW,!1,null,null,null,B.ab,null)
+B.bZd=new A.ae("Couldn't open the link.",null,null,null,null,null,null,null,null,null,null)
+B.pY=new A.lz(B.bZd,null,null,null,null,null,null,null,null,null,null,null,null,B.dW,!1,null,null,null,B.ab,null)
 B.a3h=new A.Lt(null)
 B.a3i=new A.Ww(0,"permissive")
 B.bPL=new A.Ww(1,"normal")
@@ -191623,85 +191623,85 @@ B.bZ1=new A.ae("\u2696\ufe0f",null,B.nf,null,null,null,null,null,null,null,null)
 B.a4t=new A.ae("Clear",null,null,null,null,null,null,null,null,null,null)
 B.bWs=new A.G(!0,null,null,null,null,null,18,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
 B.bZ2=new A.ae("\ud83e\ude7a",null,B.bWs,null,null,null,null,null,null,null,null)
-B.bZ3=new A.ae("Paediatric Parameters",null,null,null,null,null,null,null,null,null,null)
-B.bZ4=new A.ae("Open Lund & Browder Calculator",null,null,null,null,null,null,null,null,null,null)
-B.bZ5=new A.ae("\u2610 ",null,B.a4_,null,null,null,null,null,null,null,null)
-B.bZ6=new A.ae("Glasgow Coma Scale",null,B.eS,null,null,null,null,null,null,null,null)
-B.bZ7=new A.ae("Got it",null,null,null,null,null,null,null,null,null,null)
-B.bZ8=new A.ae("Browse by Domain",null,null,null,null,null,null,null,null,null,null)
+B.bZ3=new A.ae("Charts",null,null,null,null,null,null,null,null,null,null)
+B.bZ4=new A.ae("Paediatric Parameters",null,null,null,null,null,null,null,null,null,null)
+B.bZ5=new A.ae("Open Lund & Browder Calculator",null,null,null,null,null,null,null,null,null,null)
+B.bZ6=new A.ae("\u2610 ",null,B.a4_,null,null,null,null,null,null,null,null)
+B.bZ7=new A.ae("Glasgow Coma Scale",null,B.eS,null,null,null,null,null,null,null,null)
+B.bZ8=new A.ae("Got it",null,null,null,null,null,null,null,null,null,null)
+B.bZ9=new A.ae("Browse by Domain",null,null,null,null,null,null,null,null,null,null)
 B.a4u=new A.ae("Close",null,null,null,null,null,null,null,null,null,null)
-B.bZa=new A.ae("Screenshot",null,null,null,null,null,null,null,null,null,null)
-B.bZb=new A.ae("Developmental Milestones",null,null,null,null,null,null,null,null,null,null)
+B.bZb=new A.ae("Screenshot",null,null,null,null,null,null,null,null,null,null)
+B.bZc=new A.ae("Developmental Milestones",null,null,null,null,null,null,null,null,null,null)
 B.wy=new A.ae("\ud83e\udde0",null,B.jJ,null,null,null,null,null,null,null,null)
 B.a4h=new A.G(!0,null,null,null,null,null,16,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
-B.bZf=new A.ae("\u25bc",null,B.a4h,null,null,null,null,null,null,null,null)
-B.bZg=new A.ae("Parkland Formula",null,B.eS,null,null,null,null,null,null,null,null)
-B.bZh=new A.ae("Report Downloaded",null,null,null,null,null,null,null,null,null,null)
-B.bZi=new A.ae("Developmental Quotient",null,null,null,null,null,null,null,null,null,null)
-B.bZj=new A.ae("FAQ",null,B.fv,null,null,null,null,null,null,null,null)
-B.bZk=new A.ae("\u2615\ufe0f",null,B.nf,null,null,null,null,null,null,null,null)
-B.bZl=new A.ae("\ud83d\udc89",null,B.jJ,null,null,null,null,null,null,null,null)
-B.bZm=new A.ae("> 4.88 at 2h predicts HFNC success",null,B.ww,null,null,null,null,null,null,null,null)
-B.bZo=new A.ae("PediAid is a clinical decision support tool intended for use by qualified healthcare professionals only. All calculators, charts and references must be verified against current clinical guidelines and the patient's clinical context before any treatment decision. The developers accept no liability for clinical decisions made based on this app.",null,null,null,null,null,null,null,null,null,null)
+B.bZg=new A.ae("\u25bc",null,B.a4h,null,null,null,null,null,null,null,null)
+B.bZh=new A.ae("Parkland Formula",null,B.eS,null,null,null,null,null,null,null,null)
+B.bZi=new A.ae("Report Downloaded",null,null,null,null,null,null,null,null,null,null)
+B.bZj=new A.ae("Developmental Quotient",null,null,null,null,null,null,null,null,null,null)
+B.bZk=new A.ae("FAQ",null,B.fv,null,null,null,null,null,null,null,null)
+B.bZl=new A.ae("\u2615\ufe0f",null,B.nf,null,null,null,null,null,null,null,null)
+B.bZm=new A.ae("\ud83d\udc89",null,B.jJ,null,null,null,null,null,null,null,null)
+B.bZn=new A.ae("> 4.88 at 2h predicts HFNC success",null,B.ww,null,null,null,null,null,null,null,null)
+B.bZp=new A.ae("PediAid is a clinical decision support tool intended for use by qualified healthcare professionals only. All calculators, charts and references must be verified against current clinical guidelines and the patient's clinical context before any treatment decision. The developers accept no liability for clinical decisions made based on this app.",null,null,null,null,null,null,null,null,null,null)
 B.EA=new A.ae("Smart View",null,null,null,null,null,null,null,null,null,null)
-B.bZt=new A.ae("Nutritional Audit",null,null,null,null,null,null,null,null,null,null)
-B.bZu=new A.ae("Sign out",null,null,null,null,null,null,null,null,null,null)
-B.bZv=new A.ae("\ud83d\udca1 ",null,B.nb,null,null,null,null,null,null,null,null)
+B.bZu=new A.ae("Nutritional Audit",null,null,null,null,null,null,null,null,null,null)
+B.bZv=new A.ae("Sign out",null,null,null,null,null,null,null,null,null,null)
+B.bZw=new A.ae("\ud83d\udca1 ",null,B.nb,null,null,null,null,null,null,null,null)
 B.bSD=new A.G(!0,B.bN,null,null,null,null,11.5,B.F,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
-B.bZw=new A.ae("\u2713 MAP auto-filled into OI and OSI calculators above",null,B.bSD,null,null,null,null,null,null,null,null)
-B.bZx=new A.ae("Immunisation Schedule",null,B.eS,null,null,null,null,null,null,null,null)
-B.bZy=new A.ae("Export PDF",null,null,null,null,null,null,null,null,null,null)
-B.bZA=new A.ae("Open source PDF",null,null,null,null,null,null,null,null,null,null)
-B.bZB=new A.ae("Lung Ultrasound Score",null,null,null,null,null,null,null,null,null,null)
+B.bZx=new A.ae("\u2713 MAP auto-filled into OI and OSI calculators above",null,B.bSD,null,null,null,null,null,null,null,null)
+B.bZy=new A.ae("Immunisation Schedule",null,B.eS,null,null,null,null,null,null,null,null)
+B.bZz=new A.ae("Export PDF",null,null,null,null,null,null,null,null,null,null)
+B.bZB=new A.ae("Open source PDF",null,null,null,null,null,null,null,null,null,null)
+B.bZC=new A.ae("Lung Ultrasound Score",null,null,null,null,null,null,null,null,null,null)
 B.bX7=new A.G(!0,B.z,null,null,null,null,8.5,B.w,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
-B.bZC=new A.ae("THIS PATIENT",null,B.bX7,null,null,null,null,null,null,null,null)
+B.bZD=new A.ae("THIS PATIENT",null,B.bX7,null,null,null,null,null,null,null,null)
 B.bVp=new A.G(!0,B.z,null,null,null,null,null,B.w,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
-B.bZD=new A.ae("Drug Formulary",null,B.bVp,null,null,null,null,null,null,null,null)
-B.bZE=new A.ae("Clear",null,B.jJ,null,null,null,null,null,null,null,null)
-B.bZF=new A.ae("SELECT GESTATIONAL AGE GROUP",null,B.Et,null,null,null,null,null,null,null,null)
+B.bZE=new A.ae("Drug Formulary",null,B.bVp,null,null,null,null,null,null,null,null)
+B.bZF=new A.ae("Clear",null,B.jJ,null,null,null,null,null,null,null,null)
+B.bZG=new A.ae("SELECT GESTATIONAL AGE GROUP",null,B.Et,null,null,null,null,null,null,null,null)
 B.a46=new A.G(!0,null,null,null,null,null,15,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
-B.bZG=new A.ae("\ud83d\udcd6",null,B.a46,null,null,null,null,null,null,null,null)
-B.bZH=new A.ae("PET Calculator",null,null,null,null,null,null,null,null,null,null)
-B.bZJ=new A.ae("AAP 2022 GUIDELINE",null,B.Et,null,null,null,null,null,null,null,null)
-B.bZM=new A.ae("Schwartz eGFR",null,B.eS,null,null,null,null,null,null,null,null)
-B.bZN=new A.ae("OK",null,null,null,null,null,null,null,null,null,null)
+B.bZH=new A.ae("\ud83d\udcd6",null,B.a46,null,null,null,null,null,null,null,null)
+B.bZI=new A.ae("PET Calculator",null,null,null,null,null,null,null,null,null,null)
+B.bZK=new A.ae("AAP 2022 GUIDELINE",null,B.Et,null,null,null,null,null,null,null,null)
+B.bZN=new A.ae("Schwartz eGFR",null,B.eS,null,null,null,null,null,null,null,null)
+B.bZO=new A.ae("OK",null,null,null,null,null,null,null,null,null,null)
 B.a4b=new A.G(!0,B.bS,null,null,null,null,12.5,B.w,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
-B.bZO=new A.ae("\u26a0\ufe0f Vital Monitoring",null,B.a4b,null,null,null,null,null,null,null,null)
-B.bZP=new A.ae("TPN Calculator",null,B.fv,null,null,null,null,null,null,null,null)
-B.bZQ=new A.ae("View Fetal Development",null,null,null,null,null,null,null,null,null,null)
+B.bZP=new A.ae("\u26a0\ufe0f Vital Monitoring",null,B.a4b,null,null,null,null,null,null,null,null)
+B.bZQ=new A.ae("TPN Calculator",null,B.fv,null,null,null,null,null,null,null,null)
+B.bZR=new A.ae("View Fetal Development",null,null,null,null,null,null,null,null,null,null)
 B.wz=new A.ae("\ud83d\udccb",null,B.jJ,null,null,null,null,null,null,null,null)
-B.bZV=new A.ae("Reset",null,B.a42,null,null,null,null,null,null,null,null)
-B.bZX=new A.ae("Higher dose (0.7 mmol/kg) for under-2s.",null,B.a4a,null,null,null,null,null,null,null,null)
+B.bZW=new A.ae("Reset",null,B.a42,null,null,null,null,null,null,null,null)
+B.bZY=new A.ae("Higher dose (0.7 mmol/kg) for under-2s.",null,B.a4a,null,null,null,null,null,null,null,null)
 B.bTB=new A.G(!0,null,null,null,null,null,12,B.F,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
-B.bZY=new A.ae("Today",null,B.bTB,null,null,null,null,null,null,null,null)
+B.bZZ=new A.ae("Today",null,B.bTB,null,null,null,null,null,null,null,null)
 B.bVU=new A.G(!0,B.z,null,null,null,null,24,B.M,null,-0.5,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
-B.bZZ=new A.ae("DKA",null,B.bVU,null,null,null,null,null,null,null,null)
+B.c__=new A.ae("DKA",null,B.bVU,null,null,null,null,null,null,null,null)
 B.bSs=new A.G(!0,null,null,null,null,null,null,null,null,null,null,null,1.5,null,null,null,null,null,null,null,null,null,null,null,null,null)
-B.c__=new A.ae("This will permanently:\n\n\u2022 Delete your account on our server immediately\n\u2022 Sign you out on this device\n\u2022 Erase all of your saved preferences\n\nThis action cannot be undone. There is no soft-delete or grace period.\n\nType DELETE below to confirm.",null,B.bSs,null,null,null,null,null,null,null,null)
-B.c_0=new A.ae("Clear / Reset",null,null,null,null,null,null,null,null,null,null)
-B.c_1=new A.ae("Reset",null,B.nb,null,null,null,null,null,null,null,null)
+B.c_0=new A.ae("This will permanently:\n\n\u2022 Delete your account on our server immediately\n\u2022 Sign you out on this device\n\u2022 Erase all of your saved preferences\n\nThis action cannot be undone. There is no soft-delete or grace period.\n\nType DELETE below to confirm.",null,B.bSs,null,null,null,null,null,null,null,null)
+B.c_1=new A.ae("Clear / Reset",null,null,null,null,null,null,null,null,null,null)
+B.c_2=new A.ae("Reset",null,B.nb,null,null,null,null,null,null,null,null)
 B.bXE=new A.G(!0,B.jd,null,null,null,null,12,B.w,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
-B.c_2=new A.ae("Both give identical results! Choose your preferred input method below.",null,B.bXE,null,null,null,null,null,null,null,null)
-B.c_4=new A.ae("Calculate TPN",null,B.fW,null,null,null,null,null,null,null,null)
+B.c_3=new A.ae("Both give identical results! Choose your preferred input method below.",null,B.bXE,null,null,null,null,null,null,null,null)
+B.c_5=new A.ae("Calculate TPN",null,B.fW,null,null,null,null,null,null,null,null)
 B.bTV=new A.G(!0,B.z,null,null,null,null,20,B.w,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
-B.c_6=new A.ae("Lab Reference",null,B.bTV,null,null,null,null,null,null,null,null)
-B.c_7=new A.ae("\u26a0\ufe0f CRITICAL FORMULA CLARIFICATION",null,B.a47,null,null,null,null,null,null,null,null)
+B.c_7=new A.ae("Lab Reference",null,B.bTV,null,null,null,null,null,null,null,null)
+B.c_8=new A.ae("\u26a0\ufe0f CRITICAL FORMULA CLARIFICATION",null,B.a47,null,null,null,null,null,null,null,null)
 B.bVo=new A.G(!0,B.fA,null,null,null,null,10,B.w,null,0.15,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
-B.c_8=new A.ae("NICU TOOL",null,B.bVo,null,null,null,null,null,null,null,null)
+B.c_9=new A.ae("NICU TOOL",null,B.bVo,null,null,null,null,null,null,null,null)
 B.bXO=new A.G(!0,B.z,null,null,null,null,14,B.ax,null,null,null,null,1.55,null,null,null,null,null,null,null,null,null,null,null,null,null)
-B.c_9=new A.ae("0.05 \u2013 0.1 unit/kg/hour\nStart 1 hour after fluids initiated.",null,B.bXO,null,null,null,null,null,null,null,null)
-B.c_c=new A.ae("Assess & Plot Chart",null,B.fW,null,null,null,null,null,null,null,null)
-B.c_d=new A.ae("Burn Mortality Calculator",null,B.eS,null,null,null,null,null,null,null,null)
-B.c_h=new A.ae("Remove this region",null,null,null,null,null,null,null,null,null,null)
-B.c_i=new A.ae("Share a lesson",null,null,null,null,null,null,null,null,null,null)
-B.c_k=new A.ae("\u26a0\ufe0f STEP 5: COMPLICATIONS & MANAGEMENT",null,B.a4c,null,null,null,null,null,null,null,null)
-B.c_m=new A.ae("Calculate Volume",null,null,null,null,null,null,null,null,null,null)
-B.c_n=new A.ae("\ud83c\udf31",null,B.nf,null,null,null,null,null,null,null,null)
-B.c_o=new A.ae("Fetal Development",null,null,null,null,null,null,null,null,null,null)
+B.c_a=new A.ae("0.05 \u2013 0.1 unit/kg/hour\nStart 1 hour after fluids initiated.",null,B.bXO,null,null,null,null,null,null,null,null)
+B.c_d=new A.ae("Assess & Plot Chart",null,B.fW,null,null,null,null,null,null,null,null)
+B.c_e=new A.ae("Burn Mortality Calculator",null,B.eS,null,null,null,null,null,null,null,null)
+B.c_i=new A.ae("Remove this region",null,null,null,null,null,null,null,null,null,null)
+B.c_j=new A.ae("Share a lesson",null,null,null,null,null,null,null,null,null,null)
+B.c_l=new A.ae("\u26a0\ufe0f STEP 5: COMPLICATIONS & MANAGEMENT",null,B.a4c,null,null,null,null,null,null,null,null)
+B.c_n=new A.ae("Calculate Volume",null,null,null,null,null,null,null,null,null,null)
+B.c_o=new A.ae("\ud83c\udf31",null,B.nf,null,null,null,null,null,null,null,null)
+B.c_p=new A.ae("Fetal Development",null,null,null,null,null,null,null,null,null,null)
 B.bYa=new A.G(!0,B.bS,null,null,null,null,12.5,B.F,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
-B.c_p=new A.ae("ECMO Criteria: OI > 40 on maximum support (HFOV + iNO) for > 4-6 hours, or OI > 60 at any time.",null,B.bYa,null,null,null,null,null,null,null,null)
-B.c_q=new A.ae("Blood Gas Analyser",null,B.eS,null,null,null,null,null,null,null,null)
-B.c_r=new A.ae("Growth Charts",null,null,null,null,null,null,null,null,null,null)
+B.c_q=new A.ae("ECMO Criteria: OI > 40 on maximum support (HFOV + iNO) for > 4-6 hours, or OI > 60 at any time.",null,B.bYa,null,null,null,null,null,null,null,null)
+B.c_r=new A.ae("Blood Gas Analyser",null,B.eS,null,null,null,null,null,null,null,null)
 B.Ez=new A.G(!0,null,null,null,null,null,11.5,B.F,null,0.3,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
 B.c_s=new A.ae("AGE BAND",null,B.Ez,null,null,null,null,null,null,null,null)
 B.c_u=new A.ae("Medical Disclaimer",null,null,null,null,null,null,null,null,null,null)
@@ -192705,8 +192705,8 @@ return B.aaj})
 s($,"cBK","bYC",()=>new A.aUX())
 s($,"cw3","c7O",()=>A.D0(0))
 s($,"cw2","c7N",()=>A.aSn(0))
-s($,"cB3","caF",()=>A.bWB(B.v7,B.PF,257,286,15))
-s($,"cB2","caE",()=>A.bWB(B.RR,B.v5,0,30,15))
+s($,"cB3","caF",()=>A.bWB(B.v6,B.PF,257,286,15))
+s($,"cB2","caE",()=>A.bWB(B.RR,B.v4,0,30,15))
 s($,"cB1","caD",()=>A.bWB(null,B.aRE,0,19,7))
 s($,"cBF","cb2",()=>new A.ah())
 s($,"cwO","c8a",()=>new A.ah())
@@ -193073,7 +193073,7 @@ r($,"cxl","bSS",()=>{var q=new A.aRz(A.chN("dev.britannio.in_app_review",B.dz,nu
 q.uQ($.c8o())
 return q})
 s($,"cxm","c8o",()=>new A.ah())
-s($,"cDl","ccb",()=>new A.a8C("en_US",B.bix,B.byu,B.Sq,B.Sq,B.uU,B.uU,B.BD,B.BD,B.Rz,B.Rz,B.RF,B.RF,B.Co,B.Co,B.bnh,B.bxm,B.bih))
+s($,"cDl","ccb",()=>new A.a8C("en_US",B.bix,B.byu,B.Sq,B.Sq,B.uT,B.uT,B.BD,B.BD,B.Rz,B.Rz,B.RF,B.RF,B.Co,B.Co,B.bnh,B.bxm,B.bih))
 r($,"cBH","bT3",()=>A.c3D("initializeDateFormatting(<locale>)",$.ccb(),A.ai("a8C")))
 r($,"cDg","bYQ",()=>A.c3D("initializeDateFormatting(<locale>)",B.bC9,t.GU))
 s($,"cD7","cc4",()=>48)
