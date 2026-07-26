@@ -109,6 +109,37 @@ void main() async {
   ));
 }
 
+/// Constrains the app to a phone-like max width on wide screens and centres
+/// it, with a neutral backdrop in the side margins. Crucially it also overrides
+/// MediaQuery.size for descendants, so every screen lays out against the
+/// clamped width (not the full window) — this stops fixed-aspect grids and
+/// full-width rows from stretching on web/desktop/webview.
+class _WidthClamp extends StatelessWidget {
+  final Widget child;
+  const _WidthClamp({required this.child});
+
+  static const double _maxWidth = 640;
+
+  @override
+  Widget build(BuildContext context) {
+    final mq = MediaQuery.of(context);
+    if (mq.size.width <= _maxWidth) return child; // phones: untouched
+    final dark = Theme.of(context).brightness == Brightness.dark;
+    return ColoredBox(
+      color: dark ? const Color(0xFF0B0F14) : const Color(0xFFE8EDF3),
+      child: Center(
+        child: SizedBox(
+          width: _maxWidth,
+          child: MediaQuery(
+            data: mq.copyWith(size: Size(_maxWidth, mq.size.height)),
+            child: child,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class PediAidApp extends StatelessWidget {
   const PediAidApp({super.key});
 
@@ -133,10 +164,12 @@ class PediAidApp extends StatelessWidget {
       // Wrapped in an OnboardingGate so first-launch users see the slides
       // before the home screen.
       home: const _OnboardingGate(child: HomeScreen()),
-      // Floats a small "report an issue" button above every screen in the
-      // app (calculators, guides, lab reference, formulary, everything)
-      // without needing to touch each of those screen files individually.
-      builder: (context, child) => ReportIssueOverlay(child: child!),
+      // On wide viewports (web / desktop / tablet / embedded webview) clamp
+      // the whole app to a phone-like width and centre it — otherwise the
+      // mobile-first layouts stretch and fixed-aspect grids blow up into
+      // giant cards. Also floats the "report an issue" button on every screen.
+      builder: (context, child) =>
+          _WidthClamp(child: ReportIssueOverlay(child: child!)),
     );
   }
 }
