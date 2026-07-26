@@ -2036,7 +2036,7 @@ class _SmartCardBodyState extends State<_SmartCardBody>
   Widget _buildTitrateTab(BuildContext context) {
     final w = weight;
     final p = prep;
-    final max = kMaxDose[drug.name];
+    final max = kMaxDose[drug.name.replaceAll(RegExp(r'\s*\(.*\)'), '').trim()] ?? kMaxDose[drug.name];
     final unit = _doseUnitFor(drug.name);
 
     if (w == null || w <= 0 || p == null) {
@@ -2120,7 +2120,7 @@ class _SmartCardBodyState extends State<_SmartCardBody>
     final w = weight;
     final p = prep;
     final unit = _doseUnitFor(drug.name);
-    final max = kMaxDose[drug.name];
+    final max = kMaxDose[drug.name.replaceAll(RegExp(r'\s*\(.*\)'), '').trim()] ?? kMaxDose[drug.name];
 
     if (w == null || w <= 0 || p == null) {
       return _placeholder(context, 'Enter weight above to check.');
@@ -2231,8 +2231,13 @@ class _SmartCardBodyState extends State<_SmartCardBody>
   // ── INFO TAB ───────────────────────────────────────────────────────────────
   Widget _buildInfoTab(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
-    final info = kDrugInfo[drug.name];
-    final compat = kDiluentCompat[drug.name];
+    // Some drugs carry a parenthetical alias in their display name
+    // (e.g. "Adrenaline (Epinephrine)") while the info/compat maps are keyed
+    // on the plain name ("Adrenaline"). Strip the alias before lookup, then
+    // fall back to the raw name so nothing regresses.
+    final baseName = drug.name.replaceAll(RegExp(r'\s*\(.*\)'), '').trim();
+    final info = kDrugInfo[baseName] ?? kDrugInfo[drug.name];
+    final compat = kDiluentCompat[baseName] ?? kDiluentCompat[drug.name];
 
     Widget line(String label, String value) {
       return Padding(
