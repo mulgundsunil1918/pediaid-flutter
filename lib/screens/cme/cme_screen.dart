@@ -220,8 +220,10 @@ class _PublicTab extends StatelessWidget {
           return const _LoadingState();
         }
         if (snap.hasError) {
+          // Never surface raw backend/infra errors to end users.
           return _ErrorState(
-            message: snap.error?.toString() ?? 'Something went wrong.',
+            message: 'Events couldn’t be loaded right now. '
+                'Please check your connection and try again in a little while.',
             onRetry: onRefresh,
           );
         }
@@ -271,8 +273,10 @@ class _MyPostsTab extends StatelessWidget {
           return const _LoadingState();
         }
         if (snap.hasError) {
+          // Never surface raw backend/infra errors to end users.
           return _ErrorState(
-            message: snap.error?.toString() ?? 'Something went wrong.',
+            message: 'Events couldn’t be loaded right now. '
+                'Please check your connection and try again in a little while.',
             onRetry: onRefresh,
           );
         }

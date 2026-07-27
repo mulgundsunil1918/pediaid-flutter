@@ -139,31 +139,13 @@ class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey _scGuidesKey      = GlobalKey();
   bool _tutorialAttempted = false;
 
-  // Visitor counter — web only, decorative. Shown at the end of the home
-  // page. Stays null (and hidden) if the call fails; never blocks the page.
-  int? _visitCount;
-
   @override
   void initState() {
     super.initState();
     _loadPrefs();
     _scrollController.addListener(_onScroll);
-    _loadVisitCount();
-  }
-
-  Future<void> _loadVisitCount() async {
-    if (!kIsWeb) return;
-    try {
-      final res = await http
-          .get(Uri.parse('${AuthService.apiBase}/api/stats/visits/pediaid_home'))
-          .timeout(const Duration(seconds: 5));
-      if (res.statusCode == 200 && mounted) {
-        final body = jsonDecode(res.body) as Map<String, dynamic>;
-        setState(() => _visitCount = body['count'] as int);
-      }
-    } catch (_) {
-      // Decorative counter — silently skip on any network/backend hiccup.
-    }
+    // Visitor counter removed — it hit the DB on every web load and helped
+    // keep Neon awake / burn free compute. Dropped intentionally.
   }
 
   /// Called once after the showcase frame is laid out. Reads prefs and,
@@ -395,7 +377,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 if (kIsWeb || !Platform.isIOS) _buildDonationFooter(context, isDark),
                 if (!kIsWeb && Platform.isIOS) _buildWebPromoFooter(context),
-                if (kIsWeb && _visitCount != null) _buildVisitorCounter(context),
                 SizedBox(height: MediaQuery.of(context).padding.bottom + 16),
               ],
             ),
@@ -536,51 +517,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // ── Visitor counter (web only, very end of the page) ─────────────────────
-  Widget _buildVisitorCounter(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-    final formatted = _visitCount!.toString().replaceAllMapped(
-          RegExp(r'\B(?=(\d{3})+(?!\d))'),
-          (m) => ',',
-        );
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(18, 8, 18, 8),
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 22),
-        decoration: BoxDecoration(
-          color: cs.primary.withValues(alpha: 0.08),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: cs.primary.withValues(alpha: 0.25)),
-        ),
-        child: Column(
-          children: [
-            Icon(Icons.groups_rounded, color: cs.primary, size: 32),
-            const SizedBox(height: 8),
-            Text(
-              formatted,
-              style: TextStyle(
-                fontSize: 44,
-                fontWeight: FontWeight.w800,
-                color: cs.primary,
-                height: 1.1,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              'TOTAL VISITORS',
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w700,
-                color: cs.onSurface.withValues(alpha: 0.6),
-                letterSpacing: 1.0,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   // ── Web promo footer (iOS only) ──────────────────────────────────────────
   Widget _buildWebPromoFooter(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
