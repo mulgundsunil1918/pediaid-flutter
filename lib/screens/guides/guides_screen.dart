@@ -21,7 +21,6 @@ import 'pals/pals_algorithms_screen.dart';
 import 'neonatal_echo_screen.dart';
 import '../tools/paediatric_parameters_screen.dart';
 import 'polycythemia_guide_screen.dart';
-import 'can_score_screen.dart';
 import 'ga_classification_screen.dart';
 import 'birthweight_classification_screen.dart';
 import 'dka_algorithm_screen.dart';
@@ -71,7 +70,7 @@ class _GuidesScreenState extends State<GuidesScreen> {
       icon: Icons.assessment,
       categories: const [_kNeonatal, _kScoring],
       highlight: true,
-      badge: '13 scores',
+      badge: '14 scores',
       build: (_) => const NeonatalScoresScreen(),
     ),
     _GuideItem(
@@ -146,13 +145,7 @@ class _GuidesScreenState extends State<GuidesScreen> {
       categories: const [_kNeonatal],
       build: (_) => const PolycythemiaGuideScreen(),
     ),
-    _GuideItem(
-      title: 'CAN Score',
-      subtitle: 'Clinical Assessment of Nutrition at Birth',
-      icon: Icons.monitor_weight_outlined,
-      categories: const [_kNeonatal, _kScoring],
-      build: (_) => const CanScoreScreen(),
-    ),
+    // CAN Score moved into Neonatal Scores screen
     // ── Emergency protocol guides ────────────────────────────────────────
     _GuideItem(
       title: 'DKA Algorithm',

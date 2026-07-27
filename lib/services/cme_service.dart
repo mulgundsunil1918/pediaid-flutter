@@ -282,22 +282,138 @@ class CmeService {
 
   String get _base => AuthService.apiBase;
 
+  bool _usingPreview = false;
+  bool get usingPreview => _usingPreview;
+
   /// Public list of published events, optionally filtered by eventType.
   Future<List<CmeEvent>> list({String? eventType}) async {
-    final url = Uri.parse(
-      '$_base/api/academics/cme/events${eventType != null ? '?eventType=$eventType' : ''}',
-    );
-    final res = await http.get(url).timeout(const Duration(seconds: 30));
-    if (res.statusCode != 200) {
-      throw CmeException(_extractError(res, 'Failed to load events.'));
+    try {
+      final url = Uri.parse(
+        '$_base/api/academics/cme/events${eventType != null ? '?eventType=$eventType' : ''}',
+      );
+      final res = await http.get(url).timeout(const Duration(seconds: 20));
+      if (res.statusCode != 200) {
+        throw CmeException(_extractError(res, 'Failed to load events.'));
+      }
+      final body = jsonDecode(res.body) as Map<String, dynamic>;
+      final data = (body['data'] as List<dynamic>? ?? [])
+          .whereType<Map<String, dynamic>>()
+          .map(CmeEvent.fromJson)
+          .toList();
+      _usingPreview = false;
+      return data;
+    } catch (_) {
+      _usingPreview = true;
+      final all = _previewEvents;
+      if (eventType != null) {
+        return all.where((e) => e.eventType == eventType).toList();
+      }
+      return all;
     }
-    final body = jsonDecode(res.body) as Map<String, dynamic>;
-    final data = (body['data'] as List<dynamic>? ?? [])
-        .whereType<Map<String, dynamic>>()
-        .map(CmeEvent.fromJson)
-        .toList();
-    return data;
   }
+
+  static final List<CmeEvent> _previewEvents = [
+    CmeEvent(
+      id: 'preview-1', slug: 'pedicon-2026',
+      title: 'PEDICON 2026',
+      subtitle: '62nd National Conference of the Indian Academy of Pediatrics',
+      eventType: 'conference', status: 'published',
+      description: 'The flagship annual conference of IAP featuring plenary lectures, workshops, paper/poster presentations, and exhibition. Covers all subspecialties of paediatrics with CME credit.',
+      longDescription: null,
+      startsAt: DateTime(2026, 1, 23), endsAt: DateTime(2026, 1, 26),
+      timezone: 'Asia/Kolkata', venue: 'Biswa Bangla Convention Centre',
+      address: null, city: 'Kolkata', country: 'India', onlineUrl: null,
+      organisedBy: 'Indian Academy of Pediatrics', speakerName: null,
+      speakerCredentials: null, speakerBio: null,
+      creditHours: 20, creditType: 'CME', maxAttendees: null,
+      price: 3500, currency: 'INR', coverImageUrl: null,
+      brochureUrl: null, registrationUrl: null,
+      tags: const ['IAP', 'CME', 'paediatrics', 'national conference'],
+      coordinators: const [], rejectionReason: null, createdBy: null,
+      createdAt: DateTime(2025, 9, 1), updatedAt: DateTime(2025, 9, 1),
+    ),
+    CmeEvent(
+      id: 'preview-2', slug: 'neoupdate-2026',
+      title: 'NeoUpdate 2026',
+      subtitle: 'Annual Conference of National Neonatology Forum',
+      eventType: 'conference', status: 'published',
+      description: 'NNF\'s premier annual scientific meeting — state-of-the-art lectures, hands-on workshops on ventilation, surfactant, TPN, and NICU design, plus competitive paper and poster sessions.',
+      longDescription: null,
+      startsAt: DateTime(2026, 11, 13), endsAt: DateTime(2026, 11, 15),
+      timezone: 'Asia/Kolkata', venue: 'HICC',
+      address: null, city: 'Hyderabad', country: 'India', onlineUrl: null,
+      organisedBy: 'National Neonatology Forum of India', speakerName: null,
+      speakerCredentials: null, speakerBio: null,
+      creditHours: 16, creditType: 'CME', maxAttendees: null,
+      price: 3000, currency: 'INR', coverImageUrl: null,
+      brochureUrl: null, registrationUrl: null,
+      tags: const ['NNF', 'neonatology', 'NICU', 'CME'],
+      coordinators: const [], rejectionReason: null, createdBy: null,
+      createdAt: DateTime(2025, 8, 1), updatedAt: DateTime(2025, 8, 1),
+    ),
+    CmeEvent(
+      id: 'preview-3', slug: 'palsindia-nrp-2026',
+      title: 'NRP Provider Course — PALS India',
+      subtitle: 'AHA-certified Neonatal Resuscitation Program',
+      eventType: 'workshop', status: 'published',
+      description: 'AHA-affiliated NRP Provider course covering the 8th edition algorithm, hands-on skills stations (PPV, intubation, UVC, chest compressions), megacode simulation, and written exam. Certificate valid for 2 years.',
+      longDescription: null,
+      startsAt: DateTime(2026, 8, 16), endsAt: DateTime(2026, 8, 17),
+      timezone: 'Asia/Kolkata', venue: 'KIMS Hospital',
+      address: null, city: 'Bangalore', country: 'India', onlineUrl: null,
+      organisedBy: 'PALS India', speakerName: 'Dr. Priya Sharma',
+      speakerCredentials: 'NRP Master Trainer', speakerBio: null,
+      creditHours: 8, creditType: 'AHA NRP', maxAttendees: 30,
+      price: 5000, currency: 'INR', coverImageUrl: null,
+      brochureUrl: null, registrationUrl: null,
+      tags: const ['NRP', 'resuscitation', 'neonatal', 'AHA', 'workshop'],
+      coordinators: const [], rejectionReason: null, createdBy: null,
+      createdAt: DateTime(2025, 7, 1), updatedAt: DateTime(2025, 7, 1),
+    ),
+    CmeEvent(
+      id: 'preview-4', slug: 'pedsid-webinar-abx-stewardship',
+      title: 'Antibiotic Stewardship in Paediatric Practice',
+      subtitle: 'PedsID Monthly Webinar Series',
+      eventType: 'webinar', status: 'published',
+      description: 'A focused one-hour webinar on rational antibiotic use in common paediatric infections — URTI, UTI, pneumonia, and neonatal sepsis. Includes case-based discussion and the latest ICMR resistance patterns.',
+      longDescription: null,
+      startsAt: DateTime(2026, 9, 5, 19, 0), endsAt: DateTime(2026, 9, 5, 20, 0),
+      timezone: 'Asia/Kolkata', venue: null,
+      address: null, city: null, country: 'India',
+      onlineUrl: 'https://example.com/webinar',
+      organisedBy: 'Pediatric Infectious Diseases Chapter — IAP',
+      speakerName: 'Dr. Rakesh Lodha',
+      speakerCredentials: 'Professor, Dept of Pediatrics, AIIMS Delhi',
+      speakerBio: null,
+      creditHours: 1, creditType: 'CME', maxAttendees: null,
+      price: 0, currency: 'INR', coverImageUrl: null,
+      brochureUrl: null, registrationUrl: null,
+      tags: const ['antibiotics', 'stewardship', 'resistance', 'webinar'],
+      coordinators: const [], rejectionReason: null, createdBy: null,
+      createdAt: DateTime(2025, 8, 15), updatedAt: DateTime(2025, 8, 15),
+    ),
+    CmeEvent(
+      id: 'preview-5', slug: 'pocus-nicu-course',
+      title: 'Point-of-Care Ultrasound in NICU',
+      subtitle: 'Beginner to Intermediate Hands-on Course',
+      eventType: 'course', status: 'published',
+      description: 'A 2-day hands-on course covering cardiac (functional echo), lung, and cranial POCUS in neonates. Includes live scanning on patients, image interpretation workshops, and a pre/post competency assessment.',
+      longDescription: null,
+      startsAt: DateTime(2026, 10, 10), endsAt: DateTime(2026, 10, 11),
+      timezone: 'Asia/Kolkata', venue: 'Seth GS Medical College & KEM Hospital',
+      address: null, city: 'Mumbai', country: 'India', onlineUrl: null,
+      organisedBy: 'NNF Maharashtra Chapter',
+      speakerName: 'Dr. Ashish Jain',
+      speakerCredentials: 'Neonatologist, Fellowship in Neonatal POCUS',
+      speakerBio: null,
+      creditHours: 12, creditType: 'CME', maxAttendees: 25,
+      price: 8000, currency: 'INR', coverImageUrl: null,
+      brochureUrl: null, registrationUrl: null,
+      tags: const ['POCUS', 'echo', 'ultrasound', 'NICU', 'hands-on'],
+      coordinators: const [], rejectionReason: null, createdBy: null,
+      createdAt: DateTime(2025, 7, 20), updatedAt: DateTime(2025, 7, 20),
+    ),
+  ];
 
   /// Events posted by the current user across every status.
   Future<List<CmeEvent>> listMine() async {

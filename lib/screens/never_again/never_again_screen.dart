@@ -286,6 +286,17 @@ class _NeverAgainScreenState extends State<NeverAgainScreen> {
             message:
                 'Never Again is in preview — anonymous peer-learning posts, moderation flow and the 30-topic taxonomy are still being polished. Read freely; please don\'t treat any post as authoritative until the moderation pipeline is signed off.',
           ),
+          if (_service.usingPreview)
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              color: const Color(0xFFFFF3E0),
+              child: Text(
+                'Showing sample posts — live feed will load once the server is back online.',
+                style: GoogleFonts.plusJakartaSans(fontSize: 11.5, color: const Color(0xFFE65100)),
+                textAlign: TextAlign.center,
+              ),
+            ),
           _CategoryFilterRow(
             selected: _selectedCategory,
             onSelect: _selectCategory,

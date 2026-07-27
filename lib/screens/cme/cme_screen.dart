@@ -154,6 +154,17 @@ class _CmeScreenState extends State<CmeScreen>
             message:
                 'CME & Webinars is in preview — event listings, "My posts" submissions and admin moderation are still being wired up. Browse freely, but please don\'t rely on it for live registration deadlines yet.',
           ),
+          if (CmeService.instance.usingPreview)
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              color: const Color(0xFFFFF3E0),
+              child: Text(
+                'Showing sample events — live listings will load once the server is back online.',
+                style: GoogleFonts.plusJakartaSans(fontSize: 11.5, color: const Color(0xFFE65100)),
+                textAlign: TextAlign.center,
+              ),
+            ),
           Expanded(
             child: TabBarView(
               controller: _tabController,

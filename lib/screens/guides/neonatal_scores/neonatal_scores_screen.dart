@@ -5,6 +5,7 @@ import 'nichd_hie_screen.dart';
 import 'lus_score_screen.dart';
 import '../modified_ballard_screen.dart';
 import '../pofras_screen.dart';
+import '../can_score_screen.dart';
 
 class NeonatalScoresScreen extends StatefulWidget {
   const NeonatalScoresScreen({super.key});
@@ -92,7 +93,7 @@ class _NeonatalScoresScreenState extends State<NeonatalScoresScreen> {
         Expanded(
           child: ListView.separated(
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
-            itemCount: scores.length + 4,
+            itemCount: scores.length + 5,
             separatorBuilder: (context, i) => const SizedBox(height: 8),
             itemBuilder: (context, i) {
               // NICHD HIE Assessment — hardcoded card at top
@@ -133,10 +134,20 @@ class _NeonatalScoresScreenState extends State<NeonatalScoresScreen> {
                       MaterialPageRoute(builder: (_) => const PofrasScreen())),
                 );
               }
-              final score = scores[i - 4];
+              // CAN Score — clinical assessment of nutrition
+              if (i == 4) {
+                return _ExtraScoreCard(
+                  title: 'CAN Score',
+                  subtitle: 'Clinical Assessment of Nutrition at Birth',
+                  icon: Icons.monitor_weight_outlined,
+                  onTap: () => Navigator.push(context,
+                      MaterialPageRoute(builder: (_) => const CanScoreScreen())),
+                );
+              }
+              final score = scores[i - 5];
               return _ScoreCard(
                 score: score,
-                index: i,
+                index: i - 2,
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
