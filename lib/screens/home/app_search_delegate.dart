@@ -81,6 +81,8 @@ import '../guides/can_score_screen.dart';
 import '../lab_reference/lab_reference_screen.dart';
 import '../faq_screen.dart';
 import '../cme/cme_screen.dart';
+import '../never_again/never_again_screen.dart';
+import '../calculators/infant_bp_calculator.dart';
 import '../../academics/academics_web_screen.dart';
 
 // ── Search item model ─────────────────────────────────────────────────────────
@@ -134,7 +136,7 @@ List<_SearchItem> _buildAllItems() => [
     category: 'Calculators & Tools',
     icon: Icons.pregnant_woman_outlined,
     color: _kCalcColor,
-    keywords: const ['edd', 'lmp', 'due date', 'dating', 'weeks', 'pregnancy dating', 'antenatal'],
+    keywords: const ['edd', 'lmp', 'due date', 'dating', 'weeks', 'pregnancy dating', 'antenatal', 'expected date delivery', 'naegele', 'USG dating', 'scan date', 'trimester', 'conception', 'estimated delivery', 'obstetric date'],
     navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const GestationalAgeCalculator())),
   ),
 
@@ -144,7 +146,7 @@ List<_SearchItem> _buildAllItems() => [
     category: 'Calculators & Tools',
     icon: Icons.child_care,
     color: _kCalcColor,
-    keywords: const ['iugr', 'ponderal', 'weight', 'length', 'growth restriction', 'nutrition', 'PI'],
+    keywords: const ['iugr', 'ponderal', 'weight', 'length', 'growth restriction', 'nutrition', 'PI', 'fetal growth restriction', 'FGR', 'SGA', 'wasting', 'symmetrical IUGR', 'asymmetrical IUGR', 'thin baby', 'malnourished'],
     navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const PonderalIndexCalculator())),
   ),
 
@@ -154,7 +156,7 @@ List<_SearchItem> _buildAllItems() => [
     category: 'Calculators & Tools',
     icon: Icons.person_outlined,
     color: _kCalcColor,
-    keywords: const ['bsa', 'mosteller', 'surface area', 'dose calculation'],
+    keywords: const ['bsa', 'mosteller', 'surface area', 'dose calculation', 'body surface', 'chemotherapy dose', 'drug dosing', 'body area'],
     navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const BSACalculator())),
   ),
 
@@ -164,7 +166,7 @@ List<_SearchItem> _buildAllItems() => [
     category: 'Calculators & Tools',
     icon: Icons.local_dining,
     color: _kCalcColor,
-    keywords: const ['espghan', 'feeds', 'calories', 'nutrition', 'audit', 'enteral', 'protein', 'intake'],
+    keywords: const ['espghan', 'feeds', 'calories', 'nutrition', 'audit', 'enteral', 'protein', 'intake', 'calorie calculator', 'feeding audit', 'kcal', 'breast milk', 'formula', 'fortifier', 'preterm feeding', 'energy', 'growth velocity', 'feed volume'],
     navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const NutritionalAuditCalculator())),
   ),
 
@@ -174,7 +176,7 @@ List<_SearchItem> _buildAllItems() => [
     category: 'Calculators & Tools',
     icon: Icons.medical_services,
     color: _kCalcColor,
-    keywords: const ['tpn', 'parenteral nutrition', 'iv nutrition', 'dextrose', 'amino acids', 'lipids', 'total parenteral'],
+    keywords: const ['tpn', 'parenteral nutrition', 'iv nutrition', 'dextrose', 'amino acids', 'lipids', 'total parenteral', 'PN', 'intralipid', 'smof', 'trophamine', 'primene', 'hyperalimentation', 'central line nutrition', 'vaminolact'],
     navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const TpnCalculator())),
   ),
 
@@ -184,7 +186,7 @@ List<_SearchItem> _buildAllItems() => [
     category: 'Calculators & Tools',
     icon: Icons.calendar_month,
     color: _kCalcColor,
-    keywords: const ['corrected gestational age', 'postmenstrual age', 'cga', 'pma', 'premature', 'corrected age', 'preterm age'],
+    keywords: const ['corrected gestational age', 'postmenstrual age', 'cga', 'pma', 'premature', 'corrected age', 'preterm age', 'chronological age', 'adjusted age', 'preterm correction', 'age correction'],
     navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const CGAPMACalculator())),
   ),
 
@@ -194,7 +196,7 @@ List<_SearchItem> _buildAllItems() => [
     category: 'Calculators & Tools',
     icon: Icons.water_drop,
     color: _kCalcColor,
-    keywords: const ['glucose', 'infusion rate', 'gir', 'dextrose', 'sugar', 'hypoglycaemia', 'neonatal glucose'],
+    keywords: const ['glucose', 'infusion rate', 'gir', 'dextrose', 'sugar', 'hypoglycaemia', 'neonatal glucose', 'hypoglycemia', 'blood sugar', 'D10', 'D5', 'mg/kg/min', 'glucose delivery rate', 'low sugar', 'hyperglycemia', 'hyperglycaemia'],
     navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const GIRCalculator())),
   ),
 
@@ -204,7 +206,7 @@ List<_SearchItem> _buildAllItems() => [
     category: 'Calculators & Tools',
     icon: Icons.monitor_heart_outlined,
     color: _kCalcColor,
-    keywords: const ['egfr', 'creatinine', 'renal', 'kidney', 'gfr', 'glomerular filtration', 'schwartz', 'clearance'],
+    keywords: const ['egfr', 'creatinine', 'renal', 'kidney', 'gfr', 'glomerular filtration', 'schwartz', 'clearance', 'AKI', 'acute kidney injury', 'renal failure', 'CKD', 'kidney function', 'nephrology', 'bedside schwartz'],
     navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const SchwartzEGFRCalculator())),
   ),
 
@@ -214,7 +216,7 @@ List<_SearchItem> _buildAllItems() => [
     category: 'Calculators & Tools',
     icon: Icons.air,
     color: _kCalcColor,
-    keywords: const ['abg', 'blood gas', 'ph', 'pco2', 'po2', 'bicarbonate', 'acid base', 'metabolic', 'respiratory', 'acidosis', 'alkalosis'],
+    keywords: const ['abg', 'blood gas', 'ph', 'pco2', 'po2', 'bicarbonate', 'acid base', 'metabolic', 'respiratory', 'acidosis', 'alkalosis', 'VBG', 'venous blood gas', 'base excess', 'base deficit', 'BE', 'lactate', 'compensation', 'mixed disorder', 'HCO3', 'arterial gas'],
     navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const BloodGasAnalyser())),
   ),
 
@@ -224,7 +226,7 @@ List<_SearchItem> _buildAllItems() => [
     category: 'Calculators & Tools',
     icon: Icons.bloodtype_outlined,
     color: _kCalcColor,
-    keywords: const ['exchange transfusion', 'dvet', 'double volume', 'blood exchange', 'jaundice treatment', 'ET'],
+    keywords: const ['exchange transfusion', 'dvet', 'double volume', 'blood exchange', 'jaundice treatment', 'ET', 'severe jaundice', 'kernicterus', 'bilirubin encephalopathy', 'aliquot', 'blood group incompatibility', 'Rh incompatibility', 'ABO incompatibility', 'isoimmunisation'],
     navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const DoubleVolumeExchange())),
   ),
 
@@ -234,7 +236,7 @@ List<_SearchItem> _buildAllItems() => [
     category: 'Calculators & Tools',
     icon: Icons.air_rounded,
     color: _kCalcColor,
-    keywords: const ['ventilator', 'oxygenation index', 'OI', 'OSI', 'mean airway pressure', 'MAP', 'HFOV', 'respiratory', 'mechanical ventilation'],
+    keywords: const ['ventilator', 'oxygenation index', 'OI', 'OSI', 'mean airway pressure', 'MAP', 'HFOV', 'respiratory', 'mechanical ventilation', 'CPAP', 'SIMV', 'pressure support', 'FiO2', 'PEEP', 'PIP', 'tidal volume', 'ventilator settings', 'respiratory failure', 'oxygen', 'surfactant', 'RDS', 'HFO'],
     navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const VentilatorParameters())),
   ),
 
@@ -257,7 +259,7 @@ List<_SearchItem> _buildAllItems() => [
     category: 'Calculators & Tools',
     icon: Icons.favorite_rounded,
     color: _kCalcColor,
-    keywords: const ['blood pressure', 'bp', 'hypertension', 'hypotension', 'neonatal bp', 'pediatric bp', 'centile', 'systolic', 'diastolic', 'zubrow', 'aap bp'],
+    keywords: const ['blood pressure', 'bp', 'hypertension', 'hypotension', 'neonatal bp', 'pediatric bp', 'centile', 'systolic', 'diastolic', 'zubrow', 'aap bp', 'high bp', 'low bp', 'bp chart', 'bp centile', 'bp percentile', 'normal bp', 'stage 1', 'stage 2', 'infant bp', 'child bp', 'adolescent bp'],
     navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const BPHubScreen())),
   ),
 
@@ -267,7 +269,7 @@ List<_SearchItem> _buildAllItems() => [
     category: 'Calculators & Tools',
     icon: Icons.opacity_rounded,
     color: _kCalcColor,
-    keywords: const ['bilirubin', 'jaundice', 'phototherapy', 'exchange', 'TSB', 'icterus', 'aap 2022', 'kemper', 'hour specific', 'neurotoxicity'],
+    keywords: const ['bilirubin', 'jaundice', 'phototherapy', 'exchange', 'TSB', 'icterus', 'aap 2022', 'kemper', 'hour specific', 'neurotoxicity', 'yellow baby', 'bili', 'neonatal jaundice', 'breast milk jaundice', 'physiological jaundice', 'pathological jaundice', 'conjugated', 'unconjugated', 'direct bilirubin', 'indirect bilirubin', 'bhutani', 'nomogram', 'risk zone'],
     navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const JaundiceHubScreen())),
   ),
 
@@ -277,7 +279,7 @@ List<_SearchItem> _buildAllItems() => [
     category: 'Calculators & Tools',
     icon: Icons.local_drink_outlined,
     color: _kCalcColor,
-    keywords: const ['maintenance fluid', 'fluid', 'holliday segar', 'neonatal fluid', 'iv fluid', 'fluid requirement', 'ml per kg', 'dehydration', 'fluid therapy'],
+    keywords: const ['maintenance fluid', 'fluid', 'holliday segar', 'neonatal fluid', 'iv fluid', 'fluid requirement', 'ml per kg', 'dehydration', 'fluid therapy', '4-2-1 rule', 'fluid rate', 'drip rate', 'normal saline', 'NS', 'RL', 'ringer lactate', 'D5NS', 'isolyte', 'fluid bolus', 'fluid management', 'day 1 fluid', 'preterm fluid'],
     navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const MaintenanceFluidCalculator())),
   ),
 
@@ -329,7 +331,7 @@ List<_SearchItem> _buildAllItems() => [
     category: 'Charts',
     icon: Icons.show_chart,
     color: _kChartColor,
-    keywords: const ['who', 'growth chart', 'weight', 'height', 'head circumference', 'bmi', '0-5 years', 'centile', 'percentile', 'z-score'],
+    keywords: const ['who', 'growth chart', 'weight', 'height', 'head circumference', 'bmi', '0-5 years', 'centile', 'percentile', 'z-score', 'growth monitoring', 'wasting', 'stunting', 'underweight', 'obesity', 'overweight', 'failure to thrive', 'FTT', 'growth faltering', 'OFC', 'length for age', 'weight for age', 'weight for length'],
     navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const WhoChartSelectionScreen())),
   ),
 
@@ -339,7 +341,7 @@ List<_SearchItem> _buildAllItems() => [
     category: 'Charts',
     icon: Icons.show_chart,
     color: _kChartColor,
-    keywords: const ['iap', 'indian', 'growth chart', 'height', 'weight', '5-18 years', 'iap 2015', 'adolescent'],
+    keywords: const ['iap', 'indian', 'growth chart', 'height', 'weight', '5-18 years', 'iap 2015', 'adolescent', 'school age', 'india growth', 'national growth', 'short stature', 'tall stature', 'mid parental height', 'target height', 'puberty', 'BMI chart'],
     navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const IAPChartScreen())),
   ),
 
@@ -349,7 +351,7 @@ List<_SearchItem> _buildAllItems() => [
     category: 'Charts',
     icon: Icons.monitor_heart_outlined,
     color: _kChartColor,
-    keywords: const ['fenton', 'preterm', 'SGA', 'AGA', 'LGA', 'small for gestational age', 'growth', 'neonatal growth', '22-50 weeks', 'percentile'],
+    keywords: const ['fenton', 'preterm', 'SGA', 'AGA', 'LGA', 'small for gestational age', 'growth', 'neonatal growth', '22-50 weeks', 'percentile', 'fenton 2013', 'preterm growth chart', 'NICU growth', 'premature growth', 'birth weight centile', 'growth velocity', 'EUGR', 'postnatal growth failure'],
     navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const FentonChartScreen())),
   ),
 
@@ -374,7 +376,7 @@ List<_SearchItem> _buildAllItems() => [
     category: 'Drug Formulary',
     icon: Icons.medication_rounded,
     color: _kDrugColor,
-    keywords: const ['drug', 'medication', 'dose', 'formulary', 'neofax', 'harriet lane', 'antibiotic', 'medicine', 'pediatric drug', 'neonatal drug', 'dosing'],
+    keywords: const ['drug', 'medication', 'dose', 'formulary', 'neofax', 'harriet lane', 'antibiotic', 'medicine', 'pediatric drug', 'neonatal drug', 'dosing', 'mg per kg', 'paracetamol', 'amoxicillin', 'ceftriaxone', 'gentamicin', 'vancomycin', 'meropenem', 'ibuprofen', 'phenobarbitone', 'caffeine', 'surfactant', 'indomethacin', 'drug dose', 'syrup', 'injection', 'tablet'],
     navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const FormularyScreen())),
   ),
 
@@ -396,7 +398,7 @@ List<_SearchItem> _buildAllItems() => [
     category: 'Guides',
     icon: Icons.menu_book,
     color: _kGuideColor,
-    keywords: const ['nrp', 'newborn resuscitation', 'neonatal resuscitation', 'delivery room', 'resuscitation algorithm', '9th edition', 'apnea', 'intubation'],
+    keywords: const ['nrp', 'newborn resuscitation', 'neonatal resuscitation', 'delivery room', 'resuscitation algorithm', '9th edition', 'apnea', 'intubation', 'PPV', 'positive pressure ventilation', 'CPAP', 'chest compressions', 'golden minute', 'meconium', 'birth asphyxia', 'delayed cord clamping', 'T-piece', 'epinephrine', 'adrenaline', 'UVC', 'heart rate', 'SpO2 target'],
     navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const NrpPdfViewer())),
   ),
 
@@ -406,7 +408,7 @@ List<_SearchItem> _buildAllItems() => [
     category: 'Guides',
     icon: Icons.vaccines_outlined,
     color: _kGuideColor,
-    keywords: const ['vaccine', 'immunization', 'immunisation', 'schedule', 'iap', 'nis', 'vaccination', 'bcg', 'opv', 'dpt', 'hepb'],
+    keywords: const ['vaccine', 'immunization', 'immunisation', 'schedule', 'iap', 'nis', 'vaccination', 'bcg', 'opv', 'dpt', 'hepb', 'mmr', 'typhoid', 'varicella', 'pneumococcal', 'pcv', 'rotavirus', 'hib', 'hepatitis', 'meningococcal', 'catch up', 'booster', 'birth dose', 'ipv', 'tdap', 'flu vaccine', 'influenza', 'hpv', 'pentavalent'],
     navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const VaccineScreen())),
   ),
 
@@ -416,7 +418,7 @@ List<_SearchItem> _buildAllItems() => [
     category: 'Guides',
     icon: Icons.assessment,
     color: _kGuideColor,
-    keywords: const ['apgar', 'downes', 'sarnat', 'thompson', 'score', 'hie', 'levene', 'ballard', 'neonatal assessment', 'IVH', 'PHVD', 'NICHD'],
+    keywords: const ['apgar', 'downes', 'sarnat', 'thompson', 'score', 'hie', 'levene', 'ballard', 'neonatal assessment', 'IVH', 'PHVD', 'NICHD', 'silverman anderson', 'silverman', 'respiratory distress score', 'LATCH', 'breastfeeding score', 'CAN score', 'nutrition score', 'POFRAS', 'feeding readiness', 'combined apgar', 'lung ultrasound', 'LUS', 'neonatal scoring'],
     navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const NeonatalScoresScreen())),
   ),
 
@@ -426,7 +428,7 @@ List<_SearchItem> _buildAllItems() => [
     category: 'Guides',
     icon: Icons.thermostat_rounded,
     color: _kGuideColor,
-    keywords: const ['NICHD', 'HIE', 'cooling', 'hypothermia', 'therapeutic hypothermia', 'birth asphyxia', 'hypoxic ischemic', 'encephalopathy'],
+    keywords: const ['NICHD', 'HIE', 'cooling', 'hypothermia', 'therapeutic hypothermia', 'birth asphyxia', 'hypoxic ischemic', 'encephalopathy', 'perinatal asphyxia', 'seizures', 'MRI brain', 'whole body cooling', 'selective head cooling', 'servo mode', 'rewarming', '33.5 degrees', 'neonatal seizures'],
     navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const NeonatalScoresScreen())),
   ),
 
@@ -436,7 +438,7 @@ List<_SearchItem> _buildAllItems() => [
     category: 'Guides',
     icon: Icons.child_care,
     color: _kGuideColor,
-    keywords: const ['ballard', 'gestational age', 'maturity', 'assessment', 'scoring', 'neuromuscular', 'physical maturity'],
+    keywords: const ['ballard', 'gestational age', 'maturity', 'assessment', 'scoring', 'neuromuscular', 'physical maturity', 'new ballard', 'NBS', 'square window', 'arm recoil', 'popliteal angle', 'scarf sign', 'heel to ear', 'skin texture', 'lanugo', 'plantar crease', 'breast bud', 'genitalia', 'posture'],
     navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const ModifiedBallardScreen())),
   ),
 
@@ -446,7 +448,7 @@ List<_SearchItem> _buildAllItems() => [
     category: 'Guides',
     icon: Icons.monitor_heart,
     color: _kGuideColor,
-    keywords: const ['pals', 'pediatric advanced life support', 'resuscitation', 'algorithm', 'cardiac arrest', 'bradycardia', 'tachycardia', 'shock', 'CPR', 'FBAO'],
+    keywords: const ['pals', 'pediatric advanced life support', 'resuscitation', 'algorithm', 'cardiac arrest', 'bradycardia', 'tachycardia', 'shock', 'CPR', 'FBAO', 'SVT', 'supraventricular tachycardia', 'VT', 'VF', 'pulseless', 'AED', 'defibrillation', 'cardioversion', 'adenosine', 'amiodarone', 'chest compression', 'pediatric resuscitation', 'choking', 'foreign body', 'asystole', 'PEA'],
     navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const PalsAlgorithmsScreen())),
   ),
 
@@ -469,7 +471,7 @@ List<_SearchItem> _buildAllItems() => [
     category: 'Guides',
     icon: Icons.medical_services_outlined,
     color: _kGuideColor,
-    keywords: const ['parameters', 'equipment', 'harriet lane', 'et tube', 'ETT', 'laryngoscope', 'weight based', 'paediatric equipment', 'age based', 'NGT', 'foley'],
+    keywords: const ['parameters', 'equipment', 'harriet lane', 'et tube', 'ETT', 'laryngoscope', 'weight based', 'paediatric equipment', 'age based', 'NGT', 'foley', 'chest tube', 'suction catheter', 'BP cuff size', 'mask size', 'ambu bag', 'LMA', 'IO needle', 'intraosseous', 'IV cannula', 'tracheostomy', 'blade size', 'miller', 'macintosh'],
     navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const PaediatricParametersScreen())),
   ),
 
@@ -499,7 +501,7 @@ List<_SearchItem> _buildAllItems() => [
     category: 'Guides',
     icon: Icons.monitor_weight_outlined,
     color: _kGuideColor,
-    keywords: const ['CAN score', 'clinical assessment nutrition', 'fetal malnutrition', 'nutritional assessment', 'metcoff', 'IUGR', 'intrauterine growth restriction', 'fat wasting', 'muscle wasting', 'newborn nutrition', 'birth nutrition'],
+    keywords: const ['CAN score', 'clinical assessment nutrition', 'fetal malnutrition', 'nutritional assessment', 'metcoff', 'IUGR', 'intrauterine growth restriction', 'fat wasting', 'muscle wasting', 'newborn nutrition', 'birth nutrition', 'SGA nutrition', 'subcutaneous fat', 'skin fold', 'hair quality', 'nail', 'cheek fat', 'breast tissue', 'buttocks', 'abdomen', 'arms', 'legs'],
     navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const CanScoreScreen())),
   ),
 
@@ -511,7 +513,7 @@ List<_SearchItem> _buildAllItems() => [
     category: 'Lab Reference',
     icon: Icons.biotech_rounded,
     color: _kLabColor,
-    keywords: const ['lab', 'laboratory', 'reference values', 'normal values', 'CBC', 'electrolytes', 'LFT', 'RFT', 'haematology', 'biochemistry', 'blood counts', 'thyroid', 'coagulation'],
+    keywords: const ['lab', 'laboratory', 'reference values', 'normal values', 'CBC', 'electrolytes', 'LFT', 'RFT', 'haematology', 'biochemistry', 'blood counts', 'thyroid', 'coagulation', 'normal range', 'hemoglobin', 'haemoglobin', 'WBC', 'platelet', 'bilirubin', 'creatinine', 'urea', 'ALT', 'AST', 'CRP', 'ESR', 'PT', 'INR', 'aPTT', 'fibrinogen', 'TSH', 'T3', 'T4', 'cortisol', 'ammonia', 'lactate', 'blood sugar', 'ABG values', 'CSF', 'urine', 'neonatal values', 'pediatric range'],
     navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const LabReferenceScreen())),
   ),
 
@@ -550,7 +552,7 @@ List<_SearchItem> _buildAllItems() => [
     category: 'Calculators & Tools',
     icon: Icons.water,
     color: _kCalcColor,
-    keywords: const ['sodium', 'hyponatraemia', 'hyponatremia', 'hypernatraemia', 'hypernatremia', 'na correction', 'osmotic demyelination', 'central pontine', '3% saline', 'hypertonic saline', 'free water'],
+    keywords: const ['sodium', 'hyponatraemia', 'hyponatremia', 'hypernatraemia', 'hypernatremia', 'na correction', 'osmotic demyelination', 'central pontine', '3% saline', 'hypertonic saline', 'free water', 'sodium deficit', 'SIADH', 'cerebral salt wasting', 'low sodium', 'high sodium', 'ODS', 'myelinolysis', 'seizures hyponatremia', 'total body water'],
     navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const SodiumCorrectionCalculator())),
   ),
   _SearchItem(
@@ -577,7 +579,7 @@ List<_SearchItem> _buildAllItems() => [
     category: 'Calculators & Tools',
     icon: Icons.bolt_outlined,
     color: _kCalcColor,
-    keywords: const ['potassium', 'k correction', 'hypokalaemia', 'hypokalemia', 'hyperkalaemia', 'hyperkalemia', 'KCl', 'potassium chloride', 'IV potassium', 'oral potassium'],
+    keywords: const ['potassium', 'k correction', 'hypokalaemia', 'hypokalemia', 'hyperkalaemia', 'hyperkalemia', 'KCl', 'potassium chloride', 'IV potassium', 'oral potassium', 'low potassium', 'high potassium', 'ECG changes', 'tall T wave', 'U wave', 'arrhythmia', 'cardiac arrest potassium', 'salbutamol nebulisation', 'insulin dextrose', 'calcium gluconate hyperkalemia', 'kayexalate'],
     navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const PotassiumCorrectionCalculator())),
   ),
   _SearchItem(
@@ -586,7 +588,7 @@ List<_SearchItem> _buildAllItems() => [
     category: 'Calculators & Tools',
     icon: Icons.bolt_outlined,
     color: _kCalcColor,
-    keywords: const ['calcium', 'ca correction', 'hypocalcaemia', 'hypocalcemia', 'corrected calcium', 'albumin', 'ionised calcium', 'tetany', 'gluconate'],
+    keywords: const ['calcium', 'ca correction', 'hypocalcaemia', 'hypocalcemia', 'corrected calcium', 'albumin', 'ionised calcium', 'tetany', 'gluconate', 'low calcium', 'QTc prolongation', 'trousseau', 'chvostek', 'jitteriness', 'seizures calcium', 'calcium chloride', 'neonatal hypocalcaemia', 'vitamin D', 'rickets', 'DiGeorge'],
     navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const CalciumCorrectionCalculator())),
   ),
   _SearchItem(
@@ -613,7 +615,7 @@ List<_SearchItem> _buildAllItems() => [
     category: 'Calculators & Tools',
     icon: Icons.water_drop,
     color: _kCalcColor,
-    keywords: const ['dextrose bolus', 'D10', '2 mL/kg', 'hypoglycaemia', 'hypoglycemia', 'minibolus', 'mini bolus', 'glucose bolus', 'low blood sugar', 'neonatal hypoglycaemia'],
+    keywords: const ['dextrose bolus', 'D10', '2 mL/kg', 'hypoglycaemia', 'hypoglycemia', 'minibolus', 'mini bolus', 'glucose bolus', 'low blood sugar', 'neonatal hypoglycaemia', 'D10W', 'D25', 'D50', 'central line dextrose', 'peripheral dextrose', 'GIR', 'glucose infusion rate', 'IDM', 'infant of diabetic mother', 'LGA hypoglycemia', 'SGA hypoglycemia', 'glucagon', 'diazoxide', 'congenital hyperinsulinism'],
     navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const DextroseBolusCalculator())),
   ),
   _SearchItem(
@@ -640,7 +642,7 @@ List<_SearchItem> _buildAllItems() => [
     category: 'Calculators & Tools',
     icon: Icons.air,
     color: _kCalcColor,
-    keywords: const ['ETT', 'endotracheal tube', 'tube size', 'tube depth', 'NTL+1', 'NTL plus 1', 'intubation', 'airway', 'cuffed', 'uncuffed', 'oral ETT', 'nasal ETT'],
+    keywords: const ['ETT', 'endotracheal tube', 'tube size', 'tube depth', 'NTL+1', 'NTL plus 1', 'intubation', 'airway', 'cuffed', 'uncuffed', 'oral ETT', 'nasal ETT', 'ET tube', 'endotracheal', 'laryngoscope', 'cole formula', 'weight based tube', 'age based tube', 'lip level', 'nostril level', 'INSURE', 'LISA'],
     navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const EttCalculator())),
   ),
   _SearchItem(
@@ -649,7 +651,7 @@ List<_SearchItem> _buildAllItems() => [
     category: 'Calculators & Tools',
     icon: Icons.linear_scale_rounded,
     color: _kCalcColor,
-    keywords: const ['UVC', 'UAC', 'umbilical venous catheter', 'umbilical arterial catheter', 'umbilical line', 'shukla', 'birthweight', 'catheter depth', 'umbilical insertion'],
+    keywords: const ['UVC', 'UAC', 'umbilical venous catheter', 'umbilical arterial catheter', 'umbilical line', 'shukla', 'birthweight', 'catheter depth', 'umbilical insertion', 'central line', 'umbilical stump', 'D1 diaphragm', 'T8-T10', 'L3-L4', 'high line', 'low line', 'xray confirmation', 'PICC'],
     navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const UmbilicalCatheterCalculator())),
   ),
   _SearchItem(
@@ -658,7 +660,7 @@ List<_SearchItem> _buildAllItems() => [
     category: 'Calculators & Tools',
     icon: Icons.favorite_rounded,
     color: _kCalcColor,
-    keywords: const ['neonatal blood pressure', 'neonatal BP', 'neonatal hypertension', 'neonatal hypotension', 'preterm BP', 'mean BP', 'systolic BP', 'BP centile'],
+    keywords: const ['neonatal blood pressure', 'neonatal BP', 'neonatal hypertension', 'neonatal hypotension', 'preterm BP', 'mean BP', 'systolic BP', 'BP centile', 'zubrow', 'PMA', 'gestational age BP', 'MAP', 'mean arterial pressure', 'NIBP', 'invasive BP', 'arterial line BP'],
     navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const NeonatalBPCalculator())),
   ),
   _SearchItem(
@@ -667,7 +669,7 @@ List<_SearchItem> _buildAllItems() => [
     category: 'Calculators & Tools',
     icon: Icons.monitor_heart_outlined,
     color: _kCalcColor,
-    keywords: const ['echo', '2d echo', 'echocardiogram', 'echocardiography', 'z-score', 'shortening fraction', 'ejection fraction', 'EF', 'RVSP', 'PASP', 'PA pressure', 'cardiac', 'fractional shortening', 'TAPSE', 'LVEDD'],
+    keywords: const ['echo', '2d echo', 'echocardiogram', 'echocardiography', 'z-score', 'shortening fraction', 'ejection fraction', 'EF', 'RVSP', 'PASP', 'PA pressure', 'cardiac', 'fractional shortening', 'TAPSE', 'LVEDD', 'LVESD', 'IVS', 'LVPW', 'aortic root', 'LA size', 'PDA', 'ASD', 'VSD', 'valve regurgitation', 'PPHN', 'TR jet', 'cardiac output', 'SVC flow'],
     navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const EchoCalculatorsScreen())),
   ),
 
@@ -679,7 +681,7 @@ List<_SearchItem> _buildAllItems() => [
     category: 'Emergency',
     icon: Icons.emergency_outlined,
     color: _kEmergencyColor,
-    keywords: const ['emergency drugs', 'NICU drugs', 'resuscitation drugs', 'adrenaline', 'epinephrine', 'atropine', 'naloxone', 'sodium bicarbonate', 'calcium gluconate', 'D10', 'NICU code', 'crash cart neonatal'],
+    keywords: const ['emergency drugs', 'NICU drugs', 'resuscitation drugs', 'adrenaline', 'epinephrine', 'atropine', 'naloxone', 'sodium bicarbonate', 'calcium gluconate', 'D10', 'NICU code', 'crash cart neonatal', 'neonatal emergency', 'code blue NICU', 'prostaglandin', 'PGE1', 'surfactant', 'dopamine', 'dobutamine', 'milrinone', 'phenobarbitone loading', 'volume expander'],
     navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const EmergencyNICUDrugsScreen())),
   ),
   _SearchItem(
@@ -688,7 +690,7 @@ List<_SearchItem> _buildAllItems() => [
     category: 'Emergency',
     icon: Icons.emergency_outlined,
     color: _kEmergencyColor,
-    keywords: const ['emergency drugs', 'PICU drugs', 'pediatric emergency', 'paediatric emergency', 'crash cart', 'resuscitation drugs', 'inotrope', 'pressor', 'STAT bolus', 'infusion drugs', 'code drugs', 'adrenaline drip', 'noradrenaline'],
+    keywords: const ['emergency drugs', 'PICU drugs', 'pediatric emergency', 'paediatric emergency', 'crash cart', 'resuscitation drugs', 'inotrope', 'pressor', 'STAT bolus', 'infusion drugs', 'code drugs', 'adrenaline drip', 'noradrenaline', 'code blue', 'vasopressor', 'shock drugs', 'dopamine drip', 'dobutamine drip', 'norepinephrine', 'epinephrine drip', 'vasopressin', 'hydrocortisone stress dose', 'adenosine', 'amiodarone', 'labetalol', 'nicardipine'],
     navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const EmergencyPICUDrugsScreen())),
   ),
   _SearchItem(
@@ -895,6 +897,30 @@ List<_SearchItem> _buildAllItems() => [
         Navigator.push(ctx, MaterialPageRoute(builder: (_) => const TdscAssistantScreen())),
   ),
 
+  // ─── Infant BP (separate entry for discoverability) ────────────────────────
+
+  _SearchItem(
+    title: 'Infant BP (1-12 Months)',
+    subtitle: 'Second Task Force 1987 — centiles & hypotension',
+    category: 'Calculators & Tools',
+    icon: Icons.favorite_rounded,
+    color: _kCalcColor,
+    keywords: const ['infant blood pressure', 'infant BP', 'baby BP', '1-12 months', 'second task force', '1987', 'task force BP', 'infant hypertension', 'infant hypotension', 'PALS hypotension', 'SBP less than 70', 'baby blood pressure', 'BP 1 year', 'BP 6 months'],
+    navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const InfantBPCalculator())),
+  ),
+
+  // ─── Never Again ──────────────────────────────────────────────────────────
+
+  _SearchItem(
+    title: 'Never Again',
+    subtitle: 'Anonymous peer-learning from real clinical mistakes',
+    category: 'Academics',
+    icon: Icons.auto_stories_outlined,
+    color: _kAcademicsColor,
+    keywords: const ['never again', 'mistake', 'error', 'clinical error', 'medical error', 'peer learning', 'lesson learned', 'anonymous', 'near miss', 'adverse event', 'patient safety', 'learning from mistakes', 'what went wrong', 'root cause', 'morbidity mortality', 'M&M', 'case discussion'],
+    navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const NeverAgainScreen())),
+  ),
+
   // ─── Library / Academics ───────────────────────────────────────────────────
 
   _SearchItem(
@@ -903,7 +929,7 @@ List<_SearchItem> _buildAllItems() => [
     category: 'Academics',
     icon: Icons.school_rounded,
     color: _kAcademicsColor,
-    keywords: const ['academics', 'Nelson', 'textbook', 'IAP STG', 'NNF CPG', 'IAP action plan', 'guidelines', 'chapters', 'reference'],
+    keywords: const ['academics', 'Nelson', 'textbook', 'IAP STG', 'NNF CPG', 'IAP action plan', 'guidelines', 'chapters', 'reference', 'standard treatment guidelines', 'clinical practice guidelines', 'Nelson pediatrics', 'IAP 2026', 'action plan', 'textbook chapter', 'study material', 'protocol', 'SOP'],
     navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const AcademicsWebScreen())),
   ),
   _SearchItem(
@@ -912,7 +938,7 @@ List<_SearchItem> _buildAllItems() => [
     category: 'Academics',
     icon: Icons.event_available_rounded,
     color: _kAcademicsColor,
-    keywords: const ['CME', 'continuing medical education', 'webinar', 'workshop', 'conference', 'paedicon', 'NNF', 'IAP'],
+    keywords: const ['CME', 'continuing medical education', 'webinar', 'workshop', 'conference', 'pedicon', 'paedicon', 'NNF', 'IAP', 'NeoUpdate', 'NRP course', 'PALS course', 'credit hours', 'registration', 'online course', 'certificate', 'medical conference', 'paediatric conference', 'training', 'hands on'],
     navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const CmeScreen())),
   ),
   _SearchItem(
