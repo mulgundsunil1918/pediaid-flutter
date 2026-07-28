@@ -533,28 +533,45 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // ── Visitor counter (web only, very end of the page) ─────────────────────
+  // ── Visitor counter (web only, standalone, very end of the page) ─────────
   Widget _buildVisitorCounter(BuildContext context) {
     if (_visitorCount == null) return const SizedBox.shrink();
     final cs = Theme.of(context).colorScheme;
     return Padding(
-      padding: const EdgeInsets.only(top: 18, bottom: 4),
+      padding: const EdgeInsets.only(top: 24, bottom: 4),
       child: Center(
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.visibility_outlined,
-                size: 14, color: cs.onSurface.withValues(alpha: 0.4)),
-            const SizedBox(width: 6),
-            Text(
-              '${_visitorCount!} visitors',
-              style: GoogleFonts.plusJakartaSans(
-                fontSize: 11.5,
-                fontWeight: FontWeight.w600,
-                color: cs.onSurface.withValues(alpha: 0.45),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 18),
+          decoration: BoxDecoration(
+            color: cs.primaryContainer.withValues(alpha: 0.3),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: cs.primary.withValues(alpha: 0.18)),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.visibility_rounded, size: 22, color: cs.primary),
+              const SizedBox(height: 6),
+              Text(
+                '$_visitorCount',
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 34,
+                  fontWeight: FontWeight.w800,
+                  height: 1.1,
+                  color: cs.primary,
+                ),
               ),
-            ),
-          ],
+              const SizedBox(height: 2),
+              Text(
+                'people have visited PediAid',
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 12.5,
+                  fontWeight: FontWeight.w600,
+                  color: cs.onSurface.withValues(alpha: 0.55),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

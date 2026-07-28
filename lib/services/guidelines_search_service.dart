@@ -240,8 +240,102 @@ class GuidelinesSearchService {
     if (title.startsWith(q)) n += 5;
     if (keywords.contains(q)) n += 5;
     if (section.contains(q)) n += 2;
+
+    // Most of these ~370 chapters come straight from IAP/NNF's own site
+    // tables with no hand-authored keywords, so a direct-match miss is
+    // common even when the topic is clearly present (e.g. "kernicterus"
+    // should still find "Jaundice"). Fall back to a shared synonym
+    // dictionary instead of trying to hand-tag every chapter individually.
+    if (n == 0) {
+      for (final cluster in _synonymClusters) {
+        final queryInCluster =
+            cluster.any((t) => t.contains(q) || q.contains(t));
+        if (!queryInCluster) continue;
+        if (cluster.any(title.contains)) {
+          n += 6;
+        } else if (cluster.any(section.contains)) {
+          n += 2;
+        }
+        if (n > 0) break;
+      }
+    }
     return n;
   }
+
+  // Clusters of interchangeable/related clinical terms — abbreviations,
+  // lay terms, and closely related conditions. Expanding the *query* into
+  // its cluster (rather than tagging every chapter) scales to any number
+  // of externally-sourced chapters for free.
+  static const List<List<String>> _synonymClusters = [
+    ['jaundice', 'hyperbilirubinemia', 'hyperbilirubinaemia', 'bilirubin', 'kernicterus', 'yellow baby', 'icterus'],
+    ['sepsis', 'septicemia', 'septicaemia', 'blood infection', 'bacteremia', 'bacteraemia'],
+    ['seizure', 'seizures', 'convulsion', 'fits', 'epilepsy', 'status epilepticus'],
+    ['uti', 'urinary tract infection', 'pyuria', 'cystitis', 'pyelonephritis'],
+    ['dka', 'diabetic ketoacidosis', 'ketoacidosis', 'diabetes', 'diabetic'],
+    ['asthma', 'wheeze', 'wheezing', 'bronchospasm', 'reactive airway'],
+    ['pneumonia', 'lower respiratory tract infection', 'lrti', 'chest infection'],
+    ['meningitis', 'csf infection', 'brain infection'],
+    ['dehydration', 'fluid loss', 'diarrhea', 'diarrhoea', 'vomiting', 'gastroenteritis'],
+    ['malnutrition', 'sam', 'mam', 'severe acute malnutrition', 'wasting', 'stunting', 'undernutrition'],
+    ['anemia', 'anaemia', 'low hemoglobin', 'low haemoglobin'],
+    ['heart failure', 'cardiac failure', 'chf'],
+    ['congenital heart disease', 'chd', 'heart defect'],
+    ['respiratory distress', 'rds', 'breathing difficulty', 'tachypnea', 'tachypnoea'],
+    ['hypoglycemia', 'hypoglycaemia', 'low blood sugar', 'low glucose'],
+    ['hypocalcemia', 'hypocalcaemia', 'low calcium', 'tetany'],
+    ['resuscitation', 'cpr', 'nrp', 'code blue', 'cardiac arrest'],
+    ['vaccination', 'immunization', 'immunisation', 'vaccine', 'shots'],
+    ['growth', 'failure to thrive', 'ftt', 'growth faltering', 'poor weight gain'],
+    ['developmental delay', 'gdd', 'global developmental delay', 'milestone delay'],
+    ['autism', 'asd', 'autism spectrum disorder'],
+    ['adhd', 'attention deficit', 'hyperactivity'],
+    ['poisoning', 'overdose', 'toxin', 'ingestion'],
+    ['burns', 'scald', 'burn injury'],
+    ['trauma', 'injury', 'accident'],
+    ['allergy', 'allergic reaction', 'anaphylaxis', 'hypersensitivity'],
+    ['obesity', 'overweight', 'weight gain'],
+    ['puberty', 'adolescence', 'teen', 'teenager'],
+    ['abuse', 'maltreatment', 'neglect', 'csa', 'child sexual abuse'],
+    ['palliative care', 'end of life', 'terminal illness', 'hospice'],
+    ['snake bite', 'snakebite', 'envenomation', 'asv'],
+    ['scorpion sting', 'scorpion bite'],
+    ['drowning', 'near drowning', 'submersion'],
+    ['telemedicine', 'teleconsultation', 'virtual visit', 'online consultation'],
+    ['genetics', 'genetic disorder', 'syndrome', 'chromosomal'],
+    ['down syndrome', 'trisomy 21'],
+    ['thalassemia', 'thalassaemia'],
+    ['hemophilia', 'haemophilia', 'bleeding disorder'],
+    ['leukemia', 'leukaemia', 'blood cancer'],
+    ['tuberculosis', 'tb', "koch's disease"],
+    ['hiv', 'aids', 'immunodeficiency'],
+    ['rickets', 'vitamin d deficiency', 'bone disease'],
+    ['thyroid', 'hypothyroidism', 'hyperthyroidism'],
+    ['nephrotic syndrome', 'proteinuria', 'edema', 'oedema'],
+    ['constipation', 'bowel problem'],
+    ['worm infestation', 'helminthiasis', 'deworming'],
+    ['scabies', 'skin infestation'],
+    ['eczema', 'atopic dermatitis'],
+    ['screen time', 'social media', 'digital health', 'internet addiction'],
+    ['mental health', 'depression', 'anxiety', 'psychiatric'],
+    ['bullying', 'cyberbullying'],
+    ['breastfeeding', 'lactation', 'nursing'],
+    ['complementary feeding', 'weaning food', 'solid food'],
+    ['iron deficiency', 'iron supplementation'],
+    ['vitamin deficiency', 'micronutrient deficiency'],
+    ['newborn screening', 'nbs'],
+    ['cerebral palsy', 'cp'],
+    ['hearing loss', 'deafness', 'hearing impairment'],
+    ['vision problem', 'visual impairment', 'blindness'],
+    ['cleft lip', 'cleft palate'],
+    ['premature', 'preterm', 'prematurity'],
+    ['birth asphyxia', 'perinatal asphyxia', 'hie'],
+    ['umbilical', 'cord care', 'omphalitis'],
+    ['circumcision', 'foreskin'],
+    ['undescended testis', 'cryptorchidism'],
+    ['menstrual', 'periods', 'menarche'],
+    ['contraception', 'birth control'],
+    ['substance abuse', 'drug abuse', 'addiction', 'smoking', 'vaping'],
+  ];
 
   // ── Cache (de)serialisation ──────────────────────────────────────────────
   String _encodeCache(List<GuidelineSearchHit> hits) {
