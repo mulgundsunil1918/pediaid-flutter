@@ -61,6 +61,13 @@ class _AcademicsWebScreenState extends State<AcademicsWebScreen> {
           mediaPlaybackRequiresUserGesture: false,
           transparentBackground: true,
           supportZoom: false,
+          // The Academics site is a single-column mobile layout — there's
+          // no legitimate reason any page should scroll sideways. This
+          // guards every page loaded here, regardless of individual page
+          // CSS, against horizontal scroll/overflow.
+          disableHorizontalScroll: true,
+          useWideViewPort: true,
+          loadWithOverviewMode: true,
         ),
         onWebViewCreated: (c) {
           _controller = c;
