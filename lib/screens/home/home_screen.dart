@@ -716,7 +716,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         Icon(Icons.search, color: Colors.white.withValues(alpha: 0.6), size: 18),
                         const SizedBox(width: 8),
                         Expanded(
-                          child: Text('Search calculators, drugs, guides, charts…',
+                          child: Text('Search calculators, drugs, guides, charts, guidelines…',
                               style: GoogleFonts.plusJakartaSans(
                                   color: Colors.white.withValues(alpha: 0.55), fontSize: 13)),
                         ),
