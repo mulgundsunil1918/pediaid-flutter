@@ -11,8 +11,10 @@ class BPHubScreen extends StatelessWidget {
     final cs = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Blood Pressure Calculator',
-            style: TextStyle(fontWeight: FontWeight.bold, color: cs.onPrimary)),
+        title: Text(
+          'Blood Pressure Calculator',
+          style: TextStyle(fontWeight: FontWeight.bold, color: cs.onPrimary),
+        ),
         backgroundColor: cs.primary,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: cs.onPrimary),
@@ -32,31 +34,41 @@ class BPHubScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(4),
                 border: Border.all(color: cs.primary.withValues(alpha: 0.4)),
               ),
-              child: Text('SELECT PATIENT TYPE',
-                  style: TextStyle(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 0.15,
-                    color: cs.primary,
-                  )),
+              child: Text(
+                'SELECT PATIENT TYPE',
+                style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 0.15,
+                  color: cs.primary,
+                ),
+              ),
             ),
             const SizedBox(height: 12),
-            Text('Blood Pressure\nAssessment',
-                style: TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.bold,
-                  color: cs.onSurface,
-                  height: 1.2,
-                )),
+            Text(
+              'Blood Pressure\nAssessment',
+              style: TextStyle(
+                fontSize: 26,
+                fontWeight: FontWeight.bold,
+                color: cs.onSurface,
+                height: 1.2,
+              ),
+            ),
             const SizedBox(height: 6),
             Text(
-                'Choose the appropriate reference based on patient age',
-                style: TextStyle(fontSize: 13, color: cs.onSurface.withValues(alpha: 0.6))),
+              'Choose the appropriate reference based on patient age',
+              style: TextStyle(
+                fontSize: 13,
+                color: cs.onSurface.withValues(alpha: 0.6),
+              ),
+            ),
             const SizedBox(height: 28),
 
             _BPOptionCard(
-              onTap: () => Navigator.push(context,
-                  MaterialPageRoute(builder: (_) => const NeonatalBPCalculator())),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const NeonatalBPCalculator()),
+              ),
               icon: Icons.child_friendly,
               iconBgColor: cs.primary,
               title: 'Neonatal BP',
@@ -73,8 +85,10 @@ class BPHubScreen extends StatelessWidget {
             const SizedBox(height: 14),
 
             _BPOptionCard(
-              onTap: () => Navigator.push(context,
-                  MaterialPageRoute(builder: (_) => const InfantBPCalculator())),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const InfantBPCalculator()),
+              ),
               icon: Icons.baby_changing_station,
               iconBgColor: cs.primary,
               title: 'Infant BP',
@@ -86,18 +100,22 @@ class BPHubScreen extends StatelessWidget {
                 '📈 50th · 90th · 95th centiles',
                 '🩺 Hypotension screen (<70 mmHg)',
                 '📋 Second Task Force 1987',
+                '✅ Referenced in AAP 2017 CPG',
               ],
             ),
             const SizedBox(height: 14),
 
             _BPOptionCard(
-              onTap: () => Navigator.push(context,
-                  MaterialPageRoute(builder: (_) => const BPCalculator())),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const BPCalculator()),
+              ),
               icon: Icons.boy,
               iconBgColor: cs.primary,
               title: 'Paediatric BP',
               subtitle: 'Children & Adolescents',
-              description: 'Age 1–17 years\nAAP Clinical Practice Guideline 2017',
+              description:
+                  'Age 1–17 years\nAAP Clinical Practice Guideline 2017',
               tag: 'PAEDIATRICS',
               tagColor: cs.primary,
               details: const [
@@ -175,7 +193,7 @@ class _BPOptionCard extends StatelessWidget {
               color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 10,
               offset: const Offset(0, 2),
-            )
+            ),
           ],
         ),
         child: Row(
@@ -198,70 +216,90 @@ class _BPOptionCard extends StatelessWidget {
                   Row(
                     children: [
                       Expanded(
-                        child: Text(title,
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: cs.onSurface,
-                            )),
+                        child: Text(
+                          title,
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: cs.onSurface,
+                          ),
+                        ),
                       ),
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 3),
+                          horizontal: 8,
+                          vertical: 3,
+                        ),
                         decoration: BoxDecoration(
                           color: tagColor.withValues(alpha: 0.12),
                           borderRadius: BorderRadius.circular(20),
                         ),
-                        child: Text(tag,
-                            style: TextStyle(
-                              fontSize: 9,
-                              fontWeight: FontWeight.w700,
-                              color: tagColor,
-                              letterSpacing: 0.1,
-                            )),
+                        child: Text(
+                          tag,
+                          style: TextStyle(
+                            fontSize: 9,
+                            fontWeight: FontWeight.w700,
+                            color: tagColor,
+                            letterSpacing: 0.1,
+                          ),
+                        ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 2),
-                  Text(subtitle,
-                      style: TextStyle(
-                          fontSize: 13, color: cs.onSurface.withValues(alpha: 0.6))),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: cs.onSurface.withValues(alpha: 0.6),
+                    ),
+                  ),
                   const SizedBox(height: 6),
-                  Text(description,
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: cs.onSurface.withValues(alpha: 0.5),
-                        height: 1.5,
-                        fontStyle: FontStyle.italic,
-                      )),
+                  Text(
+                    description,
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: cs.onSurface.withValues(alpha: 0.5),
+                      height: 1.5,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
                   const SizedBox(height: 10),
                   Wrap(
                     spacing: 6,
                     runSpacing: 4,
                     children: details
-                        .map((d) => Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 3),
-                              decoration: BoxDecoration(
-                                color: cs.primary.withValues(alpha: 0.08),
-                                borderRadius: BorderRadius.circular(20),
-                                border: Border.all(
-                                    color: cs.outline),
+                        .map(
+                          (d) => Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 3,
+                            ),
+                            decoration: BoxDecoration(
+                              color: cs.primary.withValues(alpha: 0.08),
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(color: cs.outline),
+                            ),
+                            child: Text(
+                              d,
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: cs.onSurface.withValues(alpha: 0.6),
                               ),
-                              child: Text(d,
-                                  style: TextStyle(
-                                    fontSize: 10,
-                                    color: cs.onSurface.withValues(alpha: 0.6),
-                                  )),
-                            ))
+                            ),
+                          ),
+                        )
                         .toList(),
                   ),
                 ],
               ),
             ),
             const SizedBox(width: 8),
-            Icon(Icons.chevron_right,
-                color: cs.onSurface.withValues(alpha: 0.4), size: 22),
+            Icon(
+              Icons.chevron_right,
+              color: cs.onSurface.withValues(alpha: 0.4),
+              size: 22,
+            ),
           ],
         ),
       ),

@@ -48,7 +48,12 @@ const String _kScoring = 'Scoring';
 const String _kReference = 'Reference';
 
 const List<String> _kCategories = [
-  _kAll, _kEmergency, _kNeonatal, _kResus, _kScoring, _kReference,
+  _kAll,
+  _kEmergency,
+  _kNeonatal,
+  _kResus,
+  _kScoring,
+  _kReference,
 ];
 
 class GuidesScreen extends StatefulWidget {
@@ -66,7 +71,8 @@ class _GuidesScreenState extends State<GuidesScreen> {
     // neonatal scoring tools (incl. LATCH, POFRAS, Modified Ballard).
     _GuideItem(
       title: 'Neonatal Scores',
-      subtitle: 'Apgar, Downes, Sarnat, Thompson, LATCH, POFRAS, Ballard & more',
+      subtitle:
+          'Apgar, Downes, Sarnat, Thompson, LATCH, POFRAS, Ballard & more',
       icon: Icons.assessment,
       categories: const [_kNeonatal, _kScoring],
       highlight: true,
@@ -297,11 +303,11 @@ class _GuidesScreenState extends State<GuidesScreen> {
                               itemCount: filtered.length,
                               gridDelegate:
                                   SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: cols,
-                                crossAxisSpacing: 10,
-                                mainAxisSpacing: 10,
-                                childAspectRatio: 1.1,
-                              ),
+                                    crossAxisCount: cols,
+                                    crossAxisSpacing: 10,
+                                    mainAxisSpacing: 10,
+                                    childAspectRatio: 1.1,
+                                  ),
                               itemBuilder: (context, index) {
                                 final g = filtered[index];
                                 return _GuideCard(
@@ -316,9 +322,9 @@ class _GuidesScreenState extends State<GuidesScreen> {
                                       _showComingSoon(context, g.title);
                                     } else {
                                       Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: g.build!));
+                                        context,
+                                        MaterialPageRoute(builder: g.build!),
+                                      );
                                     }
                                   },
                                 );
@@ -336,13 +342,17 @@ class _GuidesScreenState extends State<GuidesScreen> {
   }
 
   void _showComingSoon(BuildContext context, String name) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text('$name — Coming Soon',
-          style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600)),
-      backgroundColor: Theme.of(context).colorScheme.primary,
-      behavior: SnackBarBehavior.floating,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-    ));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          '$name — Coming Soon',
+          style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600),
+        ),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+    );
   }
 }
 
@@ -453,8 +463,11 @@ class _EmptyState extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.filter_alt_off_outlined,
-              size: 48, color: cs.onSurface.withValues(alpha: 0.3)),
+          Icon(
+            Icons.filter_alt_off_outlined,
+            size: 48,
+            color: cs.onSurface.withValues(alpha: 0.3),
+          ),
           const SizedBox(height: 12),
           Text(
             'Nothing in this category yet.',
@@ -515,93 +528,160 @@ class _GuideCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     // Highlighted tiles get a distinct accent colour + filled background.
-    const accent = Color(0xFF7C3AED); // violet — stands out from the primary blue
+    const accent = Color(
+      0xFF7C3AED,
+    ); // violet — stands out from the primary blue
     final primary = comingSoon
         ? cs.onSurface.withValues(alpha: 0.35)
         : (highlight ? accent : cs.primary);
-    return Card(
-      elevation: highlight ? 3 : 2,
-      color: highlight ? accent.withValues(alpha: 0.10) : Theme.of(context).cardColor,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: highlight ? const BorderSide(color: accent, width: 1.4) : BorderSide.none,
-      ),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    width: 40, height: 40,
-                    decoration: BoxDecoration(
-                      color: primary.withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Icon(icon, color: primary, size: 22),
-                  ),
-                  if (badge != null)
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
-                      decoration: BoxDecoration(
-                        color: accent,
-                        borderRadius: BorderRadius.circular(999),
-                      ),
-                      child: Text(badge!,
-                          style: const TextStyle(
-                              fontSize: 9.5, fontWeight: FontWeight.w800, color: Colors.white)),
-                    )
-                  else if (comingSoon)
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                      decoration: BoxDecoration(
-                        color: cs.onSurface.withValues(alpha: 0.08),
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: Text('Soon',
-                          style: TextStyle(
-                              fontSize: 9,
-                              fontWeight: FontWeight.w600,
-                              color: cs.onSurface.withValues(alpha: 0.4))),
-                    ),
+    return Container(
+      decoration: highlight
+          ? BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  accent.withValues(alpha: 0.20),
+                  accent.withValues(alpha: 0.06),
                 ],
               ),
-              const Spacer(),
-              Container(
-                width: 3, height: 14,
-                decoration: BoxDecoration(
-                  color: primary,
-                  borderRadius: BorderRadius.circular(2),
+              boxShadow: [
+                BoxShadow(
+                  color: accent.withValues(alpha: 0.22),
+                  blurRadius: 14,
+                  offset: const Offset(0, 5),
                 ),
-              ),
-              const SizedBox(height: 5),
-              Text(
-                title,
-                style: TextStyle(
-                  color: primary,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                  height: 1.2,
+              ],
+            )
+          : null,
+      child: Card(
+        elevation: highlight ? 0 : 2,
+        color: highlight ? Colors.transparent : Theme.of(context).cardColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+          side: highlight
+              ? BorderSide(color: accent.withValues(alpha: 0.6), width: 1.6)
+              : BorderSide.none,
+        ),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(12),
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        gradient: highlight
+                            ? LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  accent,
+                                  accent.withValues(alpha: 0.78),
+                                ],
+                              )
+                            : null,
+                        color: highlight
+                            ? null
+                            : primary.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: highlight
+                            ? [
+                                BoxShadow(
+                                  color: accent.withValues(alpha: 0.35),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 3),
+                                ),
+                              ]
+                            : null,
+                      ),
+                      child: Icon(
+                        icon,
+                        color: highlight ? Colors.white : primary,
+                        size: 22,
+                      ),
+                    ),
+                    if (badge != null)
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 7,
+                          vertical: 3,
+                        ),
+                        decoration: BoxDecoration(
+                          color: accent,
+                          borderRadius: BorderRadius.circular(999),
+                        ),
+                        child: Text(
+                          badge!,
+                          style: const TextStyle(
+                            fontSize: 9.5,
+                            fontWeight: FontWeight.w800,
+                            color: Colors.white,
+                          ),
+                        ),
+                      )
+                    else if (comingSoon)
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: cs.onSurface.withValues(alpha: 0.08),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Text(
+                          'Soon',
+                          style: TextStyle(
+                            fontSize: 9,
+                            fontWeight: FontWeight.w600,
+                            color: cs.onSurface.withValues(alpha: 0.4),
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-              const SizedBox(height: 2),
-              Text(
-                subtitle,
-                style: TextStyle(
-                  color: cs.onSurface.withValues(alpha: 0.55),
-                  fontSize: 12,
+                const Spacer(),
+                Container(
+                  width: 3,
+                  height: 14,
+                  decoration: BoxDecoration(
+                    color: primary,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
                 ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
+                const SizedBox(height: 5),
+                Text(
+                  title,
+                  style: TextStyle(
+                    color: primary,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                    height: 1.2,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  subtitle,
+                  style: TextStyle(
+                    color: cs.onSurface.withValues(alpha: 0.55),
+                    fontSize: 12,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
           ),
         ),
       ),

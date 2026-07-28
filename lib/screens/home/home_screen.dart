@@ -139,13 +139,29 @@ class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey _scGuidesKey      = GlobalKey();
   bool _tutorialAttempted = false;
 
+  // Web-only vanity counter — backed by Upstash Redis (not Postgres/Neon),
+  // so unlike the old version this can't drain database compute hours.
+  int? _visitorCount;
+
   @override
   void initState() {
     super.initState();
     _loadPrefs();
     _scrollController.addListener(_onScroll);
-    // Visitor counter removed — it hit the DB on every web load and helped
-    // keep Neon awake / burn free compute. Dropped intentionally.
+    if (kIsWeb) _fetchVisitorCount();
+  }
+
+  Future<void> _fetchVisitorCount() async {
+    try {
+      final res = await http
+          .get(Uri.parse('https://pediaid-backend.onrender.com/api/stats/visits/app'))
+          .timeout(const Duration(seconds: 10));
+      if (!mounted || res.statusCode != 200) return;
+      final body = jsonDecode(res.body) as Map<String, dynamic>;
+      setState(() => _visitorCount = body['count'] as int);
+    } catch (_) {
+      // Silent — vanity counter, never surface an error for this.
+    }
   }
 
   /// Called once after the showcase frame is laid out. Reads prefs and,
@@ -377,6 +393,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 if (kIsWeb || !Platform.isIOS) _buildDonationFooter(context, isDark),
                 if (!kIsWeb && Platform.isIOS) _buildWebPromoFooter(context),
+                if (kIsWeb) _buildVisitorCounter(context),
                 SizedBox(height: MediaQuery.of(context).padding.bottom + 16),
               ],
             ),
@@ -517,6 +534,32 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // ── Visitor counter (web only, very end of the page) ─────────────────────
+  Widget _buildVisitorCounter(BuildContext context) {
+    if (_visitorCount == null) return const SizedBox.shrink();
+    final cs = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const EdgeInsets.only(top: 18, bottom: 4),
+      child: Center(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.visibility_outlined,
+                size: 14, color: cs.onSurface.withValues(alpha: 0.4)),
+            const SizedBox(width: 6),
+            Text(
+              '${_visitorCount!} visitors',
+              style: GoogleFonts.plusJakartaSans(
+                fontSize: 11.5,
+                fontWeight: FontWeight.w600,
+                color: cs.onSurface.withValues(alpha: 0.45),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   // ── Web promo footer (iOS only) ──────────────────────────────────────────
   Widget _buildWebPromoFooter(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
