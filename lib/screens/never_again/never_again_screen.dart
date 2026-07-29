@@ -203,6 +203,15 @@ class _NeverAgainScreenState extends State<NeverAgainScreen> {
     _loadPage(reset: true);
   }
 
+  void _openMySubmissions() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => const _MySubmissionsSheet(),
+    );
+  }
+
   void _openSubmitSheet() {
     showModalBottomSheet(
       context: context,
@@ -212,7 +221,8 @@ class _NeverAgainScreenState extends State<NeverAgainScreen> {
         onSuccess: () {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('Posted. Thank you for sharing.'),
+              content: Text(
+                  "Submitted — it'll appear once a moderator approves it. Check My Submissions for status."),
               behavior: SnackBarBehavior.floating,
             ),
           );
@@ -273,6 +283,11 @@ class _NeverAgainScreenState extends State<NeverAgainScreen> {
         ),
         toolbarHeight: 60,
         actions: [
+          IconButton(
+            icon: const Icon(Icons.history_rounded),
+            tooltip: 'My submissions',
+            onPressed: _openMySubmissions,
+          ),
           IconButton(
             icon: const Icon(Icons.add),
             tooltip: 'Share a mistake',
@@ -1322,6 +1337,206 @@ class _SubmitSheetState extends State<_SubmitSheet> {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+// ── My Submissions sheet ──────────────────────────────────────────────────────
+//
+// Posts are anonymous, so there's no account to push a notification to when
+// a moderator reviews a post — the poster checks back here instead, filtered
+// by this device's own device_id.
+
+class _MySubmissionsSheet extends StatefulWidget {
+  const _MySubmissionsSheet();
+
+  @override
+  State<_MySubmissionsSheet> createState() => _MySubmissionsSheetState();
+}
+
+class _MySubmissionsSheetState extends State<_MySubmissionsSheet> {
+  late Future<List<NeverAgainSubmission>> _future;
+
+  @override
+  void initState() {
+    super.initState();
+    _future = NeverAgainService.instance.getMySubmissions();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return DraggableScrollableSheet(
+      initialChildSize: 0.7,
+      minChildSize: 0.4,
+      maxChildSize: 0.9,
+      expand: false,
+      builder: (context, scrollController) => Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).scaffoldBackgroundColor,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        child: Column(
+          children: [
+            Center(
+              child: Container(
+                width: 40,
+                height: 4,
+                margin: const EdgeInsets.only(top: 12, bottom: 8),
+                decoration: BoxDecoration(
+                  color: cs.onSurface.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 4, 20, 12),
+              child: Text(
+                'My Submissions',
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: cs.onSurface,
+                ),
+              ),
+            ),
+            Expanded(
+              child: FutureBuilder<List<NeverAgainSubmission>>(
+                future: _future,
+                builder: (context, snap) {
+                  if (snap.connectionState != ConnectionState.done) {
+                    return const Center(
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    );
+                  }
+                  final posts = snap.data ?? [];
+                  if (posts.isEmpty) {
+                    return Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(32),
+                        child: Text(
+                          "You haven't shared anything from this device yet.",
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.plusJakartaSans(
+                            fontSize: 13.5,
+                            color: cs.onSurface.withValues(alpha: 0.5),
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                  return ListView.separated(
+                    controller: scrollController,
+                    padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
+                    itemCount: posts.length,
+                    separatorBuilder: (_, __) => const SizedBox(height: 10),
+                    itemBuilder: (_, i) => _SubmissionCard(post: posts[i]),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SubmissionCard extends StatelessWidget {
+  const _SubmissionCard({required this.post});
+  final NeverAgainSubmission post;
+
+  (String, Color) get _statusMeta => switch (post.status) {
+        'published' => ('LIVE', const Color(0xFF2E7D32)),
+        'rejected' => ('NOT APPROVED', const Color(0xFFC62828)),
+        _ => ('UNDER REVIEW', const Color(0xFFF9A825)),
+      };
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final (label, color) = _statusMeta;
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        border: Border.all(color: cs.onSurface.withValues(alpha: 0.1)),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  label,
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w800,
+                    color: color,
+                    letterSpacing: 0.4,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  post.category,
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 11,
+                    color: cs.onSurface.withValues(alpha: 0.5),
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              Text(
+                timeago.format(post.createdAt),
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 11,
+                  color: cs.onSurface.withValues(alpha: 0.4),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            post.whatHappened,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: GoogleFonts.plusJakartaSans(
+              fontSize: 13,
+              height: 1.4,
+              color: cs.onSurface.withValues(alpha: 0.85),
+            ),
+          ),
+          if (post.status == 'rejected' && post.rejectionReason != null) ...[
+            const SizedBox(height: 8),
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: const Color(0xFFC62828).withValues(alpha: 0.06),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                'Moderator note: ${post.rejectionReason}',
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 12,
+                  fontStyle: FontStyle.italic,
+                  color: const Color(0xFF8B1E1E),
+                  height: 1.4,
+                ),
+              ),
+            ),
+          ],
+        ],
       ),
     );
   }

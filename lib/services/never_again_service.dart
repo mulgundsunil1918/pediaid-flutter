@@ -54,6 +54,38 @@ class NeverAgainPost {
   }
 }
 
+class NeverAgainSubmission {
+  final int id;
+  final String whatHappened;
+  final String category;
+  final String status; // pending | published | rejected
+  final String? rejectionReason;
+  final DateTime createdAt;
+
+  const NeverAgainSubmission({
+    required this.id,
+    required this.whatHappened,
+    required this.category,
+    required this.status,
+    this.rejectionReason,
+    required this.createdAt,
+  });
+
+  factory NeverAgainSubmission.fromJson(Map<String, dynamic> json) {
+    return NeverAgainSubmission(
+      id: json['id'] as int,
+      whatHappened: (json['what_happened'] ?? '') as String,
+      category: (json['category'] ?? 'Other') as String,
+      status: (json['status'] ?? 'pending') as String,
+      rejectionReason: json['rejection_reason'] as String?,
+      createdAt: DateTime.tryParse(
+            (json['created_at'] ?? '').toString(),
+          ) ??
+          DateTime.now(),
+    );
+  }
+}
+
 class NeverAgainService {
   NeverAgainService._();
   static final NeverAgainService instance = NeverAgainService._();
@@ -187,6 +219,32 @@ class NeverAgainService {
       createdAt: DateTime.now().subtract(const Duration(days: 20)),
     ),
   ];
+
+  // -------------------------------------------------------------------------
+  // GET this device's own submissions + their moderation status
+  //
+  // Posts are anonymous — there's no account to push a notification to, so
+  // the app checks this instead. Every post now starts 'pending' until an
+  // admin approves it (see PendingNeverAgainPage in the Academics admin
+  // dashboard), then either goes live or is rejected with a reason.
+  // -------------------------------------------------------------------------
+
+  Future<List<NeverAgainSubmission>> getMySubmissions() async {
+    if (deviceId.isEmpty) return [];
+    try {
+      final uri = Uri.parse('$_apiBase/api/never-again/mine')
+          .replace(queryParameters: {'device_id': deviceId});
+      final res = await http.get(uri).timeout(const Duration(seconds: 15));
+      if (res.statusCode != 200) return [];
+      final body = jsonDecode(res.body) as Map<String, dynamic>;
+      return (body['posts'] as List? ?? [])
+          .cast<Map<String, dynamic>>()
+          .map(NeverAgainSubmission.fromJson)
+          .toList();
+    } catch (_) {
+      return [];
+    }
+  }
 
   // -------------------------------------------------------------------------
   // POST new post
