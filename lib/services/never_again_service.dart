@@ -58,7 +58,7 @@ class NeverAgainSubmission {
   final int id;
   final String whatHappened;
   final String category;
-  final String status; // pending | published | rejected
+  final String status; // pending | published | rejected | changes_requested
   final String? rejectionReason;
   final DateTime createdAt;
 
@@ -256,6 +256,7 @@ class NeverAgainService {
     required String theLesson,
     required String category,
     String? role,
+    String? email,
   }) async {
     final res = await http
         .post(
@@ -268,6 +269,7 @@ class NeverAgainService {
             'category': category,
             'role': role,
             'device_id': deviceId,
+            if (email != null && email.trim().isNotEmpty) 'email': email.trim(),
           }),
         )
         .timeout(const Duration(seconds: 20));

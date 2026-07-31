@@ -1088,6 +1088,7 @@ class _SubmitSheetState extends State<_SubmitSheet> {
   final _whatHappenedCtrl = TextEditingController();
   final _whatWentWrongCtrl = TextEditingController();
   final _theLessonCtrl = TextEditingController();
+  final _emailCtrl = TextEditingController();
 
   bool _disclaimerChecked = false;
   bool _submitting = false;
@@ -1097,6 +1098,7 @@ class _SubmitSheetState extends State<_SubmitSheet> {
     _whatHappenedCtrl.dispose();
     _whatWentWrongCtrl.dispose();
     _theLessonCtrl.dispose();
+    _emailCtrl.dispose();
     super.dispose();
   }
 
@@ -1118,6 +1120,7 @@ class _SubmitSheetState extends State<_SubmitSheet> {
         theLesson: _theLessonCtrl.text.trim(),
         category: _category!,
         role: _role,
+        email: _emailCtrl.text,
       );
       if (!mounted) return;
       Navigator.of(context).pop();
@@ -1258,6 +1261,28 @@ class _SubmitSheetState extends State<_SubmitSheet> {
                 maxLines: 3,
                 maxLength: 500,
                 onChanged: (_) => setState(() {}),
+              ),
+              const SizedBox(height: 12),
+
+              // ── Optional contact email ────────────────────────────────────
+              _SheetTextField(
+                controller: _emailCtrl,
+                label: 'Your email (optional)',
+                hint: 'Only if you want us to reach you about this post',
+                maxLines: 1,
+                maxLength: 255,
+                onChanged: (_) => setState(() {}),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                'Never shown publicly or to other users — only visible to '
+                'admins, and only if a revision is needed before publishing.',
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 11,
+                  fontStyle: FontStyle.italic,
+                  color: cs.onSurface.withValues(alpha: 0.45),
+                  height: 1.4,
+                ),
               ),
               const SizedBox(height: 16),
 
@@ -1450,6 +1475,7 @@ class _SubmissionCard extends StatelessWidget {
   (String, Color) get _statusMeta => switch (post.status) {
         'published' => ('LIVE', const Color(0xFF2E7D32)),
         'rejected' => ('NOT APPROVED', const Color(0xFFC62828)),
+        'changes_requested' => ('NEEDS CHANGES', const Color(0xFFEF6C00)),
         _ => ('UNDER REVIEW', const Color(0xFFF9A825)),
       };
 
@@ -1517,20 +1543,28 @@ class _SubmissionCard extends StatelessWidget {
               color: cs.onSurface.withValues(alpha: 0.85),
             ),
           ),
-          if (post.status == 'rejected' && post.rejectionReason != null) ...[
+          if ((post.status == 'rejected' || post.status == 'changes_requested') &&
+              post.rejectionReason != null) ...[
             const SizedBox(height: 8),
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: const Color(0xFFC62828).withValues(alpha: 0.06),
+                color: (post.status == 'changes_requested'
+                        ? const Color(0xFFEF6C00)
+                        : const Color(0xFFC62828))
+                    .withValues(alpha: 0.06),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
-                'Moderator note: ${post.rejectionReason}',
+                post.status == 'changes_requested'
+                    ? 'What to fix: ${post.rejectionReason}'
+                    : 'Moderator note: ${post.rejectionReason}',
                 style: GoogleFonts.plusJakartaSans(
                   fontSize: 12,
                   fontStyle: FontStyle.italic,
-                  color: const Color(0xFF8B1E1E),
+                  color: post.status == 'changes_requested'
+                      ? const Color(0xFF8B4A00)
+                      : const Color(0xFF8B1E1E),
                   height: 1.4,
                 ),
               ),
