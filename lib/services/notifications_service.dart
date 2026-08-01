@@ -92,7 +92,7 @@ class NotificationsService {
     await http
         .put(
           Uri.parse('$_base/api/academics/notifications/$id/read'),
-          headers: AuthService.instance.authHeaders,
+          headers: AuthService.instance.authHeadersNoBody,
         )
         .timeout(const Duration(seconds: 15));
   }
@@ -103,7 +103,7 @@ class NotificationsService {
     await http
         .put(
           Uri.parse('$_base/api/academics/notifications/read-all'),
-          headers: AuthService.instance.authHeaders,
+          headers: AuthService.instance.authHeadersNoBody,
         )
         .timeout(const Duration(seconds: 15));
   }

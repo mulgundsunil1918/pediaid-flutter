@@ -76,14 +76,19 @@ class _AdminPendingCmeScreenState extends State<AdminPendingCmeScreen> {
     }
   }
 
-  Future<void> _reject(CmeEvent event) async {
-    final reason = await showDialog<String>(
+  Future<String?> _promptReason({
+    required String title,
+    required String helperText,
+    required String confirmLabel,
+    required Color confirmColor,
+  }) {
+    return showDialog<String>(
       context: context,
       builder: (ctx) {
         final ctl = TextEditingController();
         return AlertDialog(
           title: Text(
-            'Reject event',
+            title,
             style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700),
           ),
           content: Column(
@@ -91,7 +96,7 @@ class _AdminPendingCmeScreenState extends State<AdminPendingCmeScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Tell the poster why their event wasn\'t approved. They will see this in their email and inside the app.',
+                helperText,
                 style: GoogleFonts.plusJakartaSans(fontSize: 12.5, height: 1.5),
               ),
               const SizedBox(height: 12),
@@ -111,7 +116,7 @@ class _AdminPendingCmeScreenState extends State<AdminPendingCmeScreen> {
               child: const Text('Cancel'),
             ),
             FilledButton(
-              style: FilledButton.styleFrom(backgroundColor: Colors.red),
+              style: FilledButton.styleFrom(backgroundColor: confirmColor),
               onPressed: () {
                 if (ctl.text.trim().length < 5) {
                   ScaffoldMessenger.of(ctx).showSnackBar(
@@ -123,11 +128,21 @@ class _AdminPendingCmeScreenState extends State<AdminPendingCmeScreen> {
                 }
                 Navigator.pop(ctx, ctl.text.trim());
               },
-              child: const Text('Reject'),
+              child: Text(confirmLabel),
             ),
           ],
         );
       },
+    );
+  }
+
+  Future<void> _reject(CmeEvent event) async {
+    final reason = await _promptReason(
+      title: 'Reject event',
+      helperText:
+          'Tell the poster why their event wasn\'t approved. They will see this in their email and inside the app.',
+      confirmLabel: 'Reject',
+      confirmColor: Colors.red,
     );
     if (reason == null) return;
 
@@ -142,6 +157,31 @@ class _AdminPendingCmeScreenState extends State<AdminPendingCmeScreen> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Rejection failed: $e')),
+      );
+    }
+  }
+
+  Future<void> _requestChanges(CmeEvent event) async {
+    final reason = await _promptReason(
+      title: 'Request changes',
+      helperText:
+          'The event goes back to the poster with your note — they can edit and resubmit without losing their place in the queue.',
+      confirmLabel: 'Send back for changes',
+      confirmColor: const Color(0xFFD69E2E),
+    );
+    if (reason == null) return;
+
+    try {
+      await AdminService.instance.requestCmeEventChanges(event.id, reason);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Sent "${event.title}" back for changes')),
+      );
+      _refresh();
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Request changes failed: $e')),
       );
     }
   }
@@ -220,43 +260,67 @@ class _AdminPendingCmeScreenState extends State<AdminPendingCmeScreen> {
                     CmeEventCard(event: event),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                      child: Row(
+                      child: Column(
                         children: [
-                          Expanded(
+                          SizedBox(
+                            width: double.infinity,
                             child: OutlinedButton.icon(
-                              onPressed: () => _reject(event),
-                              icon: const Icon(Icons.close_rounded, size: 18),
+                              onPressed: () => _requestChanges(event),
+                              icon: const Icon(Icons.edit_note_rounded, size: 18),
                               label: Text(
-                                'Reject',
+                                'Request changes',
                                 style: GoogleFonts.plusJakartaSans(
                                   fontWeight: FontWeight.w700,
                                 ),
                               ),
                               style: OutlinedButton.styleFrom(
-                                foregroundColor: Colors.red,
-                                side: const BorderSide(color: Colors.red),
+                                foregroundColor: const Color(0xFFB45309),
+                                side: const BorderSide(color: Color(0xFFD69E2E)),
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 12),
                               ),
                             ),
                           ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: FilledButton.icon(
-                              onPressed: () => _approve(event),
-                              icon: const Icon(Icons.check_rounded, size: 18),
-                              label: Text(
-                                'Approve',
-                                style: GoogleFonts.plusJakartaSans(
-                                  fontWeight: FontWeight.w700,
+                          const SizedBox(height: 8),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: OutlinedButton.icon(
+                                  onPressed: () => _reject(event),
+                                  icon: const Icon(Icons.close_rounded, size: 18),
+                                  label: Text(
+                                    'Reject',
+                                    style: GoogleFonts.plusJakartaSans(
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                  style: OutlinedButton.styleFrom(
+                                    foregroundColor: Colors.red,
+                                    side: const BorderSide(color: Colors.red),
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 12),
+                                  ),
                                 ),
                               ),
-                              style: FilledButton.styleFrom(
-                                backgroundColor: const Color(0xFF16A34A),
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 12),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: FilledButton.icon(
+                                  onPressed: () => _approve(event),
+                                  icon: const Icon(Icons.check_rounded, size: 18),
+                                  label: Text(
+                                    'Approve',
+                                    style: GoogleFonts.plusJakartaSans(
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                  style: FilledButton.styleFrom(
+                                    backgroundColor: const Color(0xFF16A34A),
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 12),
+                                  ),
+                                ),
                               ),
-                            ),
+                            ],
                           ),
                         ],
                       ),

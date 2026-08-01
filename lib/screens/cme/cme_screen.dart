@@ -16,7 +16,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../services/auth_service.dart';
 import '../../services/cme_service.dart';
-import '../../widgets/under_development_banner.dart';
 import 'widgets/cme_event_card.dart';
 import 'post_event_screen.dart';
 import 'cme_detail_screen.dart';
@@ -150,10 +149,6 @@ class _CmeScreenState extends State<CmeScreen>
       ),
       body: Column(
         children: [
-          const UnderDevelopmentBanner(
-            message:
-                'CME & Webinars is in preview — event listings, "My posts" submissions and admin moderation are still being wired up. Browse freely, but please don\'t rely on it for live registration deadlines yet.',
-          ),
           if (CmeService.instance.usingPreview)
             Container(
               width: double.infinity,
@@ -364,6 +359,7 @@ class _StatusBadge extends StatelessWidget {
     final (label, color) = switch (status) {
       'published' => ('PUBLISHED', const Color(0xFF16A34A)),
       'pending' => ('PENDING REVIEW', const Color(0xFFF59E0B)),
+      'changes_requested' => ('NEEDS CHANGES', const Color(0xFFEF6C00)),
       'rejected' => ('REJECTED', const Color(0xFFDC2626)),
       'cancelled' => ('CANCELLED', const Color(0xFF6B7280)),
       _ => (status.toUpperCase(), const Color(0xFF6B7280)),

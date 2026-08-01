@@ -108,6 +108,9 @@ class _Header extends StatelessWidget {
         children: [
           Row(
             children: [
+              if (event.isExample)
+                _Tag(text: 'EXAMPLE', bg: const Color(0xFF7C3AED)),
+              if (event.isExample) const SizedBox(width: 8),
               if (isWebinar)
                 _Tag(text: '● UPCOMING', bg: const Color(0xFFF59E0B)),
               if (isWebinar) const SizedBox(width: 8),
@@ -117,6 +120,17 @@ class _Header extends StatelessWidget {
               ),
             ],
           ),
+          if (event.isExample) ...[
+            const SizedBox(height: 8),
+            Text(
+              'Sample listing to show what an approved submission looks like — not a real event.',
+              style: GoogleFonts.plusJakartaSans(
+                fontSize: 10.5,
+                fontStyle: FontStyle.italic,
+                color: Colors.white.withValues(alpha: 0.85),
+              ),
+            ),
+          ],
           const SizedBox(height: 12),
           Text(
             event.title,

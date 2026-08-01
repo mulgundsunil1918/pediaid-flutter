@@ -134,10 +134,26 @@ class AdminService {
 
   Future<void> approveCmeEvent(String eventId) async {
     final res = await http
-        .put(_u('/admin/cme/$eventId/approve'), headers: _headers)
+        .put(
+          _u('/admin/cme/$eventId/approve'),
+          headers: AuthService.instance.authHeadersNoBody,
+        )
         .timeout(const Duration(seconds: 30));
     if (res.statusCode != 200) {
       throw Exception(_extractError(res, 'Approval failed'));
+    }
+  }
+
+  Future<void> requestCmeEventChanges(String eventId, String reason) async {
+    final res = await http
+        .put(
+          _u('/admin/cme/$eventId/request-changes'),
+          headers: _headers,
+          body: jsonEncode({'reason': reason}),
+        )
+        .timeout(const Duration(seconds: 30));
+    if (res.statusCode != 200) {
+      throw Exception(_extractError(res, 'Request changes failed'));
     }
   }
 
@@ -225,7 +241,7 @@ class AdminService {
     final res = await http
         .put(
           _u('/admin/users/$userId/reject-role'),
-          headers: _headers,
+          headers: AuthService.instance.authHeadersNoBody,
         )
         .timeout(const Duration(seconds: 30));
     if (res.statusCode != 200) {

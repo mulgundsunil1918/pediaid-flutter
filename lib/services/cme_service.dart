@@ -68,6 +68,7 @@ class CmeEvent {
   final List<String> tags;
   final List<CmeCoordinator> coordinators;
   final String? rejectionReason;
+  final bool isExample;
   final String? createdBy;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -104,6 +105,7 @@ class CmeEvent {
     required this.tags,
     required this.coordinators,
     required this.rejectionReason,
+    this.isExample = false,
     required this.createdBy,
     required this.createdAt,
     required this.updatedAt,
@@ -154,6 +156,7 @@ class CmeEvent {
           .map(CmeCoordinator.fromJson)
           .toList(),
       rejectionReason: json['rejectionReason'] as String?,
+      isExample: (json['isExample'] as bool?) ?? false,
       createdBy: json['createdBy'] as String?,
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),

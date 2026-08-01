@@ -450,6 +450,14 @@ class AuthService extends ChangeNotifier {
         if (_accessToken != null) 'Authorization': 'Bearer $_accessToken',
       };
 
+  /// For requests with no body (e.g. PUT .../approve, .../read). Fastify's
+  /// default JSON body parser rejects a request that claims
+  /// Content-Type: application/json but sends zero bytes — use this instead
+  /// of [authHeaders] for any call that doesn't pass a `body:`.
+  Map<String, String> get authHeadersNoBody => {
+        if (_accessToken != null) 'Authorization': 'Bearer $_accessToken',
+      };
+
   /// Wraps an HTTP call with automatic 401 → refresh → retry. Callers that
   /// want silent rotation on expired tokens should use this instead of
   /// calling http directly. The [send] closure is invoked with the current

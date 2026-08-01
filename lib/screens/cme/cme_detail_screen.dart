@@ -106,6 +106,50 @@ class _CmeDetailScreenState extends State<CmeDetailScreen> {
                     ],
                   ),
                 ),
+              if (event.status == 'changes_requested' &&
+                  event.rejectionReason != null &&
+                  event.rejectionReason!.isNotEmpty)
+                Container(
+                  margin: const EdgeInsets.fromLTRB(16, 14, 16, 0),
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: Colors.orange.shade50,
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(color: Colors.orange.shade300),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Icon(Icons.edit_note_rounded,
+                          size: 18, color: Colors.orange.shade800),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'A revision was requested',
+                              style: GoogleFonts.plusJakartaSans(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w800,
+                                color: Colors.orange.shade900,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              event.rejectionReason!,
+                              style: GoogleFonts.plusJakartaSans(
+                                fontSize: 12,
+                                color: Colors.orange.shade900,
+                                height: 1.45,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               if (event.status == 'pending')
                 Container(
                   margin: const EdgeInsets.fromLTRB(16, 14, 16, 0),
