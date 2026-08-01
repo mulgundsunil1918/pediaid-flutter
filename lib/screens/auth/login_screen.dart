@@ -99,7 +99,14 @@ class _LoginScreenState extends State<LoginScreen> {
         // Non-fatal — the login itself succeeded, so don't block.
       }
 
-      // _AuthGate listens to AuthService and will rebuild automatically.
+      // _AuthGate listens to AuthService and will rebuild automatically —
+      // but that only helps when LoginScreen IS the root (auth enabled).
+      // While auth is disabled for testing, LoginScreen is instead pushed
+      // as a normal route (e.g. from AccountScreen), so pop back to the
+      // root explicitly too. Harmless no-op when there's nothing to pop.
+      if (mounted && Navigator.of(context).canPop()) {
+        Navigator.of(context).popUntil((route) => route.isFirst);
+      }
     } on AuthException catch (e) {
       if (mounted) setState(() => _error = e.message);
     } catch (_) {

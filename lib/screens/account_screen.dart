@@ -30,6 +30,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../services/auth_service.dart';
 import '../services/profile_store.dart';
+import 'auth/login_screen.dart';
+import 'auth/signup_screen.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});
@@ -202,10 +204,57 @@ class _AccountScreenState extends State<AccountScreen> {
       return Scaffold(
         appBar: AppBar(title: const Text('Account')),
         body: Center(
-          child: Text(
-            "You're not signed in.",
-            style: GoogleFonts.plusJakartaSans(
-              color: cs.onSurface.withValues(alpha: 0.6),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 32),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.account_circle_outlined,
+                    size: 64, color: cs.onSurface.withValues(alpha: 0.25)),
+                const SizedBox(height: 16),
+                Text(
+                  "You're not signed in",
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: cs.onSurface,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  'Sign in to submit CME/webinar events, and to keep track of what you post to Never Again.',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 12.5,
+                    height: 1.5,
+                    color: cs.onSurface.withValues(alpha: 0.6),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                SizedBox(
+                  width: double.infinity,
+                  height: 48,
+                  child: FilledButton(
+                    onPressed: () => Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const LoginScreen()),
+                    ),
+                    child: Text(
+                      'Sign in',
+                      style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w800),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                TextButton(
+                  onPressed: () => Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const SignupScreen()),
+                  ),
+                  child: Text(
+                    "Don't have an account? Create one",
+                    style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
