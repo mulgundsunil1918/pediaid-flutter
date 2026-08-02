@@ -17,18 +17,30 @@ class _FentonChartScreenState extends State<FentonChartScreen> {
   bool _loading = true;
 
   // ── Inputs ───────────────────────────────────────────────────────────────────
-  FentonSex _sex              = FentonSex.male;
-  FentonParameter _param      = FentonParameter.weight;
-  final _gaWeeksCtrl          = TextEditingController();
-  final _gaDaysCtrl           = TextEditingController();
-  final _valCtrl              = TextEditingController();
-  final _formKey              = GlobalKey<FormState>();
+  FentonSex _sex = FentonSex.male;
+  // Which chart is currently displayed — independent from which
+  // measurements were entered, since weight/length/HC can't share one
+  // graph (different units, different y-scales).
+  FentonParameter _viewParam = FentonParameter.weight;
 
-  // ── Result ───────────────────────────────────────────────────────────────────
-  FentonResult? _result;
+  final _gaWeeksCtrl = TextEditingController();
+  final _gaDaysCtrl  = TextEditingController();
+  final _weightCtrl  = TextEditingController(); // grams
+  final _lengthCtrl  = TextEditingController(); // cm
+  final _hcCtrl      = TextEditingController(); // cm
+  final _formKey     = GlobalKey<FormState>();
+
+  // ── Results — one per parameter, computed together from the same GA ────────
+  FentonResult? _weightResult; // percentiles here are in kg (native data unit)
+  FentonResult? _lengthResult;
+  FentonResult? _hcResult;
+
   double? _plotGa;
-  double? _plotValue;
-  String? _gaError;
+  double? _plotWeightG; // entered value, grams (display unit)
+  double? _plotLengthCm;
+  double? _plotHcCm;
+
+  String? _formError;
   String  _gaLabel = '';
 
   @override
@@ -43,72 +55,162 @@ class _FentonChartScreenState extends State<FentonChartScreen> {
   void dispose() {
     _gaWeeksCtrl.dispose();
     _gaDaysCtrl.dispose();
-    _valCtrl.dispose();
+    _weightCtrl.dispose();
+    _lengthCtrl.dispose();
+    _hcCtrl.dispose();
     super.dispose();
   }
 
   // ── Helpers ──────────────────────────────────────────────────────────────────
 
-  List<FentonDataPoint> get _dataPoints {
+  List<FentonDataPoint> _dataPoints(FentonParameter param) {
     if (_data == null) return [];
     final g = _sex == FentonSex.male ? _data!.male : _data!.female;
-    return switch (_param) {
+    return switch (param) {
       FentonParameter.weight            => g.weight,
       FentonParameter.length            => g.length,
       FentonParameter.headCircumference => g.headCircumference,
     };
   }
 
-  String get _paramLabel => switch (_param) {
+  String _paramLabel(FentonParameter p) => switch (p) {
         FentonParameter.weight            => 'Weight',
         FentonParameter.length            => 'Length',
         FentonParameter.headCircumference => 'Head Circumference',
       };
 
-  String get _unit => _param == FentonParameter.weight ? 'kg' : 'cm';
+  String _unitFor(FentonParameter p) =>
+      p == FentonParameter.weight ? 'g' : 'cm';
+
+  /// The calculator and reference data work in kg for weight (their
+  /// published unit) — this converts a kg-based result to the grams the UI
+  /// actually shows, without touching the calculator or data files.
+  FentonResult _weightResultInGrams(FentonResult kgResult) {
+    final p = kgResult.percentiles;
+    return FentonResult(
+      percentiles: FentonPercentiles(
+        p3:  p.p3  * 1000,
+        p10: p.p10 * 1000,
+        p50: p.p50 * 1000,
+        p90: p.p90 * 1000,
+        p97: p.p97 * 1000,
+      ),
+      percentileBand: kgResult.percentileBand,
+      classification: kgResult.classification,
+    );
+  }
+
+  double? get _viewUserValue => switch (_viewParam) {
+        // Chart curves are plotted in kg (native data), so the weight point
+        // must be converted back from the grams the user typed.
+        FentonParameter.weight => _plotWeightG != null ? _plotWeightG! / 1000 : null,
+        FentonParameter.length => _plotLengthCm,
+        FentonParameter.headCircumference => _plotHcCm,
+      };
 
   void _calculate() {
-    setState(() { _gaError = null; _result = null; _plotGa = null; _plotValue = null; });
+    setState(() {
+      _formError    = null;
+      _weightResult = null;
+      _lengthResult = null;
+      _hcResult     = null;
+      _plotGa       = null;
+      _plotWeightG  = null;
+      _plotLengthCm = null;
+      _plotHcCm     = null;
+    });
     if (!(_formKey.currentState?.validate() ?? false)) return;
 
     final weeks = int.tryParse(_gaWeeksCtrl.text.trim());
     final days  = int.tryParse(_gaDaysCtrl.text.trim()) ?? 0;
-    final val   = double.tryParse(_valCtrl.text.trim());
-
-    if (weeks == null || val == null) return;
-
+    if (weeks == null) return;
     if (weeks < 22 || weeks > 50) {
-      setState(() => _gaError = 'Weeks must be between 22 and 50');
+      setState(() => _formError = 'Weeks must be between 22 and 50');
+      return;
+    }
+    final ga = weeks + days / 7.0;
+
+    final weightG  = double.tryParse(_weightCtrl.text.trim());
+    final lengthCm = double.tryParse(_lengthCtrl.text.trim());
+    final hcCm     = double.tryParse(_hcCtrl.text.trim());
+
+    if (weightG == null && lengthCm == null && hcCm == null) {
+      setState(() => _formError = 'Enter at least one measurement');
       return;
     }
 
-    final ga = weeks + days / 7.0;
+    final wRes = weightG != null
+        ? FentonCalculator.calculate(
+            dataPoints: _dataPoints(FentonParameter.weight),
+            ga: ga,
+            value: weightG / 1000, // grams entered → kg for the calculator
+            parameter: FentonParameter.weight,
+          )
+        : null;
+    final lRes = lengthCm != null
+        ? FentonCalculator.calculate(
+            dataPoints: _dataPoints(FentonParameter.length),
+            ga: ga,
+            value: lengthCm,
+            parameter: FentonParameter.length,
+          )
+        : null;
+    final hRes = hcCm != null
+        ? FentonCalculator.calculate(
+            dataPoints: _dataPoints(FentonParameter.headCircumference),
+            ga: ga,
+            value: hcCm,
+            parameter: FentonParameter.headCircumference,
+          )
+        : null;
 
-    final res = FentonCalculator.calculate(
-      dataPoints: _dataPoints,
-      ga: ga,
-      value: val,
-      parameter: _param,
-    );
+    // Show whichever chart actually has a fresh result, preferring the
+    // currently-selected tab if it has one.
+    FentonParameter nextView = _viewParam;
+    final hasCurrentView = switch (_viewParam) {
+      FentonParameter.weight => wRes != null,
+      FentonParameter.length => lRes != null,
+      FentonParameter.headCircumference => hRes != null,
+    };
+    if (!hasCurrentView) {
+      if (wRes != null) {
+        nextView = FentonParameter.weight;
+      } else if (lRes != null) {
+        nextView = FentonParameter.length;
+      } else if (hRes != null) {
+        nextView = FentonParameter.headCircumference;
+      }
+    }
 
     setState(() {
-      _result    = res;
-      _plotGa    = ga;
-      _plotValue = val;
-      _gaLabel   = days > 0 ? '${weeks}w ${days}d' : '${weeks}w 0d';
+      _weightResult = wRes;
+      _lengthResult = lRes;
+      _hcResult     = hRes;
+      _viewParam    = nextView;
+      _plotGa       = ga;
+      _plotWeightG  = weightG;
+      _plotLengthCm = lengthCm;
+      _plotHcCm     = hcCm;
+      _gaLabel      = days > 0 ? '${weeks}w ${days}d' : '${weeks}w 0d';
     });
   }
 
   void _reset() {
     _gaWeeksCtrl.clear();
     _gaDaysCtrl.clear();
-    _valCtrl.clear();
+    _weightCtrl.clear();
+    _lengthCtrl.clear();
+    _hcCtrl.clear();
     setState(() {
-      _result    = null;
-      _plotGa    = null;
-      _plotValue = null;
-      _gaError   = null;
-      _gaLabel   = '';
+      _weightResult = null;
+      _lengthResult = null;
+      _hcResult     = null;
+      _plotGa       = null;
+      _plotWeightG  = null;
+      _plotLengthCm = null;
+      _plotHcCm     = null;
+      _formError    = null;
+      _gaLabel      = '';
     });
   }
 
@@ -136,24 +238,21 @@ class _FentonChartScreenState extends State<FentonChartScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
+                    if (_data != null) _VersionBanner(cs: cs, version: _data!.version),
+                    if (_data != null) const SizedBox(height: 12),
+
                     _InputCard(
                       cs: cs,
-                      isDark: isDark,
                       sex: _sex,
-                      param: _param,
                       gaWeeksCtrl: _gaWeeksCtrl,
                       gaDaysCtrl: _gaDaysCtrl,
-                      valCtrl: _valCtrl,
+                      weightCtrl: _weightCtrl,
+                      lengthCtrl: _lengthCtrl,
+                      hcCtrl: _hcCtrl,
                       formKey: _formKey,
-                      unit: _unit,
-                      paramLabel: _paramLabel,
-                      gaError: _gaError,
+                      formError: _formError,
                       onSexChanged: (s) => setState(() {
                         _sex = s;
-                        _reset();
-                      }),
-                      onParamChanged: (p) => setState(() {
-                        _param = p;
                         _reset();
                       }),
                       onCalculate: _calculate,
@@ -161,32 +260,67 @@ class _FentonChartScreenState extends State<FentonChartScreen> {
                     ),
                     const SizedBox(height: 16),
 
-                    // ── Chart ────────────────────────────────────────────────
+                    // ── Chart (with a tab to pick which one to view) ─────────
                     if (_data != null)
                       _ChartCard(
                         cs: cs,
                         isDark: isDark,
                         chartData: _data!,
                         sex: _sex,
-                        param: _param,
+                        viewParam: _viewParam,
+                        onViewParamChanged: (p) => setState(() => _viewParam = p),
                         userGa: _plotGa,
-                        userValue: _plotValue,
-                        paramLabel: _paramLabel,
-                        unit: _unit,
+                        userValue: _viewUserValue,
+                        paramLabel: _paramLabel(_viewParam),
+                        unit: _unitFor(_viewParam),
+                        hasWeight: _weightResult != null,
+                        hasLength: _lengthResult != null,
+                        hasHc: _hcResult != null,
                       ),
 
-                    // ── Result ───────────────────────────────────────────────
-                    if (_result != null) ...[
+                    // ── Results — merged, one card per measurement entered ──
+                    if (_weightResult != null || _lengthResult != null || _hcResult != null) ...[
                       const SizedBox(height: 16),
-                      _ResultCard(
-                        cs: cs,
-                        result: _result!,
-                        paramLabel: _paramLabel,
-                        unit: _unit,
-                        ga: _plotGa!,
-                        gaLabel: _gaLabel,
-                        value: _plotValue!,
-                      ),
+                      Text('Results',
+                          style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                              color: cs.onSurface.withValues(alpha: 0.55))),
+                      const SizedBox(height: 8),
+                      if (_weightResult != null) ...[
+                        _ResultCard(
+                          cs: cs,
+                          result: _weightResultInGrams(_weightResult!),
+                          paramLabel: 'Weight',
+                          unit: 'g',
+                          ga: _plotGa!,
+                          gaLabel: _gaLabel,
+                          value: _plotWeightG!,
+                        ),
+                        const SizedBox(height: 10),
+                      ],
+                      if (_lengthResult != null) ...[
+                        _ResultCard(
+                          cs: cs,
+                          result: _lengthResult!,
+                          paramLabel: 'Length',
+                          unit: 'cm',
+                          ga: _plotGa!,
+                          gaLabel: _gaLabel,
+                          value: _plotLengthCm!,
+                        ),
+                        const SizedBox(height: 10),
+                      ],
+                      if (_hcResult != null)
+                        _ResultCard(
+                          cs: cs,
+                          result: _hcResult!,
+                          paramLabel: 'Head Circumference',
+                          unit: 'cm',
+                          ga: _plotGa!,
+                          gaLabel: _gaLabel,
+                          value: _plotHcCm!,
+                        ),
                     ],
 
                     // ── Citation ─────────────────────────────────────────────
@@ -204,39 +338,64 @@ class _FentonChartScreenState extends State<FentonChartScreen> {
   }
 }
 
+// ── Version banner ───────────────────────────────────────────────────────────
+
+class _VersionBanner extends StatelessWidget {
+  final ColorScheme cs;
+  final String version;
+  const _VersionBanner({required this.cs, required this.version});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
+      decoration: BoxDecoration(
+        color: cs.primary.withValues(alpha: 0.10),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: cs.primary.withValues(alpha: 0.30)),
+      ),
+      child: Row(children: [
+        Icon(Icons.verified_outlined, size: 16, color: cs.primary),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(
+            'Fenton $version — 3rd Generation Growth Charts (latest)',
+            style: TextStyle(
+                fontSize: 12, fontWeight: FontWeight.bold, color: cs.primary),
+          ),
+        ),
+      ]),
+    );
+  }
+}
+
 // ── Input card ────────────────────────────────────────────────────────────────
 
 class _InputCard extends StatelessWidget {
   final ColorScheme cs;
-  final bool isDark;
   final FentonSex sex;
-  final FentonParameter param;
   final TextEditingController gaWeeksCtrl;
   final TextEditingController gaDaysCtrl;
-  final TextEditingController valCtrl;
+  final TextEditingController weightCtrl;
+  final TextEditingController lengthCtrl;
+  final TextEditingController hcCtrl;
   final GlobalKey<FormState> formKey;
-  final String unit;
-  final String paramLabel;
-  final String? gaError;
+  final String? formError;
   final ValueChanged<FentonSex> onSexChanged;
-  final ValueChanged<FentonParameter> onParamChanged;
   final VoidCallback onCalculate;
   final VoidCallback onReset;
 
   const _InputCard({
     required this.cs,
-    required this.isDark,
     required this.sex,
-    required this.param,
     required this.gaWeeksCtrl,
     required this.gaDaysCtrl,
-    required this.valCtrl,
+    required this.weightCtrl,
+    required this.lengthCtrl,
+    required this.hcCtrl,
     required this.formKey,
-    required this.unit,
-    required this.paramLabel,
-    required this.gaError,
+    required this.formError,
     required this.onSexChanged,
-    required this.onParamChanged,
     required this.onCalculate,
     required this.onReset,
   });
@@ -287,37 +446,17 @@ class _InputCard extends StatelessWidget {
               ),
               const SizedBox(height: 14),
 
-              // Parameter toggle
-              _SectionLabel('Parameter', cs),
-              const SizedBox(height: 6),
-              _ToggleRow<FentonParameter>(
-                options: const [
-                  (FentonParameter.weight,            'Weight',  Icons.monitor_weight_outlined),
-                  (FentonParameter.length,            'Length',  Icons.straighten),
-                  (FentonParameter.headCircumference, 'HC',      Icons.circle_outlined),
-                ],
-                selected: param,
-                primaryColor: cs.primary,
-                cs: cs,
-                onSelected: onParamChanged,
-              ),
-              const SizedBox(height: 14),
-
               // GA section label
               _SectionLabel('Gestational Age', cs),
               const SizedBox(height: 6),
-
-              // GA weeks + days row
               Row(children: [
                 Expanded(
-                  flex: 5,
                   child: _IntField(
                     controller: gaWeeksCtrl,
                     label: 'Weeks',
                     hint: '22–50',
                     suffix: 'w',
                     cs: cs,
-                    extraError: gaError,
                     validator: (v) {
                       if (v == null || v.trim().isEmpty) return 'Required';
                       final n = int.tryParse(v.trim());
@@ -329,7 +468,6 @@ class _InputCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 10),
                 Expanded(
-                  flex: 4,
                   child: _IntField(
                     controller: gaDaysCtrl,
                     label: 'Days',
@@ -345,24 +483,57 @@ class _InputCard extends StatelessWidget {
                     },
                   ),
                 ),
-                const SizedBox(width: 10),
-                // Measurement value field
-                Expanded(
-                  flex: 6,
-                  child: _NumField(
-                    controller: valCtrl,
-                    label: paramLabel,
-                    hint: unit == 'kg' ? 'e.g. 1.3' : 'e.g. 42',
-                    suffix: unit,
-                    cs: cs,
-                    validator: (v) {
-                      if (v == null || v.trim().isEmpty) return 'Required';
-                      if (double.tryParse(v.trim()) == null) return 'Invalid';
-                      return null;
-                    },
-                  ),
-                ),
               ]),
+              const SizedBox(height: 14),
+
+              // All three measurements at once — enter whichever you have.
+              _SectionLabel('Measurements (enter any/all)', cs),
+              const SizedBox(height: 6),
+              _NumField(
+                controller: weightCtrl,
+                label: 'Weight',
+                hint: 'e.g. 2500',
+                suffix: 'g',
+                cs: cs,
+                validator: (v) {
+                  if (v == null || v.trim().isEmpty) return null; // optional
+                  if (double.tryParse(v.trim()) == null) return 'Invalid';
+                  return null;
+                },
+              ),
+              const SizedBox(height: 10),
+              _NumField(
+                controller: lengthCtrl,
+                label: 'Length',
+                hint: 'e.g. 42',
+                suffix: 'cm',
+                cs: cs,
+                validator: (v) {
+                  if (v == null || v.trim().isEmpty) return null;
+                  if (double.tryParse(v.trim()) == null) return 'Invalid';
+                  return null;
+                },
+              ),
+              const SizedBox(height: 10),
+              _NumField(
+                controller: hcCtrl,
+                label: 'Head Circumference',
+                hint: 'e.g. 30',
+                suffix: 'cm',
+                cs: cs,
+                validator: (v) {
+                  if (v == null || v.trim().isEmpty) return null;
+                  if (double.tryParse(v.trim()) == null) return 'Invalid';
+                  return null;
+                },
+              ),
+
+              if (formError != null) ...[
+                const SizedBox(height: 10),
+                Text(formError!,
+                    style: TextStyle(fontSize: 12, color: cs.error)),
+              ],
+
               const SizedBox(height: 16),
 
               // Buttons
@@ -412,22 +583,30 @@ class _ChartCard extends StatelessWidget {
   final bool isDark;
   final FentonChartData chartData;
   final FentonSex sex;
-  final FentonParameter param;
+  final FentonParameter viewParam;
+  final ValueChanged<FentonParameter> onViewParamChanged;
   final double? userGa;
   final double? userValue;
   final String paramLabel;
   final String unit;
+  final bool hasWeight;
+  final bool hasLength;
+  final bool hasHc;
 
   const _ChartCard({
     required this.cs,
     required this.isDark,
     required this.chartData,
     required this.sex,
-    required this.param,
+    required this.viewParam,
+    required this.onViewParamChanged,
     required this.userGa,
     required this.userValue,
     required this.paramLabel,
     required this.unit,
+    required this.hasWeight,
+    required this.hasLength,
+    required this.hasHc,
   });
 
   @override
@@ -441,6 +620,20 @@ class _ChartCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            // Which chart to view — independent of what's been entered.
+            _ToggleRow<FentonParameter>(
+              options: [
+                (FentonParameter.weight, hasWeight ? 'Weight •' : 'Weight', Icons.monitor_weight_outlined),
+                (FentonParameter.length, hasLength ? 'Length •' : 'Length', Icons.straighten),
+                (FentonParameter.headCircumference, hasHc ? 'HC •' : 'HC', Icons.circle_outlined),
+              ],
+              selected: viewParam,
+              primaryColor: cs.primary,
+              cs: cs,
+              onSelected: onViewParamChanged,
+            ),
+            const SizedBox(height: 12),
+
             // Header
             Row(children: [
               Icon(Icons.monitor_heart_outlined, color: cs.primary, size: 20),
@@ -460,7 +653,7 @@ class _ChartCard extends StatelessWidget {
             FentonChartWidget(
               chartData: chartData,
               sex: sex,
-              parameter: param,
+              parameter: viewParam,
               userGa: userGa,
               userValue: userValue,
             ),
@@ -516,7 +709,7 @@ class _ResultCard extends StatelessWidget {
                 child: Icon(Icons.analytics_outlined, color: bandColor, size: 20),
               ),
               const SizedBox(width: 10),
-              Text('Result',
+              Text(paramLabel,
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
@@ -541,8 +734,10 @@ class _ResultCard extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             _ResultRow(
-              label: paramLabel,
-              value: '$value $unit',
+              label: 'Measured',
+              value: unit == 'g'
+                  ? '${value.toStringAsFixed(0)} $unit'
+                  : '$value $unit',
               cs: cs,
             ),
 
@@ -665,19 +860,22 @@ class _PercentilesRow extends StatelessWidget {
 
   const _PercentilesRow(this.p, this.unit, this.cs);
 
+  String _fmt(double v) => switch (unit) {
+        'g'  => v.toStringAsFixed(0),
+        'kg' => v.toStringAsFixed(2),
+        _    => v.toStringAsFixed(1),
+      };
+
   @override
   Widget build(BuildContext context) {
-    final isKg = unit == 'kg';
-    String fmt(double v) => isKg ? v.toStringAsFixed(2) : v.toStringAsFixed(1);
-
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        _PctChip('P3',  fmt(p.p3),  const Color(0xFF7C4DFF), cs),
-        _PctChip('P10', fmt(p.p10), const Color(0xFF0288D1), cs),
-        _PctChip('P50', fmt(p.p50), const Color(0xFF00897B), cs),
-        _PctChip('P90', fmt(p.p90), const Color(0xFF0288D1), cs),
-        _PctChip('P97', fmt(p.p97), const Color(0xFF7C4DFF), cs),
+        _PctChip('P3',  _fmt(p.p3),  const Color(0xFF7C4DFF), cs),
+        _PctChip('P10', _fmt(p.p10), const Color(0xFF0288D1), cs),
+        _PctChip('P50', _fmt(p.p50), const Color(0xFF00897B), cs),
+        _PctChip('P90', _fmt(p.p90), const Color(0xFF0288D1), cs),
+        _PctChip('P97', _fmt(p.p97), const Color(0xFF7C4DFF), cs),
       ],
     );
   }
@@ -859,7 +1057,6 @@ class _IntField extends StatelessWidget {
   final String hint;
   final String suffix;
   final ColorScheme cs;
-  final String? extraError;
   final FormFieldValidator<String>? validator;
 
   const _IntField({
@@ -868,7 +1065,6 @@ class _IntField extends StatelessWidget {
     required this.hint,
     required this.suffix,
     required this.cs,
-    this.extraError,
     this.validator,
   });
 
@@ -882,7 +1078,6 @@ class _IntField extends StatelessWidget {
         labelText: label,
         hintText: hint,
         suffixText: suffix,
-        errorText: extraError,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 12, vertical: 12),

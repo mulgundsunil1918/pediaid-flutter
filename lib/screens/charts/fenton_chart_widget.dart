@@ -158,8 +158,10 @@ class FentonChartWidget extends StatelessWidget {
                       getTitlesWidget: (v, meta) => SideTitleWidget(
                         axisSide: meta.axisSide,
                         child: Text(
+                          // Curves plot in kg (native data unit) — only the
+                          // label converts to grams for display.
                           _isWeight
-                              ? v.toStringAsFixed(1)
+                              ? (v * 1000).toStringAsFixed(0)
                               : v.toInt().toString(),
                           style: TextStyle(fontSize: 9, color: textCol),
                         ),
