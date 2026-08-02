@@ -461,51 +461,51 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
 
-                        // ── Social sign-in (mobile only) ───────────────
-                        // kIsWeb must short-circuit before Platform.isIOS.
-                        if (!kIsWeb) ...[
-                          const SizedBox(height: 20),
-                          _OrDivider(),
-                          const SizedBox(height: 16),
-                          if (Platform.isIOS)
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: _SocialButton(
-                                    icon: Icons.g_mobiledata,
-                                    label: 'Google',
-                                    iconSize: 24,
-                                    onPressed: auth.isLoading
-                                        ? null
-                                        : _signInGoogle,
-                                  ),
+                        // ── Social sign-in ──────────────────────────────
+                        // kIsWeb must short-circuit before Platform.isIOS is
+                        // ever evaluated (Platform throws on web).
+                        const SizedBox(height: 20),
+                        _OrDivider(),
+                        const SizedBox(height: 16),
+                        if (!kIsWeb && Platform.isIOS)
+                          Row(
+                            children: [
+                              Expanded(
+                                child: _SocialButton(
+                                  icon: Icons.g_mobiledata,
+                                  label: 'Google',
+                                  iconSize: 24,
+                                  onPressed: auth.isLoading
+                                      ? null
+                                      : _signInGoogle,
                                 ),
-                                const SizedBox(width: 10),
-                                Expanded(
-                                  child: _SocialButton(
-                                    icon: Icons.apple,
-                                    label: 'Apple',
-                                    iconSize: 22,
-                                    onPressed: auth.isLoading
-                                        ? null
-                                        : _signInApple,
-                                    dark: true,
-                                  ),
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: _SocialButton(
+                                  icon: Icons.apple,
+                                  label: 'Apple',
+                                  iconSize: 22,
+                                  onPressed: auth.isLoading
+                                      ? null
+                                      : _signInApple,
+                                  dark: true,
                                 ),
-                              ],
-                            )
-                          else
-                            _SocialButton(
-                              icon: Icons.g_mobiledata,
-                              label: _mode == _Mode.signIn
-                                  ? 'Continue with Google'
-                                  : 'Sign up with Google',
-                              iconSize: 28,
-                              onPressed:
-                                  auth.isLoading ? null : _signInGoogle,
-                              fullWidth: true,
-                            ),
-                        ],
+                              ),
+                            ],
+                          )
+                        else
+                          // Android and web: Google only. On web this uses
+                          // FirebaseAuthService's signInWithPopup branch.
+                          _SocialButton(
+                            icon: Icons.g_mobiledata,
+                            label: _mode == _Mode.signIn
+                                ? 'Continue with Google'
+                                : 'Sign up with Google',
+                            iconSize: 28,
+                            onPressed: auth.isLoading ? null : _signInGoogle,
+                            fullWidth: true,
+                          ),
                         const SizedBox(height: 8),
                       ],
                     ),
