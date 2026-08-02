@@ -38979,8 +38979,8 @@ _.d=d},
 BH:function BH(a,b){var _=this
 _.a=a
 _.b=null
-_.c=!1
-_.d=null
+_.d=_.c=!1
+_.e=null
 _.dx$=0
 _.dy$=b
 _.fx$=_.fr$=0},
@@ -148949,7 +148949,7 @@ $0(){return this.a.d=!0},
 $S:0}
 A.amt.prototype={
 p(a){var s=A.qF(a,!0,t.W0)
-if(s.c)return B.bPB
+if(!s.d)return B.bPB
 return s.b!=null?B.as3:B.Y3}}
 A.a_j.prototype={
 J(){return"UserRole."+this.b}}
@@ -148963,20 +148963,21 @@ p=4
 s=7
 return A.w(n.a.Im(),$async$PV)
 case 7:n.b=b
-n.d=null
+n.e=null
 p=2
 s=6
 break
 case 4:p=3
 k=o.pop()
 m=A.au(k)
-n.d=A.pR(m)
+n.e=A.pR(m)
 A.e8().$1("[AuthProvider] loadCurrentUser: "+A.p(m))
 s=6
 break
 case 3:s=2
 break
-case 6:n.c=!1
+case 6:n.d=!0
+n.c=!1
 n.af()
 q=n.b!=null
 s=1
@@ -148998,7 +148999,7 @@ return A.H($async$NM,r)},
 pd(a,b){return this.ato(a,b)},
 ato(a,b){var s=0,r=A.I(t.y),q,p=2,o=[],n=this,m,l,k,j
 var $async$pd=A.J(function(c,d){if(c===1){o.push(d)
-s=p}for(;;)switch(s){case 0:n.d=null
+s=p}for(;;)switch(s){case 0:n.e=null
 n.c=!0
 n.af()
 p=4
@@ -149021,7 +149022,7 @@ break
 case 4:p=3
 j=o.pop()
 m=A.au(j)
-n.d=A.pR(m)
+n.e=A.pR(m)
 n.c=!1
 n.af()
 q=!1
@@ -149037,7 +149038,7 @@ return A.H($async$pd,r)},
 HA(a,b,c,d){return this.bh_(0,b,c,d)},
 bh_(a,b,c,d){var s=0,r=A.I(t.y),q,p=2,o=[],n=this,m,l,k,j
 var $async$HA=A.J(function(e,f){if(e===1){o.push(f)
-s=p}for(;;)switch(s){case 0:n.d=null
+s=p}for(;;)switch(s){case 0:n.e=null
 n.c=!0
 n.af()
 p=4
@@ -149060,7 +149061,7 @@ break
 case 4:p=3
 j=o.pop()
 m=A.au(j)
-n.d=A.pR(m)
+n.e=A.pR(m)
 n.c=!1
 n.af()
 q=!1
@@ -149075,7 +149076,7 @@ case 2:return A.F(o.at(-1),r)}})
 return A.H($async$HA,r)},
 n3(){var s=0,r=A.I(t.y),q,p=2,o=[],n=this,m,l,k,j
 var $async$n3=A.J(function(a,b){if(a===1){o.push(b)
-s=p}for(;;)switch(s){case 0:n.d=null
+s=p}for(;;)switch(s){case 0:n.e=null
 n.c=!0
 n.af()
 p=4
@@ -149098,7 +149099,7 @@ break
 case 4:p=3
 j=o.pop()
 m=A.au(j)
-n.d=A.pR(m)
+n.e=A.pR(m)
 n.c=!1
 n.af()
 q=!1
@@ -149113,7 +149114,7 @@ case 2:return A.F(o.at(-1),r)}})
 return A.H($async$n3,r)},
 dJ(){var s=0,r=A.I(t.H),q=1,p=[],o=this,n,m,l,k,j
 var $async$dJ=A.J(function(a,b){if(a===1){p.push(b)
-s=q}for(;;)switch(s){case 0:o.d=null
+s=q}for(;;)switch(s){case 0:o.e=null
 q=3
 s=6
 return A.w(o.a.dJ(),$async$dJ)
@@ -149157,7 +149158,7 @@ return A.H($async$qg,r)},
 nt(a){return this.b8f(a)},
 b8f(a){var s=0,r=A.I(t.y),q,p=2,o=[],n=this,m,l,k,j,i
 var $async$nt=A.J(function(b,c){if(b===1){o.push(c)
-s=p}for(;;)switch(s){case 0:n.d=null
+s=p}for(;;)switch(s){case 0:n.e=null
 n.c=!0
 n.af()
 p=4
@@ -149189,7 +149190,7 @@ break
 case 4:p=3
 i=o.pop()
 l=A.au(i)
-n.d=A.pR(l)
+n.e=A.pR(l)
 n.c=!1
 n.af()
 q=!1
@@ -149467,7 +149468,7 @@ case 8:k=b
 j=p.c
 if(j==null){s=1
 break}if(!k){j=j.a9(t.J).f
-m=o.d
+m=o.e
 if(m==null)m="Failed to delete account. Please try again."
 j.fz(A.lX(null,null,null,B.cn,B.fv,B.aa,null,A.c(m,null,null,null,null,A.o().$1$fontWeight(B.F),null,null,null),null,B.dH,null,null,null,null,null,null,null,new A.aI(A.f(10),B.B),null,null))
 s=1
@@ -149902,7 +149903,7 @@ s=7
 return A.w(n.HA(0,B.u.Z(m.a),o,l.a),$async$vZ)
 case 7:k=b
 case 4:if(p.c==null){s=1
-break}if(!k){o=n.d
+break}if(!k){o=n.e
 p.Ew(o==null?"Something went wrong. Please try again.":o)
 s=1
 break}s=8
@@ -149919,7 +149920,7 @@ s=3
 return A.w(n.n3(),$async$Ez)
 case 3:m=b
 if(p.c==null){s=1
-break}if(!m){o=n.d
+break}if(!m){o=n.e
 p.Ew(o==null?"Google sign-in failed. Please try again.":o)
 s=1
 break}s=4
