@@ -19,17 +19,53 @@
 
 import 'dart:async';
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuthException;
 
 /// Convert a raw exception into a clean, user-facing message.
 ///
 /// Strategy:
-///   1. If it's a known network / IO / format failure, hand-translate.
-///   2. If it's a known auth-token failure, hand-translate.
-///   3. Otherwise strip "Exception:" / "[…]" prefixes and trim the message.
-///   4. Fall back to a generic "Something went wrong" so we never leak a
-///      stack trace to the user.
+///   1. Firebase Auth exceptions matched by code (fastest, most specific).
+///   2. Known network / IO / format failures hand-translated.
+///   3. Known JWT auth-token shapes from the legacy backend.
+///   4. Generic cleanup of Exception: prefixes, with fallback.
 String friendlyError(Object? error) {
   if (error == null) return 'Something went wrong. Please try again.';
+
+  // ── Firebase Auth ────────────────────────────────────────────────────────
+  // Match by code first so we never leak "firebase_auth/" strings to the UI.
+  if (error is FirebaseAuthException) {
+    switch (error.code) {
+      case 'invalid-credential':
+      case 'invalid-login-credentials':
+      case 'wrong-password':
+      case 'user-not-found':
+        return 'Email or password is incorrect. Please check and try again.';
+      case 'email-already-in-use':
+        return 'That email is already registered. Try signing in instead.';
+      case 'weak-password':
+        return 'Password too weak — please choose at least 8 characters.';
+      case 'network-request-failed':
+        return 'Network error. Check your connection and try again.';
+      case 'too-many-requests':
+        return 'Too many attempts. Please wait a moment and try again.';
+      case 'user-disabled':
+        return 'This account has been disabled. Please contact support.';
+      case 'requires-recent-login':
+        return 'Please sign in again to perform this action.';
+      case 'operation-not-allowed':
+        return 'This sign-in method is not enabled. Please contact support.';
+      case 'permission-denied':
+        return "You don't have permission to do that.";
+      case 'unavailable':
+        return 'Service temporarily unavailable. Please try again shortly.';
+      default:
+        // macOS Keychain bug: SecureStorage throws -34018 on first launch.
+        if (error.code.contains('34018')) {
+          return 'iOS Keychain error. Try restarting the app.';
+        }
+        return error.message ?? 'Authentication failed. Please try again.';
+    }
+  }
 
   final raw = error.toString();
 

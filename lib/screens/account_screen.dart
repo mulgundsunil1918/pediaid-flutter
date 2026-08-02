@@ -28,10 +28,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../services/auth_service.dart';
+import 'package:provider/provider.dart';
+import '../models/app_user.dart';
+import '../providers/auth_provider.dart';
 import '../services/profile_store.dart';
 import 'auth/login_screen.dart';
-import 'auth/signup_screen.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});
@@ -54,28 +55,20 @@ class _AccountScreenState extends State<AccountScreen> {
   @override
   void initState() {
     super.initState();
-    AuthService.instance.addListener(_onAuthChange);
     ProfileStore.instance.addListener(_onProfileChange);
-    // Hydrate the profile store if the user opens Account on a cold start
-    // that hadn't touched it yet. Uses the current auth user's name as a
-    // fallback for the full-name field.
-    if (!ProfileStore.instance.isLoaded) {
-      ProfileStore.instance.load(
-        fallbackFullName: AuthService.instance.currentUser?.fullName,
-      );
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!ProfileStore.instance.isLoaded && mounted) {
+        final auth = context.read<AuthProvider>();
+        ProfileStore.instance.load(fallbackFullName: auth.currentUser?.name);
+      }
+    });
     _seedBuffers();
   }
 
   @override
   void dispose() {
-    AuthService.instance.removeListener(_onAuthChange);
     ProfileStore.instance.removeListener(_onProfileChange);
     super.dispose();
-  }
-
-  void _onAuthChange() {
-    if (mounted) setState(() {});
   }
 
   void _onProfileChange() {
@@ -88,10 +81,7 @@ class _AccountScreenState extends State<AccountScreen> {
 
   void _seedBuffers() {
     final p = ProfileStore.instance.profile;
-    final authName = AuthService.instance.currentUser?.fullName;
-    _fullName = p.fullName.isNotEmpty
-        ? p.fullName
-        : (authName ?? '');
+    _fullName = p.fullName;
     _age = p.age;
     _gender = p.gender;
     _qualifications = List.of(p.qualifications);
@@ -183,21 +173,127 @@ class _AccountScreenState extends State<AccountScreen> {
       ),
     );
     if (confirmed != true) return;
+    if (!mounted) return;
 
-    await AuthService.instance.logout();
-
-    // Pop every pushed route so the user lands on _AuthGate's rebuilt
-    // LoginScreen rather than still seeing this AccountScreen sitting on
-    // top of the navigator stack.
+    await context.read<AuthProvider>().signOut();
     if (mounted) {
       Navigator.of(context).popUntil((route) => route.isFirst);
     }
   }
 
+  Future<void> _handleDeleteAccount() async {
+    final auth = context.read<AuthProvider>();
+
+    // 1. Confirm intent
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Text(
+          'Delete account?',
+          style: GoogleFonts.plusJakartaSans(
+              fontWeight: FontWeight.w700, color: Colors.red.shade700),
+        ),
+        content: Text(
+          'This permanently deletes your account and all data. This cannot be undone.',
+          style: GoogleFonts.plusJakartaSans(fontSize: 14, height: 1.5),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: Text(
+              'Cancel',
+              style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600),
+            ),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(backgroundColor: Colors.red.shade700),
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: Text(
+              'Delete',
+              style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700),
+            ),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted) return;
+
+    // 2. For email/password accounts, ask for the password to re-authenticate.
+    //    Social accounts (Google / Apple) re-auth automatically inside deleteAccount().
+    String? password;
+    if (auth.isEmailUser) {
+      final ctl = TextEditingController();
+      password = await showDialog<String>(
+        context: context,
+        barrierDismissible: false,
+        builder: (ctx) => AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: Text(
+            'Confirm your password',
+            style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700),
+          ),
+          content: TextField(
+            controller: ctl,
+            obscureText: true,
+            autofocus: true,
+            decoration: const InputDecoration(
+              labelText: 'Current password',
+              prefixIcon: Icon(Icons.lock_outline_rounded),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(ctx).pop(null),
+              child: Text(
+                'Cancel',
+                style:
+                    GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600),
+              ),
+            ),
+            FilledButton(
+              style:
+                  FilledButton.styleFrom(backgroundColor: Colors.red.shade700),
+              onPressed: () => Navigator.of(ctx).pop(ctl.text),
+              child: Text(
+                'Continue',
+                style:
+                    GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700),
+              ),
+            ),
+          ],
+        ),
+      );
+      ctl.dispose();
+      if (password == null || !mounted) return; // user cancelled
+    }
+
+    // 3. Delete — re-auth + Firestore delete + Firebase Auth delete
+    final ok = await auth.deleteAccount(password: password);
+    if (!mounted) return;
+    if (!ok) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            auth.error ?? 'Failed to delete account. Please try again.',
+            style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600),
+          ),
+          backgroundColor: Colors.red.shade700,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10)),
+        ),
+      );
+      return;
+    }
+    Navigator.of(context).popUntil((route) => route.isFirst);
+  }
+
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
-    final user = AuthService.instance.currentUser;
+    final user = context.watch<AuthProvider>().currentUser;
     final profile = ProfileStore.instance.profile;
 
     if (user == null) {
@@ -244,16 +340,6 @@ class _AccountScreenState extends State<AccountScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 10),
-                TextButton(
-                  onPressed: () => Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => const SignupScreen()),
-                  ),
-                  child: Text(
-                    "Don't have an account? Create one",
-                    style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600),
-                  ),
-                ),
               ],
             ),
           ),
@@ -286,6 +372,7 @@ class _AccountScreenState extends State<AccountScreen> {
             role: user.role,
             onTapEmoji: _pickEmoji,
           ),
+
 
           const SizedBox(height: 24),
 
@@ -381,11 +468,8 @@ class _AccountScreenState extends State<AccountScreen> {
             const SizedBox(height: 28),
           ],
 
-          // ── Sign out ──────────────────────────────────────────────────
-          // Hidden while login is disabled for testing. The _handleSignOut
-          // method below is kept for easy restoration.
-          // ignore: dead_code
-          if (false && !_editing) ...[
+          // ── Danger zone ───────────────────────────────────────────────
+          if (!_editing) ...[
             const SizedBox(height: 4),
             SizedBox(
               height: 50,
@@ -409,12 +493,19 @@ class _AccountScreenState extends State<AccountScreen> {
               ),
             ),
             const SizedBox(height: 10),
-            Text(
-              "You'll be asked to sign in again the next time you open PediAid.",
-              textAlign: TextAlign.center,
-              style: GoogleFonts.plusJakartaSans(
-                fontSize: 11,
-                color: cs.onSurface.withValues(alpha: 0.5),
+            Center(
+              child: TextButton(
+                onPressed: _handleDeleteAccount,
+                style: TextButton.styleFrom(
+                  foregroundColor: cs.error,
+                ),
+                child: Text(
+                  'Delete account',
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ),
             ),
           ],
@@ -457,7 +548,7 @@ class _HeaderCard extends StatelessWidget {
 
   final DoctorProfile profile;
   final String email;
-  final String role;
+  final UserRole role;
   final VoidCallback onTapEmoji;
 
   @override
@@ -545,20 +636,14 @@ class _HeaderCard extends StatelessWidget {
     );
   }
 
-  String _roleLabel(String role) {
+  String _roleLabel(UserRole role) {
     switch (role) {
-      case 'admin':
+      case UserRole.admin:
         return 'Admin';
-      case 'moderator':
-        return 'Moderator';
-      case 'author':
-        return 'Author';
-      case 'pending_author':
-        return 'Pending author';
-      case 'pending_moderator':
-        return 'Pending moderator';
-      default:
-        return 'Reader';
+      case UserRole.doctor:
+        return 'Doctor';
+      case UserRole.nurse:
+        return 'Nurse';
     }
   }
 }

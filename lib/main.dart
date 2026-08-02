@@ -1,7 +1,9 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'firebase_options.dart';
 import 'theme/app_theme.dart';
 import 'theme/theme_provider.dart';
 import 'screens/home/home_screen.dart';
@@ -14,6 +16,7 @@ import 'services/review_service.dart';
 import 'services/guidelines_search_service.dart';
 import 'services/recents_service.dart';
 import 'services/push_service.dart';
+import 'providers/auth_provider.dart';
 import 'utils/prefs_keys.dart';
 import 'widgets/report_issue_overlay.dart';
 
@@ -26,11 +29,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Each boot step is wrapped in try/catch so a single failing subsystem
-  // can NEVER blank out the whole app. Before hardening this, an exception
-  // in flutter_secure_storage on web (the auth-hydration step) was
-  // escaping main() and stopping runApp() from ever being called — the
-  // user saw a completely blank page. Now the worst case is a missed
-  // feature with an error on the debug console.
+  // can NEVER blank out the whole app.
 
   try {
     await LabReferenceService().load();
@@ -38,24 +37,58 @@ void main() async {
     debugPrint('[boot] LabReferenceService load failed: $e\n$st');
   }
 
-  // Hydrate the persisted JWT + user blob from secure storage BEFORE the
-  // auth gate builds, so the app doesn't flash the login screen on a cold
-  // start for an already-signed-in user. On web, flutter_secure_storage
-  // is backed by WebCrypto + localStorage and CAN throw on first boot
-  // (e.g. private browsing) — absolutely must not block main().
+  // Firebase must be initialized before any Firebase service (Auth, Firestore,
+  // Messaging) is used. On platforms not yet configured in firebase_options.dart
+  // (currently iOS — run `flutterfire configure` with --platforms=ios once the
+  // Apple developer account is active) this throws UnsupportedError; we catch
+  // it so the app still launches for testing on those platforms.
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } on UnsupportedError catch (e) {
+    debugPrint('[boot] Firebase not configured for this platform: $e');
+  } catch (e) {
+    debugPrint('[boot] Firebase.initializeApp failed: $e');
+  }
+
+  // Pre-load the Firebase auth session so the _AuthGate shows the correct
+  // screen on the very first frame — avoids a flash of the login screen for
+  // already-signed-in users.
+  final authProvider = AuthProvider();
+  try {
+    await authProvider.loadCurrentUser();
+  } catch (e) {
+    debugPrint('[boot] AuthProvider.loadCurrentUser failed: $e');
+  }
+
+  // Legacy JWT auth — kept so existing backend API calls (CME, academics)
+  // continue to work. Restores whatever session was persisted last time,
+  // whether that was a direct legacy login or a Firebase bridge (below).
   try {
     await AuthService.instance.loadFromStorage();
   } catch (e, st) {
     debugPrint('[boot] AuthService loadFromStorage failed: $e\n$st');
   }
 
+  // If Firebase has a session but the legacy bridge above didn't restore
+  // one (e.g. this device signed in via Firebase before the bridge existed,
+  // or its legacy session was cleared independently), silently reconnect it
+  // now so CME/admin screens gated on the legacy session don't show
+  // "signed out" underneath an otherwise-signed-in app.
+  try {
+    await authProvider.bridgeLegacySessionIfNeeded();
+  } catch (e) {
+    debugPrint('[boot] legacy bridge failed: $e');
+  }
+
   // Doctor profile (name, age, gender, emoji, qualifications, specialty)
-  // lives in SharedPreferences. Hydrate once at boot so the AccountScreen
-  // opens instantly. Uses the current auth user's name as the initial
-  // full-name fallback for brand-new profiles.
+  // lives in SharedPreferences. Use Firebase auth name as the initial
+  // fallback for brand-new installs.
   try {
     await ProfileStore.instance.load(
-      fallbackFullName: AuthService.instance.currentUser?.fullName,
+      fallbackFullName: authProvider.currentUser?.name
+          ?? AuthService.instance.currentUser?.fullName,
     );
   } catch (e) {
     debugPrint('[boot] ProfileStore load failed: $e');
@@ -103,8 +136,11 @@ void main() async {
     debugPrint('[boot] System UI config failed: $e');
   }
 
-  runApp(ChangeNotifierProvider(
-    create: (_) => ThemeProvider(),
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider.value(value: authProvider),
+      ChangeNotifierProvider(create: (_) => ThemeProvider()),
+    ],
     child: const PediAidApp(),
   ));
 }
@@ -125,14 +161,7 @@ class PediAidApp extends StatelessWidget {
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: themeProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light,
-      // ── AUTH DISABLED FOR TESTING ──────────────────────────────────────────
-      // User has asked to remove the login page entirely while testing the
-      // app. Jump straight to the HomeScreen; _AuthGate is left in place
-      // below for easy restoration later.
-      //
-      // Wrapped in an OnboardingGate so first-launch users see the slides
-      // before the home screen.
-      home: const _OnboardingGate(child: HomeScreen()),
+      home: const _OnboardingGate(child: _AuthGate()),
       // Floats a small "report an issue" button above every screen in the
       // app without needing to touch each of those screen files individually.
       builder: (context, child) => ReportIssueOverlay(child: child!),
@@ -192,38 +221,18 @@ class _OnboardingGateState extends State<_OnboardingGate> {
   }
 }
 
-/// Top-level auth gate. Listens to [AuthService] (a ChangeNotifier) so that
-/// logging in or out anywhere in the app triggers an automatic rebuild and
-/// swap between the home screen and the login screen — no explicit
-/// navigation required at those call sites.
-class _AuthGate extends StatefulWidget {
+/// Top-level auth gate. Watches [AuthProvider] (a ChangeNotifier registered
+/// in MultiProvider) so logging in or out anywhere in the app triggers an
+/// automatic rebuild — no explicit navigation required at those call sites.
+class _AuthGate extends StatelessWidget {
   const _AuthGate();
 
   @override
-  State<_AuthGate> createState() => _AuthGateState();
-}
-
-class _AuthGateState extends State<_AuthGate> {
-  @override
-  void initState() {
-    super.initState();
-    AuthService.instance.addListener(_onAuthChange);
-  }
-
-  @override
-  void dispose() {
-    AuthService.instance.removeListener(_onAuthChange);
-    super.dispose();
-  }
-
-  void _onAuthChange() {
-    if (mounted) setState(() {});
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return AuthService.instance.isLoggedIn
-        ? const HomeScreen()
-        : const LoginScreen();
+    final auth = context.watch<AuthProvider>();
+    if (auth.isLoading) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+    return auth.isLoggedIn ? const HomeScreen() : const LoginScreen();
   }
 }

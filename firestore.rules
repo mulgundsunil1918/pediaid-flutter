@@ -1,0 +1,27 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    // Each user's own profile document (name, role, avatar, etc).
+    // Self-only: unlike Wardly, PediAid has no "look up other users"
+    // feature, so there's no reason to let a signed-in user read anyone
+    // else's doc. Keeping this self-only also matters because a doc's ID is
+    // its Firebase uid, and the Flutter client derives its legacy-backend
+    // bridge password from that uid — an open read rule would let any
+    // signed-in user look up another user's uid and forge that bridge
+    // login, including for the admin account.
+    match /users/{userId} {
+      allow read, write: if signedIn() && request.auth.uid == userId;
+    }
+
+    // Default deny for anything not explicitly allowed above.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

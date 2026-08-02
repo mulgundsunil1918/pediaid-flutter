@@ -1,0 +1,322 @@
+// =============================================================================
+// lib/services/firebase_auth_service.dart
+//
+// Firebase Auth + Firestore user-document service, following the Wardly
+// reference (AUTH_REFERENCE_FROM_WARDLY.md).
+//
+// Architecture (three layers):
+//   FirebaseAuthService  ← all Firebase calls, Firestore user doc CRUD
+//       ↓
+//   AuthProvider         ← ChangeNotifier, currentUser, isLoading, error
+//       ↓
+//   UI                   ← login_screen, account_screen, etc.
+//
+// Design:
+//   - Every sign-in path: authenticate with Firebase → check/create users/{uid}
+//     Firestore doc → read it back → return typed AppUser.
+//   - The UI never touches FirebaseUser directly; only AppUser from Firestore.
+//   - Apple Sign-In uses the mandatory nonce dance (see §7 of the reference).
+//   - deleteAccount() handles re-auth for all three providers, fixing the
+//     Wardly bug where Apple users fell into the email/password branch.
+//
+// Platform notes:
+//   - Apple Sign-In: iOS only (guarded by kIsWeb + Platform.isIOS checks).
+//   - Google sign-out: skipped on desktop (google_sign_in has no desktop support).
+//   - firebase_options.dart currently only has Android + web; iOS must be added
+//     with `flutterfire configure` once the Apple developer account is set up.
+// =============================================================================
+
+import 'dart:convert';
+import 'dart:io';
+import 'dart:math';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:crypto/crypto.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import '../firebase_options.dart';
+import '../models/app_user.dart';
+
+bool get _isDesktop =>
+    !kIsWeb &&
+    (defaultTargetPlatform == TargetPlatform.macOS ||
+        defaultTargetPlatform == TargetPlatform.windows ||
+        defaultTargetPlatform == TargetPlatform.linux);
+
+class FirebaseAuthService {
+  final FirebaseAuth _auth;
+  final FirebaseFirestore _firestore;
+
+  FirebaseAuthService({FirebaseAuth? auth, FirebaseFirestore? firestore})
+      : _auth = auth ?? FirebaseAuth.instance,
+        _firestore = firestore ?? FirebaseFirestore.instance;
+
+  CollectionReference<Map<String, dynamic>> get _users =>
+      _firestore.collection('users');
+
+  User? get firebaseUser => _auth.currentUser;
+
+  Set<String> get providerIds =>
+      _auth.currentUser?.providerData.map((p) => p.providerId).toSet() ?? {};
+
+  // ── Read ──────────────────────────────────────────────────────────────────
+
+  Future<AppUser?> getCurrentUser() async {
+    final user = _auth.currentUser;
+    if (user == null) return null;
+    final doc = await _users.doc(user.uid).get();
+    if (!doc.exists) return null;
+    return AppUser.fromFirestore(doc);
+  }
+
+  // ── Email / password ──────────────────────────────────────────────────────
+
+  Future<AppUser?> signIn(String email, String password) async {
+    final cred = await _auth.signInWithEmailAndPassword(
+      email: email.trim(),
+      password: password,
+    );
+    return _fetchUser(cred.user?.uid);
+  }
+
+  Future<AppUser?> registerUser({
+    required String name,
+    required String email,
+    required String password,
+  }) async {
+    final cred = await _auth.createUserWithEmailAndPassword(
+      email: email.trim(),
+      password: password,
+    );
+    final user = cred.user;
+    if (user == null) return null;
+
+    await user.updateDisplayName(name.trim());
+
+    await _users.doc(user.uid).set({
+      'name': name.trim(),
+      'email': email.trim(),
+      'role': 'doctor',
+      'avatarUrl': null,
+      'createdAt': Timestamp.fromDate(DateTime.now()),
+    });
+
+    return _fetchUser(user.uid);
+  }
+
+  // ── Google ─────────────────────────────────────────────────────────────────
+
+  Future<AppUser?> signInWithGoogle() async {
+    UserCredential cred;
+
+    if (kIsWeb) {
+      cred = await _auth.signInWithPopup(GoogleAuthProvider());
+    } else {
+      // kIsWeb guard is required before DefaultFirebaseOptions.currentPlatform
+      // on platforms where the options are not yet configured (throws).
+      String? iosClientId;
+      try {
+        iosClientId = DefaultFirebaseOptions.currentPlatform.iosClientId;
+      } catch (_) {}
+
+      final googleUser = await GoogleSignIn(clientId: iosClientId).signIn();
+      if (googleUser == null) return null; // user cancelled
+
+      final googleAuth = await googleUser.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+      cred = await _auth.signInWithCredential(credential);
+    }
+
+    final user = cred.user;
+    if (user == null) return null;
+
+    final doc = await _users.doc(user.uid).get();
+    if (!doc.exists) {
+      final displayName =
+          user.displayName ?? (user.email ?? 'User').split('@').first;
+      await _users.doc(user.uid).set({
+        'name': displayName,
+        'email': user.email ?? '',
+        'role': 'doctor',
+        'avatarUrl': user.photoURL,
+        'createdAt': Timestamp.fromDate(DateTime.now()),
+      });
+    }
+    return _fetchUser(user.uid); // deliberate re-read
+  }
+
+  // ── Apple (iOS only) ───────────────────────────────────────────────────────
+
+  // kIsWeb must be checked before Platform.isIOS — Platform throws on web.
+  Future<AppUser?> signInWithApple() async {
+    if (kIsWeb) throw UnsupportedError('Apple Sign-In is not available on web.');
+    if (!Platform.isIOS && !Platform.isMacOS) {
+      throw UnsupportedError('Apple Sign-In requires iOS or macOS.');
+    }
+
+    final rawNonce = _generateNonce();
+    final hashedNonce = _sha256ofString(rawNonce);
+
+    // Apple sends name + email only on the VERY FIRST grant, ever.
+    // Capture givenName / familyName here — they will be null on all future
+    // sign-ins unless the user revokes access under Settings → Apple ID.
+    final appleCredential = await SignInWithApple.getAppleIDCredential(
+      scopes: [
+        AppleIDAuthorizationScopes.email,
+        AppleIDAuthorizationScopes.fullName,
+      ],
+      nonce: hashedNonce, // HASHED goes to Apple
+    );
+
+    final oauthCred = OAuthProvider('apple.com').credential(
+      idToken: appleCredential.identityToken,
+      rawNonce: rawNonce, // RAW goes to Firebase
+    );
+    final cred = await _auth.signInWithCredential(oauthCred);
+    final user = cred.user;
+    if (user == null) return null;
+
+    final doc = await _users.doc(user.uid).get();
+    if (!doc.exists) {
+      final composed = [
+        appleCredential.givenName ?? '',
+        appleCredential.familyName ?? '',
+      ].where((s) => s.isNotEmpty).join(' ').trim();
+      final displayName = composed.isNotEmpty
+          ? composed
+          : (user.displayName ??
+              (user.email ?? 'Apple user').split('@').first);
+      await _users.doc(user.uid).set({
+        'name': displayName,
+        'email': user.email ?? appleCredential.email ?? '',
+        'role': 'doctor',
+        'avatarUrl': user.photoURL,
+        'createdAt': Timestamp.fromDate(DateTime.now()),
+      });
+    }
+    return _fetchUser(user.uid);
+  }
+
+  // ── Sign out ───────────────────────────────────────────────────────────────
+
+  Future<void> signOut() async {
+    if (!_isDesktop) {
+      try {
+        String? iosClientId;
+        try {
+          iosClientId = DefaultFirebaseOptions.currentPlatform.iosClientId;
+        } catch (_) {}
+        await GoogleSignIn(clientId: iosClientId).signOut();
+      } catch (_) {}
+    }
+    await _auth.signOut();
+  }
+
+  // ── Password reset ─────────────────────────────────────────────────────────
+
+  Future<void> sendPasswordReset(String email) async {
+    await _auth.sendPasswordResetEmail(email: email.trim());
+  }
+
+  // ── Profile update ─────────────────────────────────────────────────────────
+
+  Future<void> updateProfile({
+    String? name,
+    String? avatarUrl,
+    String? avatarEmoji,
+    String? specialty,
+  }) async {
+    final user = _auth.currentUser;
+    if (user == null) return;
+
+    final updates = <String, dynamic>{};
+    if (name != null) updates['name'] = name;
+    if (avatarUrl != null) updates['avatarUrl'] = avatarUrl;
+    if (avatarEmoji != null) updates['avatarEmoji'] = avatarEmoji;
+    if (specialty != null) updates['specialty'] = specialty;
+    if (updates.isEmpty) return;
+
+    await _users.doc(user.uid).update(updates);
+    if (name != null) await user.updateDisplayName(name);
+  }
+
+  // ── Delete account ─────────────────────────────────────────────────────────
+  // App Store / Play Store requirement if sign-up is offered.
+  // Firebase requires recent re-authentication before deletion.
+  // Handles all three providers — fixing the Wardly bug that missed Apple.
+
+  Future<void> deleteAccount({String? password}) async {
+    final user = _auth.currentUser;
+    if (user == null) return;
+
+    final providers = providerIds;
+
+    if (providers.contains('google.com') && !kIsWeb && !_isDesktop) {
+      String? iosClientId;
+      try {
+        iosClientId = DefaultFirebaseOptions.currentPlatform.iosClientId;
+      } catch (_) {}
+      final googleUser = await GoogleSignIn(clientId: iosClientId).signIn();
+      if (googleUser == null) throw Exception('Google re-auth cancelled.');
+      final googleAuth = await googleUser.authentication;
+      await user.reauthenticateWithCredential(
+        GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
+        ),
+      );
+    } else if (providers.contains('apple.com') && !kIsWeb) {
+      // FIX for Wardly bug: Apple users must re-auth via Apple, not password.
+      final rawNonce = _generateNonce();
+      final hashedNonce = _sha256ofString(rawNonce);
+      final appleCredential = await SignInWithApple.getAppleIDCredential(
+        scopes: [],
+        nonce: hashedNonce,
+      );
+      await user.reauthenticateWithCredential(
+        OAuthProvider('apple.com').credential(
+          idToken: appleCredential.identityToken,
+          rawNonce: rawNonce,
+        ),
+      );
+    } else {
+      if (password == null || password.isEmpty) {
+        throw Exception('Password is required to delete your account.');
+      }
+      final email = user.email;
+      if (email == null) throw Exception('Unable to determine account email.');
+      await user.reauthenticateWithCredential(
+        EmailAuthProvider.credential(email: email, password: password),
+      );
+    }
+
+    await _users.doc(user.uid).delete();
+    await user.delete();
+  }
+
+  // ── Internal helpers ───────────────────────────────────────────────────────
+
+  Future<AppUser?> _fetchUser(String? uid) async {
+    if (uid == null) return null;
+    final doc = await _users.doc(uid).get();
+    if (!doc.exists) return null;
+    return AppUser.fromFirestore(doc);
+  }
+
+  String _generateNonce([int length = 32]) {
+    const charset =
+        '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-._';
+    final random = Random.secure();
+    return List.generate(
+      length,
+      (_) => charset[random.nextInt(charset.length)],
+    ).join();
+  }
+
+  String _sha256ofString(String input) =>
+      sha256.convert(utf8.encode(input)).toString();
+}
