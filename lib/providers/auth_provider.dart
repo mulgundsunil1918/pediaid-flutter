@@ -30,12 +30,21 @@ class AuthProvider extends ChangeNotifier {
 
   AppUser? _currentUser;
   bool _isLoading = false;
+  bool _hasBootstrapped = false;
   String? _error;
 
   AppUser? get currentUser => _currentUser;
   bool get isLoading => _isLoading;
   String? get error => _error;
   bool get isLoggedIn => _currentUser != null;
+
+  /// True once the one-time boot hydration (loadCurrentUser at app launch)
+  /// has finished, success or failure. _AuthGate uses this — NOT isLoading —
+  /// to decide when to stop showing its spinner. isLoading toggles again on
+  /// every later sign-in/out/register call; if _AuthGate swapped on that too,
+  /// it would tear down LoginScreen (and whatever error it just set) mid-
+  /// submit on every failed attempt, replacing it with a blank new instance.
+  bool get hasBootstrapped => _hasBootstrapped;
 
   /// True when the signed-in user uses email + password (not Google or Apple).
   /// Used by the delete-account flow to decide whether to prompt for password.
@@ -58,6 +67,7 @@ class AuthProvider extends ChangeNotifier {
       _error = friendlyError(e);
       debugPrint('[AuthProvider] loadCurrentUser: $e');
     }
+    _hasBootstrapped = true;
     _setLoading(false);
     return _currentUser != null;
   }

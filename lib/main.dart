@@ -231,7 +231,11 @@ class _AuthGate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final auth = context.watch<AuthProvider>();
-    if (auth.isLoading) {
+    // hasBootstrapped, not isLoading: isLoading also flips true/false on
+    // every later sign-in attempt made FROM LoginScreen, and swapping the
+    // whole screen on that would tear LoginScreen down mid-submit — see
+    // the comment on AuthProvider.hasBootstrapped.
+    if (!auth.hasBootstrapped) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
     return auth.isLoggedIn ? const HomeScreen() : const LoginScreen();
