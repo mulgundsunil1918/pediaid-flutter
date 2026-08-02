@@ -248,7 +248,12 @@ class _ChartGrid extends StatelessWidget {
         crossAxisCount: 2,
         crossAxisSpacing: 10,
         mainAxisSpacing: 10,
-        childAspectRatio: 1.55,
+        // Fixed height instead of childAspectRatio: aspect ratio scales
+        // height with width, so on wide/web viewports these cards were
+        // ballooning to hundreds of pixels tall for the same ~110px of
+        // actual content (icon + 2-line title + range). A fixed extent
+        // keeps card height constant no matter how wide the screen is.
+        mainAxisExtent: 120,
       ),
       itemCount: options.length,
       itemBuilder: (context, i) {

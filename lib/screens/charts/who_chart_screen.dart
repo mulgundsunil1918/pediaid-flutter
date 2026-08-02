@@ -713,6 +713,8 @@ class _WhoChartScreenState extends State<WhoChartScreen> {
   }
 
   // FIX 2: Narrow layout (< 600 px)
+  // Data entry comes before the graph — you plot a patient first, then see
+  // where they land, rather than scrolling past the chart to find the form.
   Widget _buildNarrowLayout(double screenHeight) {
     final chartH = (screenHeight * 0.45).clamp(200.0, 400.0);
     return SingleChildScrollView(
@@ -724,6 +726,12 @@ class _WhoChartScreenState extends State<WhoChartScreen> {
           const SizedBox(height: 12),
           _buildModeToggle(),
           const SizedBox(height: 12),
+          _buildInputSection(),
+          if (_hasResult) ...[
+            const SizedBox(height: 14),
+            _buildResultCard(),
+          ],
+          const SizedBox(height: 14),
           _buildChart(chartHeight: chartH),
           const SizedBox(height: 4),
           Center(
@@ -734,12 +742,6 @@ class _WhoChartScreenState extends State<WhoChartScreen> {
           ),
           const SizedBox(height: 10),
           _buildLegend(),
-          const SizedBox(height: 14),
-          _buildInputSection(),
-          if (_hasResult) ...[
-            const SizedBox(height: 14),
-            _buildResultCard(),
-          ],
           const SizedBox(height: 8),
         ],
       ),
