@@ -45,10 +45,11 @@ void main() async {
   try {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
-    );
+    ).timeout(const Duration(seconds: 8));
   } on UnsupportedError catch (e) {
     debugPrint('[boot] Firebase not configured for this platform: $e');
   } catch (e) {
+    // Includes TimeoutException — a stuck init must never block boot.
     debugPrint('[boot] Firebase.initializeApp failed: $e');
   }
 

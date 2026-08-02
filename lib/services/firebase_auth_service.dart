@@ -45,12 +45,25 @@ bool get _isDesktop =>
         defaultTargetPlatform == TargetPlatform.linux);
 
 class FirebaseAuthService {
-  final FirebaseAuth _auth;
-  final FirebaseFirestore _firestore;
+  FirebaseAuth? _authOverride;
+  FirebaseFirestore? _firestoreOverride;
 
   FirebaseAuthService({FirebaseAuth? auth, FirebaseFirestore? firestore})
-      : _auth = auth ?? FirebaseAuth.instance,
-        _firestore = firestore ?? FirebaseFirestore.instance;
+      : _authOverride = auth,
+        _firestoreOverride = firestore;
+
+  // Lazy on purpose: touching FirebaseAuth.instance / FirebaseFirestore.instance
+  // constructs the JS interop bindings, which can throw if this runs before
+  // Firebase.initializeApp() has actually completed. AuthProvider constructs
+  // FirebaseAuthService() synchronously at app boot (main.dart), before any
+  // async gap — eager access here previously threw an uncaught exception
+  // straight out of main(), aborting boot before runApp() ever ran (blank
+  // page, no console output). Deferring to first real use means any failure
+  // surfaces inside a method call, which every caller already wraps in
+  // try/catch.
+  FirebaseAuth get _auth => _authOverride ??= FirebaseAuth.instance;
+  FirebaseFirestore get _firestore =>
+      _firestoreOverride ??= FirebaseFirestore.instance;
 
   CollectionReference<Map<String, dynamic>> get _users =>
       _firestore.collection('users');
