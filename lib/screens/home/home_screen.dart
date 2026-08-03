@@ -98,7 +98,7 @@ const List<_ChipDef> _allChips = [
   _ChipDef('guides',     'Guides',          Icons.auto_stories_rounded),
   _ChipDef('cme',        'CME & Webinars',  Icons.event_available_rounded),
   _ChipDef('academics',  'Academics',       Icons.school_rounded),
-  _ChipDef('resources',  'Resources',       Icons.folder_special_rounded),
+  _ChipDef('resources',  'Resources',       Icons.download_rounded),
 ];
 
 // All modules surface in Quick Access by default. Users can prune via the
@@ -776,8 +776,8 @@ class _HomeScreenState extends State<HomeScreen> {
       _FeatureDef('Guides',              'Fetal Dev · Protocols',      Icons.menu_book_outlined,     const Color(0xFF6D4C41), () => open('guides',    'Guides',          () => const GuidesScreen())),
       _FeatureDef('CME & Webinars',       'Conferences · Webinars',     Icons.event_note_rounded,     const Color(0xFF7B1FA2), () => open('cme',       'CME & Webinars',  () => const CmeScreen())),
       _FeatureDef('Academics',           'Peer-reviewed content',       Icons.auto_stories_rounded,   const Color(0xFF283593), () => open('academics', 'Academics',       () => const AcademicsWebScreen())),
-      _FeatureDef('Never Again',         'Learn from real mistakes',     Icons.auto_stories,           const Color(0xFF1A237E), () => open('neveragain','Never Again',     () => const NeverAgainScreen())),
-      _FeatureDef('Resources',           'Charts · scores · templates',  Icons.folder_special_rounded, const Color(0xFFAD1457), () => open('resources', 'Resources',       () => const ResourcesScreen())),
+      _FeatureDef('Never Again',         'Learn from real mistakes',     Icons.groups_rounded,          const Color(0xFF1A237E), () => open('neveragain','Never Again',     () => const NeverAgainScreen())),
+      _FeatureDef('Resources',           'Charts · scores · templates',  Icons.download_rounded, const Color(0xFFAD1457), () => open('resources', 'Resources',       () => const ResourcesScreen())),
     ];
 
     return GridView.builder(
