@@ -57,6 +57,7 @@ import '../../services/auth_service.dart';
 import '../admin/admin_dashboard_screen.dart';
 import '../never_again/never_again_screen.dart';
 import '../resources/resources_screen.dart';
+import '../submissions/my_submissions_screen.dart';
 import '../guides/developmental_milestones/dev_milestones_hub.dart';
 import '../guides/developmental_milestones/tdsc/tdsc_assistant_screen.dart';
 
@@ -1372,6 +1373,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 _DrawerItem(icon: Icons.info_outline_rounded,    label: 'About',    onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const AboutScreen())); }),
                 _DrawerItem(icon: Icons.menu_book_rounded,       label: 'References & Sources', onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const ReferencesScreen())); }),
                 _DrawerItem(icon: Icons.account_circle_outlined, label: 'Account',  onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const AccountScreen())); }),
+                _DrawerItem(icon: Icons.fact_check_outlined,     label: 'My Submissions', onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const MySubmissionsScreen())); }),
                 const Divider(height: 24, indent: 16, endIndent: 16),
                 // ── Rate, Share, Web, Feedback ────────────────────────
                 _DrawerItem(

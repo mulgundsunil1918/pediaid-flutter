@@ -12,6 +12,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import '../../services/never_again_service.dart';
 import '../../widgets/under_development_banner.dart';
+import '../submissions/my_submissions_screen.dart';
 
 // ── Category definitions ──────────────────────────────────────────────────────
 
@@ -203,12 +204,11 @@ class _NeverAgainScreenState extends State<NeverAgainScreen> {
     _loadPage(reset: true);
   }
 
+  // Opens the global submissions screen rather than a Never-Again-only sheet:
+  // posts from here and events posted to CME now share one list.
   void _openMySubmissions() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (_) => const _MySubmissionsSheet(),
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(builder: (_) => const MySubmissionsScreen()),
     );
   }
 
@@ -1327,7 +1327,32 @@ class _SubmitSheetState extends State<_SubmitSheet> {
                   ],
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 14),
+
+              // ── Review notice ─────────────────────────────────────────────
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.info_outline_rounded,
+                    size: 15,
+                    color: cs.onSurface.withValues(alpha: 0.4),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'Submitted content is reviewed before publication. '
+                      'You can track all submissions from the menu → My Submissions.',
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 11.5,
+                        height: 1.45,
+                        color: cs.onSurface.withValues(alpha: 0.5),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 14),
 
               // ── Submit button ─────────────────────────────────────────────
               ElevatedButton(
@@ -1362,215 +1387,6 @@ class _SubmitSheetState extends State<_SubmitSheet> {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-// ── My Submissions sheet ──────────────────────────────────────────────────────
-//
-// Posts are anonymous, so there's no account to push a notification to when
-// a moderator reviews a post — the poster checks back here instead, filtered
-// by this device's own device_id.
-
-class _MySubmissionsSheet extends StatefulWidget {
-  const _MySubmissionsSheet();
-
-  @override
-  State<_MySubmissionsSheet> createState() => _MySubmissionsSheetState();
-}
-
-class _MySubmissionsSheetState extends State<_MySubmissionsSheet> {
-  late Future<List<NeverAgainSubmission>> _future;
-
-  @override
-  void initState() {
-    super.initState();
-    _future = NeverAgainService.instance.getMySubmissions();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-    return DraggableScrollableSheet(
-      initialChildSize: 0.7,
-      minChildSize: 0.4,
-      maxChildSize: 0.9,
-      expand: false,
-      builder: (context, scrollController) => Container(
-        decoration: BoxDecoration(
-          color: Theme.of(context).scaffoldBackgroundColor,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-        ),
-        child: Column(
-          children: [
-            Center(
-              child: Container(
-                width: 40,
-                height: 4,
-                margin: const EdgeInsets.only(top: 12, bottom: 8),
-                decoration: BoxDecoration(
-                  color: cs.onSurface.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 4, 20, 12),
-              child: Text(
-                'My Submissions',
-                style: GoogleFonts.plusJakartaSans(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: cs.onSurface,
-                ),
-              ),
-            ),
-            Expanded(
-              child: FutureBuilder<List<NeverAgainSubmission>>(
-                future: _future,
-                builder: (context, snap) {
-                  if (snap.connectionState != ConnectionState.done) {
-                    return const Center(
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    );
-                  }
-                  final posts = snap.data ?? [];
-                  if (posts.isEmpty) {
-                    return Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(32),
-                        child: Text(
-                          "You haven't shared anything from this device yet.",
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.plusJakartaSans(
-                            fontSize: 13.5,
-                            color: cs.onSurface.withValues(alpha: 0.5),
-                          ),
-                        ),
-                      ),
-                    );
-                  }
-                  return ListView.separated(
-                    controller: scrollController,
-                    padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
-                    itemCount: posts.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 10),
-                    itemBuilder: (_, i) => _SubmissionCard(post: posts[i]),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _SubmissionCard extends StatelessWidget {
-  const _SubmissionCard({required this.post});
-  final NeverAgainSubmission post;
-
-  (String, Color) get _statusMeta => switch (post.status) {
-        'published' => ('LIVE', const Color(0xFF2E7D32)),
-        'rejected' => ('NOT APPROVED', const Color(0xFFC62828)),
-        'changes_requested' => ('NEEDS CHANGES', const Color(0xFFEF6C00)),
-        _ => ('UNDER REVIEW', const Color(0xFFF9A825)),
-      };
-
-  @override
-  Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-    final (label, color) = _statusMeta;
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        border: Border.all(color: cs.onSurface.withValues(alpha: 0.1)),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                decoration: BoxDecoration(
-                  color: color.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Text(
-                  label,
-                  style: GoogleFonts.plusJakartaSans(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w800,
-                    color: color,
-                    letterSpacing: 0.4,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  post.category,
-                  style: GoogleFonts.plusJakartaSans(
-                    fontSize: 11,
-                    color: cs.onSurface.withValues(alpha: 0.5),
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              Text(
-                timeago.format(post.createdAt),
-                style: GoogleFonts.plusJakartaSans(
-                  fontSize: 11,
-                  color: cs.onSurface.withValues(alpha: 0.4),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Text(
-            post.whatHappened,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: GoogleFonts.plusJakartaSans(
-              fontSize: 13,
-              height: 1.4,
-              color: cs.onSurface.withValues(alpha: 0.85),
-            ),
-          ),
-          if ((post.status == 'rejected' || post.status == 'changes_requested') &&
-              post.rejectionReason != null) ...[
-            const SizedBox(height: 8),
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: (post.status == 'changes_requested'
-                        ? const Color(0xFFEF6C00)
-                        : const Color(0xFFC62828))
-                    .withValues(alpha: 0.06),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Text(
-                post.status == 'changes_requested'
-                    ? 'What to fix: ${post.rejectionReason}'
-                    : 'Moderator note: ${post.rejectionReason}',
-                style: GoogleFonts.plusJakartaSans(
-                  fontSize: 12,
-                  fontStyle: FontStyle.italic,
-                  color: post.status == 'changes_requested'
-                      ? const Color(0xFF8B4A00)
-                      : const Color(0xFF8B1E1E),
-                  height: 1.4,
-                ),
-              ),
-            ),
-          ],
-        ],
       ),
     );
   }

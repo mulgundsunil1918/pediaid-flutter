@@ -691,6 +691,29 @@ class _PostEventScreenState extends State<PostEventScreen> {
                   ),
                 ),
               if (_submitError != null) const SizedBox(height: 12),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.info_outline_rounded,
+                    size: 15,
+                    color: cs.onSurface.withValues(alpha: 0.4),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'Submitted content is reviewed before publication. '
+                      'You can track all submissions from the menu → My Submissions.',
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 11.5,
+                        height: 1.45,
+                        color: cs.onSurface.withValues(alpha: 0.5),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
               SizedBox(
                 height: 52,
                 child: FilledButton(
