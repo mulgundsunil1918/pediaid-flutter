@@ -988,13 +988,13 @@ class _NAState extends State<NutritionalAuditCalculator> {
       <div class="footer">
         <strong>Prepared by: Dr. Sunil Mulgund</strong><br>
         Based on ESPGHAN 2022 Guidelines for Preterm Infant Nutrition<br>
-        Email: mulgundsunil@gmail.com
+        Email: help@bridgr.co.in
       </div>''';
     final footer2 = '''
       <div class="footer">
         <strong>Prepared by: Dr. Sunil Mulgund</strong><br>
         Based on ESPGHAN 2022 Guidelines for Preterm Infant Nutrition<br>
-        Email: mulgundsunil@gmail.com<br>
+        Email: help@bridgr.co.in<br>
         <em style="font-size:10px">This is a computer-generated report. For medical decisions, please consult with healthcare professionals.</em>
       </div>''';
 

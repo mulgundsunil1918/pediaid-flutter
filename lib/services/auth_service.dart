@@ -344,7 +344,7 @@ class AuthService extends ChangeNotifier {
       throw AuthException(
         'We signed you out, but couldn\'t reach the server to fully delete '
         'your account. Please try Delete Account again from the sign-in '
-        'screen, or email mulgundsunil@gmail.com to confirm deletion.',
+        'screen, or email help@bridgr.co.in to confirm deletion.',
       );
     }
   }

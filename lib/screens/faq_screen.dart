@@ -4,12 +4,12 @@
 // =============================================================================
 
 import 'package:flutter/material.dart';
+import '../utils/support_contact.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class FaqScreen extends StatelessWidget {
   const FaqScreen({super.key});
 
-  static const String _supportEmail = 'mulgundsunil@gmail.com';
   static const String _privacyUrl =
       'https://pediaid.bridgr.co.in/privacy.html';
 
@@ -336,9 +336,9 @@ class FaqScreen extends StatelessWidget {
                 Wrap(spacing: 8, runSpacing: 8, children: [
                   _LinkChip(
                     icon: Icons.mail_outline,
-                    label: _supportEmail,
+                    label: kSupportEmail,
                     onTap: () => launchUrl(
-                        Uri.parse('mailto:$_supportEmail?subject=PediAid help'),
+                        Uri.parse('mailto:$kSupportEmail?subject=PediAid help'),
                         mode: LaunchMode.externalApplication),
                   ),
                   _LinkChip(

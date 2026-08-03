@@ -57,6 +57,7 @@ import '../../services/auth_service.dart';
 import '../admin/admin_dashboard_screen.dart';
 import '../never_again/never_again_screen.dart';
 import '../resources/resources_screen.dart';
+import '../../utils/support_contact.dart';
 import '../submissions/my_submissions_screen.dart';
 import '../guides/developmental_milestones/dev_milestones_hub.dart';
 import '../guides/developmental_milestones/tdsc/tdsc_assistant_screen.dart';
@@ -1432,7 +1433,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   onTap: () async {
                     Navigator.pop(context);
                     await launchUrl(
-                      Uri.parse('mailto:mulgundsunil1918@gmail.com?subject=PediAid%20Feedback'),
+                      Uri.parse('mailto:$kSupportEmail?subject=PediAid%20Feedback'),
                       mode: LaunchMode.externalApplication,
                     );
                   },

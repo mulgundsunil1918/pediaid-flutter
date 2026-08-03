@@ -19,6 +19,7 @@
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import '../../utils/support_contact.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:share_plus/share_plus.dart';
@@ -33,7 +34,6 @@ import '../../utils/prefs_keys.dart';
 import '../faq_screen.dart';
 import '../references_screen.dart';
 
-const String _kSupportEmail = 'mulgundsunil@gmail.com';
 const String _kPrivacyUrl =
     'https://pediaid.bridgr.co.in/privacy.html';
 const String _kPlayStoreUrl =
@@ -299,7 +299,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final encSubject = _percentEncode(subject);
     final encBody = _percentEncode(body);
     final uri =
-        Uri.parse('mailto:$_kSupportEmail?subject=$encSubject&body=$encBody');
+        Uri.parse('mailto:$kSupportEmail?subject=$encSubject&body=$encBody');
     try {
       final ok = await launchUrl(uri, mode: LaunchMode.externalApplication);
       if (!ok && mounted) _toast('No email app found on this device');
