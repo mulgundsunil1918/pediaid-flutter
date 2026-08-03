@@ -268,30 +268,10 @@ class AuthService extends ChangeNotifier {
     _armRefreshTimer();
   }
 
-  Future<void> registerEmailPassword({
-    required String email,
-    required String password,
-    required String fullName,
-  }) async {
-    final registerRes = await http
-        .post(
-          Uri.parse('$apiBase/api/academics/auth/register'),
-          headers: const {'Content-Type': 'application/json'},
-          body: jsonEncode({
-            'email': email.trim(),
-            'password': password,
-            'fullName': fullName.trim(),
-          }),
-        )
-        .timeout(const Duration(seconds: 30));
-
-    if (registerRes.statusCode != 201) {
-      throw AuthException(_extractErrorMessage(registerRes));
-    }
-
-    // Register returns 201 but no token — auto-login to land them signed in.
-    await loginEmailPassword(email, password);
-  }
+  // registerEmailPassword was removed alongside the uid-derived bridge
+  // password. It was the last Flutter path that provisioned a legacy account
+  // from an email+password pair; accounts are now created by the backend when
+  // it verifies a Firebase ID token (see loginWithFirebaseToken).
 
   // -------------------------------------------------------------------------
   // Forgot password (kicks off the email; reset is completed on the web)
