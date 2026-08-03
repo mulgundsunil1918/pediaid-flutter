@@ -235,18 +235,9 @@ class AuthService extends ChangeNotifier {
   // Email + password
   // -------------------------------------------------------------------------
 
-  Future<void> loginEmailPassword(String email, String password) async {
-    final res = await http
-        .post(
-          Uri.parse('$apiBase/api/academics/auth/login'),
-          headers: const {'Content-Type': 'application/json'},
-          body: jsonEncode({'email': email.trim(), 'password': password}),
-        )
-        .timeout(const Duration(seconds: 30));
-
-    await _handleAuthResponse(res);
-    _armRefreshTimer();
-  }
+  // loginEmailPassword was removed along with the backend's POST /login.
+  // Sign-in goes through Firebase and loginWithFirebaseToken below; the
+  // password path existed only for the old uid-derived bridge password.
 
   /// Exchanges a Firebase ID token for this backend's own session.
   ///
