@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
@@ -13,6 +14,27 @@ class IAPChartScreen extends StatefulWidget {
 class _IAPChartScreenState extends State<IAPChartScreen> {
   bool _isLoading = true;
   InAppWebViewController? _controller;
+  Timer? _loadTimeout;
+
+  // flutter_inappwebview's web implementation doesn't reliably fire
+  // onLoadStop for srcdoc/InAppWebViewInitialData content in every
+  // browser — without this, a failed callback left the spinner covering
+  // the screen forever with no way out except the AppBar refresh button,
+  // which is easy to miss. This guarantees the spinner clears either way;
+  // if the content genuinely didn't render, the user at least sees that
+  // and can hit refresh, instead of a screen that looks permanently stuck.
+  void _armLoadTimeout() {
+    _loadTimeout?.cancel();
+    _loadTimeout = Timer(const Duration(seconds: 6), () {
+      if (mounted && _isLoading) setState(() => _isLoading = false);
+    });
+  }
+
+  @override
+  void dispose() {
+    _loadTimeout?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,11 +83,14 @@ class _IAPChartScreenState extends State<IAPChartScreen> {
                 ),
                 onWebViewCreated: (controller) {
                   _controller = controller;
+                  _armLoadTimeout();
                 },
                 onLoadStart: (controller, url) {
                   if (mounted) setState(() => _isLoading = true);
+                  _armLoadTimeout();
                 },
                 onLoadStop: (controller, url) async {
+                  _loadTimeout?.cancel();
                   await controller.evaluateJavascript(
                       source:
                           "document.body.style.backgroundColor = '${isDark ? '#0A0A0A' : '#F0F3FA'}';");
