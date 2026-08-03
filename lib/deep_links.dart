@@ -133,7 +133,7 @@ final Map<String, WidgetBuilder> deepLinkRoutes = {
   'drug-formulary-v2': (_) => const FormularyV2Hub(),
 
   'fetal-development-week-by-week': (_) => const FetalDevelopmentScreen(),
-  'nrp-algorithm-9th-edition': (_) => const NrpPdfViewer(),
+  'nrp-algorithm-neonatal-resuscitation': (_) => const NrpPdfViewer(),
   'iap-immunization-schedule': (_) => const VaccineScreen(),
   'neonatal-scoring-systems': (_) => const NeonatalScoresScreen(),
   'nichd-hie-assessment-tool': (_) => const NeonatalScoresScreen(),
@@ -180,7 +180,7 @@ final Map<String, WidgetBuilder> deepLinkRoutes = {
   'scorpion-sting-management': (_) => const ScorpionStingScreen(),
   'snake-bite-envenomation-management': (_) => const SnakeEnvenomationScreen(),
 
-  'birthweight-classification-aga-sga-lga': (_) => const BirthweightClassificationScreen(),
+  'birthweight-classification-elbw-vlbw-lbw': (_) => const BirthweightClassificationScreen(),
   'gestational-age-classification': (_) => const GAClassificationScreen(),
   'neonatal-echo-measurements-tool': (_) => const NeonatalEchoScreen(),
   'developmental-milestones-checker': (_) => const DevMilestonesHub(),
