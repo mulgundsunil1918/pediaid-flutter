@@ -54,6 +54,7 @@ import 'phosphate_correction_calculator.dart';
 import 'dextrose_bolus_calculator.dart';
 import 'umbilical_catheter_calculator.dart';
 import 'ett_calculator.dart';
+import 'mid_parental_height_calculator.dart';
 import '../guides/gcs_screen.dart';
 
 // ── Category catalogue ──────────────────────────────────────────────────────
@@ -96,6 +97,12 @@ class _CalculatorsScreenState extends State<CalculatorsScreen> {
       title: 'Ponderal Index',
       subtitle: 'IUGR & nutritional status',
       icon: Icons.child_care,
+      categories: [_kNICU],
+    ),
+    _CalculatorItem(
+      title: 'Mid-Parental Height',
+      subtitle: 'Genetic target height & range',
+      icon: Icons.height_rounded,
       categories: [_kNICU],
     ),
     _CalculatorItem(
@@ -409,6 +416,9 @@ class _CalculatorsScreenState extends State<CalculatorsScreen> {
       case 'Ponderal Index':
         Navigator.push(context,
             MaterialPageRoute(builder: (_) => const PonderalIndexCalculator()));
+      case 'Mid-Parental Height':
+        Navigator.push(context,
+            MaterialPageRoute(builder: (_) => const MidParentalHeightCalculator()));
       case 'Body Surface Area':
         Navigator.push(context,
             MaterialPageRoute(builder: (_) => const BSACalculator()));

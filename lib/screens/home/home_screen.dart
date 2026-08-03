@@ -15,6 +15,7 @@ import '../calculators/blood_gas_analyser.dart';
 import '../calculators/tpn_calculator.dart';
 import '../calculators/cga_pma_calculator.dart';
 import '../calculators/ponderal_index_calculator.dart';
+import '../calculators/mid_parental_height_calculator.dart';
 import '../calculators/bsa_calculator.dart';
 import '../calculators/maintenance_fluid_calculator.dart';
 import '../calculators/burn_mortality_calculator.dart';
@@ -69,6 +70,7 @@ const List<_ChipDef> _allChips = [
   _ChipDef('tpn',        'TPN',             Icons.medical_services_rounded),
   _ChipDef('cga',        'CGA / PMA',       Icons.calendar_month_rounded),
   _ChipDef('ponderal',   'Ponderal',        Icons.child_care_rounded),
+  _ChipDef('mph',        'Mid-Parental Ht', Icons.height_rounded),
   _ChipDef('bsa',        'BSA',             Icons.person_rounded),
   _ChipDef('bp',         'BP Calc',         Icons.favorite_rounded),
   _ChipDef('neobp',      'Neonatal BP',     Icons.monitor_heart_rounded),
@@ -101,7 +103,7 @@ const List<_ChipDef> _allChips = [
 // Edit sheet — but a fresh install shows everything so the carousel feels
 // full rather than empty.
 const List<String> _kDefaultKeys = [
-  'gir', 'gas', 'tpn', 'cga', 'ponderal', 'bsa', 'bp', 'neobp', 'bili',
+  'gir', 'gas', 'tpn', 'cga', 'ponderal', 'mph', 'bsa', 'bp', 'neobp', 'bili',
   'fluid', 'burn', 'parkland', 'lund', 'pet', 'egfr', 'ga', 'vent',
   'nutri', 'dve', 'allcalc', 'growth', 'devmile', 'tdsc', 'formulary',
   'labref', 'guides', 'cme', 'academics',
@@ -1031,6 +1033,7 @@ class _HomeScreenState extends State<HomeScreen> {
       'tpn':       () => const TpnCalculator(),
       'cga':       () => const CGAPMACalculator(),
       'ponderal':  () => const PonderalIndexCalculator(),
+      'mph':       () => const MidParentalHeightCalculator(),
       'bsa':       () => const BSACalculator(),
       'bp':        () => const BPHubScreen(),
       'neobp':     () => const NeonatalBPCalculator(),

@@ -7,6 +7,7 @@ import '../../utils/friendly_error.dart';
 
 import '../calculators/gestational_age_calculator.dart';
 import '../calculators/ponderal_index_calculator.dart';
+import '../calculators/mid_parental_height_calculator.dart';
 import '../calculators/bsa_calculator.dart';
 import '../calculators/nutritional_audit_calculator.dart';
 import '../calculators/tpn_calculator.dart';
@@ -148,6 +149,16 @@ List<_SearchItem> _buildAllItems() => [
     color: _kCalcColor,
     keywords: const ['iugr', 'ponderal', 'weight', 'length', 'growth restriction', 'nutrition', 'PI', 'fetal growth restriction', 'FGR', 'SGA', 'wasting', 'symmetrical IUGR', 'asymmetrical IUGR', 'thin baby', 'malnourished'],
     navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const PonderalIndexCalculator())),
+  ),
+
+  _SearchItem(
+    title: 'Mid-Parental Height',
+    subtitle: 'Genetic target height & range',
+    category: 'Calculators & Tools',
+    icon: Icons.height_rounded,
+    color: _kCalcColor,
+    keywords: const ['mid parental height', 'MPH', 'target height', 'genetic potential', 'short stature', 'tall stature', 'familial short stature', 'parental height', "mother's height", "father's height", 'target height range', 'growth potential', 'height prediction'],
+    navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const MidParentalHeightCalculator())),
   ),
 
   _SearchItem(
