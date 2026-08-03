@@ -14,8 +14,6 @@
 // action and can sign out / back in.
 // =============================================================================
 
-import 'dart:convert';
-import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
 import '../models/app_user.dart';
 import '../services/auth_service.dart';
@@ -242,30 +240,25 @@ class AuthProvider extends ChangeNotifier {
   // worst case, legacy-gated screens keep showing "not signed in" until the
   // next successful sign-in retries the bridge.
   //
-  // Known gap: an account that already existed in acad_users BEFORE this
-  // bridge shipped (a real, user-chosen password) will fail both the login
-  // and the register attempt below — the email is taken but the password
-  // doesn't match. That one row needs a one-time manual reconciliation
-  // (update its password hash to match the derived one below).
+  // The backend verifies the Firebase ID token's signature against Google's
+  // public certificates, so simply holding a valid Firebase session proves
+  // identity and provisions/returns the matching acad_users account.
+  //
+  // This replaced a scheme that derived the backend password from the user's
+  // own Firebase uid. That derivation was public (it shipped in the web
+  // bundle too), which made a uid — an identifier, not a secret — sufficient
+  // to sign in as anyone. It also removes the old "account predates the
+  // bridge" gap: there is no password to reconcile any more.
   Future<void> _bridgeLegacySession(AppUser user) async {
-    final bridgePassword = _legacyBridgePassword(user.uid);
     try {
-      await AuthService.instance.loginEmailPassword(user.email, bridgePassword);
-      return;
-    } catch (_) {
-      // No existing bridge account yet — fall through to provisioning one.
-    }
-    try {
-      await AuthService.instance.registerEmailPassword(
-        email: user.email,
-        password: bridgePassword,
-        fullName: user.name.isNotEmpty ? user.name : user.email.split('@').first,
-      );
+      final idToken = await _service.firebaseUser?.getIdToken();
+      if (idToken == null) {
+        debugPrint('[AuthProvider] legacy bridge skipped: no Firebase token');
+        return;
+      }
+      await AuthService.instance.loginWithFirebaseToken(idToken);
     } catch (e) {
       debugPrint('[AuthProvider] legacy bridge failed for ${user.email}: $e');
     }
   }
-
-  String _legacyBridgePassword(String uid) =>
-      sha256.convert(utf8.encode('pediaid-firebase-bridge:$uid')).toString();
 }

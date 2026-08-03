@@ -248,6 +248,26 @@ class AuthService extends ChangeNotifier {
     _armRefreshTimer();
   }
 
+  /// Exchanges a Firebase ID token for this backend's own session.
+  ///
+  /// The server verifies the token's signature against Google's public
+  /// certificates, so holding a genuine Firebase session is the proof of
+  /// identity. This replaced the old bridge, where the client derived a
+  /// password from its own Firebase uid — that derivation was public, so
+  /// anyone who learned a uid could sign in as that user.
+  Future<void> loginWithFirebaseToken(String idToken) async {
+    final res = await http
+        .post(
+          Uri.parse('$apiBase/api/academics/auth/firebase'),
+          headers: const {'Content-Type': 'application/json'},
+          body: jsonEncode({'idToken': idToken}),
+        )
+        .timeout(const Duration(seconds: 30));
+
+    await _handleAuthResponse(res);
+    _armRefreshTimer();
+  }
+
   Future<void> registerEmailPassword({
     required String email,
     required String password,
