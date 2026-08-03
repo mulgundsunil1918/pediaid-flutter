@@ -7,6 +7,7 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import '../../services/who_data_service.dart';
+import '../../widgets/download_original_chart_button.dart';
 
 const Color _boyBlue  = Color(0xFF1565C0);
 const Color _girlPink = Color(0xFFAD1457);
@@ -742,6 +743,9 @@ class _WhoChartScreenState extends State<WhoChartScreen> {
           ),
           const SizedBox(height: 10),
           _buildLegend(),
+          const DownloadOriginalChartButton(
+            driveId: '1r3lMy7gRckpSkzAabWVFrEKHoMu4SS7g',
+          ),
           const SizedBox(height: 8),
         ],
       ),
@@ -798,6 +802,9 @@ class _WhoChartScreenState extends State<WhoChartScreen> {
                 ),
               ),
             ],
+          ),
+          const DownloadOriginalChartButton(
+            driveId: '1r3lMy7gRckpSkzAabWVFrEKHoMu4SS7g',
           ),
           const SizedBox(height: 8),
         ],

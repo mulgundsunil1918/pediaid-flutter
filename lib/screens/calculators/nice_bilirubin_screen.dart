@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:fl_chart/fl_chart.dart';
+import '../../widgets/download_original_chart_button.dart';
 
 const double _umolPerMgDl = 17.1;
 
@@ -187,6 +188,9 @@ class _NiceBilirubinScreenState extends State<NiceBilirubinScreen> {
                       ],
                       const SizedBox(height: 14),
                       _buildReferenceCard(),
+                      const DownloadOriginalChartButton(
+                        driveId: '1ne9-ekD0_DjeGAoRMZYcgZEhf_JmytPG',
+                      ),
                       const SizedBox(height: 32),
                     ],
                   ),

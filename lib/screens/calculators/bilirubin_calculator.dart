@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../../widgets/download_original_chart_button.dart';
 
 // ══════════════════════════════════════════════════════════════════════════════
 // AAP 2022 Neonatal Bilirubin / Jaundice Calculator  ≥35 weeks
@@ -351,6 +352,9 @@ class _BilirubinCalculatorState extends State<BilirubinCalculator> {
                     _buildReferenceCard(),
                   ],
 
+                  const DownloadOriginalChartButton(
+                    driveId: '1BFJwNLICCnTFlah1q-RyIryP58sDANQl',
+                  ),
                   const SizedBox(height: 24),
                 ],
               ),

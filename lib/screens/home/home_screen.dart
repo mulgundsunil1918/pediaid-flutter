@@ -56,6 +56,7 @@ import '../../services/auth_service.dart';
 // ignore: unused_import
 import '../admin/admin_dashboard_screen.dart';
 import '../never_again/never_again_screen.dart';
+import '../resources/resources_screen.dart';
 import '../guides/developmental_milestones/dev_milestones_hub.dart';
 import '../guides/developmental_milestones/tdsc/tdsc_assistant_screen.dart';
 
@@ -97,6 +98,7 @@ const List<_ChipDef> _allChips = [
   _ChipDef('guides',     'Guides',          Icons.auto_stories_rounded),
   _ChipDef('cme',        'CME & Webinars',  Icons.event_available_rounded),
   _ChipDef('academics',  'Academics',       Icons.school_rounded),
+  _ChipDef('resources',  'Resources',       Icons.folder_special_rounded),
 ];
 
 // All modules surface in Quick Access by default. Users can prune via the
@@ -106,7 +108,7 @@ const List<String> _kDefaultKeys = [
   'gir', 'gas', 'tpn', 'cga', 'ponderal', 'mph', 'bsa', 'bp', 'neobp', 'bili',
   'fluid', 'burn', 'parkland', 'lund', 'pet', 'egfr', 'ga', 'vent',
   'nutri', 'dve', 'allcalc', 'growth', 'devmile', 'tdsc', 'formulary',
-  'labref', 'guides', 'cme', 'academics',
+  'labref', 'guides', 'cme', 'academics', 'resources',
 ];
 
 // ── HomeScreen ────────────────────────────────────────────────────────────────
@@ -775,6 +777,7 @@ class _HomeScreenState extends State<HomeScreen> {
       _FeatureDef('CME & Webinars',       'Conferences · Webinars',     Icons.event_note_rounded,     const Color(0xFF7B1FA2), () => open('cme',       'CME & Webinars',  () => const CmeScreen())),
       _FeatureDef('Academics',           'Peer-reviewed content',       Icons.auto_stories_rounded,   const Color(0xFF283593), () => open('academics', 'Academics',       () => const AcademicsWebScreen())),
       _FeatureDef('Never Again',         'Learn from real mistakes',     Icons.auto_stories,           const Color(0xFF1A237E), () => open('neveragain','Never Again',     () => const NeverAgainScreen())),
+      _FeatureDef('Resources',           'Charts · scores · templates',  Icons.folder_special_rounded, const Color(0xFFAD1457), () => open('resources', 'Resources',       () => const ResourcesScreen())),
     ];
 
     return GridView.builder(
@@ -1057,6 +1060,7 @@ class _HomeScreenState extends State<HomeScreen> {
       'guides':    () => const GuidesScreen(),
       'cme':       () => const CmeScreen(),
       'academics': () => const AcademicsWebScreen(),
+      'resources': () => const ResourcesScreen(),
     };
     final builder = routes[key];
     if (builder == null) return;

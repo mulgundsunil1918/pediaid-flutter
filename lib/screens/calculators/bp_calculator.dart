@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'bp_aap2017_data.dart';
+import '../../widgets/download_original_chart_button.dart';
 
 // ══════════════════════════════════════════════════════════════════════════
 // Pediatric BP — AAP 2017 Clinical Practice Guideline (Flynn et al,
@@ -330,6 +331,9 @@ class _BPCalculatorState extends State<BPCalculator> {
               const SizedBox(height: 12),
               _buildReference(),
             ],
+            const DownloadOriginalChartButton(
+              driveId: '1Q1MmyPDjnn7x2vdszreX33Aiu-nXkES2',
+            ),
             const SizedBox(height: 24),
           ],
         ),

@@ -9,6 +9,7 @@ import 'package:printing/printing.dart';
 import '../../data/fenton_data_loader.dart';
 import '../../logic/fenton_calculator.dart';
 import 'fenton_chart_widget.dart';
+import '../../widgets/download_original_chart_button.dart';
 
 /// Standard normal CDF via the Abramowitz & Stegun 7.1.26 approximation
 /// (max error ~1.5e-7) — used to turn a value's position between two
@@ -654,6 +655,13 @@ class _FentonChartScreenState extends State<FentonChartScreen> {
                       const SizedBox(height: 16),
                       _CitationCard(cs: cs, isDark: isDark, citation: _data!.citation, version: _data!.version),
                     ],
+
+                    DownloadOriginalChartButton(
+                      driveId: _sex == FentonSex.male
+                          ? '1Qu1CntSMS7lkVGXtfiOrO91vGUgiQBpD'
+                          : '1pN-2dyuG-WsxWvE6Iv4d5FTYpYAEAsPa',
+                      label: 'Download Original Chart ($_sexLabel)',
+                    ),
 
                     const SizedBox(height: 24),
                   ],

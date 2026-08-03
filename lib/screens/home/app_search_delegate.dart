@@ -85,6 +85,7 @@ import '../cme/cme_screen.dart';
 import '../never_again/never_again_screen.dart';
 import '../calculators/infant_bp_calculator.dart';
 import '../../academics/academics_web_screen.dart';
+import '../resources/resources_screen.dart';
 
 // ── Search item model ─────────────────────────────────────────────────────────
 
@@ -126,6 +127,7 @@ const _kGuideColor     = Color(0xFF6D4C41);
 const _kLabColor       = Color(0xFF00838F);
 const _kEmergencyColor = Color(0xFFB71C1C);
 const _kAcademicsColor = Color(0xFF7C3AED);
+const _kResourceColor  = Color(0xFFAD1457);
 
 List<_SearchItem> _buildAllItems() => [
 
@@ -961,6 +963,31 @@ List<_SearchItem> _buildAllItems() => [
     keywords: const ['faq', 'help', 'support', 'how to', 'questions', 'troubleshooting'],
     navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const FaqScreen())),
   ),
+
+  // ── Downloadable Resources ───────────────────────────────────────────────────
+  // Individual entries open the Drive file directly (same pattern as the
+  // BPD Estimator / INTERGROWTH-21st external links above) — a search hit
+  // is a download action, not a screen to browse through.
+
+  _SearchItem(
+    title: 'Resources',
+    subtitle: 'Downloadable charts, scores & templates',
+    category: 'Resources',
+    icon: Icons.folder_special_rounded,
+    color: _kResourceColor,
+    keywords: const ['resources', 'downloads', 'pdf', 'printable', 'charts', 'templates'],
+    navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const ResourcesScreen())),
+  ),
+  for (final r in kResourceItems)
+    _SearchItem(
+      title: r.title,
+      subtitle: 'Resources · ${r.category}',
+      category: 'Resources',
+      icon: r.icon,
+      color: _kResourceColor,
+      keywords: [r.filename, r.category, 'pdf', 'download'],
+      navigate: (ctx) => launchUrl(r.driveUri, mode: LaunchMode.externalApplication),
+    ),
 ];
 
 // ── Delegate ──────────────────────────────────────────────────────────────────

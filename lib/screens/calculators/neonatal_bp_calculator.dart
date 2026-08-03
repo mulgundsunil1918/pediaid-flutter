@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../widgets/download_original_chart_button.dart';
 
 // ══════════════════════════════════════════════════════════════
 // Zubrow AB et al. J Perinatol. 1995;15(6):470–479.
@@ -180,6 +181,9 @@ class _NeonatalBPCalculatorState extends State<NeonatalBPCalculator> {
             _buildQuickBedsideCard(),
             const SizedBox(height: 12),
             _buildReferenceCard(),
+            const DownloadOriginalChartButton(
+              driveId: '1g0vcu8_Gxf7B3RzPKI8kPwEkHoh5XhhD',
+            ),
             const SizedBox(height: 24),
           ],
         ),

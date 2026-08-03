@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class IAPChartScreen extends StatefulWidget {
   const IAPChartScreen({super.key});
@@ -63,6 +64,17 @@ class _IAPChartScreenState extends State<IAPChartScreen> {
             onPressed: () => _controller?.reload(),
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        backgroundColor: const Color(0xFF2E7D32),
+        foregroundColor: Colors.white,
+        icon: const Icon(Icons.download_rounded),
+        label: const Text('Download Original Chart'),
+        onPressed: () async {
+          final uri = Uri.parse(
+              'https://drive.google.com/file/d/1r3lMy7gRckpSkzAabWVFrEKHoMu4SS7g/view');
+          await launchUrl(uri, mode: LaunchMode.externalApplication);
+        },
       ),
       body: Stack(
         children: [
