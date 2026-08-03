@@ -79,7 +79,7 @@ class _FentonChartScreenState extends State<FentonChartScreen> {
   final _formKey     = GlobalKey<FormState>();
 
   // ── Results — one per parameter, computed together from the same GA ────────
-  FentonResult? _weightResult; // percentiles here are in kg (native data unit)
+  FentonResult? _weightResult; // percentiles are in grams (native data unit)
   FentonResult? _lengthResult;
   FentonResult? _hcResult;
 
@@ -134,28 +134,8 @@ class _FentonChartScreenState extends State<FentonChartScreen> {
   String _unitFor(FentonParameter p) =>
       p == FentonParameter.weight ? 'g' : 'cm';
 
-  /// The calculator and reference data work in kg for weight (their
-  /// published unit) — this converts a kg-based result to the grams the UI
-  /// actually shows, without touching the calculator or data files.
-  FentonResult _weightResultInGrams(FentonResult kgResult) {
-    final p = kgResult.percentiles;
-    return FentonResult(
-      percentiles: FentonPercentiles(
-        p3:  p.p3  * 1000,
-        p10: p.p10 * 1000,
-        p50: p.p50 * 1000,
-        p90: p.p90 * 1000,
-        p97: p.p97 * 1000,
-      ),
-      percentileBand: kgResult.percentileBand,
-      classification: kgResult.classification,
-    );
-  }
-
   double? get _viewUserValue => switch (_viewParam) {
-        // Chart curves are plotted in kg (native data), so the weight point
-        // must be converted back from the grams the user typed.
-        FentonParameter.weight => _plotWeightG != null ? _plotWeightG! / 1000 : null,
+        FentonParameter.weight => _plotWeightG,
         FentonParameter.length => _plotLengthCm,
         FentonParameter.headCircumference => _plotHcCm,
       };
@@ -195,7 +175,7 @@ class _FentonChartScreenState extends State<FentonChartScreen> {
         ? FentonCalculator.calculate(
             dataPoints: _dataPoints(FentonParameter.weight),
             ga: ga,
-            value: weightG / 1000, // grams entered → kg for the calculator
+            value: weightG, // reference data is in grams natively now
             parameter: FentonParameter.weight,
           )
         : null;
@@ -381,8 +361,7 @@ class _FentonChartScreenState extends State<FentonChartScreen> {
       return pw.Text('Not measured this visit',
           style: pw.TextStyle(fontSize: 10, color: PdfColors.grey500, fontStyle: pw.FontStyle.italic));
     }
-    final displayResult = p == FentonParameter.weight ? _weightResultInGrams(result) : result;
-    final pct = _approxPercentile(value, displayResult.percentiles);
+    final pct = _approxPercentile(value, result.percentiles);
     return pw.Row(
       mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
       children: [
@@ -390,10 +369,10 @@ class _FentonChartScreenState extends State<FentonChartScreen> {
           unit == 'g' ? '${value.toStringAsFixed(0)} $unit' : '$value $unit',
           style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold, color: navy),
         ),
-        pw.Text('~$pct%ile  (${displayResult.percentileBand})',
+        pw.Text('~$pct%ile  (${result.percentileBand})',
             style: const pw.TextStyle(fontSize: 10, color: PdfColors.grey700)),
-        if (displayResult.classification != null)
-          pw.Text(displayResult.classification!,
+        if (result.classification != null)
+          pw.Text(result.classification!,
               style: pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold, color: navy)),
       ],
     );
@@ -425,9 +404,9 @@ class _FentonChartScreenState extends State<FentonChartScreen> {
           pw.SizedBox(height: 4),
           pw.Divider(color: navy),
           pw.SizedBox(height: 10),
-          pw.Text('$_sexLabel — ${_paramLabel(param)}',
+ pw.Text('$_sexLabel - ${_paramLabel(param)}',
               style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold, color: navy)),
-          pw.Text('Fenton ${_data?.version ?? ''} 3rd-Generation Charts · GA $_gaLabel',
+ pw.Text('Fenton ${_data?.version ?? ''} 3rd-Generation Charts - GA $_gaLabel',
               style: pw.TextStyle(fontSize: 11, color: PdfColors.grey700)),
           pw.SizedBox(height: 14),
           if (imageBytes != null)
@@ -447,7 +426,7 @@ class _FentonChartScreenState extends State<FentonChartScreen> {
           pw.SizedBox(height: 20),
           pw.Divider(color: PdfColors.grey400),
           pw.SizedBox(height: 4),
-          pw.Text('WHO/Fenton reference charts — for clinical use only',
+ pw.Text('WHO/Fenton reference charts - for clinical use only',
               style: pw.TextStyle(fontSize: 9, color: PdfColors.grey600)),
         ],
       ),
@@ -486,16 +465,16 @@ class _FentonChartScreenState extends State<FentonChartScreen> {
               pw.SizedBox(height: 4),
               pw.Divider(color: navy),
               pw.SizedBox(height: 8),
-              pw.Text('$_sexLabel — GA at assessment: $_gaLabel',
+ pw.Text('$_sexLabel - GA at assessment: $_gaLabel',
                   style: pw.TextStyle(fontSize: 15, fontWeight: pw.FontWeight.bold, color: navy)),
-              pw.Text('Fenton ${_data?.version ?? ''} 3rd-Generation Charts — Weight, Length & Head Circumference',
+ pw.Text('Fenton ${_data?.version ?? ''} 3rd-Generation Charts - Weight, Length & Head Circumference',
                   style: pw.TextStyle(fontSize: 11, color: PdfColors.grey700)),
               pw.SizedBox(height: 10),
             ])
           : pw.SizedBox(),
       footer: (ctx) => pw.Column(children: [
         pw.Divider(color: PdfColors.grey400, height: 8),
-        pw.Text('WHO/Fenton reference charts — for clinical use only  ·  Page ${ctx.pageNumber} of ${ctx.pagesCount}',
+ pw.Text('WHO/Fenton reference charts - for clinical use only - Page ${ctx.pageNumber} of ${ctx.pagesCount}',
             style: pw.TextStyle(fontSize: 8, color: PdfColors.grey600)),
       ]),
       build: (ctx) => [
@@ -600,13 +579,13 @@ class _FentonChartScreenState extends State<FentonChartScreen> {
                       if (_weightResult != null) ...[
                         _ResultCard(
                           cs: cs,
-                          result: _weightResultInGrams(_weightResult!),
+                          result: _weightResult!,
                           paramLabel: 'Weight',
                           unit: 'g',
                           ga: _plotGa!,
                           gaLabel: _gaLabel,
                           value: _plotWeightG!,
-                          percentile: _approxPercentile(_plotWeightG!, _weightResultInGrams(_weightResult!).percentiles),
+                          percentile: _approxPercentile(_plotWeightG!, _weightResult!.percentiles),
                         ),
                         const SizedBox(height: 10),
                       ],

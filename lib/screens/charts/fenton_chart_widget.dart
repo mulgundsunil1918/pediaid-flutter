@@ -38,8 +38,6 @@ class FentonChartWidget extends StatelessWidget {
     };
   }
 
-  bool get _isWeight => parameter == FentonParameter.weight;
-
   @override
   Widget build(BuildContext context) {
     final cs     = Theme.of(context).colorScheme;
@@ -157,12 +155,10 @@ class FentonChartWidget extends StatelessWidget {
                       interval: _yInterval(minY, maxY),
                       getTitlesWidget: (v, meta) => SideTitleWidget(
                         axisSide: meta.axisSide,
+                        // Weight data is stored in grams natively now — no
+                        // conversion needed, same as length/HC in cm.
                         child: Text(
-                          // Curves plot in kg (native data unit) — only the
-                          // label converts to grams for display.
-                          _isWeight
-                              ? (v * 1000).toStringAsFixed(0)
-                              : v.toInt().toString(),
+                          v.toInt().toString(),
                           style: TextStyle(fontSize: 9, color: textCol),
                         ),
                       ),
