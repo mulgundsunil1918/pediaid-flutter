@@ -1,8 +1,56 @@
+import 'dart:math';
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
 import '../../data/fenton_data_loader.dart';
 import '../../logic/fenton_calculator.dart';
 import 'fenton_chart_widget.dart';
+
+/// Standard normal CDF via the Abramowitz & Stegun 7.1.26 approximation
+/// (max error ~1.5e-7) — used to turn a value's position between two
+/// known percentile anchors into an approximate exact percentile (e.g.
+/// "94th") rather than just the P90–P97 band.
+double _normalCdf(double z) {
+  const a1 = 0.254829592, a2 = -0.284496736, a3 = 1.421413741;
+  const a4 = -1.453152027, a5 = 1.061405429, p = 0.3275911;
+  final sign = z < 0 ? -1.0 : 1.0;
+  final x = z.abs() / sqrt2;
+  final t = 1.0 / (1.0 + p * x);
+  final y = 1.0 -
+      (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * exp(-x * x);
+  return 0.5 * (1.0 + sign * y);
+}
+
+/// Z-scores for the app's 5 stored percentile anchors.
+const _kP3Z = -1.8808, _kP10Z = -1.2816, _kP50Z = 0.0, _kP90Z = 1.2816, _kP97Z = 1.8808;
+
+/// Approximates the patient's exact percentile by finding which two
+/// stored anchors (P3/P10/P50/P90/P97) the value falls between and
+/// interpolating linearly in value-space between their known Z-scores,
+/// then converting that Z back to a percentile. This is a display aid,
+/// not a re-derivation of the full LMS curve — it's exact at the 5
+/// anchors and a smooth, reasonable estimate between them.
+int _approxPercentile(double value, FentonPercentiles p) {
+  double z;
+  if (value <= p.p3) {
+    z = _kP3Z;
+  } else if (value <= p.p10) {
+    z = _kP3Z + (_kP10Z - _kP3Z) * (value - p.p3) / (p.p10 - p.p3);
+  } else if (value <= p.p50) {
+    z = _kP10Z + (_kP50Z - _kP10Z) * (value - p.p10) / (p.p50 - p.p10);
+  } else if (value <= p.p90) {
+    z = _kP50Z + (_kP90Z - _kP50Z) * (value - p.p50) / (p.p90 - p.p50);
+  } else if (value <= p.p97) {
+    z = _kP90Z + (_kP97Z - _kP90Z) * (value - p.p90) / (p.p97 - p.p90);
+  } else {
+    z = _kP97Z;
+  }
+  return (_normalCdf(z) * 100).round().clamp(0, 100);
+}
 
 class FentonChartScreen extends StatefulWidget {
   const FentonChartScreen({super.key});
@@ -42,6 +90,10 @@ class _FentonChartScreenState extends State<FentonChartScreen> {
 
   String? _formError;
   String  _gaLabel = '';
+
+  // Reused for whichever chart is currently shown — combined-PDF export
+  // switches _viewParam through all three in turn, capturing after each.
+  final GlobalKey _chartKey = GlobalKey();
 
   @override
   void initState() {
@@ -214,6 +266,263 @@ class _FentonChartScreenState extends State<FentonChartScreen> {
     });
   }
 
+  // ── Export ────────────────────────────────────────────────────────────────────
+
+  Future<Uint8List?> _captureChart() async {
+    try {
+      // Give the chart a frame to finish painting after any setState this
+      // capture follows (e.g. switching _viewParam for the combined export).
+      await Future.delayed(const Duration(milliseconds: 120));
+      final boundary = _chartKey.currentContext?.findRenderObject()
+          as RenderRepaintBoundary?;
+      if (boundary == null) return null;
+      final image = await boundary.toImage(pixelRatio: 1.8);
+      final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      return byteData?.buffer.asUint8List();
+    } catch (_) {
+      return null;
+    }
+  }
+
+  void _showLoadingSnackBar(String message) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(children: [
+          const SizedBox(
+            width: 16,
+            height: 16,
+            child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+          ),
+          const SizedBox(width: 12),
+          Text(message),
+        ]),
+        duration: const Duration(seconds: 20),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+      ),
+    );
+  }
+
+  String get _sexLabel => _sex == FentonSex.male ? 'Male' : 'Female';
+
+  /// Exports whichever chart is currently on screen — single parameter,
+  /// matching the reference curve + patient point exactly as shown.
+  Future<void> _exportCurrentChartPdf() async {
+    _showLoadingSnackBar('Generating PDF…');
+    try {
+      final image = await _captureChart();
+      final bytes = await _generateSingleChartPdf(_viewParam, image);
+      if (mounted) ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      await Printing.layoutPdf(
+        name: '$_sexLabel-${_paramLabel(_viewParam)}-Fenton',
+        onLayout: (_) => bytes,
+      );
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Export failed: $e')));
+      }
+    }
+  }
+
+  /// Exports all three parameters (weight/length/HC) in one PDF, matching
+  /// the layout of the official combined Fenton chart — the whole point
+  /// being a single document you can print/save for bedside monitoring
+  /// across visits, instead of three separate exports.
+  Future<void> _exportCombinedPdf() async {
+    _showLoadingSnackBar('Generating combined chart PDF…');
+    final originalView = _viewParam;
+    final images = <FentonParameter, Uint8List?>{};
+    try {
+      for (final p in const [
+        FentonParameter.weight,
+        FentonParameter.length,
+        FentonParameter.headCircumference,
+      ]) {
+        setState(() => _viewParam = p);
+        images[p] = await _captureChart();
+      }
+      final bytes = await _generateCombinedPdf(images);
+      if (mounted) ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      await Printing.layoutPdf(
+        name: '$_sexLabel-Fenton-Combined',
+        onLayout: (_) => bytes,
+      );
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Export failed: $e')));
+      }
+    } finally {
+      if (mounted) setState(() => _viewParam = originalView);
+    }
+  }
+
+  FentonResult? _resultFor(FentonParameter p) => switch (p) {
+        FentonParameter.weight => _weightResult,
+        FentonParameter.length => _lengthResult,
+        FentonParameter.headCircumference => _hcResult,
+      };
+
+  double? _plotValueFor(FentonParameter p) => switch (p) {
+        FentonParameter.weight => _plotWeightG,
+        FentonParameter.length => _plotLengthCm,
+        FentonParameter.headCircumference => _plotHcCm,
+      };
+
+  pw.Widget _pdfResultBlock(FentonParameter p) {
+    final result = _resultFor(p);
+    final value = _plotValueFor(p);
+    final unit = _unitFor(p);
+    const navy = PdfColor.fromInt(0xFF1a237e);
+    if (result == null || value == null) {
+      return pw.Text('Not measured this visit',
+          style: pw.TextStyle(fontSize: 10, color: PdfColors.grey500, fontStyle: pw.FontStyle.italic));
+    }
+    final displayResult = p == FentonParameter.weight ? _weightResultInGrams(result) : result;
+    final pct = _approxPercentile(value, displayResult.percentiles);
+    return pw.Row(
+      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+      children: [
+        pw.Text(
+          unit == 'g' ? '${value.toStringAsFixed(0)} $unit' : '$value $unit',
+          style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold, color: navy),
+        ),
+        pw.Text('~$pct%ile  (${displayResult.percentileBand})',
+            style: const pw.TextStyle(fontSize: 10, color: PdfColors.grey700)),
+        if (displayResult.classification != null)
+          pw.Text(displayResult.classification!,
+              style: pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold, color: navy)),
+      ],
+    );
+  }
+
+  Future<Uint8List> _generateSingleChartPdf(
+      FentonParameter param, Uint8List? imageBytes) async {
+    final doc = pw.Document();
+    final now = DateTime.now();
+    final dateStr = '${now.day}/${now.month}/${now.year}';
+    const navy = PdfColor.fromInt(0xFF1a237e);
+
+    doc.addPage(pw.Page(
+      pageFormat: PdfPageFormat.a4,
+      margin: const pw.EdgeInsets.all(32),
+      build: (ctx) => pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          pw.Row(
+            mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+            children: [
+              pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.start, children: [
+                pw.Text('PediAid', style: pw.TextStyle(fontSize: 22, fontWeight: pw.FontWeight.bold, color: navy)),
+                pw.Text('Fenton Preterm Growth Chart', style: pw.TextStyle(fontSize: 13, color: PdfColors.grey700)),
+              ]),
+              pw.Text(dateStr, style: pw.TextStyle(fontSize: 10, color: PdfColors.grey600)),
+            ],
+          ),
+          pw.SizedBox(height: 4),
+          pw.Divider(color: navy),
+          pw.SizedBox(height: 10),
+          pw.Text('$_sexLabel — ${_paramLabel(param)}',
+              style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold, color: navy)),
+          pw.Text('Fenton ${_data?.version ?? ''} 3rd-Generation Charts · GA $_gaLabel',
+              style: pw.TextStyle(fontSize: 11, color: PdfColors.grey700)),
+          pw.SizedBox(height: 14),
+          if (imageBytes != null)
+            pw.Image(pw.MemoryImage(imageBytes), height: 300, fit: pw.BoxFit.contain)
+          else
+            pw.Container(
+              height: 300,
+              color: PdfColors.grey200,
+              child: pw.Center(child: pw.Text('Chart image unavailable', style: const pw.TextStyle(fontSize: 12))),
+            ),
+          pw.SizedBox(height: 14),
+          pw.Container(
+            padding: const pw.EdgeInsets.all(10),
+            decoration: pw.BoxDecoration(border: pw.Border.all(color: PdfColors.grey400), borderRadius: const pw.BorderRadius.all(pw.Radius.circular(6))),
+            child: _pdfResultBlock(param),
+          ),
+          pw.SizedBox(height: 20),
+          pw.Divider(color: PdfColors.grey400),
+          pw.SizedBox(height: 4),
+          pw.Text('WHO/Fenton reference charts — for clinical use only',
+              style: pw.TextStyle(fontSize: 9, color: PdfColors.grey600)),
+        ],
+      ),
+    ));
+    return doc.save();
+  }
+
+  Future<Uint8List> _generateCombinedPdf(
+      Map<FentonParameter, Uint8List?> images) async {
+    final doc = pw.Document();
+    final now = DateTime.now();
+    final dateStr = '${now.day}/${now.month}/${now.year}';
+    const navy = PdfColor.fromInt(0xFF1a237e);
+
+    const order = [
+      FentonParameter.weight,
+      FentonParameter.length,
+      FentonParameter.headCircumference,
+    ];
+
+    doc.addPage(pw.MultiPage(
+      pageFormat: PdfPageFormat.a4,
+      margin: const pw.EdgeInsets.all(28),
+      header: (ctx) => ctx.pageNumber == 1
+          ? pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.start, children: [
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
+                  pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.start, children: [
+                    pw.Text('PediAid', style: pw.TextStyle(fontSize: 22, fontWeight: pw.FontWeight.bold, color: navy)),
+                    pw.Text('Combined Fenton Preterm Growth Chart', style: pw.TextStyle(fontSize: 13, color: PdfColors.grey700)),
+                  ]),
+                  pw.Text(dateStr, style: pw.TextStyle(fontSize: 10, color: PdfColors.grey600)),
+                ],
+              ),
+              pw.SizedBox(height: 4),
+              pw.Divider(color: navy),
+              pw.SizedBox(height: 8),
+              pw.Text('$_sexLabel — GA at assessment: $_gaLabel',
+                  style: pw.TextStyle(fontSize: 15, fontWeight: pw.FontWeight.bold, color: navy)),
+              pw.Text('Fenton ${_data?.version ?? ''} 3rd-Generation Charts — Weight, Length & Head Circumference',
+                  style: pw.TextStyle(fontSize: 11, color: PdfColors.grey700)),
+              pw.SizedBox(height: 10),
+            ])
+          : pw.SizedBox(),
+      footer: (ctx) => pw.Column(children: [
+        pw.Divider(color: PdfColors.grey400, height: 8),
+        pw.Text('WHO/Fenton reference charts — for clinical use only  ·  Page ${ctx.pageNumber} of ${ctx.pagesCount}',
+            style: pw.TextStyle(fontSize: 8, color: PdfColors.grey600)),
+      ]),
+      build: (ctx) => [
+        for (final p in order) ...[
+          pw.Text(_paramLabel(p), style: pw.TextStyle(fontSize: 13, fontWeight: pw.FontWeight.bold, color: navy)),
+          pw.SizedBox(height: 6),
+          if (images[p] != null)
+            pw.Image(pw.MemoryImage(images[p]!), height: 230, fit: pw.BoxFit.contain)
+          else
+            pw.Container(
+              height: 230,
+              color: PdfColors.grey200,
+              child: pw.Center(child: pw.Text('Chart unavailable', style: const pw.TextStyle(fontSize: 11))),
+            ),
+          pw.SizedBox(height: 6),
+          pw.Container(
+            padding: const pw.EdgeInsets.all(8),
+            decoration: pw.BoxDecoration(border: pw.Border.all(color: PdfColors.grey400), borderRadius: const pw.BorderRadius.all(pw.Radius.circular(6))),
+            child: _pdfResultBlock(p),
+          ),
+          pw.SizedBox(height: 16),
+        ],
+      ],
+    ));
+    return doc.save();
+  }
+
   // ── Build ─────────────────────────────────────────────────────────────────────
 
   @override
@@ -265,6 +574,7 @@ class _FentonChartScreenState extends State<FentonChartScreen> {
                       _ChartCard(
                         cs: cs,
                         isDark: isDark,
+                        chartKey: _chartKey,
                         chartData: _data!,
                         sex: _sex,
                         viewParam: _viewParam,
@@ -296,6 +606,7 @@ class _FentonChartScreenState extends State<FentonChartScreen> {
                           ga: _plotGa!,
                           gaLabel: _gaLabel,
                           value: _plotWeightG!,
+                          percentile: _approxPercentile(_plotWeightG!, _weightResultInGrams(_weightResult!).percentiles),
                         ),
                         const SizedBox(height: 10),
                       ],
@@ -308,6 +619,7 @@ class _FentonChartScreenState extends State<FentonChartScreen> {
                           ga: _plotGa!,
                           gaLabel: _gaLabel,
                           value: _plotLengthCm!,
+                          percentile: _approxPercentile(_plotLengthCm!, _lengthResult!.percentiles),
                         ),
                         const SizedBox(height: 10),
                       ],
@@ -320,7 +632,42 @@ class _FentonChartScreenState extends State<FentonChartScreen> {
                           ga: _plotGa!,
                           gaLabel: _gaLabel,
                           value: _plotHcCm!,
+                          percentile: _approxPercentile(_plotHcCm!, _hcResult!.percentiles),
                         ),
+                    ],
+
+                    // ── Export ───────────────────────────────────────────────
+                    if (_data != null) ...[
+                      const SizedBox(height: 16),
+                      Row(children: [
+                        Expanded(
+                          child: OutlinedButton.icon(
+                            onPressed: _exportCurrentChartPdf,
+                            icon: const Icon(Icons.picture_as_pdf_outlined, size: 16),
+                            label: Text('${_paramLabel(_viewParam)} PDF', style: const TextStyle(fontSize: 12)),
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: cs.primary,
+                              side: BorderSide(color: cs.primary.withValues(alpha: 0.5)),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          flex: 2,
+                          child: FilledButton.icon(
+                            onPressed: _exportCombinedPdf,
+                            icon: const Icon(Icons.picture_as_pdf, size: 16),
+                            label: const Text('Combined Chart PDF (Weight+Length+HC)', style: TextStyle(fontSize: 12)),
+                            style: FilledButton.styleFrom(
+                              backgroundColor: cs.primary,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                            ),
+                          ),
+                        ),
+                      ]),
                     ],
 
                     // ── Citation ─────────────────────────────────────────────
@@ -581,6 +928,7 @@ class _InputCard extends StatelessWidget {
 class _ChartCard extends StatelessWidget {
   final ColorScheme cs;
   final bool isDark;
+  final GlobalKey chartKey;
   final FentonChartData chartData;
   final FentonSex sex;
   final FentonParameter viewParam;
@@ -596,6 +944,7 @@ class _ChartCard extends StatelessWidget {
   const _ChartCard({
     required this.cs,
     required this.isDark,
+    required this.chartKey,
     required this.chartData,
     required this.sex,
     required this.viewParam,
@@ -650,12 +999,18 @@ class _ChartCard extends StatelessWidget {
             ]),
             const SizedBox(height: 12),
 
-            FentonChartWidget(
-              chartData: chartData,
-              sex: sex,
-              parameter: viewParam,
-              userGa: userGa,
-              userValue: userValue,
+            RepaintBoundary(
+              key: chartKey,
+              child: Container(
+                color: Theme.of(context).cardColor,
+                child: FentonChartWidget(
+                  chartData: chartData,
+                  sex: sex,
+                  parameter: viewParam,
+                  userGa: userGa,
+                  userValue: userValue,
+                ),
+              ),
             ),
           ],
         ),
@@ -674,6 +1029,7 @@ class _ResultCard extends StatelessWidget {
   final double ga;
   final String gaLabel;
   final double value;
+  final int percentile;
 
   const _ResultCard({
     required this.cs,
@@ -683,6 +1039,7 @@ class _ResultCard extends StatelessWidget {
     required this.ga,
     required this.gaLabel,
     required this.value,
+    required this.percentile,
   });
 
   @override
@@ -709,11 +1066,22 @@ class _ResultCard extends StatelessWidget {
                 child: Icon(Icons.analytics_outlined, color: bandColor, size: 20),
               ),
               const SizedBox(width: 10),
-              Text(paramLabel,
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                      color: cs.onSurface)),
+              Expanded(
+                child: Text(paramLabel,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: cs.onSurface)),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                decoration: BoxDecoration(
+                  color: bandColor.withValues(alpha: 0.14),
+                  borderRadius: BorderRadius.circular(999),
+                ),
+                child: Text('~$percentile%ile',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: bandColor)),
+              ),
             ]),
             const SizedBox(height: 14),
 
