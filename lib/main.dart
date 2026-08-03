@@ -1,8 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'deep_links.dart';
 import 'firebase_options.dart';
 import 'theme/app_theme.dart';
 import 'theme/theme_provider.dart';
@@ -135,6 +137,22 @@ void main() async {
     ));
   } catch (e) {
     debugPrint('[boot] System UI config failed: $e');
+  }
+
+  // Web-only deep link: if this tab was opened at a URL like
+  // pediaid.bridgr.co.in/#fenton-growth-chart (e.g. from an SEO landing
+  // page's "Open in PediAid" button), push that one screen on top of
+  // whatever the normal boot flow renders. Navigator.push always shows the
+  // new route full-screen regardless of what's underneath, so this works
+  // the same whether the visitor is signed in or not, and it never touches
+  // any existing screen's own navigation.
+  if (kIsWeb) {
+    final builder = resolveDeepLink();
+    if (builder != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        reportNavigatorKey.currentState?.push(MaterialPageRoute(builder: builder));
+      });
+    }
   }
 
   runApp(MultiProvider(
