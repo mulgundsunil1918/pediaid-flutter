@@ -1,7 +1,7 @@
 // A wrong offset here silently puts every saved event at the wrong hour, which
 // is worse than no calendar button at all.
 import 'package:flutter_test/flutter_test.dart';
-import 'package:neoapp_app/utils/calendar_export.dart';
+import 'package:pediaid_app/utils/calendar_export.dart';
 
 void main() {
   // Must read the field from inside VEVENT. The VTIMEZONE block that precedes

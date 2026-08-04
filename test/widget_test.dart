@@ -17,9 +17,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:neoapp_app/main.dart';
-import 'package:neoapp_app/providers/auth_provider.dart';
-import 'package:neoapp_app/theme/theme_provider.dart';
+import 'package:pediaid_app/main.dart';
+import 'package:pediaid_app/providers/auth_provider.dart';
+import 'package:pediaid_app/theme/theme_provider.dart';
 
 void main() {
   setUp(() {

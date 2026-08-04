@@ -28,7 +28,8 @@ import 'auth_service.dart';
 /// Paste the Web Push certificate key pair here (Firebase console →
 /// Project Settings → Cloud Messaging → Web configuration) to enable
 /// push on pediaid.bridgr.co.in. Empty string = web push disabled.
-const String _webVapidKey = '';
+const String _webVapidKey =
+    'BHCfX5fYaYWNubWJaRcFInUBWSB4fquBYcfAsiDbLjqy7fy8jNyp5jbTW--e4ucrG8gEjeFI_xQvdeG9q06gAzg';
 
 class PushService {
   PushService._();

@@ -2,7 +2,7 @@
 // comparison gets 1.10.0 vs 1.9.0 backwards, which would either strand users
 // on a bad build or lock out a good one.
 import 'package:flutter_test/flutter_test.dart';
-import 'package:neoapp_app/services/app_config_service.dart';
+import 'package:pediaid_app/services/app_config_service.dart';
 
 void main() {
   group('compareVersions', () {

@@ -1,11 +1,11 @@
 {
-    "name": "neoapp_app",
-    "short_name": "neoapp_app",
+    "name": "PediAid",
+    "short_name": "PediAid",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Paediatric and neonatal clinical reference \u2014 calculators, growth charts, drug formulary and guidelines.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
