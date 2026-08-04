@@ -93,11 +93,23 @@ class PushService {
 
   Future<void> _registerTokenWithBackend(String token) async {
     try {
+      // Send the session token when there is one. Without it the backend can
+      // only add this device to the broadcast topic; with it, the device is
+      // bound to the account and can receive personal notifications
+      // ("your submission was approved"). Signed-out registration still works
+      // and still gets announcements — that is why the header is optional.
+      final auth = AuthService.instance.accessToken;
       await http
           .post(
             Uri.parse('${AuthService.apiBase}/api/push/register'),
-            headers: {'Content-Type': 'application/json'},
-            body: jsonEncode({'token': token}),
+            headers: {
+              'Content-Type': 'application/json',
+              if (auth != null) 'Authorization': 'Bearer $auth',
+            },
+            body: jsonEncode({
+              'token': token,
+              'platform': kIsWeb ? 'web' : defaultTargetPlatform.name,
+            }),
           )
           .timeout(const Duration(seconds: 10));
     } catch (e) {
