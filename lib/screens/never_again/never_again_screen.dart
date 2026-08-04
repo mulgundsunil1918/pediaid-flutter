@@ -283,10 +283,29 @@ class _NeverAgainScreenState extends State<NeverAgainScreen> {
         ),
         toolbarHeight: 60,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.history_rounded),
-            tooltip: 'My submissions',
+          // Labelled, because a clock-arrow glyph does not say "the things you
+          // submitted" to anyone who hasn't been told, and its tooltip only
+          // appears on long-press — which nobody does while hunting for
+          // something. The "+" beside it stays an icon: that one really is
+          // universally read as "add".
+          TextButton.icon(
             onPressed: _openMySubmissions,
+            icon: const Icon(Icons.fact_check_outlined, size: 18),
+            label: Text(
+              'My Submissions',
+              style: GoogleFonts.plusJakartaSans(
+                fontWeight: FontWeight.w600,
+                fontSize: 13,
+              ),
+            ),
+            style: TextButton.styleFrom(
+              foregroundColor: Colors.white,
+              backgroundColor: Colors.white.withValues(alpha: 0.16),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
           ),
           IconButton(
             icon: const Icon(Icons.add),

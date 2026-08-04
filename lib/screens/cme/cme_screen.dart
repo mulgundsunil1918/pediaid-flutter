@@ -116,11 +116,32 @@ class _CmeScreenState extends State<CmeScreen>
           style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700),
         ),
         actions: [
+          // A labelled button, not a bare icon. A clock-arrow glyph does not
+          // say "the things you submitted" to anyone who hasn't been told, and
+          // the tooltip only appears on long-press — which nobody does when
+          // they are looking for something.
           if (_isLoggedIn)
-            IconButton(
-              icon: const Icon(Icons.history_rounded),
-              tooltip: 'My Submissions',
-              onPressed: _openMySubmissions,
+            Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: TextButton.icon(
+                onPressed: _openMySubmissions,
+                icon: const Icon(Icons.fact_check_outlined, size: 18),
+                label: Text(
+                  'My Submissions',
+                  style: GoogleFonts.plusJakartaSans(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 13,
+                  ),
+                ),
+                style: TextButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor: Colors.white.withValues(alpha: 0.16),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
             ),
         ],
         bottom: TabBar(
