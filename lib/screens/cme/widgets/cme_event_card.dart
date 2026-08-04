@@ -15,6 +15,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import '../../../utils/calendar_export.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../services/cme_service.dart';
@@ -662,6 +664,31 @@ class _FooterButtons extends StatelessWidget {
     }
   }
 
+  Future<void> _addToCalendar(BuildContext context) async {
+    final messenger = ScaffoldMessenger.maybeOf(context);
+    try {
+      await addToCalendar(
+        uid: event.id,
+        title: event.title,
+        startsAt: event.startsAt,
+        endsAt: event.endsAt,
+        description: event.description ?? event.subtitle,
+        // Venue first, falling back to the join link for online events, so an
+        // entry always says where to actually be.
+        location: (event.venue != null && event.venue!.isNotEmpty)
+            ? [event.venue, event.address, event.city]
+                .where((p) => p != null && p.isNotEmpty)
+                .join(', ')
+            : event.onlineUrl,
+        url: event.registrationUrl ?? event.onlineUrl,
+      );
+    } catch (_) {
+      messenger?.showSnackBar(
+        const SnackBar(content: Text('Could not open your calendar.')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
@@ -672,6 +699,38 @@ class _FooterButtons extends StatelessWidget {
     final online = event.onlineUrl;
 
     final actions = <Widget>[];
+
+    // Add to calendar, given its own full-width row above the other actions.
+    //
+    // Deliberately prominent rather than tucked in beside Get Details: for a
+    // conference months away, saving the date is the single most useful thing
+    // someone can do on this card, and it is the action they are most likely
+    // to forget. Register Now stays the primary CTA below.
+    final calendarRow = Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: SizedBox(
+        width: double.infinity,
+        child: OutlinedButton.icon(
+          style: OutlinedButton.styleFrom(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            side: BorderSide(color: primaryColor.withValues(alpha: 0.7), width: 1.4),
+            foregroundColor: primaryColor,
+            backgroundColor: primaryColor.withValues(alpha: 0.06),
+          ),
+          onPressed: () => _addToCalendar(context),
+          icon: const Icon(Icons.event_available_rounded, size: 18),
+          label: Text(
+            'Add to my calendar',
+            style: GoogleFonts.plusJakartaSans(
+              fontSize: 13.5,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+        ),
+      ),
+    );
 
     if (brochure != null && brochure.isNotEmpty) {
       actions.add(Expanded(
@@ -743,6 +802,9 @@ class _FooterButtons extends StatelessWidget {
     }
 
     if (actions.isEmpty) return const SizedBox.shrink();
-    return Row(children: actions);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [calendarRow, Row(children: actions)],
+    );
   }
 }
