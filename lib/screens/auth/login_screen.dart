@@ -31,6 +31,8 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
+import '../../widgets/report_issue_overlay.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -60,15 +62,31 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  bool _suppressingReport = false;
   String? _localError;
 
   @override
   void initState() {
     super.initState();
+    // No Report button over the sign-in screen: it competes with the one
+    // action the screen exists for, and a sign-in problem is not what that
+    // form reports.
+    //
+    // Deferred to after the first frame: bumping the notifier inside initState
+    // mutates it while the ValueListenableBuilder above this screen is still
+    // building, which throws "setState() called during build" and takes the
+    // screen down. The flag keeps increment and decrement balanced if the
+    // widget is disposed before the callback runs.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      _suppressingReport = true;
+      reportButtonSuppressed.value++;
+    });
   }
 
   @override
   void dispose() {
+    if (_suppressingReport) reportButtonSuppressed.value--;
     super.dispose();
   }
 

@@ -16,6 +16,8 @@
 // =============================================================================
 
 import 'package:flutter/material.dart';
+
+import '../../widgets/report_issue_overlay.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../utils/prefs_keys.dart';
@@ -31,6 +33,7 @@ class OnboardingScreen extends StatefulWidget {
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
+  bool _suppressingReport = false;
   final PageController _ctrl = PageController();
   int _index = 0;
 
@@ -62,7 +65,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     _Slide(
       eyebrow: 'Drug formulary',
       title: '676 drugs,\none clean view.',
-      tagline: 'Neofax (199) + Harriet Lane (478)',
+      tagline: 'Neonatal + paediatric, one format',
       body:
           'Every drug rendered the same way: Quick Summary up top, then '
           'Dose · Preparation · Monitoring · Common vs Serious adverse '
@@ -108,6 +111,30 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           'to the right tool.',
       icon: Icons.search_rounded,
       gradient: [Color(0xFF7C3AED), Color(0xFFA78BFA)],
+    ),
+    _Slide(
+      eyebrow: 'CME & Webinars',
+      title: 'Conferences,\nwithout the hunt.',
+      tagline: 'Conferences · Webinars · Workshops · Courses',
+      body:
+          'Paediatric CME from across India in one place — filter by state '
+          'or by online versus in person, search by topic or speaker, and '
+          'add any event straight to your calendar. Running one yourself? '
+          'Post it and it goes live once reviewed.',
+      icon: Icons.event_available_rounded,
+      gradient: [Color(0xFF0F766E), Color(0xFF14B8A6)],
+    ),
+    _Slide(
+      eyebrow: 'Never Again',
+      title: 'Learn from real\nmistakes.',
+      tagline: 'Anonymous · Moderated · No blame',
+      body:
+          'Clinical near-misses and errors shared anonymously by colleagues, '
+          'so the same mistake need not be repeated. No names, no hospitals, '
+          'no blame — just what happened, what went wrong and the lesson. '
+          'Share your own; nothing identifies you.',
+      icon: Icons.groups_rounded,
+      gradient: [Color(0xFF1A237E), Color(0xFF3949AB)],
     ),
   ];
 
@@ -256,7 +283,26 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    // No Report button on the tutorial: nobody is reporting a clinical issue
+    // before they have seen the app, and it competes with Next/Skip.
+    //
+    // Deferred to after the first frame: bumping the notifier inside initState
+    // mutates it while the ValueListenableBuilder above this screen is still
+    // building, which throws "setState() called during build" and takes the
+    // screen down. The flag keeps increment and decrement balanced if the
+    // widget is disposed before the callback runs.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      _suppressingReport = true;
+      reportButtonSuppressed.value++;
+    });
+  }
+
+  @override
   void dispose() {
+    if (_suppressingReport) reportButtonSuppressed.value--;
     _ctrl.dispose();
     super.dispose();
   }

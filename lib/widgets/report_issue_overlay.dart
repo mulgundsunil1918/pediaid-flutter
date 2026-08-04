@@ -11,6 +11,45 @@ import '../services/auth_service.dart';
 /// pushed through this key instead.
 final GlobalKey<NavigatorState> reportNavigatorKey = GlobalKey<NavigatorState>();
 
+/// Screens that should NOT show the floating Report button.
+///
+/// The button is mounted above the whole app so it reaches all 140+ screens
+/// without editing each one, which also means it lands on the two places it
+/// makes no sense: the onboarding slides and the sign-in screen. Nobody is
+/// reporting a clinical issue before they have seen the app or signed in, and
+/// on those screens it is just a stray control competing with the one thing
+/// the screen is asking them to do.
+///
+/// A counter rather than a bool, so overlapping screens (sign-in pushed over
+/// onboarding) cannot have the first one to close re-enable it.
+final ValueNotifier<int> reportButtonSuppressed = ValueNotifier<int>(0);
+
+/// Hides the Report button for as long as this widget is mounted.
+class SuppressReportButton extends StatefulWidget {
+  final Widget child;
+  const SuppressReportButton({super.key, required this.child});
+
+  @override
+  State<SuppressReportButton> createState() => _SuppressReportButtonState();
+}
+
+class _SuppressReportButtonState extends State<SuppressReportButton> {
+  @override
+  void initState() {
+    super.initState();
+    reportButtonSuppressed.value++;
+  }
+
+  @override
+  void dispose() {
+    reportButtonSuppressed.value--;
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.child;
+}
+
 /// Wraps the whole app (via `MaterialApp.builder`) with a small floating
 /// "Report" button that appears on every screen — calculators, guides,
 /// lab reference, formulary, everything — without touching any of those
@@ -21,6 +60,14 @@ class ReportIssueOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return ValueListenableBuilder<int>(
+      valueListenable: reportButtonSuppressed,
+      builder: (context, suppressed, _) =>
+          suppressed > 0 ? child : _buildWithButton(context),
+    );
+  }
+
+  Widget _buildWithButton(BuildContext context) {
     return Stack(
       children: [
         child,
