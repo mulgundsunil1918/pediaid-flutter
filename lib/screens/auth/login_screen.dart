@@ -15,8 +15,9 @@
 // Layout (top -> bottom):
 //   1. Colored brand header  — top 34% of screen in primary color
 //   2. White sheet overlay   — from top 28%, 32px top corner radius, scrollable
-//   3. Provider buttons — Google and Apple side by side on iOS, Google alone
-//      elsewhere (native Sign in with Apple is iOS-only in this app)
+//   3. Provider buttons — Google everywhere; Apple alongside it on Apple
+//      platforms (iOS and macOS, native or in a browser). Windows and
+//      Android see Google alone.
 //
 // Post-auth sequence (both methods):
 //   1. Mark onboarding complete (future launches skip the slides)
@@ -24,11 +25,10 @@
 //   3. Ask for name + specialty if we don't have them yet
 //   4. Pop to root — _AuthGate rebuilds to HomeScreen automatically
 //
-// Platform guard: kIsWeb must short-circuit before Platform.isIOS is evaluated
-// (Platform throws on web). All Platform.* refs live inside !kIsWeb blocks.
+// No dart:io here: platform is read via defaultTargetPlatform, which works on
+// web as well as native, so nothing can throw on the web build.
 // =============================================================================
 
-import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -39,6 +39,18 @@ import '../../providers/auth_provider.dart';
 import '../../services/push_service.dart';
 import '../../utils/prefs_keys.dart';
 import '../onboarding/profile_setup_screen.dart';
+
+/// Apple platforms — iOS and macOS, natively or in a browser there.
+///
+/// Deliberately NOT `!kIsWeb && Platform.isIOS`, which is what this was: that
+/// hid the Apple button from every Mac and from Safari on iPhone, even though
+/// Apple sign-in works in both through Firebase's OAuth popup.
+/// defaultTargetPlatform reports the underlying OS on web too, so one check
+/// covers native and browser alike — and it never touches Platform, so there
+/// is nothing to throw on web.
+bool get _isApplePlatform =>
+    defaultTargetPlatform == TargetPlatform.iOS ||
+    defaultTargetPlatform == TargetPlatform.macOS;
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -230,10 +242,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     ],
 
                     // ── Social sign-in ──────────────────────────────
-                    // kIsWeb must short-circuit before Platform.isIOS is
-                    // ever evaluated (Platform throws on web).
                     const SizedBox(height: 4),
-                    if (!kIsWeb && Platform.isIOS)
+                    if (_isApplePlatform)
                       Row(
                         children: [
                           Expanded(

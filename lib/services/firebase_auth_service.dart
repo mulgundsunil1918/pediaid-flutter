@@ -133,7 +133,19 @@ class FirebaseAuthService {
 
   // kIsWeb must be checked before Platform.isIOS — Platform throws on web.
   Future<AppUser?> signInWithApple() async {
-    if (kIsWeb) throw UnsupportedError('Apple Sign-In is not available on web.');
+    // On the web, Firebase's OAuth popup handles Apple directly. The native
+    // sign_in_with_apple plugin cannot run there, which is why this used to
+    // throw — but that left anyone on a Mac or iPhone browser with no Apple
+    // option at all, even though the flow works perfectly well through the
+    // popup.
+    if (kIsWeb) {
+      final cred =
+          await _auth.signInWithPopup(OAuthProvider('apple.com')
+            ..addScope('email')
+            ..addScope('name'));
+      return _afterAppleSignIn(cred);
+    }
+
     if (!Platform.isIOS && !Platform.isMacOS) {
       throw UnsupportedError('Apple Sign-In requires iOS or macOS.');
     }
@@ -157,22 +169,42 @@ class FirebaseAuthService {
       rawNonce: rawNonce, // RAW goes to Firebase
     );
     final cred = await _auth.signInWithCredential(oauthCred);
+    return _afterAppleSignIn(
+      cred,
+      // Apple returns the name only on the very first grant, and only to the
+      // native flow — pass it through so the profile isn't left nameless.
+      givenName: appleCredential.givenName,
+      familyName: appleCredential.familyName,
+      appleEmail: appleCredential.email,
+    );
+  }
+
+  /// Creates the Firestore profile on a first Apple sign-in.
+  ///
+  /// Shared by the native and web paths so they cannot drift. The name parts
+  /// are optional because the web popup does not surface them separately —
+  /// there, Firebase has already folded them into displayName.
+  Future<AppUser?> _afterAppleSignIn(
+    UserCredential cred, {
+    String? givenName,
+    String? familyName,
+    String? appleEmail,
+  }) async {
     final user = cred.user;
     if (user == null) return null;
 
     final doc = await _users.doc(user.uid).get();
     if (!doc.exists) {
-      final composed = [
-        appleCredential.givenName ?? '',
-        appleCredential.familyName ?? '',
-      ].where((s) => s.isNotEmpty).join(' ').trim();
+      final composed = [givenName ?? '', familyName ?? '']
+          .where((s) => s.isNotEmpty)
+          .join(' ')
+          .trim();
       final displayName = composed.isNotEmpty
           ? composed
-          : (user.displayName ??
-              (user.email ?? 'Apple user').split('@').first);
+          : (user.displayName ?? (user.email ?? 'Apple user').split('@').first);
       await _users.doc(user.uid).set({
         'name': displayName,
-        'email': user.email ?? appleCredential.email ?? '',
+        'email': user.email ?? appleEmail ?? '',
         'role': 'doctor',
         'avatarUrl': user.photoURL,
         'createdAt': Timestamp.fromDate(DateTime.now()),

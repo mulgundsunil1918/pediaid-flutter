@@ -184,11 +184,23 @@ class FaqScreen extends StatelessWidget {
       question: 'Do I need an account to use PediAid?',
       answer:
           'No. Calculators, charts, drug formulary, growth charts, '
-          'guides and emergency tools all work without an account.\n\n'
-          'Login is currently disabled while we polish the app. When '
-          'it returns, an account will only be needed for the '
-          'Academics web module (peer-reviewed chapters, CME tracking, '
-          'contributor features).',
+          'guides and emergency tools all work without an account, and '
+          'always will.\n\n'
+          'You only need to sign in for the things that are tied to you '
+          'personally — the Academics module (peer-reviewed chapters, CME '
+          'tracking, contributor features), submitting a CME event, or '
+          'posting to Never Again and following what happens to it.',
+    ),
+    _QA(
+      question: 'Which sign-in should I use — Google or Apple?',
+      answer:
+          'Whichever you already have. On Windows and Android you will see '
+          'Google; on iPhone, iPad and Mac you will see both.\n\n'
+          'Use the same one every time. They are separate accounts even if '
+          'the email looks identical, so signing in with the other button '
+          'creates a second, empty account rather than opening your '
+          'existing one — and PediAid will tell you so rather than '
+          'silently merging them.',
     ),
     _QA(
       question: 'How do I create an account?',
@@ -212,7 +224,10 @@ class FaqScreen extends StatelessWidget {
           'Settings → Danger zone → Sign out (you can sign back in any '
           'time) or Delete account (you\'ll be asked to type DELETE; '
           'deletion is immediate and permanent — no soft-delete, no '
-          'grace period; all your data is removed from our servers).',
+          'grace period; all your data is removed from our servers).\n\n'
+          'You are never asked for a password to delete — there isn\'t '
+          'one. If you signed in a while ago, Google or Apple may ask you '
+          'to confirm it is really you first.',
     ),
 
     // ── Tutorials & device ─────────────────────────────────────────────
