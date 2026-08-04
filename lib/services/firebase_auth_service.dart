@@ -266,19 +266,52 @@ class FirebaseAuthService {
     final user = _auth.currentUser;
     if (user == null) return;
 
-    final providers = providerIds;
-
-    // Re-authentication must mirror how the user actually signs in, per
-    // platform. It previously did not: both the Google and Apple branches were
-    // gated on `!kIsWeb`, so on web (and, for Google, on desktop) they were
-    // skipped entirely and execution fell through to the password branch —
-    // which threw "Password is required to delete your account" at people who
-    // have never had a password. On those platforms a social-login user could
-    // not delete their account at all, which is a store-policy requirement.
+    // Try the deletion first, and only re-authenticate if Firebase actually
+    // demands it.
     //
-    // The rule now: if you can sign in that way, you can re-authenticate that
-    // way. Web uses the popup APIs (matching signInWithGoogle above), every
-    // other platform uses the native SDK.
+    // This ordering matters. The previous version always inspected
+    // providerData up front and branched on it, which meant a single wrong
+    // guess about the provider blocked deletion outright — and it guessed
+    // wrong on web, where the social branches were gated behind !kIsWeb and
+    // execution fell through to "Password is required to delete your account"
+    // for people who have never had a password.
+    //
+    // Firebase only requires recent authentication when the sign-in is old.
+    // For anyone who just signed in, this now succeeds with no re-auth at all,
+    // no popup, and no dependence on provider detection being right.
+    //
+    // Deleting the Firestore document first is deliberate: security rules
+    // require an authenticated user, and once the auth record is gone the
+    // client can no longer satisfy them. If the auth delete then fails, the
+    // retry below simply deletes the document again — a no-op in Firestore —
+    // so the repeat is safe.
+    try {
+      await _users.doc(user.uid).delete();
+      await user.delete();
+      return;
+    } on FirebaseAuthException catch (e) {
+      if (e.code != 'requires-recent-login') rethrow;
+    }
+
+    await _reauthenticate(user, password);
+
+    await _users.doc(user.uid).delete();
+    await user.delete();
+  }
+
+  /// Proves the user is who they say they are, using whichever method they
+  /// actually sign in with. Only called when Firebase asks for it.
+  Future<void> _reauthenticate(User user, String? password) async {
+    // providerData can be stale on a long-lived session, and an empty or
+    // outdated list is exactly what would send us down the wrong branch.
+    try {
+      await user.reload();
+    } catch (_) {
+      // Offline or transient — fall through and use what we already have.
+    }
+    final providers =
+        (_auth.currentUser ?? user).providerData.map((p) => p.providerId).toSet();
+
     if (providers.contains('google.com')) {
       if (kIsWeb) {
         await user.reauthenticateWithPopup(GoogleAuthProvider());
@@ -297,11 +330,14 @@ class FirebaseAuthService {
           ),
         );
       }
-    } else if (providers.contains('apple.com')) {
+      return;
+    }
+
+    if (providers.contains('apple.com')) {
       if (kIsWeb || _isDesktop) {
-        // Native Sign in with Apple is unavailable here, but Firebase's popup
-        // flow is not — so an Apple account created on iOS can still be
-        // deleted from the web build.
+        // Native Sign in with Apple isn't available here, but Firebase's popup
+        // flow is — so an account created on iOS can still be deleted from a
+        // browser.
         await user.reauthenticateWithPopup(OAuthProvider('apple.com'));
       } else {
         final rawNonce = _generateNonce();
@@ -317,7 +353,10 @@ class FirebaseAuthService {
           ),
         );
       }
-    } else if (providers.contains('password')) {
+      return;
+    }
+
+    if (providers.contains('password')) {
       if (password == null || password.isEmpty) {
         throw Exception('Password is required to delete your account.');
       }
@@ -326,17 +365,15 @@ class FirebaseAuthService {
       await user.reauthenticateWithCredential(
         EmailAuthProvider.credential(email: email, password: password),
       );
-    } else {
-      // No provider we can re-authenticate with. Asking for a password would
-      // be misleading, since there isn't one to give.
-      throw Exception(
-        'Could not verify your identity for deletion. Please sign out, sign '
-        'back in, and try again — or email help@bridgr.co.in.',
-      );
+      return;
     }
 
-    await _users.doc(user.uid).delete();
-    await user.delete();
+    // No provider we can re-authenticate with. Asking for a password would be
+    // misleading, since there isn't one to give.
+    throw Exception(
+      'Please sign out, sign back in, and try deleting again. If it still '
+      'fails, email help@bridgr.co.in and we will remove the account for you.',
+    );
   }
 
   // ── Internal helpers ───────────────────────────────────────────────────────
