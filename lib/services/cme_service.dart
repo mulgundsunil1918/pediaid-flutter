@@ -288,12 +288,27 @@ class CmeService {
   bool _usingPreview = false;
   bool get usingPreview => _usingPreview;
 
-  /// Public list of published events, optionally filtered by eventType.
-  Future<List<CmeEvent>> list({String? eventType}) async {
+  /// Public list of published events.
+  ///
+  /// [state] is an ISO 3166-2:IN code ('KA'), [mode] one of online /
+  /// in_person / hybrid, and [query] free text or a PA-CME-… reference. All
+  /// are handled server-side against the indexes added in migration 0017, so
+  /// filtering does not depend on how many events the client has fetched.
+  Future<List<CmeEvent>> list({
+    String? eventType,
+    String? state,
+    String? mode,
+    String? query,
+  }) async {
     try {
-      final url = Uri.parse(
-        '$_base/api/academics/cme/events${eventType != null ? '?eventType=$eventType' : ''}',
-      );
+      final params = <String, String>{};
+      if (eventType != null) params['eventType'] = eventType;
+      if (state != null && state.isNotEmpty) params['state'] = state;
+      if (mode != null && mode.isNotEmpty) params['mode'] = mode;
+      if (query != null && query.trim().isNotEmpty) params['q'] = query.trim();
+
+      final url = Uri.parse('$_base/api/academics/cme/events')
+          .replace(queryParameters: params.isEmpty ? null : params);
       final res = await http.get(url).timeout(const Duration(seconds: 20));
       if (res.statusCode != 200) {
         throw CmeException(_extractError(res, 'Failed to load events.'));

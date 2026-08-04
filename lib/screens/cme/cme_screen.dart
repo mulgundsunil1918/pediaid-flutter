@@ -18,6 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../services/auth_service.dart';
 import '../../services/cme_service.dart';
+import '../../widgets/cme_filter_bar.dart';
 import 'widgets/cme_event_card.dart';
 import 'post_event_screen.dart';
 import 'cme_detail_screen.dart';
@@ -47,6 +48,13 @@ class CmeScreen extends StatefulWidget {
 class _CmeScreenState extends State<CmeScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+
+  // Server-side filters. The event-type tabs still narrow client-side, but
+  // these three go to the API so the app never has to hold every event in
+  // memory in order to filter them.
+  String? _stateFilter;
+  String? _modeFilter;
+  String _query = '';
 
   Future<List<CmeEvent>>? _publicFuture;
 
@@ -78,7 +86,11 @@ class _CmeScreenState extends State<CmeScreen>
 
   void _refreshAll() {
     setState(() {
-      _publicFuture = CmeService.instance.list();
+      _publicFuture = CmeService.instance.list(
+        state: _stateFilter,
+        mode: _modeFilter,
+        query: _query,
+      );
     });
   }
 
@@ -182,6 +194,23 @@ class _CmeScreenState extends State<CmeScreen>
                 textAlign: TextAlign.center,
               ),
             ),
+          CmeFilterBar(
+            state: _stateFilter,
+            mode: _modeFilter,
+            query: _query,
+            onStateChanged: (v) {
+              _stateFilter = v;
+              _refreshAll();
+            },
+            onModeChanged: (v) {
+              _modeFilter = v;
+              _refreshAll();
+            },
+            onQueryChanged: (v) {
+              _query = v;
+              _refreshAll();
+            },
+          ),
           Expanded(
             child: TabBarView(
               controller: _tabController,

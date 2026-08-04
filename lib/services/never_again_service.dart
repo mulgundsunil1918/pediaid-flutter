@@ -128,6 +128,7 @@ class NeverAgainService {
 
   Future<({List<NeverAgainPost> posts, int total, bool hasMore})> getPosts({
     String? category,
+    String? query,
     int page = 1,
   }) async {
     try {
@@ -137,6 +138,11 @@ class NeverAgainService {
       };
       if (category != null && category != 'All') {
         params['category'] = category;
+      }
+      // Free text, or a PA-NA-… reference — the server matches a code exactly
+      // rather than tokenising it, since it would otherwise find nothing.
+      if (query != null && query.trim().isNotEmpty) {
+        params['q'] = query.trim();
       }
       final uri = Uri.parse('$_apiBase/api/never-again').replace(queryParameters: params);
       final res = await http.get(uri).timeout(const Duration(seconds: 20));

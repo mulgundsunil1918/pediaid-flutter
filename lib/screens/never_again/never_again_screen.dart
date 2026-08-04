@@ -7,6 +7,8 @@
 // border, 10-14 px rounded corners, Google Fonts Plus Jakarta Sans).
 // =============================================================================
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -127,6 +129,12 @@ class _NeverAgainScreenState extends State<NeverAgainScreen> {
   final _scrollCtrl = ScrollController();
 
   String _selectedCategory = _kAllCategory;
+
+  // Text search only. No state or city filter here, unlike CME: these posts
+  // are anonymous, and location plus role plus category plus date is often
+  // enough to identify one person — in a small subspecialty it is close to a
+  // name. The whole point of the module is that admitting a mistake is safe.
+  String _query = '';
   final List<NeverAgainPost> _posts = [];
   bool _loading = true;
   bool _loadingMore = false;
@@ -163,7 +171,8 @@ class _NeverAgainScreenState extends State<NeverAgainScreen> {
     }
     try {
       final cat = _selectedCategory == _kAllCategory ? null : _selectedCategory;
-      final result = await _service.getPosts(category: cat, page: _page);
+      final result =
+          await _service.getPosts(category: cat, query: _query, page: _page);
       if (!mounted) return;
       setState(() {
         _posts.addAll(result.posts);
@@ -334,6 +343,10 @@ class _NeverAgainScreenState extends State<NeverAgainScreen> {
           _CategoryFilterRow(
             selected: _selectedCategory,
             onSelect: _selectCategory,
+            onSearch: (v) {
+              _query = v;
+              _loadPage(reset: true);
+            },
           ),
           Expanded(child: _buildFeed()),
         ],
@@ -403,10 +416,18 @@ class _CategoryFilterRow extends StatefulWidget {
   const _CategoryFilterRow({
     required this.selected,
     required this.onSelect,
+    required this.onSearch,
   });
 
   final String selected;
   final ValueChanged<String> onSelect;
+
+  /// Fires debounced. The field's hint has always promised "Search topics —
+  /// e.g. seizure, sepsis, NICU", but it only ever filtered the category chip
+  /// list, so typing a clinical term searched nothing. It now searches the
+  /// posts themselves, server-side, which is what the hint says and what
+  /// anyone would expect.
+  final ValueChanged<String> onSearch;
 
   @override
   State<_CategoryFilterRow> createState() => _CategoryFilterRowState();
@@ -414,16 +435,31 @@ class _CategoryFilterRow extends StatefulWidget {
 
 class _CategoryFilterRowState extends State<_CategoryFilterRow> {
   final TextEditingController _q = TextEditingController();
+  Timer? _debounce;
 
   @override
   void dispose() {
+    _debounce?.cancel();
     _q.dispose();
     super.dispose();
+  }
+
+  void _onTyped(String value) {
+    setState(() {}); // repaint the clear affordance
+    _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 350), () {
+      if (mounted) widget.onSearch(value);
+    });
   }
 
   /// Chips that match the current filter query. "All" always stays
   /// visible so users can still reset to the full list.
   List<String> get _visibleCategories {
+    // The text box now searches posts, so it must not also hide categories:
+    // typing "sepsis" would collapse the chip row at the same moment the
+    // results below changed, and neither effect would be explicable.
+    return _kCategories;
+    // ignore: dead_code
     final q = _q.text.trim().toLowerCase();
     if (q.isEmpty) return _kCategories;
     return _kCategories
@@ -452,7 +488,7 @@ class _CategoryFilterRowState extends State<_CategoryFilterRow> {
               height: 38,
               child: TextField(
                 controller: _q,
-                onChanged: (_) => setState(() {}),
+                onChanged: _onTyped,
                 style: GoogleFonts.plusJakartaSans(fontSize: 13),
                 decoration: InputDecoration(
                   isDense: true,

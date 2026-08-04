@@ -23,7 +23,13 @@ class _AcademicsWebScreenState extends State<AcademicsWebScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final url = '$_baseUrl${widget.path}';
+    // ?embed=1 tells the academics site it is inside the app, so it drops its
+    // own header — the Academics/Dashboard links, the search box and the
+    // notification bell. All three are duplicates of chrome this Scaffold and
+    // the app already provide, and the bell in particular belongs in PediAid
+    // proper, not buried in a web view where notifications would be missed.
+    final sep = widget.path.contains('?') ? '&' : '?';
+    final url = '$_baseUrl${widget.path}${sep}embed=1';
 
     return Scaffold(
       appBar: AppBar(
