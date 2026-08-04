@@ -11,6 +11,7 @@ import 'theme/theme_provider.dart';
 import 'screens/home/home_screen.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/onboarding/onboarding_screen.dart';
+import 'widgets/app_config_gate.dart';
 import 'services/lab_reference_service.dart';
 import 'services/auth_service.dart';
 import 'services/profile_store.dart';
@@ -180,7 +181,12 @@ class PediAidApp extends StatelessWidget {
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: themeProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light,
-      home: const _OnboardingGate(child: _AuthGate()),
+      // AppConfigGate is outermost: if a released build is known to be
+      // unsafe, that must be decided before anything else is shown. It is
+      // invisible unless app-config.json says otherwise.
+      home: const AppConfigGate(
+        child: _OnboardingGate(child: _AuthGate()),
+      ),
       // Floats a small "report an issue" button above every screen in the
       // app without needing to touch each of those screen files individually.
       builder: (context, child) => ReportIssueOverlay(child: child!),

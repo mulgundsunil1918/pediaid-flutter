@@ -1,0 +1,11 @@
+{
+  "_readme": "Emergency lever for released builds. Edit this file on the gh-pages branch (GitHub web UI works) and the change reaches every app on next launch, with no store release. All three fields are optional; an empty object means nothing is wrong.",
+  "_minVersion": "Builds strictly below this are blocked with an update screen. Use only for a genuinely unsafe build — a wrong dose, a broken calculator. Example: \"1.2.1\"",
+  "_disabledTools": "Tool ids taken out of service; those screens show a notice instead of the tool. Example: [\"tpn-calculator\"]",
+  "_notice": "Message shown at the top of the app. Example: \"Correction issued for TPN dosing — please update.\"",
+
+  "minVersion": null,
+  "disabledTools": [],
+  "notice": null,
+  "noticeUrl": null
+}
