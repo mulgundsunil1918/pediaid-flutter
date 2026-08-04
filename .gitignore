@@ -54,12 +54,29 @@ android/app/upload-keystore.jks
 *.keystore
 
 # ── Service accounts / tokens ─────────────────────────────────────────
+# These are real secrets: they authenticate AS the project and can read and
+# write any user's data. They must never be committed.
 *.env
 .env.*
-google-services.json
-GoogleService-Info.plist
 service-account*.json
 firebase-adminsdk*.json
+GoogleService-Info.plist
+
+# google-services.json is deliberately NOT ignored.
+#
+# It is client configuration, not a credential: every value in it ships inside
+# the APK on the Play Store, so anyone can already read them. What actually
+# protects the project is the SHA-1 certificate check and the Firebase security
+# rules, neither of which this file can bypass.
+#
+# It is tracked because it carries the SHA-1 fingerprints that make Google
+# Sign-In work. When it was ignored, that configuration existed on exactly one
+# machine, and a fresh clone silently built an app whose sign-in was broken —
+# with nothing in the history to explain why.
+#
+# Note this repository is public, so the API key in it will be picked up by
+# secret scanners. That is expected rather than a leak; restrict the key by
+# package name and SHA-1 in Google Cloud Console so the alert stays accurate.
 firebase-service-account*.json
 ios/api_key.json
 

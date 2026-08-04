@@ -13,6 +13,7 @@
 //   - If eventType == 'webinar' AND onlineUrl set → "Join Webinar Now"
 // =============================================================================
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -664,23 +665,105 @@ class _FooterButtons extends StatelessWidget {
     }
   }
 
+  /// Asks which calendar, then creates the entry there.
+  ///
+  /// Previously this always produced an .ics file, which browsers *download* —
+  /// leaving the user to find the file and open it, when what they asked for
+  /// was the event in their calendar. Google Calendar is offered first because
+  /// it opens the event already filled in, one Save away, and on Android the
+  /// Google Calendar app claims the link so its own editor opens rather than a
+  /// browser. The .ics file remains for Apple Calendar and Outlook, which is
+  /// the only mechanism those accept.
   Future<void> _addToCalendar(BuildContext context) async {
     final messenger = ScaffoldMessenger.maybeOf(context);
+
+    // Venue first, falling back to the join link for online events, so an
+    // entry always says where to actually be.
+    final location = (event.venue != null && event.venue!.isNotEmpty)
+        ? [event.venue, event.address, event.city]
+            .where((p) => p != null && p.isNotEmpty)
+            .join(', ')
+        : event.onlineUrl;
+    final description = event.description ?? event.subtitle;
+    final url = event.registrationUrl ?? event.onlineUrl;
+
+    // Android and iOS can insert straight into the device calendar: the OS's
+    // own new-event screen opens filled in, one tap saves it, and it lands in
+    // whichever calendar the user actually uses. That is what "add to calendar"
+    // is supposed to do, so it happens without asking anything first.
+    //
+    // Only web needs the chooser below, because no browser API can write to a
+    // calendar — there the best available is a pre-filled link or a file.
+    if (!kIsWeb) {
+      final added = await addToDeviceCalendar(
+        title: event.title,
+        startsAt: event.startsAt,
+        endsAt: event.endsAt,
+        description: description,
+        location: location,
+      );
+      if (added) return;
+      // No calendar app, or permission refused — fall through to the chooser
+      // rather than leaving the tap with nothing to show for it.
+    }
+
+    if (!context.mounted) return;
+
+    final useGoogle = await showModalBottomSheet<bool>(
+      context: context,
+      showDragHandle: true,
+      builder: (sheetContext) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.event_available_rounded),
+              title: Text('Google Calendar',
+                  style: GoogleFonts.plusJakartaSans(
+                      fontWeight: FontWeight.w700, fontSize: 15)),
+              subtitle: Text('Opens with the details already filled in',
+                  style: GoogleFonts.plusJakartaSans(fontSize: 12.5)),
+              onTap: () => Navigator.pop(sheetContext, true),
+            ),
+            ListTile(
+              leading: const Icon(Icons.calendar_month_rounded),
+              title: Text('Apple Calendar, Outlook or other',
+                  style: GoogleFonts.plusJakartaSans(
+                      fontWeight: FontWeight.w700, fontSize: 15)),
+              subtitle: Text('Sends a calendar file your app can import',
+                  style: GoogleFonts.plusJakartaSans(fontSize: 12.5)),
+              onTap: () => Navigator.pop(sheetContext, false),
+            ),
+            const SizedBox(height: 8),
+          ],
+        ),
+      ),
+    );
+
+    if (useGoogle == null) return; // dismissed
+
     try {
+      if (useGoogle) {
+        final opened = await addToGoogleCalendar(
+          title: event.title,
+          startsAt: event.startsAt,
+          endsAt: event.endsAt,
+          description: description,
+          location: location,
+          url: url,
+        );
+        if (opened) return;
+        // Nothing could handle the link — fall through to the file rather than
+        // leaving the tap with no result at all.
+      }
       await addToCalendar(
         uid: event.id,
         title: event.title,
         startsAt: event.startsAt,
         endsAt: event.endsAt,
-        description: event.description ?? event.subtitle,
-        // Venue first, falling back to the join link for online events, so an
-        // entry always says where to actually be.
-        location: (event.venue != null && event.venue!.isNotEmpty)
-            ? [event.venue, event.address, event.city]
-                .where((p) => p != null && p.isNotEmpty)
-                .join(', ')
-            : event.onlineUrl,
-        url: event.registrationUrl ?? event.onlineUrl,
+        description: description,
+        location: location,
+        url: url,
       );
     } catch (_) {
       messenger?.showSnackBar(

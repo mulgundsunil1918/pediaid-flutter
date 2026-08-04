@@ -122,7 +122,9 @@ class _CmeFilterBarState extends State<CmeFilterBar> {
     final cs = Theme.of(context).colorScheme;
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+      // No bottom padding: the first card carries its own 10px top margin, and
+      // stacking the two left a visible dead band under the filters.
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -172,7 +174,10 @@ class _CmeFilterBarState extends State<CmeFilterBar> {
                 Expanded(
                   child: _Dropdown<String>(
                     value: widget.mode,
-                    hint: 'Online or in person',
+                    // Short enough to fit the half-width field outright.
+                    // "Online or in person" needed two lines here, and the
+                    // dropdown's own options already spell out the choices.
+                    hint: 'Any format',
                     icon: Icons.devices_outlined,
                     items: kCmeModes.entries
                         .map((e) => DropdownMenuItem(
@@ -241,8 +246,13 @@ class _Dropdown<T> extends StatelessWidget {
     return DropdownButtonFormField<T>(
       initialValue: value,
       isExpanded: true,
+      // maxLines is what makes the ellipsis work. Without it the hint wraps to
+      // a second line inside this dense fixed-height field and that line is
+      // clipped mid-word, so the overflow style never gets a chance to apply.
       hint: Text(hint,
           style: GoogleFonts.plusJakartaSans(fontSize: 13),
+          maxLines: 1,
+          softWrap: false,
           overflow: TextOverflow.ellipsis),
       icon: const Icon(Icons.expand_more_rounded, size: 20),
       style: GoogleFonts.plusJakartaSans(

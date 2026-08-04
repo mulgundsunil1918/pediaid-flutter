@@ -286,7 +286,9 @@ class _PublicTab extends StatelessWidget {
         return RefreshIndicator(
           onRefresh: onRefresh,
           child: ListView.builder(
-            padding: const EdgeInsets.only(top: 8, bottom: 100),
+            // Top padding removed — the card's own margin already separates it
+            // from the filter bar. bottom clears the "Post event" FAB.
+            padding: const EdgeInsets.only(bottom: 100),
             itemCount: filtered.length,
             itemBuilder: (_, i) => CmeEventCard(
               event: filtered[i],

@@ -12,6 +12,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../services/app_config_service.dart';
 
 const String kSupportDeveloperUrl = 'https://bridgr.co.in/support?from=pediaid';
 const String kBridgrHomeUrl = 'https://bridgr.co.in/';
@@ -20,12 +21,14 @@ const List<_Reference> _kReferences = [
   _Reference(
     title: 'Neofax',
     subtitle: 'Neonatal drug dosing — Wolters Kluwer',
-    url: 'https://www.wolterskluwer.com/en/solutions/clinical-drug-information/neofax',
+    url:
+        'https://www.wolterskluwer.com/en/solutions/clinical-drug-information/neofax',
   ),
   _Reference(
     title: 'The Harriet Lane Handbook',
     subtitle: 'Pediatric drug reference — Elsevier',
-    url: 'https://www.elsevier.com/books/the-harriet-lane-handbook/tschudy/978-0-323-67407-4',
+    url:
+        'https://www.elsevier.com/books/the-harriet-lane-handbook/tschudy/978-0-323-67407-4',
   ),
   _Reference(
     title: 'WHO Child Growth Standards',
@@ -45,7 +48,8 @@ const List<_Reference> _kReferences = [
   _Reference(
     title: "Nelson's Textbook of Pediatrics",
     subtitle: 'Comprehensive paediatric reference — Elsevier',
-    url: 'https://www.elsevier.com/books/nelson-textbook-of-pediatrics/kliegman/978-0-323-52950-1',
+    url:
+        'https://www.elsevier.com/books/nelson-textbook-of-pediatrics/kliegman/978-0-323-52950-1',
   ),
 ];
 
@@ -373,51 +377,64 @@ class AboutScreen extends StatelessWidget {
             // ── References & Citations ───────────────────────────────────
             _SectionLabel(label: 'References & Citations', color: cs.primary),
             const SizedBox(height: 10),
-            ...(_kReferences.map((ref) => Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: InkWell(
-                onTap: () => _openUrl(context, ref.url),
-                borderRadius: BorderRadius.circular(12),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-                  decoration: BoxDecoration(
-                    color: cs.surfaceContainerHighest,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: cs.outlineVariant),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(Icons.menu_book_rounded, size: 18, color: cs.primary),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              ref.title,
-                              style: GoogleFonts.plusJakartaSans(
-                                fontSize: 13.5,
-                                fontWeight: FontWeight.w700,
-                                color: cs.onSurface,
-                              ),
-                            ),
-                            const SizedBox(height: 2),
-                            Text(
-                              ref.subtitle,
-                              style: GoogleFonts.plusJakartaSans(
-                                fontSize: 11.5,
-                                color: cs.onSurface.withValues(alpha: 0.6),
-                              ),
-                            ),
-                          ],
+            ...(_kReferences.map(
+              (ref) => Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: InkWell(
+                  onTap: () => _openUrl(context, ref.url),
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 12,
+                    ),
+                    decoration: BoxDecoration(
+                      color: cs.surfaceContainerHighest,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: cs.outlineVariant),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.menu_book_rounded,
+                          size: 18,
+                          color: cs.primary,
                         ),
-                      ),
-                      Icon(Icons.open_in_new_rounded, size: 14, color: cs.primary),
-                    ],
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                ref.title,
+                                style: GoogleFonts.plusJakartaSans(
+                                  fontSize: 13.5,
+                                  fontWeight: FontWeight.w700,
+                                  color: cs.onSurface,
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                ref.subtitle,
+                                style: GoogleFonts.plusJakartaSans(
+                                  fontSize: 11.5,
+                                  color: cs.onSurface.withValues(alpha: 0.6),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Icon(
+                          Icons.open_in_new_rounded,
+                          size: 14,
+                          color: cs.primary,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ))),
+            )),
 
             const SizedBox(height: 24),
 
@@ -427,9 +444,7 @@ class AboutScreen extends StatelessWidget {
               decoration: BoxDecoration(
                 color: cs.primaryContainer.withValues(alpha: 0.35),
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: cs.primary.withValues(alpha: 0.2),
-                ),
+                border: Border.all(color: cs.primary.withValues(alpha: 0.2)),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -471,80 +486,83 @@ class AboutScreen extends StatelessWidget {
 
             // ── Support the developer (hidden on iOS — App Store 3.1.1) ──
             if (kIsWeb || !Platform.isIOS)
-            Container(
-              padding: const EdgeInsets.all(18),
-              decoration: BoxDecoration(
-                color: const Color(0xFFFFFBEB),
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: const Color(0xFFFDE68A), width: 1.5),
+              Container(
+                padding: const EdgeInsets.all(18),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFFFBEB),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: const Color(0xFFFDE68A),
+                    width: 1.5,
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        const Text('☕️', style: TextStyle(fontSize: 22)),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Support the developer',
+                          style: GoogleFonts.plusJakartaSans(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w800,
+                            color: const Color(0xFF92400E),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      "I've built and maintain PediAid on my own — all the "
+                      "coding, the servers, the databases, the domain, the "
+                      "email infrastructure. It's free for every user and "
+                      "always will be, but servers cost money every month to "
+                      "keep running. If PediAid has saved you time on a "
+                      "shift, consider supporting the developer — it directly "
+                      "helps keep the app live and growing.",
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 12.5,
+                        height: 1.55,
+                        color: const Color(0xFF78350F),
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+                    SizedBox(
+                      width: double.infinity,
+                      child: FilledButton.icon(
+                        onPressed: () => _openSupport(context),
+                        style: FilledButton.styleFrom(
+                          backgroundColor: const Color(0xFFF59E0B),
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                        ),
+                        icon: const Icon(Icons.favorite_rounded, size: 16),
+                        label: Text(
+                          'Support the developer',
+                          style: GoogleFonts.plusJakartaSans(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Opens bridgr.co.in in your browser.',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 10.5,
+                        color: const Color(0xFF92400E).withValues(alpha: 0.7),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      const Text('☕️', style: TextStyle(fontSize: 22)),
-                      const SizedBox(width: 8),
-                      Text(
-                        'Support the developer',
-                        style: GoogleFonts.plusJakartaSans(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w800,
-                          color: const Color(0xFF92400E),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    "I've built and maintain PediAid on my own — all the "
-                    "coding, the servers, the databases, the domain, the "
-                    "email infrastructure. It's free for every user and "
-                    "always will be, but servers cost money every month to "
-                    "keep running. If PediAid has saved you time on a "
-                    "shift, consider supporting the developer — it directly "
-                    "helps keep the app live and growing.",
-                    style: GoogleFonts.plusJakartaSans(
-                      fontSize: 12.5,
-                      height: 1.55,
-                      color: const Color(0xFF78350F),
-                    ),
-                  ),
-                  const SizedBox(height: 14),
-                  SizedBox(
-                    width: double.infinity,
-                    child: FilledButton.icon(
-                      onPressed: () => _openSupport(context),
-                      style: FilledButton.styleFrom(
-                        backgroundColor: const Color(0xFFF59E0B),
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(14),
-                        ),
-                      ),
-                      icon: const Icon(Icons.favorite_rounded, size: 16),
-                      label: Text(
-                        'Support the developer',
-                        style: GoogleFonts.plusJakartaSans(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Opens bridgr.co.in in your browser.',
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.plusJakartaSans(
-                      fontSize: 10.5,
-                      color: const Color(0xFF92400E).withValues(alpha: 0.7),
-                    ),
-                  ),
-                ],
-              ),
-            ),
 
             const SizedBox(height: 16),
 
@@ -558,7 +576,9 @@ class AboutScreen extends StatelessWidget {
                   color: const Color(0xFFEFF6FF),
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                      color: const Color(0xFFBFDBFE), width: 1.5),
+                    color: const Color(0xFFBFDBFE),
+                    width: 1.5,
+                  ),
                 ),
                 child: Row(
                   children: [
@@ -569,8 +589,11 @@ class AboutScreen extends StatelessWidget {
                         color: Color(0xFF1D4ED8),
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.language_rounded,
-                          color: Colors.white, size: 22),
+                      child: const Icon(
+                        Icons.language_rounded,
+                        color: Colors.white,
+                        size: 22,
+                      ),
                     ),
                     const SizedBox(width: 14),
                     Expanded(
@@ -590,15 +613,19 @@ class AboutScreen extends StatelessWidget {
                             'bridgr.co.in — the home of all my projects',
                             style: GoogleFonts.plusJakartaSans(
                               fontSize: 12,
-                              color: const Color(0xFF1E40AF)
-                                  .withValues(alpha: 0.75),
+                              color: const Color(
+                                0xFF1E40AF,
+                              ).withValues(alpha: 0.75),
                             ),
                           ),
                         ],
                       ),
                     ),
-                    const Icon(Icons.open_in_new_rounded,
-                        color: Color(0xFF1D4ED8), size: 18),
+                    const Icon(
+                      Icons.open_in_new_rounded,
+                      color: Color(0xFF1D4ED8),
+                      size: 18,
+                    ),
                   ],
                 ),
               ),
@@ -609,7 +636,7 @@ class AboutScreen extends StatelessWidget {
             // ── Footer ──────────────────────────────────────────────────
             Center(
               child: Text(
-                'PediAid v1.0.0',
+                'PediAid v${AppConfigService.instance.currentVersion.isEmpty ? "1.3.0" : AppConfigService.instance.currentVersion}',
                 style: GoogleFonts.plusJakartaSans(
                   fontSize: 11,
                   color: cs.onSurface.withValues(alpha: 0.45),
@@ -631,7 +658,11 @@ class _Reference {
   final String title;
   final String subtitle;
   final String url;
-  const _Reference({required this.title, required this.subtitle, required this.url});
+  const _Reference({
+    required this.title,
+    required this.subtitle,
+    required this.url,
+  });
 }
 
 class _SectionLabel extends StatelessWidget {
@@ -652,4 +683,3 @@ class _SectionLabel extends StatelessWidget {
     );
   }
 }
-

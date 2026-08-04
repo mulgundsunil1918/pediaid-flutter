@@ -52,12 +52,24 @@ class FentonChartWidget extends StatelessWidget {
     final p90s = _spots('p90');
     final p97s = _spots('p97');
 
-    // Y bounds from p3 and p97 extremes
-    final allY = [...p3s.map((s) => s.y), ...p97s.map((s) => s.y)];
+    // Y bounds from the p3/p97 envelope — plus the patient's own value, which
+    // must be included rather than assumed to fall inside it. A baby below P3
+    // or above P97 is precisely the case worth plotting, and leaving it out of
+    // the bounds clipped that dot off the chart entirely.
+    final allY = [
+      ...p3s.map((s) => s.y),
+      ...p97s.map((s) => s.y),
+      if (userValue != null) userValue!,
+    ];
     final rawMin = allY.reduce((a, b) => a < b ? a : b);
     final rawMax = allY.reduce((a, b) => a > b ? a : b);
-    final minY = (rawMin * 0.88).floorToDouble();
-    final maxY = (rawMax * 1.06).ceilToDouble();
+
+    // Snap the bounds outward to whole multiples of the gridline interval so
+    // labels read 1000/2000/3000 rather than 334/1334/2334. The snap is what
+    // provides the breathing room around the curves, so no extra padding.
+    final yStep = _yInterval(rawMax - rawMin);
+    final minY = (rawMin / yStep).floorToDouble() * yStep;
+    final maxY = (rawMax / yStep).ceilToDouble() * yStep;
 
     final gridCol = cs.onSurface.withValues(alpha: isDark ? 0.1 : 0.08);
     final textCol = cs.onSurface.withValues(alpha: 0.5);
@@ -127,7 +139,7 @@ class FentonChartWidget extends StatelessWidget {
                   show: true,
                   drawVerticalLine: true,
                   verticalInterval: 2,
-                  horizontalInterval: _yInterval(minY, maxY),
+                  horizontalInterval: yStep,
                   getDrawingHorizontalLine: (_) =>
                       FlLine(color: gridCol, strokeWidth: 0.7),
                   getDrawingVerticalLine: (_) =>
@@ -152,7 +164,7 @@ class FentonChartWidget extends StatelessWidget {
                     sideTitles: SideTitles(
                       showTitles: true,
                       reservedSize: 40,
-                      interval: _yInterval(minY, maxY),
+                      interval: yStep,
                       getTitlesWidget: (v, meta) => SideTitleWidget(
                         axisSide: meta.axisSide,
                         // Weight data is stored in grams natively now — no
@@ -218,14 +230,50 @@ class FentonChartWidget extends StatelessWidget {
         belowBarData: BarAreaData(show: false),
       );
 
-  double _yInterval(double minY, double maxY) {
-    final r = maxY - minY;
-    if (r <= 1.5) return 0.2;
-    if (r <= 4)   return 0.5;
-    if (r <= 12)  return 1.0;
-    if (r <= 25)  return 2.0;
-    return 5.0;
+  double _yInterval(double range) => fentonYInterval(range);
+}
+
+// ── Y-axis scaling ────────────────────────────────────────────────────────────
+
+const int _kTargetTicks = 6;
+
+/// Gridline/label spacing yielding roughly [_kTargetTicks] labels at any scale,
+/// rounded to a readable 1/2/5 x 10^n step.
+///
+/// This was previously a ladder of hard-coded bands ending in `return 5.0`,
+/// which silently assumed weight was in kilograms (range ~5). Weight is now
+/// stored in grams, so a ~6800-unit range fell off the end of the ladder and
+/// got a 5-unit interval — ~1465 labels drawn on top of each other and as many
+/// gridlines, which is what turned the Y axis into a black smear and the plot
+/// area solid grey. Length and head circumference are still in cm and so were
+/// never affected, which is why only the weight chart looked broken.
+///
+/// Deriving the step from the range instead of matching it against fixed
+/// thresholds means this cannot break again if a unit changes.
+///
+/// Top-level rather than a private method so it can be tested directly — the
+/// failure was arithmetic, and arithmetic is cheap to pin down.
+double fentonYInterval(double range) {
+  if (range <= 0 || !range.isFinite) return 1;
+  final rough = range / _kTargetTicks;
+  // Largest power of ten at or below `rough`, by repeated scaling — avoids
+  // pulling in dart:math for a single logarithm.
+  var magnitude = 1.0;
+  while (magnitude * 10 <= rough) {
+    magnitude *= 10;
   }
+  while (magnitude > rough && magnitude > 1e-6) {
+    magnitude /= 10;
+  }
+  final normalised = rough / magnitude;
+  final step = normalised < 1.5
+      ? 1.0
+      : normalised < 3
+          ? 2.0
+          : normalised < 7
+              ? 5.0
+              : 10.0;
+  return step * magnitude;
 }
 
 // ── Legend ────────────────────────────────────────────────────────────────────

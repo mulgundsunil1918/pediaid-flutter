@@ -34,6 +34,8 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:package_info_plus/package_info_plus.dart';
 
+import 'auth_service.dart';
+
 class AppConfig {
   const AppConfig({
     this.minVersion,
@@ -90,7 +92,15 @@ class AppConfigService {
   AppConfigService._();
   static final AppConfigService instance = AppConfigService._();
 
-  static const _url = 'https://pediaid.bridgr.co.in/app-config.json';
+  /// The live source, editable from the admin dashboard's App control page.
+  static const _apiUrl = '${AuthService.apiBase}/api/app-config';
+
+  /// Static fallback, edited by hand and deployed with the site.
+  ///
+  /// Kept because the API is on a free tier that sleeps: during an incident it
+  /// can be the slowest thing in the system, or down — and "the backend is
+  /// down" is itself something worth being able to announce.
+  static const _staticUrl = 'https://pediaid.bridgr.co.in/app-config.json';
 
   AppConfig _config = AppConfig.empty;
   AppConfig get config => _config;
@@ -117,20 +127,31 @@ class AppConfigService {
       // levers still work.
     }
 
+    // API first so the dashboard lever takes effect immediately, then the
+    // static file. Whichever answers first wins; if neither does, _config
+    // stays empty, which means "nothing is wrong" — the safe default, since a
+    // safety switch that bricks the app when the network is down would do more
+    // harm than the rare bad release it exists for. See the header.
+    for (final url in const [_apiUrl, _staticUrl]) {
+      if (await _tryLoad(url)) return;
+    }
+  }
+
+  Future<bool> _tryLoad(String url) async {
     try {
       final res = await http
           // Cache-busted: a stale copy of the very file used to announce an
           // emergency would defeat the purpose.
-          .get(Uri.parse('$_url?t=${DateTime.now().millisecondsSinceEpoch}'))
+          .get(Uri.parse('$url?t=${DateTime.now().millisecondsSinceEpoch}'))
           .timeout(const Duration(seconds: 4));
-      if (res.statusCode != 200) return;
+      if (res.statusCode != 200) return false;
       final decoded = jsonDecode(res.body);
-      if (decoded is Map<String, dynamic>) {
-        _config = AppConfig.fromJson(decoded);
-      }
+      if (decoded is! Map<String, dynamic>) return false;
+      _config = AppConfig.fromJson(decoded);
+      return true;
     } catch (_) {
-      // Offline, slow, 404, malformed — all leave _config at empty, which
-      // means "nothing is wrong", which is the safe default. See the header.
+      // Offline, slow, 404, malformed — fall through to the next source.
+      return false;
     }
   }
 }

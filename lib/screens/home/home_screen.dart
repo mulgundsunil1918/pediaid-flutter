@@ -62,6 +62,7 @@ import '../../utils/support_contact.dart';
 import '../submissions/my_submissions_screen.dart';
 import '../guides/developmental_milestones/dev_milestones_hub.dart';
 import '../guides/developmental_milestones/tdsc/tdsc_assistant_screen.dart';
+import '../../services/app_config_service.dart';
 
 // ── All available quick-access items ─────────────────────────────────────────
 
@@ -1774,7 +1775,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Padding(
             padding: const EdgeInsets.all(16),
             child: Text(
-              'PediAid v1.0.0',
+              'PediAid v${AppConfigService.instance.currentVersion.isEmpty ? "1.3.0" : AppConfigService.instance.currentVersion}',
               style: GoogleFonts.plusJakartaSans(
                 fontSize: 11,
                 color: cs.onSurface.withValues(alpha: 0.4),

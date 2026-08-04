@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "11076606207",
+    "project_id": "pediaid-app",
+    "storage_bucket": "pediaid-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:11076606207:android:5c369fa248f512acf2d4ca",
+        "android_client_info": {
+          "package_name": "com.pediaid.pediaid"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "11076606207-2m94l95sgphnc1hgq9r54ee1qotf00tc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pediaid.pediaid",
+            "certificate_hash": "aa29eb0ceb443cc19469f150410ca02f139e32aa"
+          }
+        },
+        {
+          "client_id": "11076606207-iei511qb9lk40chn3ac658eotb1e0flj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pediaid.pediaid",
+            "certificate_hash": "33460d6dff15aeb904dbcaba74e027e50a4c7077"
+          }
+        },
+        {
+          "client_id": "11076606207-02kg8ensf5br3gk3lkhfcuv6hghpacu6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDkp_wuDLoqCgg6MG93l4vz_5vsexh3DF8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "11076606207-02kg8ensf5br3gk3lkhfcuv6hghpacu6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

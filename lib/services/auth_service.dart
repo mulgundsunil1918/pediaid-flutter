@@ -35,6 +35,10 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+// Circular with push_service.dart (it reads apiBase/accessToken from here).
+// Safe: both sides are lazy singletons, so nothing runs at import time.
+import 'push_service.dart';
+
 // ---------------------------------------------------------------------------
 // Simple user model — only the fields the Flutter app actually displays.
 // ---------------------------------------------------------------------------
@@ -498,6 +502,12 @@ class AuthService extends ChangeNotifier {
       refresh: refresh,
       userJsonStr: jsonEncode(userJson),
     );
+
+    // Bind this device's push token to the account now that there is one.
+    // Registration otherwise happens once at startup while signed out, leaving
+    // personal notifications with no destination. Fire-and-forget: push is an
+    // enhancement and must never delay or fail a sign-in.
+    unawaited(PushService.instance.onSignedIn());
 
     notifyListeners();
   }

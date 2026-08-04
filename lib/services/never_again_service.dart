@@ -7,6 +7,7 @@
 // resonating, and flagging.
 // =============================================================================
 
+import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -264,29 +265,67 @@ class NeverAgainService {
     String? role,
     String? email,
   }) async {
-    final res = await http
-        .post(
-          Uri.parse('$_apiBase/api/never-again'),
-          headers: const {'Content-Type': 'application/json'},
-          body: jsonEncode({
-            'what_happened': whatHappened,
-            'what_went_wrong': whatWentWrong,
-            'the_lesson': theLesson,
-            'category': category,
-            'role': role,
-            'device_id': deviceId,
-            if (email != null && email.trim().isNotEmpty) 'email': email.trim(),
-          }),
-        )
-        .timeout(const Duration(seconds: 20));
+    final http.Response res;
+    try {
+      res = await http
+          .post(
+            Uri.parse('$_apiBase/api/never-again'),
+            headers: const {'Content-Type': 'application/json'},
+            body: jsonEncode({
+              'what_happened': whatHappened,
+              'what_went_wrong': whatWentWrong,
+              'the_lesson': theLesson,
+              'category': category,
+              'role': role,
+              'device_id': deviceId,
+              if (email != null && email.trim().isNotEmpty)
+                'email': email.trim(),
+            }),
+          )
+          // The backend sleeps on its free tier and a cold start can take most
+          // of a minute. The old 20s budget expired during that wake-up and the
+          // post was lost, which is the worst outcome here — someone has just
+          // written up a mistake they made, and being told to try again is how
+          // you ensure they don't.
+          .timeout(const Duration(seconds: 60));
+    } on TimeoutException {
+      throw Exception(
+        'The server is taking too long to respond — it may be waking up. '
+        'Your text is still here; please try again in a moment.',
+      );
+    } catch (_) {
+      throw Exception(
+        'Could not reach the server. Check your connection and try again — '
+        'your text is still here.',
+      );
+    }
+
+    if (res.statusCode == 201) return;
 
     if (res.statusCode == 429) {
       throw Exception("You've reached today's posting limit.");
     }
-    if (res.statusCode != 201) {
-      final body = jsonDecode(res.body) as Map<String, dynamic>;
-      throw Exception(body['message'] ?? 'Failed to submit post.');
+
+    // Read the server's explanation defensively. A gateway or cold-start error
+    // returns an HTML page, and jsonDecode throws on it — that exception used
+    // to escape as a bare failure, hiding both the real reason and the fact
+    // that the problem was temporary.
+    String? message;
+    try {
+      final decoded = jsonDecode(res.body);
+      if (decoded is Map<String, dynamic>) message = decoded['message'] as String?;
+    } catch (_) {
+      // Not JSON — fall through to the status-based message below.
     }
+
+    if (message != null && message.isNotEmpty) throw Exception(message);
+    if (res.statusCode >= 500) {
+      throw Exception(
+        'The server had a problem saving this (error ${res.statusCode}). '
+        'Your text is still here — please try again shortly.',
+      );
+    }
+    throw Exception('Could not submit this post (error ${res.statusCode}).');
   }
 
   // -------------------------------------------------------------------------

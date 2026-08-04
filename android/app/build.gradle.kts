@@ -40,8 +40,16 @@ android {
         applicationId = "com.pediaid.pediaid"
         // minSdk inherited from Flutter SDK default (covers >99% of devices).
         minSdk = flutter.minSdkVersion
-        // Play Store 2026 deadline: targetSdk 35.
-        targetSdk = 35
+        // Play Store requires targetSdk 36 for any update published after
+        // 31 Aug 2026 — below that the upload is rejected outright, which
+        // would also block shipping an urgent clinical fix.
+        //
+        // Safe here because the app already satisfies both of API 36's
+        // breaking behaviour changes: it opts into edge-to-edge itself
+        // (main.dart) rather than relying on the opt-out flag 36 removes,
+        // and it never restricts orientation, so 36 ignoring those
+        // restrictions on large screens changes nothing.
+        targetSdk = 36
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }

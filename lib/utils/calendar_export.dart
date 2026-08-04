@@ -87,7 +87,9 @@ String buildIcs({
 }) {
   // An end at or before the start makes some clients drop the event outright;
   // an hour is a safer assumption than a zero-length appointment.
-  final end = endsAt.isAfter(startsAt) ? endsAt : startsAt.add(const Duration(hours: 1));
+  final end = endsAt.isAfter(startsAt)
+      ? endsAt
+      : startsAt.add(const Duration(hours: 1));
 
   final lines = <String>[
     'BEGIN:VCALENDAR',
@@ -119,11 +121,109 @@ String buildIcs({
   return '${lines.join('\r\n')}\r\n';
 }
 
+/// Direct insert into the device calendar — not currently available.
+///
+/// Returns false everywhere, so callers fall through to the pre-filled Google
+/// Calendar link or the .ics file.
+///
+/// The obvious package for this (add_2_calendar) cannot be used: its own Gradle
+/// script calls APIs that are hard errors under the Gradle 8.14 / AGP 8.11
+/// toolchain that targetSdk 36 requires, so adding it fails the Android build
+/// outright. Doing this properly means a small platform channel — an
+/// ACTION_INSERT intent on Android, EventKit on iOS — rather than a dependency
+/// that pins the build to an old toolchain. Kept as a seam so that change is
+/// local to this function.
+Future<bool> addToDeviceCalendar({
+  required String title,
+  required DateTime startsAt,
+  required DateTime endsAt,
+  String? description,
+  String? location,
+}) async => false;
+
+/// Builds a Google Calendar "create event" link.
+///
+/// This exists because handing a browser a `data:text/calendar` URL makes it
+/// *download a file*, which is not what someone who tapped "Add to calendar"
+/// wanted — they then have to find the download and open it. This link instead
+/// opens the event already filled in, one Save away.
+///
+/// On Android the Google Calendar app claims this URL, so the app's own event
+/// editor opens rather than a browser. That is the closest thing to a direct
+/// insert available without native calendar permissions.
+///
+/// Times go out in UTC (the trailing Z), which is unambiguous: Google renders
+/// them in the viewer's own timezone, so an 09:00 IST event reads as 09:00 for
+/// a doctor in India without us declaring a timezone at all.
+String buildGoogleCalendarUrl({
+  required String title,
+  required DateTime startsAt,
+  required DateTime endsAt,
+  String? description,
+  String? location,
+  String? url,
+}) {
+  // Mirrors the .ics fallback: a non-positive duration becomes one hour rather
+  // than an event that ends before it starts.
+  final end = endsAt.isAfter(startsAt)
+      ? endsAt
+      : startsAt.add(const Duration(hours: 1));
+
+  final details = [
+    if (description != null && description.trim().isNotEmpty)
+      description.trim(),
+    if (url != null && url.trim().isNotEmpty) url.trim(),
+  ].join('\n\n');
+
+  return Uri.https('calendar.google.com', '/calendar/render', {
+    'action': 'TEMPLATE',
+    'text': title,
+    'dates': '${_utc(startsAt)}/${_utc(end)}',
+    if (details.isNotEmpty) 'details': details,
+    if (location != null && location.trim().isNotEmpty)
+      'location': location.trim(),
+  }).toString();
+}
+
+/// Opens the event pre-filled in Google Calendar (its app on Android, the web
+/// UI elsewhere). Returns false if no handler could be launched, so the caller
+/// can fall back to the .ics file.
+Future<bool> addToGoogleCalendar({
+  required String title,
+  required DateTime startsAt,
+  required DateTime endsAt,
+  String? description,
+  String? location,
+  String? url,
+}) async {
+  final uri = Uri.parse(
+    buildGoogleCalendarUrl(
+      title: title,
+      startsAt: startsAt,
+      endsAt: endsAt,
+      description: description,
+      location: location,
+      url: url,
+    ),
+  );
+  try {
+    return await launchUrl(
+      uri,
+      mode: kIsWeb
+          ? LaunchMode.platformDefault
+          : LaunchMode.externalApplication,
+      webOnlyWindowName: kIsWeb ? '_blank' : null,
+    );
+  } catch (_) {
+    return false;
+  }
+}
+
 /// Hands the .ics to the platform so the user can save it.
 ///
-/// Web downloads it, which every desktop and mobile browser then opens in the
-/// default calendar. Native shares the file, letting the OS offer whichever
-/// calendar apps are installed rather than us guessing.
+/// The fallback path, for Apple Calendar and Outlook users. Native shares the
+/// file, letting the OS offer whichever calendar apps are installed rather than
+/// us guessing.
 Future<void> addToCalendar({
   required String uid,
   required String title,
@@ -157,8 +257,7 @@ Future<void> addToCalendar({
   final dir = await getTemporaryDirectory();
   final file = File('${dir.path}/$safeName');
   await file.writeAsString(ics);
-  await Share.shareXFiles(
-    [XFile(file.path, mimeType: 'text/calendar')],
-    subject: title,
-  );
+  await Share.shareXFiles([
+    XFile(file.path, mimeType: 'text/calendar'),
+  ], subject: title);
 }

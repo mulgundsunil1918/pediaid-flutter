@@ -41,6 +41,22 @@ class PushService {
 
   bool _initialized = false;
 
+  /// The device's current FCM token, kept so it can be re-sent once the user
+  /// signs in.
+  String? _token;
+
+  /// Re-registers this device against the account that just signed in.
+  ///
+  /// init() runs at startup, usually while signed out, so the token gets stored
+  /// with no user attached and personal notifications have no destination. FCM
+  /// only fires onTokenRefresh when the token itself changes — signing in is
+  /// not such an event — so without this call the binding never happens for
+  /// anyone who logs in after launch, which is nearly everyone.
+  Future<void> onSignedIn() async {
+    final t = _token;
+    if (t != null) await _registerTokenWithBackend(t);
+  }
+
   static bool get _supported =>
       kIsWeb || defaultTargetPlatform == TargetPlatform.android;
 
@@ -72,13 +88,30 @@ class PushService {
       final settings = await messaging.requestPermission();
       if (settings.authorizationStatus == AuthorizationStatus.denied) return;
 
-      if (kIsWeb) {
-        final token = await messaging.getToken(vapidKey: _webVapidKey);
-        if (token == null) return;
+      // Every platform needs its token registered, not just web.
+      //
+      // Android previously only subscribed to the broadcast topic here. Topics
+      // deliver announcements to everyone, but a personal notification ("your
+      // event was approved") is addressed to one user's tokens — so with no row
+      // in acad_push_tokens the backend had nobody to send to and silently sent
+      // nothing. The in-app bell still worked, because that reads a database
+      // row, which is what made the gap look like a delivery problem rather
+      // than a registration one.
+      final token = await messaging.getToken(
+        vapidKey: kIsWeb ? _webVapidKey : null,
+      );
+      if (token != null) {
+        _token = token;
         await _registerTokenWithBackend(token);
-        messaging.onTokenRefresh.listen(_registerTokenWithBackend);
-      } else {
-        // Android supports client-side topic subscription directly.
+      }
+      messaging.onTokenRefresh.listen((t) {
+        _token = t;
+        _registerTokenWithBackend(t);
+      });
+
+      if (!kIsWeb) {
+        // Still subscribe to the topic — that is the broadcast channel, and it
+        // is separate from per-user delivery rather than a substitute for it.
         await messaging.subscribeToTopic('all_users');
       }
 

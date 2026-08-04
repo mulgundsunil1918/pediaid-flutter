@@ -1183,14 +1183,31 @@ class _SubmitSheetState extends State<_SubmitSheet> {
         widget.onRateLimit();
         return;
       }
-      // Other errors
+      // Show what the server actually said.
+      //
+      // This used to be a flat "Something went wrong. Please try again.", which
+      // is the worst possible response to a validation failure: the server had
+      // already explained the problem ("what_happened exceeds 500 character
+      // limit"), the fix was one edit away, and the message threw that away —
+      // so retrying unchanged failed identically, forever, with the writing
+      // still sitting in the form.
       if (!mounted) return;
       setState(() => _submitting = false);
+      final reason = e
+          .toString()
+          .replaceFirst('Exception: ', '')
+          // Field names are the API's, not words a user should have to read.
+          .replaceAll('what_happened', 'What happened')
+          .replaceAll('what_went_wrong', 'What went wrong')
+          .replaceAll('the_lesson', 'The lesson');
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Something went wrong. Please try again.'),
+        SnackBar(
+          content: Text(
+            reason.isEmpty ? 'Something went wrong. Please try again.' : reason,
+          ),
           behavior: SnackBarBehavior.floating,
-          backgroundColor: Color(0xFFC62828),
+          backgroundColor: const Color(0xFFC62828),
+          duration: const Duration(seconds: 6),
         ),
       );
     }
