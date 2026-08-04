@@ -192,6 +192,48 @@
     For more details:
     * https://docs.flutter.dev/platform-integration/web/initialization
   -->
+  <!-- =====================================================================
+       Notice a new deploy without waiting for a cache to expire.
+
+       GitHub Pages serves this file with a fixed Cache-Control: max-age=600
+       that we cannot change, so after a deploy a browser can keep running a
+       ten-minute-old app. The deploy looks like it did nothing, and the only
+       advice available is "wait, or hard-refresh" — not something to tell
+       real users.
+
+       The escape is a request the HTTP cache cannot answer: cache:'no-store'
+       refuses to involve it at all (unlike no-cache, which still revalidates
+       through it), and the timestamp defeats any CDN edge. 2026-08-04T08:25:12Z is
+       stamped into this file at deploy time, so comparing it to the deployed
+       version.json says whether THIS html is stale — which sessionStorage
+       alone could never tell us on a first load.
+
+       Guarded so it can only ever reload once per build id, and every failure
+       path is silent: this is an enhancement and must never stop the app
+       booting.
+       ================================================================== -->
+  <script>
+    (function () {
+      var MINE = '2026-08-04T08:25:12Z';
+      if (MINE.indexOf('BUILD_ID') !== -1) return; // not stamped (local dev)
+      var KEY = 'pediaid_app_reloaded_for';
+      try {
+        fetch('version.json?t=' + Date.now(), { cache: 'no-store' })
+          .then(function (r) { return r.ok ? r.json() : null; })
+          .then(function (v) {
+            if (!v || !v.buildId || v.buildId === MINE) return;
+            if (sessionStorage.getItem(KEY) === v.buildId) return;
+            sessionStorage.setItem(KEY, v.buildId);
+            // New URL each time, so the cached html cannot answer it.
+            window.location.replace(
+              window.location.pathname + '?v=' + encodeURIComponent(v.buildId)
+            );
+          })
+          .catch(function () {});
+      } catch (e) {}
+    })();
+  </script>
+
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>
