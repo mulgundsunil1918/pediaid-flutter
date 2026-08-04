@@ -233,6 +233,112 @@ class AboutScreen extends StatelessWidget {
 
             const SizedBox(height: 24),
 
+            // ── Contributors ─────────────────────────────────────────────
+            // People who materially shaped the app beyond writing code —
+            // clinical review of modules, verification of doses and content.
+            _SectionLabel(label: 'Contributors', color: cs.primary),
+            const SizedBox(height: 10),
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: cs.surfaceContainerHighest,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: cs.outlineVariant),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 32,
+                        backgroundColor: cs.primary,
+                        child: Icon(
+                          Icons.verified_rounded,
+                          size: 30,
+                          color: cs.onPrimary,
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Dr. Raj Bhojwani',
+                              style: GoogleFonts.plusJakartaSans(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w800,
+                                color: cs.onSurface,
+                                height: 1.15,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'MBBS · MD (Paediatrics) · Superspeciality in Neonatology (in training) · Sonography · Diploma in Allergy',
+                              style: GoogleFonts.plusJakartaSans(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: cs.primary,
+                                height: 1.35,
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              'Paediatrician · Hyderabad · Contributor & module reviewer',
+                              style: GoogleFonts.plusJakartaSans(
+                                fontSize: 11.5,
+                                color: cs.onSurface.withValues(alpha: 0.7),
+                                height: 1.3,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    "I'm a paediatrician and budding neonatologist practising "
+                    "in Hyderabad. I hold MBBS and MD (Paediatrics) degrees, "
+                    "and am currently pursuing a superspeciality in "
+                    "Neonatology, along with training in Sonography and a "
+                    "Diploma in Allergy.",
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 14,
+                      height: 1.65,
+                      color: cs.onSurface,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    "I strongly believe that a little compassion heals the "
+                    "patient faster. I try to combine clinical precision with "
+                    "a warm, patient-centred approach — treating not just "
+                    "the illness, but the child and family behind it.",
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 14,
+                      height: 1.65,
+                      color: cs.onSurface,
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                  Text(
+                    'Dr. Bhojwani has reviewed and verified content across '
+                    'multiple PediAid modules.',
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 12.5,
+                      height: 1.5,
+                      fontStyle: FontStyle.italic,
+                      color: cs.onSurface.withValues(alpha: 0.7),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 24),
+
             // ── Educational Disclaimer ───────────────────────────────────
             _SectionLabel(label: 'Disclaimer', color: const Color(0xFF92400E)),
             const SizedBox(height: 10),
