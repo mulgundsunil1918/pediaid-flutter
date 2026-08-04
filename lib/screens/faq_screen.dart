@@ -193,17 +193,18 @@ class FaqScreen extends StatelessWidget {
     _QA(
       question: 'How do I create an account?',
       answer:
-          'Login is currently disabled in this build for testing. When '
-          'it\'s re-enabled: Sign in screen → Create account, valid '
-          'email + 8-character password, you\'ll get a verification '
-          'email (check spam if it doesn\'t arrive in 5 minutes).',
+          'There is no separate sign-up. Tap Sign in and choose Continue '
+          'with Google, or Continue with Apple on an iPhone or iPad — your '
+          'account is created the first time you do. Nothing to fill in, '
+          'and no verification email to wait for.',
     ),
     _QA(
       question: 'I forgot my password.',
       answer:
-          'When account login is enabled: Sign in → Forgot password → '
-          'enter your email. You\'ll get a reset link valid for 1 hour. '
-          'If the email doesn\'t arrive, check spam.',
+          'PediAid has no password to forget. You sign in with your Google '
+          'or Apple account, so those handle security and recovery. If you '
+          'cannot get into that account, recover it with Google or Apple '
+          'first and PediAid will let you straight back in.',
     ),
     _QA(
       question: 'How do I sign out / delete my account?',

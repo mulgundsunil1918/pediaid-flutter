@@ -85,39 +85,6 @@ class FirebaseAuthService {
 
   // ── Email / password ──────────────────────────────────────────────────────
 
-  Future<AppUser?> signIn(String email, String password) async {
-    final cred = await _auth.signInWithEmailAndPassword(
-      email: email.trim(),
-      password: password,
-    );
-    return _fetchUser(cred.user?.uid);
-  }
-
-  Future<AppUser?> registerUser({
-    required String name,
-    required String email,
-    required String password,
-  }) async {
-    final cred = await _auth.createUserWithEmailAndPassword(
-      email: email.trim(),
-      password: password,
-    );
-    final user = cred.user;
-    if (user == null) return null;
-
-    await user.updateDisplayName(name.trim());
-
-    await _users.doc(user.uid).set({
-      'name': name.trim(),
-      'email': email.trim(),
-      'role': 'doctor',
-      'avatarUrl': null,
-      'createdAt': Timestamp.fromDate(DateTime.now()),
-    });
-
-    return _fetchUser(user.uid);
-  }
-
   // ── Google ─────────────────────────────────────────────────────────────────
 
   Future<AppUser?> signInWithGoogle() async {
@@ -230,10 +197,6 @@ class FirebaseAuthService {
   }
 
   // ── Password reset ─────────────────────────────────────────────────────────
-
-  Future<void> sendPasswordReset(String email) async {
-    await _auth.sendPasswordResetEmail(email: email.trim());
-  }
 
   // ── Profile update ─────────────────────────────────────────────────────────
 

@@ -84,44 +84,6 @@ class AuthProvider extends ChangeNotifier {
 
   // ── Email / password ──────────────────────────────────────────────────────
 
-  Future<bool> signIn(String email, String password) async {
-    _error = null;
-    _setLoading(true);
-    try {
-      _currentUser = await _service.signIn(email, password);
-      if (_currentUser != null) await _bridgeLegacySession(_currentUser!);
-      _setLoading(false);
-      return _currentUser != null;
-    } catch (e) {
-      _error = friendlyError(e);
-      _setLoading(false);
-      return false;
-    }
-  }
-
-  Future<bool> register({
-    required String name,
-    required String email,
-    required String password,
-  }) async {
-    _error = null;
-    _setLoading(true);
-    try {
-      _currentUser = await _service.registerUser(
-        name: name,
-        email: email,
-        password: password,
-      );
-      if (_currentUser != null) await _bridgeLegacySession(_currentUser!);
-      _setLoading(false);
-      return _currentUser != null;
-    } catch (e) {
-      _error = friendlyError(e);
-      _setLoading(false);
-      return false;
-    }
-  }
-
   // ── Social ────────────────────────────────────────────────────────────────
 
   Future<bool> signInWithGoogle() async {
@@ -173,10 +135,6 @@ class AuthProvider extends ChangeNotifier {
   }
 
   // ── Password reset ────────────────────────────────────────────────────────
-
-  Future<void> sendPasswordReset(String email) async {
-    await _service.sendPasswordReset(email);
-  }
 
   // ── Profile ───────────────────────────────────────────────────────────────
 
