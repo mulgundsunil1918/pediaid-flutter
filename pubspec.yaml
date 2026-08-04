@@ -48,6 +48,9 @@ dependencies:
   url_launcher: ^6.3.0
   # Unified PediAid auth (shared with the React academics app):
   http: ^1.2.0
+  # Standalone-mode detection for the install prompt. dart:html is
+  # deprecated on Dart 3.x; package:web is its sanctioned replacement.
+  web: ^1.1.0
   flutter_secure_storage: ^9.2.2
 
   # Production-ready layer (added 2026-05-02):

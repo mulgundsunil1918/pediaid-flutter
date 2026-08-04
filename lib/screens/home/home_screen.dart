@@ -9,6 +9,7 @@ import '../../theme/theme_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../utils/prefs_keys.dart';
 import '../../widgets/notification_bell.dart';
+import '../../widgets/install_prompt.dart';
 import '../calculators/calculators_screen.dart';
 import '../calculators/gir_calculator.dart';
 import '../calculators/blood_gas_analyser.dart';
@@ -68,49 +69,75 @@ const _kPrefKey = 'quick_access_keys';
 
 const List<_ChipDef> _allChips = [
   // Calculators
-  _ChipDef('gir',        'GIR Calc',        Icons.water_drop_rounded),
-  _ChipDef('gas',        'Blood Gas',       Icons.air_rounded),
-  _ChipDef('tpn',        'TPN',             Icons.medical_services_rounded),
-  _ChipDef('cga',        'CGA / PMA',       Icons.calendar_month_rounded),
-  _ChipDef('ponderal',   'Ponderal',        Icons.child_care_rounded),
-  _ChipDef('mph',        'Mid-Parental Ht', Icons.height_rounded),
-  _ChipDef('bsa',        'BSA',             Icons.person_rounded),
-  _ChipDef('bp',         'BP Calc',         Icons.favorite_rounded),
-  _ChipDef('neobp',      'Neonatal BP',     Icons.monitor_heart_rounded),
-  _ChipDef('bili',       'Bili Tool',       Icons.opacity_rounded),
-  _ChipDef('fluid',      'Maint. Fluid',    Icons.water_rounded),
-  _ChipDef('burn',       'Burn Mortality',  Icons.local_fire_department_rounded),
-  _ChipDef('parkland',   'Parkland',        Icons.whatshot_rounded),
-  _ChipDef('lund',       'Lund-Browder',    Icons.accessibility_new_rounded),
-  _ChipDef('pet',        'PET Calc',        Icons.science_rounded),
-  _ChipDef('egfr',       'Schwartz eGFR',   Icons.bloodtype_rounded),
-  _ChipDef('ga',         'GA Calc',         Icons.date_range_rounded),
-  _ChipDef('vent',       'Ventilator',      Icons.air_rounded),
-  _ChipDef('nutri',      'Nutri Audit',     Icons.restaurant_rounded),
-  _ChipDef('dve',        'DVE',             Icons.sync_alt_rounded),
-  _ChipDef('allcalc',    'All Calculators', Icons.calculate_rounded),
+  _ChipDef('gir', 'GIR Calc', Icons.water_drop_rounded),
+  _ChipDef('gas', 'Blood Gas', Icons.air_rounded),
+  _ChipDef('tpn', 'TPN', Icons.medical_services_rounded),
+  _ChipDef('cga', 'CGA / PMA', Icons.calendar_month_rounded),
+  _ChipDef('ponderal', 'Ponderal', Icons.child_care_rounded),
+  _ChipDef('mph', 'Mid-Parental Ht', Icons.height_rounded),
+  _ChipDef('bsa', 'BSA', Icons.person_rounded),
+  _ChipDef('bp', 'BP Calc', Icons.favorite_rounded),
+  _ChipDef('neobp', 'Neonatal BP', Icons.monitor_heart_rounded),
+  _ChipDef('bili', 'Bili Tool', Icons.opacity_rounded),
+  _ChipDef('fluid', 'Maint. Fluid', Icons.water_rounded),
+  _ChipDef('burn', 'Burn Mortality', Icons.local_fire_department_rounded),
+  _ChipDef('parkland', 'Parkland', Icons.whatshot_rounded),
+  _ChipDef('lund', 'Lund-Browder', Icons.accessibility_new_rounded),
+  _ChipDef('pet', 'PET Calc', Icons.science_rounded),
+  _ChipDef('egfr', 'Schwartz eGFR', Icons.bloodtype_rounded),
+  _ChipDef('ga', 'GA Calc', Icons.date_range_rounded),
+  _ChipDef('vent', 'Ventilator', Icons.air_rounded),
+  _ChipDef('nutri', 'Nutri Audit', Icons.restaurant_rounded),
+  _ChipDef('dve', 'DVE', Icons.sync_alt_rounded),
+  _ChipDef('allcalc', 'All Calculators', Icons.calculate_rounded),
   // Charts
-  _ChipDef('growth',     'Charts',          Icons.show_chart_rounded),
+  _ChipDef('growth', 'Charts', Icons.show_chart_rounded),
   // Developmental
-  _ChipDef('devmile',    'Dev Milestones',  Icons.child_friendly_rounded),
-  _ChipDef('tdsc',       'TDSC',            Icons.assignment_turned_in_outlined),
+  _ChipDef('devmile', 'Dev Milestones', Icons.child_friendly_rounded),
+  _ChipDef('tdsc', 'TDSC', Icons.assignment_turned_in_outlined),
   // References / library
-  _ChipDef('formulary',  'Formulary',       Icons.menu_book_rounded),
-  _ChipDef('labref',     'Lab Reference',   Icons.science_outlined),
-  _ChipDef('guides',     'Guides',          Icons.auto_stories_rounded),
-  _ChipDef('cme',        'CME & Webinars',  Icons.event_available_rounded),
-  _ChipDef('academics',  'Academics',       Icons.school_rounded),
-  _ChipDef('resources',  'Resources',       Icons.download_rounded),
+  _ChipDef('formulary', 'Formulary', Icons.menu_book_rounded),
+  _ChipDef('labref', 'Lab Reference', Icons.science_outlined),
+  _ChipDef('guides', 'Guides', Icons.auto_stories_rounded),
+  _ChipDef('cme', 'CME & Webinars', Icons.event_available_rounded),
+  _ChipDef('academics', 'Academics', Icons.school_rounded),
+  _ChipDef('resources', 'Resources', Icons.download_rounded),
 ];
 
 // All modules surface in Quick Access by default. Users can prune via the
 // Edit sheet — but a fresh install shows everything so the carousel feels
 // full rather than empty.
 const List<String> _kDefaultKeys = [
-  'gir', 'gas', 'tpn', 'cga', 'ponderal', 'mph', 'bsa', 'bp', 'neobp', 'bili',
-  'fluid', 'burn', 'parkland', 'lund', 'pet', 'egfr', 'ga', 'vent',
-  'nutri', 'dve', 'allcalc', 'growth', 'devmile', 'tdsc', 'formulary',
-  'labref', 'guides', 'cme', 'academics', 'resources',
+  'gir',
+  'gas',
+  'tpn',
+  'cga',
+  'ponderal',
+  'mph',
+  'bsa',
+  'bp',
+  'neobp',
+  'bili',
+  'fluid',
+  'burn',
+  'parkland',
+  'lund',
+  'pet',
+  'egfr',
+  'ga',
+  'vent',
+  'nutri',
+  'dve',
+  'allcalc',
+  'growth',
+  'devmile',
+  'tdsc',
+  'formulary',
+  'labref',
+  'guides',
+  'cme',
+  'academics',
+  'resources',
 ];
 
 // ── HomeScreen ────────────────────────────────────────────────────────────────
@@ -137,12 +164,12 @@ class _HomeScreenState extends State<HomeScreen> {
   // Settings → "Replay tutorial" — that handler clears
   // PrefsKeys.interactiveTutorialDone so the next HomeScreen build starts
   // the tour again.
-  final GlobalKey _scDrawerKey      = GlobalKey();
-  final GlobalKey _scSearchKey      = GlobalKey();
+  final GlobalKey _scDrawerKey = GlobalKey();
+  final GlobalKey _scSearchKey = GlobalKey();
   final GlobalKey _scQuickAccessKey = GlobalKey();
   final GlobalKey _scCalculatorsKey = GlobalKey();
-  final GlobalKey _scFormularyKey   = GlobalKey();
-  final GlobalKey _scGuidesKey      = GlobalKey();
+  final GlobalKey _scFormularyKey = GlobalKey();
+  final GlobalKey _scGuidesKey = GlobalKey();
   bool _tutorialAttempted = false;
 
   // Web-only vanity counter — backed by Upstash Redis (not Postgres/Neon),
@@ -160,7 +187,11 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _fetchVisitorCount() async {
     try {
       final res = await http
-          .get(Uri.parse('https://pediaid-backend.onrender.com/api/stats/visits/app'))
+          .get(
+            Uri.parse(
+              'https://pediaid-backend.onrender.com/api/stats/visits/app',
+            ),
+          )
           .timeout(const Duration(seconds: 10));
       if (!mounted || res.statusCode != 200) return;
       final body = jsonDecode(res.body) as Map<String, dynamic>;
@@ -192,18 +223,24 @@ class _HomeScreenState extends State<HomeScreen> {
           _scGuidesKey,
         ]);
       }
-    } catch (_) {/* never block boot for the tour */}
+    } catch (_) {
+      /* never block boot for the tour */
+    }
   }
 
   Future<void> _markTourDone() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool(PrefsKeys.interactiveTutorialDone, true);
-    } catch (_) {/* fine — will retry next launch */}
+    } catch (_) {
+      /* fine — will retry next launch */
+    }
   }
 
   void _onScroll() {
-    final offset = _scrollController.hasClients ? _scrollController.offset : 0.0;
+    final offset = _scrollController.hasClients
+        ? _scrollController.offset
+        : 0.0;
     final clamped = offset < 0 ? 0.0 : offset;
     if (_scrollY.value != clamped) {
       _scrollY.value = clamped;
@@ -254,153 +291,188 @@ class _HomeScreenState extends State<HomeScreen> {
     // Fire the coachmark trigger after the first frame so widget keys are
     // registered with the ShowCaseWidget controller.
     WidgetsBinding.instance.addPostFrameCallback(
-        (_) => _maybeStartTutorial(showcaseCtx));
+      (_) => _maybeStartTutorial(showcaseCtx),
+    );
 
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: Theme.of(showcaseCtx).scaffoldBackgroundColor,
       drawer: _buildDrawer(showcaseCtx, isDark),
-      body: CustomScrollView(
-        controller: _scrollController,
-        slivers: [
-          SliverAppBar(
-            expandedHeight: 0,
-            floating: true,
-            pinned: true,
-            snap: true,
-            elevation: 0,
-            backgroundColor: isDark
-                ? const Color(0xFF022B42)
-                : const Color(0xFF395886),
-            leading: Showcase(
-              key: _scDrawerKey,
-              title: 'Menu',
-              description:
-                  'Settings, Account, About, Admin and Logout all live here.',
-              targetShapeBorder: const CircleBorder(),
-              child: IconButton(
-                icon: const Icon(Icons.menu, color: Colors.white),
-                onPressed: () => _scaffoldKey.currentState?.openDrawer(),
-              ),
-            ),
-            title: const Text(
-              'PediAid',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 22,
-                letterSpacing: 0.3,
-              ),
-            ),
-            actions: [
-              // Support the developer — hidden on iOS (App Store guideline 3.1.1)
-              if (kIsWeb || !Platform.isIOS)
-                IconButton(
-                  tooltip: 'Support the developer',
-                  onPressed: () async {
-                    final uri = Uri.parse(
-                        'https://bridgr.co.in/support?from=pediaid');
-                    try {
-                      await launchUrl(uri,
-                          mode: LaunchMode.externalApplication);
-                    } catch (_) {
-                      if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Couldn't open the link.")),
-                        );
-                      }
-                    }
-                  },
-                  icon: const Icon(
-                    Icons.favorite_rounded,
-                    color: Colors.white,
-                    size: 22,
+      // The install prompt sits above the scroll view rather than inside it,
+      // so it stays put instead of scrolling away before anyone reads it.
+      // It renders nothing on native builds, on desktop, once installed, or
+      // after dismissal — see install_prompt.dart.
+      body: Column(
+        children: [
+          const InstallPrompt(),
+          Expanded(
+            child: CustomScrollView(
+              controller: _scrollController,
+              slivers: [
+                SliverAppBar(
+                  expandedHeight: 0,
+                  floating: true,
+                  pinned: true,
+                  snap: true,
+                  elevation: 0,
+                  backgroundColor: isDark
+                      ? const Color(0xFF022B42)
+                      : const Color(0xFF395886),
+                  leading: Showcase(
+                    key: _scDrawerKey,
+                    title: 'Menu',
+                    description:
+                        'Settings, Account, About, Admin and Logout all live here.',
+                    targetShapeBorder: const CircleBorder(),
+                    child: IconButton(
+                      icon: const Icon(Icons.menu, color: Colors.white),
+                      onPressed: () => _scaffoldKey.currentState?.openDrawer(),
+                    ),
                   ),
-                ),
-              Consumer<ThemeProvider>(
-                builder: (context, themeProvider, _) => IconButton(
-                  onPressed: () => themeProvider.toggleTheme(),
-                  icon: Icon(
-                    themeProvider.isDarkMode ? Icons.light_mode : Icons.dark_mode,
-                    color: Colors.white,
-                    size: 22,
+                  title: const Text(
+                    'PediAid',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 22,
+                      letterSpacing: 0.3,
+                    ),
                   ),
-                ),
-              ),
-              const NotificationBell(),
-              const SizedBox(width: 4),
-            ],
-          ),
-          SliverToBoxAdapter(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                ValueListenableBuilder<double>(
-                  valueListenable: _scrollY,
-                  builder: (context, scrollY, child) {
-                    final progress = (scrollY / _kHeroFadeEnd).clamp(0.0, 1.0);
-                    final opacity = 1.0 - progress;
-                    return IgnorePointer(
-                      ignoring: opacity < 0.1,
-                      child: ClipRect(
-                        child: Align(
-                          alignment: Alignment.topCenter,
-                          heightFactor: (1.0 - progress).clamp(0.0, 1.0),
-                          child: Opacity(
-                            opacity: opacity,
-                            child: Transform.translate(
-                              offset: Offset(0, -40 * progress),
-                              child: child,
-                            ),
-                          ),
+                  actions: [
+                    // Support the developer — hidden on iOS (App Store guideline 3.1.1)
+                    if (kIsWeb || !Platform.isIOS)
+                      IconButton(
+                        tooltip: 'Support the developer',
+                        onPressed: () async {
+                          final uri = Uri.parse(
+                            'https://bridgr.co.in/support?from=pediaid',
+                          );
+                          try {
+                            await launchUrl(
+                              uri,
+                              mode: LaunchMode.externalApplication,
+                            );
+                          } catch (_) {
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text("Couldn't open the link."),
+                                ),
+                              );
+                            }
+                          }
+                        },
+                        icon: const Icon(
+                          Icons.favorite_rounded,
+                          color: Colors.white,
+                          size: 22,
                         ),
                       ),
-                    );
-                  },
-                  child: _buildWelcomeBanner(context, isDark),
+                    Consumer<ThemeProvider>(
+                      builder: (context, themeProvider, _) => IconButton(
+                        onPressed: () => themeProvider.toggleTheme(),
+                        icon: Icon(
+                          themeProvider.isDarkMode
+                              ? Icons.light_mode
+                              : Icons.dark_mode,
+                          color: Colors.white,
+                          size: 22,
+                        ),
+                      ),
+                    ),
+                    const NotificationBell(),
+                    const SizedBox(width: 4),
+                  ],
                 ),
-                LayoutBuilder(
-                  builder: (context, constraints) {
-                    final maxContent = constraints.maxWidth > 700 ? 680.0 : constraints.maxWidth;
-                    return Center(
-                      child: ConstrainedBox(
-                        constraints: BoxConstraints(maxWidth: maxContent),
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(16, 10, 16, 32),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              _buildFeatureGrid(context, isDark, cs),
-                              const SizedBox(height: 24),
-                              // Recents row — only renders when the user
-                              // has actually opened something (RecentsService
-                              // notifier publishes []).
-                              _RecentsRow(
-                                onOpen: (key) => _navigateChip(context, key),
+                SliverToBoxAdapter(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      ValueListenableBuilder<double>(
+                        valueListenable: _scrollY,
+                        builder: (context, scrollY, child) {
+                          final progress = (scrollY / _kHeroFadeEnd).clamp(
+                            0.0,
+                            1.0,
+                          );
+                          final opacity = 1.0 - progress;
+                          return IgnorePointer(
+                            ignoring: opacity < 0.1,
+                            child: ClipRect(
+                              child: Align(
+                                alignment: Alignment.topCenter,
+                                heightFactor: (1.0 - progress).clamp(0.0, 1.0),
+                                child: Opacity(
+                                  opacity: opacity,
+                                  child: Transform.translate(
+                                    offset: Offset(0, -40 * progress),
+                                    child: child,
+                                  ),
+                                ),
                               ),
-                              _buildQuickHeader(context, cs),
-                              const SizedBox(height: 10),
-                              _buildQuickChips(context, cs, isDark),
-                              const SizedBox(height: 24),
-                              _buildDisclaimer(context, cs),
-                              const SizedBox(height: 8),
-                              _buildReferencesLink(context, cs),
-                              const SizedBox(height: 16),
-                              _buildSuggestBanner(context, cs),
-                              // Admin tile disabled while auth is removed for
-                              // testing — was previously gated on
-                              // AuthService.instance.currentUser?.role == 'admin'.
-                            ],
-                          ),
-                        ),
+                            ),
+                          );
+                        },
+                        child: _buildWelcomeBanner(context, isDark),
                       ),
-                    );
-                  },
+                      LayoutBuilder(
+                        builder: (context, constraints) {
+                          final maxContent = constraints.maxWidth > 700
+                              ? 680.0
+                              : constraints.maxWidth;
+                          return Center(
+                            child: ConstrainedBox(
+                              constraints: BoxConstraints(maxWidth: maxContent),
+                              child: Padding(
+                                padding: const EdgeInsets.fromLTRB(
+                                  16,
+                                  10,
+                                  16,
+                                  32,
+                                ),
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    _buildFeatureGrid(context, isDark, cs),
+                                    const SizedBox(height: 24),
+                                    // Recents row — only renders when the user
+                                    // has actually opened something (RecentsService
+                                    // notifier publishes []).
+                                    _RecentsRow(
+                                      onOpen: (key) =>
+                                          _navigateChip(context, key),
+                                    ),
+                                    _buildQuickHeader(context, cs),
+                                    const SizedBox(height: 10),
+                                    _buildQuickChips(context, cs, isDark),
+                                    const SizedBox(height: 24),
+                                    _buildDisclaimer(context, cs),
+                                    const SizedBox(height: 8),
+                                    _buildReferencesLink(context, cs),
+                                    const SizedBox(height: 16),
+                                    _buildSuggestBanner(context, cs),
+                                    // Admin tile disabled while auth is removed for
+                                    // testing — was previously gated on
+                                    // AuthService.instance.currentUser?.role == 'admin'.
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      if (kIsWeb || !Platform.isIOS)
+                        _buildDonationFooter(context, isDark),
+                      if (!kIsWeb && Platform.isIOS)
+                        _buildWebPromoFooter(context),
+                      if (kIsWeb) _buildVisitorCounter(context),
+                      SizedBox(
+                        height: MediaQuery.of(context).padding.bottom + 16,
+                      ),
+                    ],
+                  ),
                 ),
-                if (kIsWeb || !Platform.isIOS) _buildDonationFooter(context, isDark),
-                if (!kIsWeb && Platform.isIOS) _buildWebPromoFooter(context),
-                if (kIsWeb) _buildVisitorCounter(context),
-                SizedBox(height: MediaQuery.of(context).padding.bottom + 16),
               ],
             ),
           ),
@@ -425,9 +497,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Container(
         padding: const EdgeInsets.all(18),
         decoration: BoxDecoration(
-          color: isDark
-              ? const Color(0xFF1E1A12)
-              : const Color(0xFFFFFBEB),
+          color: isDark ? const Color(0xFF1E1A12) : const Color(0xFFFFFBEB),
           borderRadius: BorderRadius.circular(18),
           border: Border.all(
             color: isDark
@@ -465,10 +535,9 @@ class _HomeScreenState extends State<HomeScreen> {
               style: GoogleFonts.plusJakartaSans(
                 fontSize: 12.5,
                 height: 1.55,
-                color: (isDark
-                        ? const Color(0xFFFCD34D)
-                        : const Color(0xFF78350F))
-                    .withValues(alpha: 0.9),
+                color:
+                    (isDark ? const Color(0xFFFCD34D) : const Color(0xFF78350F))
+                        .withValues(alpha: 0.9),
               ),
             ),
             const SizedBox(height: 12),
@@ -484,14 +553,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 onPressed: () async {
-                  final uri = Uri.parse('https://bridgr.co.in/support?from=pediaid');
+                  final uri = Uri.parse(
+                    'https://bridgr.co.in/support?from=pediaid',
+                  );
                   try {
-                    await launchUrl(uri,
-                        mode: LaunchMode.externalApplication);
+                    await launchUrl(uri, mode: LaunchMode.externalApplication);
                   } catch (_) {
                     if (context.mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Couldn't open the link.")),
+                        const SnackBar(
+                          content: Text("Couldn't open the link."),
+                        ),
                       );
                     }
                   }
@@ -512,10 +584,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 'Opens bridgr.co.in — no account needed.',
                 style: GoogleFonts.plusJakartaSans(
                   fontSize: 10,
-                  color: (isDark
-                          ? const Color(0xFFFCD34D)
-                          : const Color(0xFF92400E))
-                      .withValues(alpha: 0.55),
+                  color:
+                      (isDark
+                              ? const Color(0xFFFCD34D)
+                              : const Color(0xFF92400E))
+                          .withValues(alpha: 0.55),
                 ),
               ),
             ),
@@ -526,10 +599,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: GoogleFonts.plusJakartaSans(
                   fontSize: 10,
                   fontStyle: FontStyle.italic,
-                  color: (isDark
-                          ? const Color(0xFFFCD34D)
-                          : const Color(0xFF92400E))
-                      .withValues(alpha: 0.7),
+                  color:
+                      (isDark
+                              ? const Color(0xFFFCD34D)
+                              : const Color(0xFF92400E))
+                          .withValues(alpha: 0.7),
                 ),
               ),
             ),
@@ -604,12 +678,17 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Row(
             children: [
               Container(
-                width: 42, height: 42,
+                width: 42,
+                height: 42,
                 decoration: BoxDecoration(
                   color: cs.primary,
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Icon(Icons.language_rounded, color: Colors.white, size: 22),
+                child: const Icon(
+                  Icons.language_rounded,
+                  color: Colors.white,
+                  size: 22,
+                ),
               ),
               const SizedBox(width: 14),
               Expanded(
@@ -619,7 +698,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     Text(
                       'More features on the Web App',
                       style: GoogleFonts.plusJakartaSans(
-                        fontSize: 13.5, fontWeight: FontWeight.w700,
+                        fontSize: 13.5,
+                        fontWeight: FontWeight.w700,
                         color: cs.onSurface,
                       ),
                     ),
@@ -645,8 +725,10 @@ class _HomeScreenState extends State<HomeScreen> {
   // ── Welcome banner (below AppBar, in scroll body) ────────────────────────
 
   Widget _buildWelcomeBanner(BuildContext context, bool isDark) {
-    final gradStart = isDark ? const Color(0xFF1A2744) : const Color(0xFF1565C0);
-    final gradEnd   = isDark ? const Color(0xFF0F1117) : const Color(0xFF0D47A1);
+    final gradStart = isDark
+        ? const Color(0xFF1A2744)
+        : const Color(0xFF1565C0);
+    final gradEnd = isDark ? const Color(0xFF0F1117) : const Color(0xFF0D47A1);
 
     return Container(
       width: double.infinity,
@@ -668,33 +750,55 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 // Greeting pill
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.white.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
+                    border: Border.all(
+                      color: Colors.white.withValues(alpha: 0.2),
+                    ),
                   ),
-                  child: Row(mainAxisSize: MainAxisSize.min, children: [
-                    const Icon(Icons.wb_sunny_outlined, color: Colors.white, size: 12),
-                    const SizedBox(width: 5),
-                    Text(_greeting,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(
+                        Icons.wb_sunny_outlined,
+                        color: Colors.white,
+                        size: 12,
+                      ),
+                      const SizedBox(width: 5),
+                      Text(
+                        _greeting,
                         style: GoogleFonts.plusJakartaSans(
-                            color: Colors.white, fontSize: 11, fontWeight: FontWeight.w500)),
-                  ]),
+                          color: Colors.white,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   'What would you like to look up?',
                   style: GoogleFonts.plusJakartaSans(
-                    color: Colors.white, fontSize: 20,
-                    fontWeight: FontWeight.w800, height: 1.2, letterSpacing: -0.3,
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w800,
+                    height: 1.2,
+                    letterSpacing: -0.3,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   'Paediatric & Neonatal Clinical Reference',
                   style: GoogleFonts.plusJakartaSans(
-                      color: Colors.white.withValues(alpha: 0.65), fontSize: 12),
+                    color: Colors.white.withValues(alpha: 0.65),
+                    fontSize: 12,
+                  ),
                 ),
                 const SizedBox(height: 12),
                 // Search bar (tappable — opens full search)
@@ -712,22 +816,41 @@ class _HomeScreenState extends State<HomeScreen> {
                       delegate: AppSearchDelegate(),
                     ),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 14,
+                        vertical: 10,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.white.withValues(alpha: 0.14),
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
-                      ),
-                      child: Row(children: [
-                        Icon(Icons.search, color: Colors.white.withValues(alpha: 0.6), size: 18),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text('Search calculators, drugs, guides, charts, guidelines…',
-                              style: GoogleFonts.plusJakartaSans(
-                                  color: Colors.white.withValues(alpha: 0.55), fontSize: 13)),
+                        border: Border.all(
+                          color: Colors.white.withValues(alpha: 0.2),
                         ),
-                        Icon(Icons.tune_rounded, color: Colors.white.withValues(alpha: 0.4), size: 16),
-                      ]),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.search,
+                            color: Colors.white.withValues(alpha: 0.6),
+                            size: 18,
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              'Search calculators, drugs, guides, charts, guidelines…',
+                              style: GoogleFonts.plusJakartaSans(
+                                color: Colors.white.withValues(alpha: 0.55),
+                                fontSize: 13,
+                              ),
+                            ),
+                          ),
+                          Icon(
+                            Icons.tune_rounded,
+                            color: Colors.white.withValues(alpha: 0.4),
+                            size: 16,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -740,7 +863,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _circle(double size, double alpha) => Container(
-    width: size, height: size,
+    width: size,
+    height: size,
     decoration: BoxDecoration(
       shape: BoxShape.circle,
       color: Colors.white.withValues(alpha: alpha),
@@ -752,8 +876,10 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _sectionLabel(BuildContext context, String title) => Text(
     title,
     style: GoogleFonts.plusJakartaSans(
-      fontSize: 16, fontWeight: FontWeight.w700,
-      color: Theme.of(context).colorScheme.onSurface, letterSpacing: 0.1,
+      fontSize: 16,
+      fontWeight: FontWeight.w700,
+      color: Theme.of(context).colorScheme.onSurface,
+      letterSpacing: 0.1,
     ),
   );
 
@@ -768,25 +894,87 @@ class _HomeScreenState extends State<HomeScreen> {
       RecentsService.instance.record(key, label);
       Navigator.push(context, MaterialPageRoute(builder: (_) => builder()));
     }
+
     final bool _iosNative = !kIsWeb && Platform.isIOS;
     final cards = [
-      _FeatureDef('Calculators & Tools', 'Calc · BP · Bili · More',   Icons.calculate_rounded,   const Color(0xFF1565C0), () => open('allcalc',   'Calculators',     () => const CalculatorsScreen())),
-      _FeatureDef('Charts',        'Growth · Fenton · IAP',   Icons.show_chart_rounded,  const Color(0xFF6A1B9A), () => open('growth',    'Charts',          () => const GrowthChartsScreen())),
+      _FeatureDef(
+        'Calculators & Tools',
+        'Calc · BP · Bili · More',
+        Icons.calculate_rounded,
+        const Color(0xFF1565C0),
+        () => open('allcalc', 'Calculators', () => const CalculatorsScreen()),
+      ),
+      _FeatureDef(
+        'Charts',
+        'Growth · Fenton · IAP',
+        Icons.show_chart_rounded,
+        const Color(0xFF6A1B9A),
+        () => open('growth', 'Charts', () => const GrowthChartsScreen()),
+      ),
       if (!_iosNative)
-      _FeatureDef('Drug Formulary','500+ drugs',               Icons.medication_rounded,  const Color(0xFF00695C), () => open('formulary', 'Drug Formulary',  () => const FormularyScreen())),
-      _FeatureDef('Lab Reference',       'Harriet Lane values',        Icons.biotech_rounded,        const Color(0xFF00838F), () => open('labref',    'Lab Reference',   () => const LabReferenceScreen())),
-      _FeatureDef('Guides',              'Fetal Dev · Protocols',      Icons.menu_book_outlined,     const Color(0xFF6D4C41), () => open('guides',    'Guides',          () => const GuidesScreen())),
-      _FeatureDef('CME & Webinars',       'Conferences · Webinars',     Icons.event_note_rounded,     const Color(0xFF7B1FA2), () => open('cme',       'CME & Webinars',  () => const CmeScreen())),
-      _FeatureDef('Academics',           'Peer-reviewed content',       Icons.auto_stories_rounded,   const Color(0xFF283593), () => open('academics', 'Academics',       () => const AcademicsWebScreen())),
-      _FeatureDef('Never Again',         'Learn from real mistakes',     Icons.groups_rounded,          const Color(0xFF1A237E), () => open('neveragain','Never Again',     () => const NeverAgainScreen())),
-      _FeatureDef('Resources',           'Charts · scores · templates',  Icons.download_rounded, const Color(0xFFAD1457), () => open('resources', 'Resources',       () => const ResourcesScreen())),
+        _FeatureDef(
+          'Drug Formulary',
+          '500+ drugs',
+          Icons.medication_rounded,
+          const Color(0xFF00695C),
+          () => open(
+            'formulary',
+            'Drug Formulary',
+            () => const FormularyScreen(),
+          ),
+        ),
+      _FeatureDef(
+        'Lab Reference',
+        'Harriet Lane values',
+        Icons.biotech_rounded,
+        const Color(0xFF00838F),
+        () => open('labref', 'Lab Reference', () => const LabReferenceScreen()),
+      ),
+      _FeatureDef(
+        'Guides',
+        'Fetal Dev · Protocols',
+        Icons.menu_book_outlined,
+        const Color(0xFF6D4C41),
+        () => open('guides', 'Guides', () => const GuidesScreen()),
+      ),
+      _FeatureDef(
+        'CME & Webinars',
+        'Conferences · Webinars',
+        Icons.event_note_rounded,
+        const Color(0xFF7B1FA2),
+        () => open('cme', 'CME & Webinars', () => const CmeScreen()),
+      ),
+      _FeatureDef(
+        'Academics',
+        'Peer-reviewed content',
+        Icons.auto_stories_rounded,
+        const Color(0xFF283593),
+        () => open('academics', 'Academics', () => const AcademicsWebScreen()),
+      ),
+      _FeatureDef(
+        'Never Again',
+        'Learn from real mistakes',
+        Icons.groups_rounded,
+        const Color(0xFF1A237E),
+        () => open('neveragain', 'Never Again', () => const NeverAgainScreen()),
+      ),
+      _FeatureDef(
+        'Resources',
+        'Charts · scores · templates',
+        Icons.download_rounded,
+        const Color(0xFFAD1457),
+        () => open('resources', 'Resources', () => const ResourcesScreen()),
+      ),
     ];
 
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2, crossAxisSpacing: 12, mainAxisSpacing: 12, childAspectRatio: 1.55,
+        crossAxisCount: 2,
+        crossAxisSpacing: 12,
+        mainAxisSpacing: 12,
+        childAspectRatio: 1.55,
       ),
       itemCount: cards.length,
       itemBuilder: (_, i) {
@@ -853,13 +1041,21 @@ class _HomeScreenState extends State<HomeScreen> {
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(color: cs.primary.withValues(alpha: 0.2)),
               ),
-              child: Row(mainAxisSize: MainAxisSize.min, children: [
-                Icon(Icons.edit_outlined, size: 13, color: cs.primary),
-                const SizedBox(width: 5),
-                Text('Edit',
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.edit_outlined, size: 13, color: cs.primary),
+                  const SizedBox(width: 5),
+                  Text(
+                    'Edit',
                     style: GoogleFonts.plusJakartaSans(
-                        fontSize: 12, fontWeight: FontWeight.w600, color: cs.primary)),
-              ]),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: cs.primary,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
@@ -870,7 +1066,7 @@ class _HomeScreenState extends State<HomeScreen> {
   // ── Quick chips ───────────────────────────────────────────────────────────
 
   Widget _buildQuickChips(BuildContext context, ColorScheme cs, bool isDark) {
-    final chipBg     = isDark ? AppTheme.dCard   : Colors.white;
+    final chipBg = isDark ? AppTheme.dCard : Colors.white;
     final chipBorder = isDark ? AppTheme.dBorder : const Color(0xFFCBD8EB);
 
     final bool _iosChip = !kIsWeb && Platform.isIOS;
@@ -882,9 +1078,13 @@ class _HomeScreenState extends State<HomeScreen> {
     if (visible.isEmpty) {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Text('No quick items selected. Tap Edit to add some.',
-            style: GoogleFonts.plusJakartaSans(
-                fontSize: 13, color: cs.onSurface.withValues(alpha: 0.4))),
+        child: Text(
+          'No quick items selected. Tap Edit to add some.',
+          style: GoogleFonts.plusJakartaSans(
+            fontSize: 13,
+            color: cs.onSurface.withValues(alpha: 0.4),
+          ),
+        ),
       );
     }
 
@@ -912,15 +1112,21 @@ class _HomeScreenState extends State<HomeScreen> {
                 borderRadius: BorderRadius.circular(30),
                 border: Border.all(color: chipBorder),
               ),
-              child: Row(mainAxisSize: MainAxisSize.min, children: [
-                Icon(c.icon, size: 15, color: cs.primary),
-                const SizedBox(width: 6),
-                Text(c.label,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(c.icon, size: 15, color: cs.primary),
+                  const SizedBox(width: 6),
+                  Text(
+                    c.label,
                     style: GoogleFonts.plusJakartaSans(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: cs.onSurface)),
-              ]),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: cs.onSurface,
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         },
@@ -936,7 +1142,8 @@ class _HomeScreenState extends State<HomeScreen> {
       isScrollControlled: true,
       backgroundColor: Theme.of(context).cardColor,
       shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
       builder: (ctx) {
         return StatefulBuilder(
           builder: (ctx, setLocal) {
@@ -952,23 +1159,37 @@ class _HomeScreenState extends State<HomeScreen> {
                     // Handle bar
                     Center(
                       child: Container(
-                        width: 36, height: 4,
+                        width: 36,
+                        height: 4,
                         decoration: BoxDecoration(
-                            color: cs.outline, borderRadius: BorderRadius.circular(2)),
+                          color: cs.outline,
+                          borderRadius: BorderRadius.circular(2),
+                        ),
                       ),
                     ),
                     const SizedBox(height: 16),
-                    Row(children: [
-                      Icon(Icons.tune_rounded, color: cs.primary, size: 20),
-                      const SizedBox(width: 8),
-                      Text('Customise Quick Access',
+                    Row(
+                      children: [
+                        Icon(Icons.tune_rounded, color: cs.primary, size: 20),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Customise Quick Access',
                           style: GoogleFonts.plusJakartaSans(
-                              fontSize: 17, fontWeight: FontWeight.w700, color: cs.onSurface)),
-                    ]),
+                            fontSize: 17,
+                            fontWeight: FontWeight.w700,
+                            color: cs.onSurface,
+                          ),
+                        ),
+                      ],
+                    ),
                     const SizedBox(height: 4),
-                    Text('Select which shortcuts appear on your home screen.',
-                        style: GoogleFonts.plusJakartaSans(
-                            fontSize: 12, color: cs.onSurface.withValues(alpha: 0.5))),
+                    Text(
+                      'Select which shortcuts appear on your home screen.',
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 12,
+                        color: cs.onSurface.withValues(alpha: 0.5),
+                      ),
+                    ),
                     const SizedBox(height: 12),
                     Flexible(
                       child: ListView(
@@ -976,39 +1197,56 @@ class _HomeScreenState extends State<HomeScreen> {
                         padding: const EdgeInsets.only(bottom: 8),
                         children: [
                           for (final chip in _allChips)
-                            Builder(builder: (_) {
-                              final selected = _selectedKeys.contains(chip.key);
-                              return CheckboxListTile(
-                                value: selected,
-                                onChanged: (v) {
-                                  setLocal(() {
-                                    if (v == true) {
-                                      _selectedKeys.add(chip.key);
-                                    } else {
-                                      _selectedKeys.remove(chip.key);
-                                    }
-                                  });
-                                  setState(() {});
-                                  _savePrefs();
-                                },
-                                secondary: Container(
-                                  width: 36, height: 36,
-                                  decoration: BoxDecoration(
-                                    color: cs.primary.withValues(alpha: 0.1),
+                            Builder(
+                              builder: (_) {
+                                final selected = _selectedKeys.contains(
+                                  chip.key,
+                                );
+                                return CheckboxListTile(
+                                  value: selected,
+                                  onChanged: (v) {
+                                    setLocal(() {
+                                      if (v == true) {
+                                        _selectedKeys.add(chip.key);
+                                      } else {
+                                        _selectedKeys.remove(chip.key);
+                                      }
+                                    });
+                                    setState(() {});
+                                    _savePrefs();
+                                  },
+                                  secondary: Container(
+                                    width: 36,
+                                    height: 36,
+                                    decoration: BoxDecoration(
+                                      color: cs.primary.withValues(alpha: 0.1),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Icon(
+                                      chip.icon,
+                                      color: cs.primary,
+                                      size: 18,
+                                    ),
+                                  ),
+                                  title: Text(
+                                    chip.label,
+                                    style: GoogleFonts.plusJakartaSans(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14,
+                                      color: cs.onSurface,
+                                    ),
+                                  ),
+                                  activeColor: cs.primary,
+                                  shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10),
                                   ),
-                                  child: Icon(chip.icon, color: cs.primary, size: 18),
-                                ),
-                                title: Text(chip.label,
-                                    style: GoogleFonts.plusJakartaSans(
-                                        fontWeight: FontWeight.w600, fontSize: 14, color: cs.onSurface)),
-                                activeColor: cs.primary,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10)),
-                                dense: true,
-                                contentPadding: const EdgeInsets.symmetric(horizontal: 4),
-                              );
-                            }),
+                                  dense: true,
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 4,
+                                  ),
+                                );
+                              },
+                            ),
                         ],
                       ),
                     ),
@@ -1017,8 +1255,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: () => Navigator.pop(ctx),
-                        child: Text('Done',
-                            style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700)),
+                        child: Text(
+                          'Done',
+                          style: GoogleFonts.plusJakartaSans(
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
                       ),
                     ),
                   ],
@@ -1033,34 +1275,34 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _navigateChip(BuildContext context, String key) {
     final routes = <String, Widget Function()>{
-      'gir':       () => const GIRCalculator(),
-      'gas':       () => const BloodGasAnalyser(),
-      'tpn':       () => const TpnCalculator(),
-      'cga':       () => const CGAPMACalculator(),
-      'ponderal':  () => const PonderalIndexCalculator(),
-      'mph':       () => const MidParentalHeightCalculator(),
-      'bsa':       () => const BSACalculator(),
-      'bp':        () => const BPHubScreen(),
-      'neobp':     () => const NeonatalBPCalculator(),
-      'bili':      () => const JaundiceHubScreen(),
-      'fluid':     () => const MaintenanceFluidCalculator(),
-      'burn':      () => const BurnMortalityCalculator(),
-      'parkland':  () => const ParklandCalculatorScreen(),
-      'lund':      () => const LundBrowderScreen(),
-      'pet':       () => const PETCalculatorScreen(),
-      'egfr':      () => const SchwartzEGFRCalculator(),
-      'ga':        () => const GestationalAgeCalculator(),
-      'vent':      () => const VentilatorParameters(),
-      'nutri':     () => const NutritionalAuditCalculator(),
-      'dve':       () => const DoubleVolumeExchange(),
-      'allcalc':   () => const CalculatorsScreen(),
-      'growth':    () => const GrowthChartsScreen(),
-      'devmile':   () => const DevMilestonesHub(),
-      'tdsc':      () => const TdscAssistantScreen(),
+      'gir': () => const GIRCalculator(),
+      'gas': () => const BloodGasAnalyser(),
+      'tpn': () => const TpnCalculator(),
+      'cga': () => const CGAPMACalculator(),
+      'ponderal': () => const PonderalIndexCalculator(),
+      'mph': () => const MidParentalHeightCalculator(),
+      'bsa': () => const BSACalculator(),
+      'bp': () => const BPHubScreen(),
+      'neobp': () => const NeonatalBPCalculator(),
+      'bili': () => const JaundiceHubScreen(),
+      'fluid': () => const MaintenanceFluidCalculator(),
+      'burn': () => const BurnMortalityCalculator(),
+      'parkland': () => const ParklandCalculatorScreen(),
+      'lund': () => const LundBrowderScreen(),
+      'pet': () => const PETCalculatorScreen(),
+      'egfr': () => const SchwartzEGFRCalculator(),
+      'ga': () => const GestationalAgeCalculator(),
+      'vent': () => const VentilatorParameters(),
+      'nutri': () => const NutritionalAuditCalculator(),
+      'dve': () => const DoubleVolumeExchange(),
+      'allcalc': () => const CalculatorsScreen(),
+      'growth': () => const GrowthChartsScreen(),
+      'devmile': () => const DevMilestonesHub(),
+      'tdsc': () => const TdscAssistantScreen(),
       'formulary': () => const FormularyScreen(),
-      'labref':    () => const LabReferenceScreen(),
-      'guides':    () => const GuidesScreen(),
-      'cme':       () => const CmeScreen(),
+      'labref': () => const LabReferenceScreen(),
+      'guides': () => const GuidesScreen(),
+      'cme': () => const CmeScreen(),
       'academics': () => const AcademicsWebScreen(),
       'resources': () => const ResourcesScreen(),
     };
@@ -1087,9 +1329,9 @@ class _HomeScreenState extends State<HomeScreen> {
       color: Colors.transparent,
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
-        onTap: () => Navigator.of(context).push(
-          MaterialPageRoute(builder: (_) => const AdminDashboardScreen()),
-        ),
+        onTap: () => Navigator.of(
+          context,
+        ).push(MaterialPageRoute(builder: (_) => const AdminDashboardScreen())),
         child: Container(
           padding: const EdgeInsets.all(18),
           decoration: BoxDecoration(
@@ -1179,7 +1421,10 @@ class _HomeScreenState extends State<HomeScreen> {
               'Clinical decision support tool only. Always verify calculations independently. '
               'PediAid does not replace clinical judgement.',
               style: GoogleFonts.plusJakartaSans(
-                  fontSize: 12, color: cs.onSurface.withValues(alpha: 0.7), height: 1.5),
+                fontSize: 12,
+                color: cs.onSurface.withValues(alpha: 0.7),
+                height: 1.5,
+              ),
             ),
           ),
         ],
@@ -1192,14 +1437,14 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildReferencesLink(BuildContext context, ColorScheme cs) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return GestureDetector(
-      onTap: () => Navigator.push(context,
-          MaterialPageRoute(builder: (_) => const ReferencesScreen())),
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const ReferencesScreen()),
+      ),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
         decoration: BoxDecoration(
-          color: isDark
-              ? const Color(0xFF1A1A2E)
-              : const Color(0xFFEEF2FF),
+          color: isDark ? const Color(0xFF1A1A2E) : const Color(0xFFEEF2FF),
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
             color: isDark
@@ -1209,11 +1454,11 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         child: Row(
           children: [
-            Icon(Icons.menu_book_rounded,
-                size: 16,
-                color: isDark
-                    ? const Color(0xFF818CF8)
-                    : const Color(0xFF4F46E5)),
+            Icon(
+              Icons.menu_book_rounded,
+              size: 16,
+              color: isDark ? const Color(0xFF818CF8) : const Color(0xFF4F46E5),
+            ),
             const SizedBox(width: 8),
             Expanded(
               child: Text(
@@ -1227,11 +1472,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-            Icon(Icons.chevron_right_rounded,
-                size: 16,
-                color: isDark
-                    ? const Color(0xFF818CF8).withValues(alpha: 0.6)
-                    : const Color(0xFF4F46E5).withValues(alpha: 0.6)),
+            Icon(
+              Icons.chevron_right_rounded,
+              size: 16,
+              color: isDark
+                  ? const Color(0xFF818CF8).withValues(alpha: 0.6)
+                  : const Color(0xFF4F46E5).withValues(alpha: 0.6),
+            ),
           ],
         ),
       ),
@@ -1256,10 +1503,7 @@ class _HomeScreenState extends State<HomeScreen> {
             end: Alignment.bottomRight,
           ),
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(
-            color: accent.withValues(alpha: 0.35),
-            width: 1.5,
-          ),
+          border: Border.all(color: accent.withValues(alpha: 0.35), width: 1.5),
         ),
         child: Row(
           children: [
@@ -1270,10 +1514,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 color: accent.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                    color: accent.withValues(alpha: 0.3), width: 1),
+                  color: accent.withValues(alpha: 0.3),
+                  width: 1,
+                ),
               ),
-              child: const Icon(Icons.lightbulb_rounded,
-                  color: accent, size: 22),
+              child: const Icon(
+                Icons.lightbulb_rounded,
+                color: accent,
+                size: 22,
+              ),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -1302,8 +1551,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SizedBox(width: 8),
             Container(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 10, vertical: 5),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               decoration: BoxDecoration(
                 color: accent,
                 borderRadius: BorderRadius.circular(20),
@@ -1327,9 +1575,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildDrawer(BuildContext context, bool isDark) {
     final cs = Theme.of(context).colorScheme;
-    final drawerBg  = isDark ? AppTheme.dSurface : Colors.white;
-    final gradStart = isDark ? const Color(0xFF1A2744) : const Color(0xFF1565C0);
-    final gradEnd   = isDark ? const Color(0xFF232D42) : const Color(0xFF1E88E5);
+    final drawerBg = isDark ? AppTheme.dSurface : Colors.white;
+    final gradStart = isDark
+        ? const Color(0xFF1A2744)
+        : const Color(0xFF1565C0);
+    final gradEnd = isDark ? const Color(0xFF232D42) : const Color(0xFF1E88E5);
 
     return Drawer(
       backgroundColor: drawerBg,
@@ -1340,26 +1590,46 @@ class _HomeScreenState extends State<HomeScreen> {
             width: double.infinity,
             padding: const EdgeInsets.fromLTRB(20, 56, 20, 24),
             decoration: BoxDecoration(
-              gradient: LinearGradient(colors: [gradStart, gradEnd],
-                  begin: Alignment.topLeft, end: Alignment.bottomRight),
-            ),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Container(
-                width: 52, height: 52,
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                child: const Icon(Icons.child_care_rounded, color: Colors.white, size: 28),
+              gradient: LinearGradient(
+                colors: [gradStart, gradEnd],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
-              const SizedBox(height: 14),
-              Text('PediAid',
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 52,
+                  height: 52,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  child: const Icon(
+                    Icons.child_care_rounded,
+                    color: Colors.white,
+                    size: 28,
+                  ),
+                ),
+                const SizedBox(height: 14),
+                Text(
+                  'PediAid',
                   style: GoogleFonts.plusJakartaSans(
-                      color: Colors.white, fontSize: 22, fontWeight: FontWeight.w800)),
-              Text('Paediatric & Neonatal Reference',
+                    color: Colors.white,
+                    fontSize: 22,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                Text(
+                  'Paediatric & Neonatal Reference',
                   style: GoogleFonts.plusJakartaSans(
-                      color: Colors.white.withValues(alpha: 0.7), fontSize: 12)),
-            ]),
+                    color: Colors.white.withValues(alpha: 0.7),
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
           ),
           Expanded(
             child: ListView(
@@ -1369,12 +1639,70 @@ class _HomeScreenState extends State<HomeScreen> {
                 // formulary, lab reference, guides, CME, academics) are the
                 // primary tiles on the home screen itself, so they've been
                 // removed from the drawer to keep it a quiet utility menu.
-                _DrawerItem(icon: Icons.home_rounded,            label: 'Home',     onTap: () => Navigator.pop(context)),
-                _DrawerItem(icon: Icons.settings_rounded,        label: 'Settings', onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const SettingsScreen())); }),
-                _DrawerItem(icon: Icons.info_outline_rounded,    label: 'About',    onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const AboutScreen())); }),
-                _DrawerItem(icon: Icons.menu_book_rounded,       label: 'References & Sources', onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const ReferencesScreen())); }),
-                _DrawerItem(icon: Icons.account_circle_outlined, label: 'Account',  onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const AccountScreen())); }),
-                _DrawerItem(icon: Icons.fact_check_outlined,     label: 'My Submissions', onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const MySubmissionsScreen())); }),
+                _DrawerItem(
+                  icon: Icons.home_rounded,
+                  label: 'Home',
+                  onTap: () => Navigator.pop(context),
+                ),
+                _DrawerItem(
+                  icon: Icons.settings_rounded,
+                  label: 'Settings',
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const SettingsScreen()),
+                    );
+                  },
+                ),
+                _DrawerItem(
+                  icon: Icons.info_outline_rounded,
+                  label: 'About',
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const AboutScreen()),
+                    );
+                  },
+                ),
+                _DrawerItem(
+                  icon: Icons.menu_book_rounded,
+                  label: 'References & Sources',
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const ReferencesScreen(),
+                      ),
+                    );
+                  },
+                ),
+                _DrawerItem(
+                  icon: Icons.account_circle_outlined,
+                  label: 'Account',
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const AccountScreen()),
+                    );
+                  },
+                ),
+                _DrawerItem(
+                  icon: Icons.fact_check_outlined,
+                  label: 'My Submissions',
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const MySubmissionsScreen(),
+                      ),
+                    );
+                  },
+                ),
                 const Divider(height: 24, indent: 16, endIndent: 16),
                 // ── Rate, Share, Web, Feedback ────────────────────────
                 _DrawerItem(
@@ -1433,7 +1761,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   onTap: () async {
                     Navigator.pop(context);
                     await launchUrl(
-                      Uri.parse('mailto:$kSupportEmail?subject=PediAid%20Feedback'),
+                      Uri.parse(
+                        'mailto:$kSupportEmail?subject=PediAid%20Feedback',
+                      ),
                       mode: LaunchMode.externalApplication,
                     );
                   },
@@ -1443,10 +1773,14 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           Padding(
             padding: const EdgeInsets.all(16),
-            child: Text('PediAid v1.0.0',
-                style: GoogleFonts.plusJakartaSans(
-                    fontSize: 11, color: cs.onSurface.withValues(alpha: 0.4)),
-                textAlign: TextAlign.center),
+            child: Text(
+              'PediAid v1.0.0',
+              style: GoogleFonts.plusJakartaSans(
+                fontSize: 11,
+                color: cs.onSurface.withValues(alpha: 0.4),
+              ),
+              textAlign: TextAlign.center,
+            ),
           ),
         ],
       ),
@@ -1459,7 +1793,6 @@ class _HomeScreenState extends State<HomeScreen> {
   // the AccountScreen which can be opened from the drawer's 'Account' entry.
 
   // _showComingSoon was removed along with the 'Research' drawer entry.
-
 }
 
 // ── Data classes ──────────────────────────────────────────────────────────────
@@ -1470,7 +1803,13 @@ class _FeatureDef {
   final IconData icon;
   final Color accent;
   final VoidCallback onTap;
-  const _FeatureDef(this.title, this.subtitle, this.icon, this.accent, this.onTap);
+  const _FeatureDef(
+    this.title,
+    this.subtitle,
+    this.icon,
+    this.accent,
+    this.onTap,
+  );
 }
 
 class _ChipDef {
@@ -1489,10 +1828,10 @@ class _FeatureCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cs      = Theme.of(context).colorScheme;
-    final cardBg  = isDark ? AppTheme.dCard   : Colors.white;
-    final border  = isDark ? AppTheme.dBorder : const Color(0xFFCBD8EB);
-    final accent  = card.accent;
+    final cs = Theme.of(context).colorScheme;
+    final cardBg = isDark ? AppTheme.dCard : Colors.white;
+    final border = isDark ? AppTheme.dBorder : const Color(0xFFCBD8EB);
+    final accent = card.accent;
 
     return Container(
       decoration: BoxDecoration(
@@ -1511,7 +1850,8 @@ class _FeatureCardWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                width: 40, height: 40,
+                width: 40,
+                height: 40,
                 decoration: BoxDecoration(
                   color: accent.withValues(alpha: isDark ? 0.2 : 0.12),
                   borderRadius: BorderRadius.circular(12),
@@ -1521,19 +1861,27 @@ class _FeatureCardWidget extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(card.title,
-                      style: GoogleFonts.plusJakartaSans(
-                        color: cs.onSurface,
-                        fontSize: 14, fontWeight: FontWeight.w700,
-                      ),
-                      maxLines: 1, overflow: TextOverflow.ellipsis),
+                  Text(
+                    card.title,
+                    style: GoogleFonts.plusJakartaSans(
+                      color: cs.onSurface,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                   const SizedBox(height: 2),
-                  Text(card.subtitle,
-                      style: GoogleFonts.plusJakartaSans(
-                        color: cs.onSurface.withValues(alpha: 0.55),
-                        fontSize: 11, fontWeight: FontWeight.w500,
-                      ),
-                      maxLines: 1, overflow: TextOverflow.ellipsis),
+                  Text(
+                    card.subtitle,
+                    style: GoogleFonts.plusJakartaSans(
+                      color: cs.onSurface.withValues(alpha: 0.55),
+                      fontSize: 11,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ],
               ),
             ],
@@ -1550,16 +1898,25 @@ class _DrawerItem extends StatelessWidget {
   final IconData icon;
   final String label;
   final VoidCallback onTap;
-  const _DrawerItem({required this.icon, required this.label, required this.onTap});
+  const _DrawerItem({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     return ListTile(
       leading: Icon(icon, color: cs.primary, size: 22),
-      title: Text(label,
-          style: GoogleFonts.plusJakartaSans(
-              color: cs.onSurface, fontSize: 14, fontWeight: FontWeight.w600)),
+      title: Text(
+        label,
+        style: GoogleFonts.plusJakartaSans(
+          color: cs.onSurface,
+          fontSize: 14,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
       onTap: onTap,
       dense: true,
       contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
@@ -1614,8 +1971,8 @@ class _RecentsRow extends StatelessWidget {
                     final item = items[i];
                     final chip = _allChips.firstWhere(
                       (c) => c.key == item.key,
-                      orElse: () => _ChipDef(item.key, item.label,
-                          Icons.history_rounded),
+                      orElse: () =>
+                          _ChipDef(item.key, item.label, Icons.history_rounded),
                     );
                     return _RecentChip(
                       label: item.label,
