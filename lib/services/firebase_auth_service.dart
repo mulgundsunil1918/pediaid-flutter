@@ -268,35 +268,56 @@ class FirebaseAuthService {
 
     final providers = providerIds;
 
-    if (providers.contains('google.com') && !kIsWeb && !_isDesktop) {
-      String? iosClientId;
-      try {
-        iosClientId = DefaultFirebaseOptions.currentPlatform.iosClientId;
-      } catch (_) {}
-      final googleUser = await GoogleSignIn(clientId: iosClientId).signIn();
-      if (googleUser == null) throw Exception('Google re-auth cancelled.');
-      final googleAuth = await googleUser.authentication;
-      await user.reauthenticateWithCredential(
-        GoogleAuthProvider.credential(
-          accessToken: googleAuth.accessToken,
-          idToken: googleAuth.idToken,
-        ),
-      );
-    } else if (providers.contains('apple.com') && !kIsWeb) {
-      // FIX for Wardly bug: Apple users must re-auth via Apple, not password.
-      final rawNonce = _generateNonce();
-      final hashedNonce = _sha256ofString(rawNonce);
-      final appleCredential = await SignInWithApple.getAppleIDCredential(
-        scopes: [],
-        nonce: hashedNonce,
-      );
-      await user.reauthenticateWithCredential(
-        OAuthProvider('apple.com').credential(
-          idToken: appleCredential.identityToken,
-          rawNonce: rawNonce,
-        ),
-      );
-    } else {
+    // Re-authentication must mirror how the user actually signs in, per
+    // platform. It previously did not: both the Google and Apple branches were
+    // gated on `!kIsWeb`, so on web (and, for Google, on desktop) they were
+    // skipped entirely and execution fell through to the password branch —
+    // which threw "Password is required to delete your account" at people who
+    // have never had a password. On those platforms a social-login user could
+    // not delete their account at all, which is a store-policy requirement.
+    //
+    // The rule now: if you can sign in that way, you can re-authenticate that
+    // way. Web uses the popup APIs (matching signInWithGoogle above), every
+    // other platform uses the native SDK.
+    if (providers.contains('google.com')) {
+      if (kIsWeb) {
+        await user.reauthenticateWithPopup(GoogleAuthProvider());
+      } else {
+        String? iosClientId;
+        try {
+          iosClientId = DefaultFirebaseOptions.currentPlatform.iosClientId;
+        } catch (_) {}
+        final googleUser = await GoogleSignIn(clientId: iosClientId).signIn();
+        if (googleUser == null) throw Exception('Google re-auth cancelled.');
+        final googleAuth = await googleUser.authentication;
+        await user.reauthenticateWithCredential(
+          GoogleAuthProvider.credential(
+            accessToken: googleAuth.accessToken,
+            idToken: googleAuth.idToken,
+          ),
+        );
+      }
+    } else if (providers.contains('apple.com')) {
+      if (kIsWeb || _isDesktop) {
+        // Native Sign in with Apple is unavailable here, but Firebase's popup
+        // flow is not — so an Apple account created on iOS can still be
+        // deleted from the web build.
+        await user.reauthenticateWithPopup(OAuthProvider('apple.com'));
+      } else {
+        final rawNonce = _generateNonce();
+        final hashedNonce = _sha256ofString(rawNonce);
+        final appleCredential = await SignInWithApple.getAppleIDCredential(
+          scopes: [],
+          nonce: hashedNonce,
+        );
+        await user.reauthenticateWithCredential(
+          OAuthProvider('apple.com').credential(
+            idToken: appleCredential.identityToken,
+            rawNonce: rawNonce,
+          ),
+        );
+      }
+    } else if (providers.contains('password')) {
       if (password == null || password.isEmpty) {
         throw Exception('Password is required to delete your account.');
       }
@@ -304,6 +325,13 @@ class FirebaseAuthService {
       if (email == null) throw Exception('Unable to determine account email.');
       await user.reauthenticateWithCredential(
         EmailAuthProvider.credential(email: email, password: password),
+      );
+    } else {
+      // No provider we can re-authenticate with. Asking for a password would
+      // be misleading, since there isn't one to give.
+      throw Exception(
+        'Could not verify your identity for deletion. Please sign out, sign '
+        'back in, and try again — or email help@bridgr.co.in.',
       );
     }
 
