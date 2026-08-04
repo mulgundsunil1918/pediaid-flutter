@@ -34,6 +34,7 @@ import '../../providers/auth_provider.dart';
 import '../../services/push_service.dart';
 import '../../utils/friendly_error.dart';
 import '../../utils/prefs_keys.dart';
+import '../onboarding/profile_setup_screen.dart';
 
 enum _Mode { signIn, signUp }
 
@@ -105,6 +106,23 @@ class _LoginScreenState extends State<LoginScreen> {
       // ignore: unawaited_futures
       PushService.instance.init();
     } catch (_) {}
+
+    // Every sign-in path — email, Google and Apple — funnels through here, so
+    // this is the one place the details step needs to be hooked in. The
+    // slide-based onboarding runs before sign-in and therefore cannot ask
+    // anything about the person; a social sign-up would otherwise leave
+    // specialty empty forever, since almost nobody goes looking for Account
+    // settings on their own.
+    if (mounted) {
+      final auth = context.read<AuthProvider>();
+      if (needsProfileSetup(auth)) {
+        await Navigator.of(context).push(
+          MaterialPageRoute(builder: (_) => const ProfileSetupScreen()),
+        );
+        return; // ProfileSetupScreen pops back to the first route itself.
+      }
+    }
+
     if (mounted) Navigator.of(context).popUntil((route) => route.isFirst);
   }
 

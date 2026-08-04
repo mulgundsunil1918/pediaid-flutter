@@ -204,11 +204,13 @@ class AboutScreen extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              "PediAid is built and maintained single-handedly — every line "
-              "of the Flutter app, the React academics web, the Fastify "
-              "backend, and the Postgres schema. I'm not a full-time "
-              "developer. I built this because I wanted it to exist, and "
-              "because I hoped it would help other paediatricians and "
+              "I build and maintain PediAid myself — the Flutter app, the "
+              "React academics web, the Fastify backend and the Postgres "
+              "schema — and I'm not a full-time developer. But it isn't a "
+              "solo effort any more. Colleagues like Dr. Raj Bhojwani review "
+              "and verify the clinical content, and that work matters as much "
+              "as any of the code. I built this because I wanted it to exist, "
+              "and because I hoped it would help other paediatricians and "
               "students the way I wish it had helped me during my training.",
               style: GoogleFonts.plusJakartaSans(
                 fontSize: 14,
