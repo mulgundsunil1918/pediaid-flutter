@@ -50,7 +50,18 @@ class PushService {
     // Without a VAPID key web push can't work at all — bail before
     // requestPermission() so visitors never see a pointless browser
     // notification-permission popup.
-    if (kIsWeb && _webVapidKey.isEmpty) return;
+    //
+    // Logged rather than returning quietly: an empty constant silently turning
+    // off a whole feature is exactly the kind of thing that goes unnoticed for
+    // months, and the only symptom is "push doesn't work on the website" with
+    // nothing anywhere to explain why.
+    if (kIsWeb && _webVapidKey.isEmpty) {
+      debugPrint(
+        '[push] Web push disabled: _webVapidKey is empty. Set it from Firebase '
+        'console → Project Settings → Cloud Messaging → Web Push certificates.',
+      );
+      return;
+    }
     try {
       await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
