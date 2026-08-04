@@ -8,12 +8,21 @@
 // Apple Calendar, or a hospital account on Outlook, would be sent somewhere
 // they cannot save anything. Every calendar app on every platform imports .ics.
 //
-// Times are written in UTC with a Z suffix. The event's own timezone string is
-// free text ("Asia/Kolkata", "IST", sometimes blank), and emitting a VTIMEZONE
-// block from an unvalidated label risks an invalid file that silently imports
-// at the wrong hour — which for a conference someone travels to is worse than
-// no button at all. UTC is unambiguous, and every client renders it in the
-// user's local zone.
+// Times are written in India Standard Time, declared with a VTIMEZONE block.
+//
+// That is both what the audience expects and correct, because India has no
+// daylight saving: the offset is +05:30, always, so the block is four static
+// lines with no rules to get wrong. Every event on the platform is scheduled
+// in IST anyway.
+//
+// The declaration matters. A bare local time with no timezone ("floating") is
+// interpreted by calendars as the VIEWER's local time, so an 8am Bengaluru
+// conference would show as 8am to someone in London. With TZID it shows as
+// 8am IST to an Indian user and the correct converted time to everyone else.
+//
+// The event's own `timezone` field is deliberately ignored: it is free text
+// ("Asia/Kolkata", "IST", sometimes blank), and generating a VTIMEZONE from an
+// unvalidated label is how files end up silently an hour out.
 // =============================================================================
 
 import 'dart:convert';
@@ -36,11 +45,35 @@ String _esc(String? raw) {
       .replaceAll('\n', '\\n');
 }
 
+String _pad(int n, [int w = 2]) => n.toString().padLeft(w, '0');
+
+/// UTC with the Z suffix — used only for DTSTAMP, which is a creation
+/// timestamp rather than something a user reads.
 String _utc(DateTime dt) {
   final u = dt.toUtc();
-  String p(int n, [int w = 2]) => n.toString().padLeft(w, '0');
-  return '${p(u.year, 4)}${p(u.month)}${p(u.day)}T${p(u.hour)}${p(u.minute)}${p(u.second)}Z';
+  return '${_pad(u.year, 4)}${_pad(u.month)}${_pad(u.day)}'
+      'T${_pad(u.hour)}${_pad(u.minute)}${_pad(u.second)}Z';
 }
+
+/// IST wall-clock, no suffix — paired with TZID=Asia/Kolkata on the property.
+String _ist(DateTime dt) {
+  final i = dt.toUtc().add(const Duration(hours: 5, minutes: 30));
+  return '${_pad(i.year, 4)}${_pad(i.month)}${_pad(i.day)}'
+      'T${_pad(i.hour)}${_pad(i.minute)}${_pad(i.second)}';
+}
+
+/// India never observes daylight saving, so this is fixed and complete.
+const _vtimezone = [
+  'BEGIN:VTIMEZONE',
+  'TZID:Asia/Kolkata',
+  'BEGIN:STANDARD',
+  'DTSTART:19700101T000000',
+  'TZOFFSETFROM:+0530',
+  'TZOFFSETTO:+0530',
+  'TZNAME:IST',
+  'END:STANDARD',
+  'END:VTIMEZONE',
+];
 
 /// Builds the .ics payload. Pure, so it can be checked without a device.
 String buildIcs({
@@ -62,11 +95,12 @@ String buildIcs({
     'PRODID:-//PediAid//CME//EN',
     'CALSCALE:GREGORIAN',
     'METHOD:PUBLISH',
+    ..._vtimezone,
     'BEGIN:VEVENT',
     'UID:$uid@pediaid.bridgr.co.in',
     'DTSTAMP:${_utc(DateTime.now())}',
-    'DTSTART:${_utc(startsAt)}',
-    'DTEND:${_utc(end)}',
+    'DTSTART;TZID=Asia/Kolkata:${_ist(startsAt)}',
+    'DTEND;TZID=Asia/Kolkata:${_ist(end)}',
     'SUMMARY:${_esc(title)}',
     if (description != null && description.isNotEmpty)
       'DESCRIPTION:${_esc(description)}',
