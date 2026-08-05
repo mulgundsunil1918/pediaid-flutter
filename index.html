@@ -203,7 +203,7 @@
 
        The escape is a request the HTTP cache cannot answer: cache:'no-store'
        refuses to involve it at all (unlike no-cache, which still revalidates
-       through it), and the timestamp defeats any CDN edge. 2026-08-04T09:18:44Z is
+       through it), and the timestamp defeats any CDN edge. __BUILD_ID__ is
        stamped into this file at deploy time, so comparing it to the deployed
        version.json says whether THIS html is stale — which sessionStorage
        alone could never tell us on a first load.
@@ -214,7 +214,7 @@
        ================================================================== -->
   <script>
     (function () {
-      var MINE = '2026-08-04T09:18:44Z';
+      var MINE = '__BUILD_ID__';
       if (MINE.indexOf('BUILD_ID') !== -1) return; // not stamped (local dev)
       var KEY = 'pediaid_app_reloaded_for';
       try {
