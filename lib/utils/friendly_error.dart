@@ -35,11 +35,24 @@ String friendlyError(Object? error) {
   // Match by code first so we never leak "firebase_auth/" strings to the UI.
   if (error is FirebaseAuthException) {
     switch (error.code) {
-      case 'invalid-credential':
+      // Only the password-specific codes may blame the password.
       case 'invalid-login-credentials':
       case 'wrong-password':
       case 'user-not-found':
         return 'Email or password is incorrect. Please check and try again.';
+
+      // invalid-credential is NOT password-specific — Firebase also raises it
+      // when a Google or Apple credential is refused, which happens when that
+      // provider is not enabled in Firebase Authentication. Reporting it as a
+      // wrong password sent people to re-check a password they never typed,
+      // and hid a configuration fault behind a user error.
+      case 'invalid-credential':
+        return 'That sign-in could not be completed. If you used Google or '
+            'Apple, this sign-in method may not be enabled yet — please '
+            'contact support.';
+      case 'account-exists-with-different-credential':
+        return 'You already have an account using a different sign-in method. '
+            'Try signing in that way instead.';
       case 'email-already-in-use':
         return 'That email is already registered. Try signing in instead.';
       case 'weak-password':

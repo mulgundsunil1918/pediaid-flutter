@@ -13,7 +13,6 @@ import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class IosFeatureGate extends StatelessWidget {
   /// The feature name shown in the message, e.g. "Drug Formulary"
@@ -25,7 +24,6 @@ class IosFeatureGate extends StatelessWidget {
   /// The child widget rendered on Android/web (ignored on iOS)
   final Widget child;
 
-  static const _webAppUrl = 'https://pediaid.bridgr.co.in';
   static bool get _isIos => !kIsWeb && Platform.isIOS;
 
   const IosFeatureGate({
@@ -140,7 +138,14 @@ class _IosGateScreen extends StatelessWidget {
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        'This feature is available on the PediAid web app at pediaid.bridgr.co.in',
+                        // Deliberately does not name where else this content
+                        // lives. Pointing iOS users to another PediAid surface
+                        // for drug dosing reads to an App Store reviewer as
+                        // routing around guideline 1.4.2 rather than complying
+                        // with it — which is treated far more harshly than not
+                        // shipping the feature at all.
+                        'This section is not available in the iOS app. Please '
+                        'refer to your usual departmental or formulary source.',
                         style: TextStyle(
                           fontSize: 12,
                           height: 1.5,
@@ -154,43 +159,16 @@ class _IosGateScreen extends StatelessWidget {
                 ),
               ),
 
-              // CTA button
-              SizedBox(
-                width: double.infinity,
-                child: FilledButton.icon(
-                  onPressed: () => launchUrl(
-                    Uri.parse(IosFeatureGate._webAppUrl),
-                    mode: LaunchMode.externalApplication,
-                  ),
-                  icon: const Icon(Icons.open_in_browser_rounded),
-                  label: const Text('Open PediAid Web App'),
-                  style: FilledButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    textStyle: GoogleFonts.plusJakartaSans(
-                        fontSize: 15, fontWeight: FontWeight.w600),
-                    backgroundColor: isDark
-                        ? const Color(0xFF4F46E5)
-                        : const Color(0xFF4F46E5),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 12),
-
-              // Secondary link
-              TextButton(
-                onPressed: () => launchUrl(
-                  Uri.parse('${IosFeatureGate._webAppUrl}/academics'),
-                  mode: LaunchMode.externalApplication,
-                ),
-                child: Text(
-                  'Also browse IAP STG, NNF CPG & more guidelines online',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 12.5,
-                    color: cs.onSurface.withValues(alpha: 0.5),
-                  ),
-                ),
-              ),
+              // No outbound button here.
+              //
+              // This gate is what an iOS user sees on reaching a drug-dosing
+              // screen withheld under App Store guideline 1.4.2. A prominent
+              // "Open PediAid Web App" CTA at that exact moment is the clearest
+              // possible statement that the restriction is being routed around
+              // rather than complied with — and the secondary guidelines link
+              // read the same way in this context, however innocuous elsewhere.
+              //
+              // The screen now simply states the section is unavailable.
             ],
           ),
         ),

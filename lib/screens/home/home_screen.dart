@@ -516,8 +516,21 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       if (kIsWeb || !Platform.isIOS)
                         _buildDonationFooter(context, isDark),
-                      if (!kIsWeb && Platform.isIOS)
-                        _buildWebPromoFooter(context),
+                      // The iOS-only "More features on the Web App" banner is
+                      // deliberately not rendered.
+                      //
+                      // It named the drug formulary and dose calculators and
+                      // linked to the site that still has them — on the one
+                      // platform where those tools are withheld to satisfy App
+                      // Store guideline 1.4.2. To a reviewer that reads as
+                      // routing users around the restriction rather than
+                      // complying with it, which is treated more harshly than
+                      // simply shipping the feature, and it also invites 2.3.1
+                      // (functionality not evident in the app itself).
+                      //
+                      // Kept as a widget rather than deleted: it is legitimate
+                      // on any platform that is not iOS, if it is ever wanted
+                      // there without naming the withheld tools.
                       if (kIsWeb) _buildVisitorCounter(context),
                       SizedBox(
                         height: MediaQuery.of(context).padding.bottom + 16,
@@ -709,7 +722,8 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // ── Web promo footer (iOS only) ──────────────────────────────────────────
+  // ── Web promo footer — NOT rendered on iOS (see call site) ──────────────
+  // ignore: unused_element
   Widget _buildWebPromoFooter(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     return Padding(
