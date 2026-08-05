@@ -23,10 +23,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for ios - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return ios;
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
@@ -65,4 +62,16 @@ class DefaultFirebaseOptions {
     projectId: 'pediaid-app',
     storageBucket: 'pediaid-app.firebasestorage.app',
   );
+
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyCu55GyWl4ea6Yy3-xmBQzt-HXC4zgs8Pk',
+    appId: '1:11076606207:ios:dc57c66e8eeb718bf2d4ca',
+    messagingSenderId: '11076606207',
+    projectId: 'pediaid-app',
+    storageBucket: 'pediaid-app.firebasestorage.app',
+    androidClientId: '11076606207-2m94l95sgphnc1hgq9r54ee1qotf00tc.apps.googleusercontent.com',
+    iosClientId: '11076606207-3grv5stb6t8s0db6cihn8ls731tjj0if.apps.googleusercontent.com',
+    iosBundleId: 'app.pediaid.pediaid',
+  );
+
 }

@@ -171,6 +171,39 @@ class _NotificationSheetState extends State<_NotificationSheet> {
     _unread = widget.initialUnread;
   }
 
+  /// Two-step, because this cannot be undone: the rows are deleted, not
+  /// hidden. A single tap sitting next to "Mark all read" would be too easy to
+  /// hit by accident, and there is no way back from it.
+  bool _confirmClear = false;
+
+  Future<void> _deleteAll() async {
+    if (_items.isEmpty) return;
+    if (!_confirmClear) {
+      setState(() => _confirmClear = true);
+      return;
+    }
+    setState(() {
+      _busy = true;
+      _confirmClear = false;
+    });
+    try {
+      await NotificationsService.instance.deleteAll();
+      if (!mounted) return;
+      setState(() {
+        _items = [];
+        _unread = 0;
+      });
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Could not clear notifications.')),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
   Future<void> _markAll() async {
     if (_unread == 0) return;
     setState(() => _busy = true);
@@ -277,6 +310,21 @@ class _NotificationSheetState extends State<_NotificationSheet> {
                         style: GoogleFonts.plusJakartaSans(
                           fontSize: 12,
                           fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  if (_items.isNotEmpty)
+                    TextButton.icon(
+                      onPressed: _busy ? null : _deleteAll,
+                      icon: Icon(Icons.delete_outline_rounded,
+                          size: 16,
+                          color: _confirmClear ? cs.error : null),
+                      label: Text(
+                        _confirmClear ? 'Delete all?' : 'Delete all',
+                        style: GoogleFonts.plusJakartaSans(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          color: _confirmClear ? cs.error : null,
                         ),
                       ),
                     ),

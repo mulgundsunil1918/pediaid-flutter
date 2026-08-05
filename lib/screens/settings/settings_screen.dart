@@ -37,7 +37,7 @@ import '../references_screen.dart';
 const String _kPrivacyUrl =
     'https://pediaid.bridgr.co.in/privacy.html';
 const String _kPlayStoreUrl =
-    'https://play.google.com/store/apps/details?id=org.pediaid.app';
+    'https://play.google.com/store/apps/details?id=com.pediaid.pediaid';
 const String _kWebAppUrl = 'https://pediaid.bridgr.co.in/';
 
 class SettingsScreen extends StatefulWidget {

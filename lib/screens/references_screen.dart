@@ -6,6 +6,9 @@
 // Added to satisfy App Store guideline 1.4.1 (medical apps must cite sources).
 // =============================================================================
 
+import 'dart:io' show Platform;
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -20,8 +23,10 @@ class ReferencesScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('References & Sources',
-            style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700)),
+        title: Text(
+          'References & Sources',
+          style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700),
+        ),
         centerTitle: true,
       ),
       body: ListView(
@@ -29,143 +34,174 @@ class ReferencesScreen extends StatelessWidget {
         children: [
           _disclaimer(context, isDark, cs),
           const SizedBox(height: 20),
-          _section(context, 'Drug References', Icons.medication_rounded,
-              const Color(0xFF1E3A5F), [
-            _Ref(
-              title: 'Neofax®',
-              subtitle: 'Neonatal drug reference',
-              detail:
-                  'Neofax® is a leading neonatal drug reference used by clinicians worldwide. '
-                  'All neonatal drug dosage data in PediAid is sourced from Neofax.',
-              url: 'https://www.micromedexsolutions.com',
+          // Withheld on iOS along with the formulary and the dosing screens.
+          //
+          // This section states that PediAid's drug dosage data comes from
+          // Neofax — true on Android and web, but on an iOS build where every
+          // dosing surface is hidden it advertises exactly the capability the
+          // build is meant not to have, to the reviewer applying guideline
+          // 1.4.2. Every other reference stays: 1.4.1 asks for sources to be
+          // disclosed, so the rest of this screen is an asset, not a risk.
+          if (kIsWeb || !Platform.isIOS)
+            _section(
+              context,
+              'Drug References',
+              Icons.medication_rounded,
+              const Color(0xFF1E3A5F),
+              [
+                _Ref(
+                  title: 'Neofax®',
+                  subtitle: 'Neonatal drug reference',
+                  detail:
+                      'Neofax® is a leading neonatal drug reference used by clinicians worldwide. '
+                      'All neonatal drug dosage data in PediAid is sourced from Neofax.',
+                  url: 'https://www.micromedexsolutions.com',
+                ),
+                _Ref(
+                  title: 'Harriet Lane Handbook®',
+                  subtitle: 'Paediatric drug & clinical reference',
+                  detail:
+                      'The Harriet Lane Handbook is a standard paediatric clinical reference published '
+                      'by Johns Hopkins. Paediatric drug dosages in PediAid are sourced from this reference.',
+                  url:
+                      'https://www.elsevier.com/books/the-harriet-lane-handbook',
+                ),
+              ],
             ),
-            _Ref(
-              title: 'Harriet Lane Handbook®',
-              subtitle: 'Paediatric drug & clinical reference',
-              detail:
-                  'The Harriet Lane Handbook is a standard paediatric clinical reference published '
-                  'by Johns Hopkins. Paediatric drug dosages in PediAid are sourced from this reference.',
-              url: 'https://www.elsevier.com/books/the-harriet-lane-handbook',
-            ),
-          ]),
           const SizedBox(height: 16),
-          _section(context, 'Clinical Practice Guidelines',
-              Icons.menu_book_rounded, const Color(0xFF065F46), [
-            _Ref(
-              title: 'IAP Standard Treatment Guidelines 2022',
-              subtitle: 'Indian Academy of Pediatrics',
-              detail:
-                  'Consensus-based guidelines covering 149 paediatric and neonatal topics — '
-                  'definitions, evaluation, management flowcharts and follow-up.',
-              url: 'https://iapindia.org',
-            ),
-            _Ref(
-              title: 'IAP Action Plan 2026',
-              subtitle: 'Indian Academy of Pediatrics',
-              detail:
-                  'Practice guidelines and action plans for common paediatric conditions, '
-                  'published by the Indian Academy of Pediatrics.',
-              url: 'https://iapindia.org',
-            ),
-            _Ref(
-              title: 'NNF Clinical Practice Guidelines',
-              subtitle: 'National Neonatology Forum of India',
-              detail:
-                  'Evidence-based neonatal clinical practice guidelines published by the '
-                  'National Neonatology Forum of India.',
-              url: 'https://nnfi.org',
-            ),
-            _Ref(
-              title: 'AAP CPG: Hyperbilirubinemia (2022)',
-              subtitle: 'American Academy of Pediatrics',
-              detail:
-                  'AAP Clinical Practice Guideline: Management of hyperbilirubinemia in '
-                  'newborn infants 35 or more weeks of gestation. Pediatrics, 2022.',
-              url:
-                  'https://publications.aap.org/pediatrics/article/150/3/e2022058859/188726',
-            ),
-            _Ref(
-              title: 'NICE CG98: Neonatal Jaundice',
-              subtitle: 'National Institute for Health and Care Excellence',
-              detail:
-                  'NICE Clinical Guideline CG98: Neonatal jaundice. '
-                  'National Institute for Health and Care Excellence, UK.',
-              url: 'https://www.nice.org.uk/guidance/cg98',
-            ),
-          ]),
+          _section(
+            context,
+            'Clinical Practice Guidelines',
+            Icons.menu_book_rounded,
+            const Color(0xFF065F46),
+            [
+              _Ref(
+                title: 'IAP Standard Treatment Guidelines 2022',
+                subtitle: 'Indian Academy of Pediatrics',
+                detail:
+                    'Consensus-based guidelines covering 149 paediatric and neonatal topics — '
+                    'definitions, evaluation, management flowcharts and follow-up.',
+                url: 'https://iapindia.org',
+              ),
+              _Ref(
+                title: 'IAP Action Plan 2026',
+                subtitle: 'Indian Academy of Pediatrics',
+                detail:
+                    'Practice guidelines and action plans for common paediatric conditions, '
+                    'published by the Indian Academy of Pediatrics.',
+                url: 'https://iapindia.org',
+              ),
+              _Ref(
+                title: 'NNF Clinical Practice Guidelines',
+                subtitle: 'National Neonatology Forum of India',
+                detail:
+                    'Evidence-based neonatal clinical practice guidelines published by the '
+                    'National Neonatology Forum of India.',
+                url: 'https://nnfi.org',
+              ),
+              _Ref(
+                title: 'AAP CPG: Hyperbilirubinemia (2022)',
+                subtitle: 'American Academy of Pediatrics',
+                detail:
+                    'AAP Clinical Practice Guideline: Management of hyperbilirubinemia in '
+                    'newborn infants 35 or more weeks of gestation. Pediatrics, 2022.',
+                url:
+                    'https://publications.aap.org/pediatrics/article/150/3/e2022058859/188726',
+              ),
+              _Ref(
+                title: 'NICE CG98: Neonatal Jaundice',
+                subtitle: 'National Institute for Health and Care Excellence',
+                detail:
+                    'NICE Clinical Guideline CG98: Neonatal jaundice. '
+                    'National Institute for Health and Care Excellence, UK.',
+                url: 'https://www.nice.org.uk/guidance/cg98',
+              ),
+            ],
+          ),
           const SizedBox(height: 16),
-          _section(context, 'Growth Chart Standards',
-              Icons.show_chart_rounded, const Color(0xFF7C3AED), [
-            _Ref(
-              title: 'WHO Child Growth Standards (0–5 years)',
-              subtitle: 'World Health Organization, 2006',
-              detail:
-                  'WHO Multicentre Growth Reference Study. WHO child growth standards: '
-                  'length/height-for-age, weight-for-age, weight-for-length, weight-for-height '
-                  'and body mass index-for-age.',
-              url: 'https://www.who.int/tools/child-growth-standards',
-            ),
-            _Ref(
-              title: 'WHO Growth Reference (5–19 years)',
-              subtitle: 'World Health Organization, 2007',
-              detail:
-                  'WHO Reference 2007 for school-age children and adolescents. '
-                  'de Onis M et al. Bull World Health Organ. 2007.',
-              url:
-                  'https://www.who.int/tools/growth-reference-data-for-5to19-years',
-            ),
-            _Ref(
-              title: 'IAP Growth Charts 2015',
-              subtitle: 'Indian Academy of Pediatrics',
-              detail:
-                  'Revised IAP growth charts for height, weight, and body mass index '
-                  'for 5–18-year-old Indian children. Indian Pediatrics, 2015.',
-              url: 'https://iapindia.org',
-            ),
-            _Ref(
-              title: 'Fenton Preterm Growth Chart (2013)',
-              subtitle: 'Tanis R. Fenton & Jae H. Kim',
-              detail:
-                  'A systematic review and meta-analysis to revise the Fenton growth chart '
-                  'for preterm infants. BMC Pediatrics, 2013.',
-              url:
-                  'https://bmcpediatr.biomedcentral.com/articles/10.1186/1471-2431-13-59',
-            ),
-            _Ref(
-              title: 'INTERGROWTH-21st Standards',
-              subtitle: 'International Fetal and Newborn Growth Consortium',
-              detail:
-                  'International standards for newborn weight, length, and head circumference '
-                  'by gestational age and sex. Villar J et al. Lancet, 2014.',
-              url: 'https://intergrowth21.tghn.org',
-            ),
-          ]),
+          _section(
+            context,
+            'Growth Chart Standards',
+            Icons.show_chart_rounded,
+            const Color(0xFF7C3AED),
+            [
+              _Ref(
+                title: 'WHO Child Growth Standards (0–5 years)',
+                subtitle: 'World Health Organization, 2006',
+                detail:
+                    'WHO Multicentre Growth Reference Study. WHO child growth standards: '
+                    'length/height-for-age, weight-for-age, weight-for-length, weight-for-height '
+                    'and body mass index-for-age.',
+                url: 'https://www.who.int/tools/child-growth-standards',
+              ),
+              _Ref(
+                title: 'WHO Growth Reference (5–19 years)',
+                subtitle: 'World Health Organization, 2007',
+                detail:
+                    'WHO Reference 2007 for school-age children and adolescents. '
+                    'de Onis M et al. Bull World Health Organ. 2007.',
+                url:
+                    'https://www.who.int/tools/growth-reference-data-for-5to19-years',
+              ),
+              _Ref(
+                title: 'IAP Growth Charts 2015',
+                subtitle: 'Indian Academy of Pediatrics',
+                detail:
+                    'Revised IAP growth charts for height, weight, and body mass index '
+                    'for 5–18-year-old Indian children. Indian Pediatrics, 2015.',
+                url: 'https://iapindia.org',
+              ),
+              _Ref(
+                title: 'Fenton Preterm Growth Chart (2013)',
+                subtitle: 'Tanis R. Fenton & Jae H. Kim',
+                detail:
+                    'A systematic review and meta-analysis to revise the Fenton growth chart '
+                    'for preterm infants. BMC Pediatrics, 2013.',
+                url:
+                    'https://bmcpediatr.biomedcentral.com/articles/10.1186/1471-2431-13-59',
+              ),
+              _Ref(
+                title: 'INTERGROWTH-21st Standards',
+                subtitle: 'International Fetal and Newborn Growth Consortium',
+                detail:
+                    'International standards for newborn weight, length, and head circumference '
+                    'by gestational age and sex. Villar J et al. Lancet, 2014.',
+                url: 'https://intergrowth21.tghn.org',
+              ),
+            ],
+          ),
           const SizedBox(height: 16),
-          _section(context, 'Calculator References',
-              Icons.calculate_rounded, const Color(0xFFB45309), [
-            _Ref(
-              title: 'Schwartz Formula (eGFR)',
-              subtitle: 'Kidney function estimation in children',
-              detail:
-                  'Schwartz GJ et al. New equations to estimate GFR in children with CKD. '
-                  'J Am Soc Nephrol. 2009.',
-            ),
-            _Ref(
-              title: 'Mosteller Formula (BSA)',
-              subtitle: 'Body surface area calculation',
-              detail:
-                  'Mosteller RD. Simplified calculation of body-surface area. '
-                  'N Engl J Med. 1987.',
-            ),
-            _Ref(
-              title: 'Nelson Textbook of Pediatrics',
-              subtitle: '21st Edition — General paediatric reference',
-              detail:
-                  'Kliegman RM et al. Nelson Textbook of Pediatrics, 21st Edition. '
-                  'Elsevier, 2020. Used for general paediatric normal ranges and reference values.',
-              url: 'https://www.elsevier.com/books/nelson-textbook-of-pediatrics',
-            ),
-          ]),
+          _section(
+            context,
+            'Calculator References',
+            Icons.calculate_rounded,
+            const Color(0xFFB45309),
+            [
+              _Ref(
+                title: 'Schwartz Formula (eGFR)',
+                subtitle: 'Kidney function estimation in children',
+                detail:
+                    'Schwartz GJ et al. New equations to estimate GFR in children with CKD. '
+                    'J Am Soc Nephrol. 2009.',
+              ),
+              _Ref(
+                title: 'Mosteller Formula (BSA)',
+                subtitle: 'Body surface area calculation',
+                detail:
+                    'Mosteller RD. Simplified calculation of body-surface area. '
+                    'N Engl J Med. 1987.',
+              ),
+              _Ref(
+                title: 'Nelson Textbook of Pediatrics',
+                subtitle: '21st Edition — General paediatric reference',
+                detail:
+                    'Kliegman RM et al. Nelson Textbook of Pediatrics, 21st Edition. '
+                    'Elsevier, 2020. Used for general paediatric normal ranges and reference values.',
+                url:
+                    'https://www.elsevier.com/books/nelson-textbook-of-pediatrics',
+              ),
+            ],
+          ),
           const SizedBox(height: 32),
           Center(
             child: Text(
@@ -186,14 +222,11 @@ class ReferencesScreen extends StatelessWidget {
     );
   }
 
-  Widget _disclaimer(
-      BuildContext context, bool isDark, ColorScheme cs) {
+  Widget _disclaimer(BuildContext context, bool isDark, ColorScheme cs) {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: isDark
-            ? const Color(0xFF1A1A2E)
-            : const Color(0xFFEEF2FF),
+        color: isDark ? const Color(0xFF1A1A2E) : const Color(0xFFEEF2FF),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: isDark
@@ -204,11 +237,11 @@ class ReferencesScreen extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(Icons.info_outline_rounded,
-              size: 18,
-              color: isDark
-                  ? const Color(0xFF818CF8)
-                  : const Color(0xFF4F46E5)),
+          Icon(
+            Icons.info_outline_rounded,
+            size: 18,
+            color: isDark ? const Color(0xFF818CF8) : const Color(0xFF4F46E5),
+          ),
           const SizedBox(width: 10),
           Expanded(
             child: Text(
@@ -229,34 +262,42 @@ class ReferencesScreen extends StatelessWidget {
     );
   }
 
-  Widget _section(BuildContext context, String title, IconData icon,
-      Color color, List<_Ref> refs) {
+  Widget _section(
+    BuildContext context,
+    String title,
+    IconData icon,
+    Color color,
+    List<_Ref> refs,
+  ) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(children: [
-          Container(
-            padding: const EdgeInsets.all(7),
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: isDark ? 0.2 : 0.1),
-              borderRadius: BorderRadius.circular(8),
+        Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(7),
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: isDark ? 0.2 : 0.1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(icon, size: 16, color: color),
             ),
-            child: Icon(icon, size: 16, color: color),
-          ),
-          const SizedBox(width: 10),
-          Text(title,
+            const SizedBox(width: 10),
+            Text(
+              title,
               style: GoogleFonts.plusJakartaSans(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                  color: color)),
-        ]),
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+                color: color,
+              ),
+            ),
+          ],
+        ),
         const SizedBox(height: 10),
         Container(
           decoration: BoxDecoration(
-            color: isDark
-                ? const Color(0xFF1E1E2E)
-                : Colors.white,
+            color: isDark ? const Color(0xFF1E1E2E) : Colors.white,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: isDark
@@ -269,12 +310,13 @@ class ReferencesScreen extends StatelessWidget {
               for (int i = 0; i < refs.length; i++) ...[
                 if (i > 0)
                   Divider(
-                      height: 1,
-                      indent: 16,
-                      endIndent: 16,
-                      color: isDark
-                          ? Colors.white.withValues(alpha: 0.07)
-                          : Colors.grey.shade100),
+                    height: 1,
+                    indent: 16,
+                    endIndent: 16,
+                    color: isDark
+                        ? Colors.white.withValues(alpha: 0.07)
+                        : Colors.grey.shade100,
+                  ),
                 _RefTile(ref: refs[i], color: color),
               ],
             ],
@@ -311,8 +353,10 @@ class _RefTile extends StatelessWidget {
 
     return InkWell(
       onTap: ref.url != null
-          ? () => launchUrl(Uri.parse(ref.url!),
-              mode: LaunchMode.externalApplication)
+          ? () => launchUrl(
+              Uri.parse(ref.url!),
+              mode: LaunchMode.externalApplication,
+            )
           : null,
       borderRadius: BorderRadius.circular(12),
       child: Padding(
@@ -320,33 +364,46 @@ class _RefTile extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(children: [
-              Expanded(
-                child: Text(ref.title,
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    ref.title,
                     style: GoogleFonts.plusJakartaSans(
-                        fontSize: 13.5,
-                        fontWeight: FontWeight.w600,
-                        color: cs.onSurface)),
-              ),
-              if (ref.url != null) ...[
-                const SizedBox(width: 6),
-                Icon(Icons.open_in_new_rounded,
+                      fontSize: 13.5,
+                      fontWeight: FontWeight.w600,
+                      color: cs.onSurface,
+                    ),
+                  ),
+                ),
+                if (ref.url != null) ...[
+                  const SizedBox(width: 6),
+                  Icon(
+                    Icons.open_in_new_rounded,
                     size: 14,
-                    color: color.withValues(alpha: 0.7)),
+                    color: color.withValues(alpha: 0.7),
+                  ),
+                ],
               ],
-            ]),
+            ),
             const SizedBox(height: 2),
-            Text(ref.subtitle,
-                style: TextStyle(
-                    fontSize: 11.5,
-                    color: color,
-                    fontWeight: FontWeight.w500)),
+            Text(
+              ref.subtitle,
+              style: TextStyle(
+                fontSize: 11.5,
+                color: color,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
             const SizedBox(height: 6),
-            Text(ref.detail,
-                style: TextStyle(
-                    fontSize: 12,
-                    height: 1.45,
-                    color: cs.onSurface.withValues(alpha: 0.6))),
+            Text(
+              ref.detail,
+              style: TextStyle(
+                fontSize: 12,
+                height: 1.45,
+                color: cs.onSurface.withValues(alpha: 0.6),
+              ),
+            ),
           ],
         ),
       ),

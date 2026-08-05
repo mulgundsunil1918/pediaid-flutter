@@ -13,12 +13,15 @@
 //   - If eventType == 'webinar' AND onlineUrl set → "Join Webinar Now"
 // =============================================================================
 
+import 'dart:io' show Platform;
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../utils/calendar_export.dart';
 import 'package:intl/intl.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../services/cme_service.dart';
 
@@ -321,8 +324,10 @@ class _ConferenceBody extends StatelessWidget {
             children: event.tags
                 .map(
                   (t) => Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 3,
+                    ),
                     decoration: BoxDecoration(
                       color: cs.primaryContainer.withValues(alpha: 0.4),
                       borderRadius: BorderRadius.circular(999),
@@ -370,9 +375,11 @@ class _ConferenceBody extends StatelessWidget {
                         if (c.name.isNotEmpty)
                           Row(
                             children: [
-                              Icon(Icons.person_outline_rounded,
-                                  size: 12,
-                                  color: cs.onSurface.withValues(alpha: 0.6)),
+                              Icon(
+                                Icons.person_outline_rounded,
+                                size: 12,
+                                color: cs.onSurface.withValues(alpha: 0.6),
+                              ),
                               const SizedBox(width: 6),
                               Expanded(
                                 child: Text(
@@ -389,17 +396,18 @@ class _ConferenceBody extends StatelessWidget {
                         if (c.email != null && c.email!.isNotEmpty)
                           Row(
                             children: [
-                              Icon(Icons.mail_outline_rounded,
-                                  size: 12,
-                                  color: cs.onSurface.withValues(alpha: 0.6)),
+                              Icon(
+                                Icons.mail_outline_rounded,
+                                size: 12,
+                                color: cs.onSurface.withValues(alpha: 0.6),
+                              ),
                               const SizedBox(width: 6),
                               Expanded(
                                 child: Text(
                                   c.email!,
                                   style: GoogleFonts.plusJakartaSans(
                                     fontSize: 12,
-                                    color:
-                                        cs.onSurface.withValues(alpha: 0.75),
+                                    color: cs.onSurface.withValues(alpha: 0.75),
                                   ),
                                 ),
                               ),
@@ -408,17 +416,18 @@ class _ConferenceBody extends StatelessWidget {
                         if (c.phone != null && c.phone!.isNotEmpty)
                           Row(
                             children: [
-                              Icon(Icons.phone_outlined,
-                                  size: 12,
-                                  color: cs.onSurface.withValues(alpha: 0.6)),
+                              Icon(
+                                Icons.phone_outlined,
+                                size: 12,
+                                color: cs.onSurface.withValues(alpha: 0.6),
+                              ),
                               const SizedBox(width: 6),
                               Expanded(
                                 child: Text(
                                   c.phone!,
                                   style: GoogleFonts.plusJakartaSans(
                                     fontSize: 12,
-                                    color:
-                                        cs.onSurface.withValues(alpha: 0.75),
+                                    color: cs.onSurface.withValues(alpha: 0.75),
                                   ),
                                 ),
                               ),
@@ -455,7 +464,11 @@ class _LabelRow extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.only(top: 2),
-          child: Icon(icon, size: 14, color: cs.onSurface.withValues(alpha: 0.6)),
+          child: Icon(
+            icon,
+            size: 14,
+            color: cs.onSurface.withValues(alpha: 0.6),
+          ),
         ),
         const SizedBox(width: 8),
         Expanded(
@@ -516,8 +529,11 @@ class _WebinarBody extends StatelessWidget {
                 CircleAvatar(
                   radius: 18,
                   backgroundColor: cs.primaryContainer,
-                  child: Icon(Icons.person_rounded,
-                      size: 18, color: cs.primary),
+                  child: Icon(
+                    Icons.person_rounded,
+                    size: 18,
+                    color: cs.primary,
+                  ),
                 ),
                 const SizedBox(width: 10),
                 Expanded(
@@ -592,8 +608,10 @@ class _WebinarBody extends StatelessWidget {
             children: event.tags
                 .map(
                   (t) => Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 3,
+                    ),
                     decoration: BoxDecoration(
                       color: cs.primaryContainer.withValues(alpha: 0.4),
                       borderRadius: BorderRadius.circular(999),
@@ -610,33 +628,6 @@ class _WebinarBody extends StatelessWidget {
                 )
                 .toList(),
           ),
-        if (event.onlineUrl != null && event.onlineUrl!.isNotEmpty) ...[
-          const SizedBox(height: 12),
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: const Color(0xFFFFFBEB),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: const Color(0xFFFDE68A)),
-            ),
-            child: Row(
-              children: [
-                const Icon(Icons.info_outline_rounded,
-                    size: 14, color: Color(0xFF92400E)),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    'Online link will be shared via email upon registration.',
-                    style: GoogleFonts.plusJakartaSans(
-                      fontSize: 11.5,
-                      color: const Color(0xFF92400E),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
       ],
     );
   }
@@ -658,9 +649,9 @@ class _FooterButtons extends StatelessWidget {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
     } catch (_) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Could not open link.')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Could not open link.')));
       }
     }
   }
@@ -680,9 +671,11 @@ class _FooterButtons extends StatelessWidget {
     // Venue first, falling back to the join link for online events, so an
     // entry always says where to actually be.
     final location = (event.venue != null && event.venue!.isNotEmpty)
-        ? [event.venue, event.address, event.city]
-            .where((p) => p != null && p.isNotEmpty)
-            .join(', ')
+        ? [
+            event.venue,
+            event.address,
+            event.city,
+          ].where((p) => p != null && p.isNotEmpty).join(', ')
         : event.onlineUrl;
     final description = event.description ?? event.subtitle;
     final url = event.registrationUrl ?? event.onlineUrl;
@@ -718,20 +711,32 @@ class _FooterButtons extends StatelessWidget {
           children: [
             ListTile(
               leading: const Icon(Icons.event_available_rounded),
-              title: Text('Google Calendar',
-                  style: GoogleFonts.plusJakartaSans(
-                      fontWeight: FontWeight.w700, fontSize: 15)),
-              subtitle: Text('Opens with the details already filled in',
-                  style: GoogleFonts.plusJakartaSans(fontSize: 12.5)),
+              title: Text(
+                'Google Calendar',
+                style: GoogleFonts.plusJakartaSans(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 15,
+                ),
+              ),
+              subtitle: Text(
+                'Opens with the details already filled in',
+                style: GoogleFonts.plusJakartaSans(fontSize: 12.5),
+              ),
               onTap: () => Navigator.pop(sheetContext, true),
             ),
             ListTile(
               leading: const Icon(Icons.calendar_month_rounded),
-              title: Text('Apple Calendar, Outlook or other',
-                  style: GoogleFonts.plusJakartaSans(
-                      fontWeight: FontWeight.w700, fontSize: 15)),
-              subtitle: Text('Sends a calendar file your app can import',
-                  style: GoogleFonts.plusJakartaSans(fontSize: 12.5)),
+              title: Text(
+                'Apple Calendar, Outlook or other',
+                style: GoogleFonts.plusJakartaSans(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 15,
+                ),
+              ),
+              subtitle: Text(
+                'Sends a calendar file your app can import',
+                style: GoogleFonts.plusJakartaSans(fontSize: 12.5),
+              ),
               onTap: () => Navigator.pop(sheetContext, false),
             ),
             const SizedBox(height: 8),
@@ -778,8 +783,24 @@ class _FooterButtons extends StatelessWidget {
     final primaryColor = isWebinar ? const Color(0xFF0F766E) : cs.primary;
 
     final brochure = event.brochureUrl;
-    final register = event.registrationUrl;
-    final online = event.onlineUrl;
+    var register = event.registrationUrl;
+    var online = event.onlineUrl;
+
+    // App Store guideline 3.1.1: an external link to buy digital content is
+    // treated as steering around in-app purchase. Apple splits this by what is
+    // being sold — a conference or workshop is a real-world event and is exempt
+    // under 3.1.3(e), but a paid webinar or online course is a "one-to-many
+    // realtime experience", which is not.
+    //
+    // So on iOS only, paid online events lose their register and join links.
+    // The listing itself stays: the date, speaker, syllabus and CME credits are
+    // the useful part, and free webinars keep their links because no purchase
+    // is involved. Android and web are untouched — this is an App Store rule,
+    // not a decision about the product.
+    if (!kIsWeb && Platform.isIOS && isWebinar && event.price > 0) {
+      register = null;
+      online = null;
+    }
 
     final actions = <Widget>[];
 
@@ -796,9 +817,13 @@ class _FooterButtons extends StatelessWidget {
         child: OutlinedButton.icon(
           style: OutlinedButton.styleFrom(
             padding: const EdgeInsets.symmetric(vertical: 12),
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            side: BorderSide(color: primaryColor.withValues(alpha: 0.7), width: 1.4),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            side: BorderSide(
+              color: primaryColor.withValues(alpha: 0.7),
+              width: 1.4,
+            ),
             foregroundColor: primaryColor,
             backgroundColor: primaryColor.withValues(alpha: 0.06),
           ),
@@ -816,78 +841,241 @@ class _FooterButtons extends StatelessWidget {
     );
 
     if (brochure != null && brochure.isNotEmpty) {
-      actions.add(Expanded(
-        child: OutlinedButton.icon(
-          style: OutlinedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12)),
-            side: BorderSide(color: primaryColor.withValues(alpha: 0.5)),
-            foregroundColor: primaryColor,
-          ),
-          onPressed: () => _open(context, brochure),
-          icon: const Icon(Icons.info_outline_rounded, size: 16),
-          label: Text(
-            'Get Details',
-            style: GoogleFonts.plusJakartaSans(
-              fontSize: 13,
-              fontWeight: FontWeight.w700,
+      actions.add(
+        Expanded(
+          child: OutlinedButton.icon(
+            style: OutlinedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              side: BorderSide(color: primaryColor.withValues(alpha: 0.5)),
+              foregroundColor: primaryColor,
+            ),
+            onPressed: () => _open(context, brochure),
+            icon: const Icon(Icons.info_outline_rounded, size: 16),
+            label: Text(
+              'Get Details',
+              style: GoogleFonts.plusJakartaSans(
+                fontSize: 13,
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ),
         ),
-      ));
+      );
     }
 
-    // For webinars with both onlineUrl and registrationUrl, show "Join" as the
-    // primary CTA. Otherwise show "Register Now".
-    if (isWebinar && online != null && online.isNotEmpty) {
+    // "Join Webinar Now" only when joining is actually possible.
+    //
+    // The button used to appear the moment an onlineUrl existed, so a webinar
+    // three months out offered "Join Webinar Now" — which either dead-ends in
+    // an empty meeting room or, worse, teaches people the button is a lie and
+    // they miss the real one. Organisers also often paste the link as soon as
+    // they have it, long before the session.
+    //
+    // The room opens fifteen minutes early, which is when people actually
+    // arrive, and stays joinable until the scheduled end. Outside that window
+    // the card falls through to Register Now, which is the useful action then.
+    final now = DateTime.now();
+    final joinOpens = event.startsAt.subtract(const Duration(minutes: 15));
+    final joinable = now.isAfter(joinOpens) && now.isBefore(event.endsAt);
+
+    if (isWebinar && online != null && online.isNotEmpty && joinable) {
       if (actions.isNotEmpty) actions.add(const SizedBox(width: 10));
-      actions.add(Expanded(
-        child: FilledButton.icon(
-          style: FilledButton.styleFrom(
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12)),
-            backgroundColor: primaryColor,
-          ),
-          onPressed: () => _open(context, online),
-          icon: const Icon(Icons.videocam_rounded, size: 16),
-          label: Text(
-            'Join Webinar Now',
-            style: GoogleFonts.plusJakartaSans(
-              fontSize: 13,
-              fontWeight: FontWeight.w800,
+      actions.add(
+        Expanded(
+          child: FilledButton.icon(
+            style: FilledButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              backgroundColor: primaryColor,
+            ),
+            onPressed: () => _open(context, online!),
+            icon: const Icon(Icons.videocam_rounded, size: 16),
+            label: Text(
+              'Join Webinar Now',
+              style: GoogleFonts.plusJakartaSans(
+                fontSize: 13,
+                fontWeight: FontWeight.w800,
+              ),
             ),
           ),
         ),
-      ));
+      );
     } else if (register != null && register.isNotEmpty) {
       if (actions.isNotEmpty) actions.add(const SizedBox(width: 10));
-      actions.add(Expanded(
-        child: FilledButton.icon(
-          style: FilledButton.styleFrom(
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12)),
-            backgroundColor: primaryColor,
-          ),
-          onPressed: () => _open(context, register),
-          icon: const Icon(Icons.person_add_alt_rounded, size: 16),
-          label: Text(
-            'Register Now',
-            style: GoogleFonts.plusJakartaSans(
-              fontSize: 13,
-              fontWeight: FontWeight.w800,
+      actions.add(
+        Expanded(
+          child: FilledButton.icon(
+            style: FilledButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              backgroundColor: primaryColor,
+            ),
+            onPressed: () => _open(context, register!),
+            icon: const Icon(Icons.person_add_alt_rounded, size: 16),
+            label: Text(
+              'Register Now',
+              style: GoogleFonts.plusJakartaSans(
+                fontSize: 13,
+                fontWeight: FontWeight.w800,
+              ),
             ),
           ),
         ),
-      ));
+      );
     }
 
-    if (actions.isEmpty) return const SizedBox.shrink();
+    // Reference code and share, on the event itself rather than only in the
+    // submitter's own list. The code is how anyone — organiser, attendee,
+    // someone forwarding it — refers to this listing, so it belongs wherever
+    // the event is shown; and sharing an event without it forces the recipient
+    // to search by title.
+    final code = event.referenceCode;
+    final referenceRow = (code == null || code.isEmpty)
+        ? null
+        : Padding(
+            padding: const EdgeInsets.only(top: 4, bottom: 2),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.tag_rounded,
+                  size: 14,
+                  color: cs.onSurface.withValues(alpha: 0.45),
+                ),
+                const SizedBox(width: 5),
+                Expanded(
+                  child: SelectableText(
+                    code,
+                    style: GoogleFonts.robotoMono(
+                      fontSize: 11.5,
+                      fontWeight: FontWeight.w600,
+                      color: cs.onSurface.withValues(alpha: 0.55),
+                    ),
+                  ),
+                ),
+                TextButton.icon(
+                  onPressed: () => _shareEvent(),
+                  icon: const Icon(Icons.share_rounded, size: 15),
+                  label: Text(
+                    'Share',
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 12.5,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  style: TextButton.styleFrom(
+                    visualDensity: VisualDensity.compact,
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                  ),
+                ),
+              ],
+            ),
+          );
+
+    // No early return. "Add to calendar" used to sit behind `actions.isEmpty`,
+    // so an event with no brochure, registration link or join URL lost the
+    // whole footer — and saving the date is exactly what someone wants from a
+    // listing that has no other link to follow. Every event has a date, so
+    // this row always renders.
+    // Says when the join button will appear, for a webinar that has a link but
+    // is not open yet. Without this the absence of a Join button reads as
+    // something missing from the listing, and someone who registered has no
+    // way to know whether to keep checking back.
+    final showsJoinLater =
+        isWebinar && online != null && online.isNotEmpty && !joinable;
+    final joinHint = (showsJoinLater && now.isBefore(joinOpens))
+        ? Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.schedule_rounded,
+                  size: 13,
+                  color: cs.onSurface.withValues(alpha: 0.45),
+                ),
+                const SizedBox(width: 5),
+                Expanded(
+                  child: Text(
+                    'The join button appears 15 minutes before the webinar starts.',
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 11.5,
+                      color: cs.onSurface.withValues(alpha: 0.55),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          )
+        : null;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [calendarRow, Row(children: actions)],
+      children: [
+        calendarRow,
+        if (actions.isNotEmpty) Row(children: actions),
+        ?joinHint,
+        ?referenceRow,
+      ],
     );
+  }
+
+  /// Share text carrying everything the card shows.
+  ///
+  /// Built from the same fields the screen renders — title, dates, venue,
+  /// organiser, reference — because a share that drops half of them makes the
+  /// recipient come back and ask. Times are the device's local rendering of
+  /// the event, matching what the sender is looking at.
+  void _shareEvent() {
+    final e = event;
+    final start = e.startsAt.toLocal();
+    final end = e.endsAt.toLocal();
+    final dateStr = DateFormat('d MMM yyyy').format(start);
+    final timeStr =
+        '${DateFormat('h:mm a').format(start)} – ${DateFormat('h:mm a').format(end)}';
+
+    final buf = StringBuffer()
+      ..writeln(e.title)
+      ..writeln(
+        '${e.eventType[0].toUpperCase()}${e.eventType.substring(1)} · PediAid',
+      );
+    if (e.subtitle != null && e.subtitle!.isNotEmpty) buf.writeln(e.subtitle);
+    buf
+      ..writeln()
+      ..writeln('$dateStr, $timeStr');
+
+    final venue = [
+      e.venue,
+      e.address,
+      e.city,
+    ].where((p) => p != null && p.isNotEmpty).join(', ');
+    if (venue.isNotEmpty) buf.writeln('Venue: $venue');
+    if (e.organisedBy != null && e.organisedBy!.isNotEmpty) {
+      buf.writeln('Organised by: ${e.organisedBy}');
+    }
+    if (e.creditHours != null) buf.writeln('${e.creditHours} CME credits');
+    if (e.onlineUrl != null && e.onlineUrl!.isNotEmpty) {
+      buf.writeln('Join: ${e.onlineUrl}');
+    }
+    if (e.registrationUrl != null && e.registrationUrl!.isNotEmpty) {
+      buf.writeln('Register: ${e.registrationUrl}');
+    }
+    if (e.referenceCode != null && e.referenceCode!.isNotEmpty) {
+      buf
+        ..writeln()
+        ..writeln('PediAid ID no.: ${e.referenceCode}');
+    }
+    if (e.slug.isNotEmpty) {
+      buf.writeln(
+        'https://academics.pediaid.bridgr.co.in/academics/cme/${e.slug}',
+      );
+    }
+
+    Share.share(buf.toString().trim(), subject: e.title);
   }
 }

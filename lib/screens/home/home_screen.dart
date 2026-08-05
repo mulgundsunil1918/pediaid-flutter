@@ -63,6 +63,8 @@ import '../submissions/my_submissions_screen.dart';
 import '../guides/developmental_milestones/dev_milestones_hub.dart';
 import '../guides/developmental_milestones/tdsc/tdsc_assistant_screen.dart';
 import '../../services/app_config_service.dart';
+import '../../services/rate_prompt_service.dart';
+import '../../widgets/tool_gate.dart';
 
 // ── All available quick-access items ─────────────────────────────────────────
 
@@ -183,6 +185,19 @@ class _HomeScreenState extends State<HomeScreen> {
     _loadPrefs();
     _scrollController.addListener(_onScroll);
     if (kIsWeb) _fetchVisitorCount();
+    _maybeAskForReview();
+  }
+
+  /// Offers the review prompt a few seconds after the home screen settles.
+  ///
+  /// Not on the first frame: someone who just opened the app is on their way
+  /// to look something up, and a dialog in front of that is an interruption
+  /// rather than a request. The service decides whether it is due at all — it
+  /// asks three times over two months at most, then never again.
+  Future<void> _maybeAskForReview() async {
+    await Future<void>.delayed(const Duration(seconds: 4));
+    if (!mounted) return;
+    await RatePromptService.instance.maybeAsk(context);
   }
 
   Future<void> _fetchVisitorCount() async {
@@ -256,17 +271,53 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
+  /// Key under which we record which chips existed when the user last saved.
+  ///
+  /// Needed to tell "the user removed this" apart from "this did not exist
+  /// yet". Without it, a saved selection silently froze Quick Access at the
+  /// module list of whichever version the user first customised on — every
+  /// module added afterwards was invisible to them forever, while a fresh
+  /// install showed everything. That is why modules appeared to be missing.
+  static const _kKnownKey = '${_kPrefKey}_known';
+
   Future<void> _loadPrefs() async {
     final prefs = await SharedPreferences.getInstance();
     final saved = prefs.getStringList(_kPrefKey);
-    if (saved != null && saved.isNotEmpty) {
-      setState(() => _selectedKeys = saved);
+    if (saved == null || saved.isEmpty) return;
+
+    final known = prefs.getStringList(_kKnownKey);
+
+    // Chips that did not exist when this selection was saved, so the user
+    // never had the chance to opt out of them. Anything they actively removed
+    // stays removed, because it was in `known` at the time.
+    final List<String> unseen;
+    if (known == null) {
+      // Saved before this bookkeeping existed — nothing records what was on
+      // offer then. Add back everything missing, once, so the modules they
+      // never saw appear; from here on `known` makes it exact, and anything
+      // they remove now stays removed.
+      unseen = _kDefaultKeys.where((k) => !saved.contains(k)).toList();
+    } else {
+      unseen = _kDefaultKeys
+          .where((k) => !known.contains(k) && !saved.contains(k))
+          .toList();
+    }
+
+    final merged = [...saved, ...unseen];
+    setState(() => _selectedKeys = merged);
+
+    if (unseen.isNotEmpty || known == null) {
+      await prefs.setStringList(_kPrefKey, merged);
+      await prefs.setStringList(_kKnownKey, _kDefaultKeys);
     }
   }
 
   Future<void> _savePrefs() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setStringList(_kPrefKey, _selectedKeys);
+    // Snapshot what was on offer, so a later release can tell which modules
+    // are genuinely new versus ones this user chose not to have.
+    await prefs.setStringList(_kKnownKey, _kDefaultKeys);
   }
 
   String get _greeting {
@@ -893,7 +944,15 @@ class _HomeScreenState extends State<HomeScreen> {
     void open(String key, String label, Widget Function() builder) {
       // ignore: unawaited_futures
       RecentsService.instance.record(key, label);
-      Navigator.push(context, MaterialPageRoute(builder: (_) => builder()));
+      // Gated here too: Quick Access and Recents reach calculators without
+      // going through the calculators list, so a tool withdrawn from service
+      // must be unreachable from every route into it, not just the obvious one.
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => ToolGate(toolId: key, child: builder()),
+        ),
+      );
     }
 
     final bool _iosNative = !kIsWeb && Platform.isIOS;
@@ -1318,7 +1377,15 @@ class _HomeScreenState extends State<HomeScreen> {
       // ignore: unawaited_futures
       RecentsService.instance.record(key, chip.label);
     }
-    Navigator.push(context, MaterialPageRoute(builder: (_) => builder()));
+    // Gated here too: Quick Access and Recents reach calculators without
+    // going through the calculators list, so a tool withdrawn from service
+    // must be unreachable from every route into it, not just the obvious one.
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ToolGate(toolId: key, child: builder()),
+      ),
+    );
   }
 
   // ── Admin tile (only rendered when currentUser.role == 'admin') ──────────
@@ -1711,13 +1778,29 @@ class _HomeScreenState extends State<HomeScreen> {
                   label: 'Rate PediAid',
                   onTap: () async {
                     Navigator.pop(context);
+                    // requestReview() is quota-limited by Google and does
+                    // nothing at all when the app was not installed from the
+                    // Play Store — a sideloaded build gets silence, with no
+                    // error to explain it. isAvailable() does not catch that,
+                    // so the tap has to fall back to the store listing rather
+                    // than trusting the card appeared.
                     final review = InAppReview.instance;
-                    if (await review.isAvailable()) {
-                      review.requestReview();
-                    } else {
-                      review.openStoreListing(
-                        appStoreId: '6748139585',
-                        microsoftStoreId: null,
+                    var shown = false;
+                    try {
+                      if (await review.isAvailable()) {
+                        await review.requestReview();
+                        shown = true;
+                      }
+                    } catch (_) {
+                      // Fall through to the listing below.
+                    }
+                    if (!shown) {
+                      await launchUrl(
+                        Uri.parse(
+                          'https://play.google.com/store/apps/details'
+                          '?id=com.pediaid.pediaid',
+                        ),
+                        mode: LaunchMode.externalApplication,
                       );
                     }
                   },
@@ -1730,7 +1813,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Share.share(
                       'Check out PediAid — a free paediatric & neonatal clinical reference app for drug doses, calculators, and growth charts.\n\n'
                       '📱 iOS: https://apps.apple.com/app/id6748139585\n'
-                      '🤖 Android: https://play.google.com/store/apps/details?id=org.pediaid.app',
+                      '🤖 Android: https://play.google.com/store/apps/details?id=com.pediaid.pediaid',
                     );
                   },
                 ),
@@ -1775,7 +1858,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Padding(
             padding: const EdgeInsets.all(16),
             child: Text(
-              'PediAid v${AppConfigService.instance.currentVersion.isEmpty ? "1.3.0" : AppConfigService.instance.currentVersion}',
+              'PediAid v${AppConfigService.instance.versionLabel.isEmpty ? "1.3.0" : AppConfigService.instance.versionLabel}',
               style: GoogleFonts.plusJakartaSans(
                 fontSize: 11,
                 color: cs.onSurface.withValues(alpha: 0.4),

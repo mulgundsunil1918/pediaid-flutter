@@ -11,6 +11,9 @@
 // to see everything.
 // =============================================================================
 
+import 'dart:io' show Platform;
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'fetal_development_screen.dart';
@@ -65,6 +68,11 @@ class GuidesScreen extends StatefulWidget {
 
 class _GuidesScreenState extends State<GuidesScreen> {
   String _selected = _kAll;
+
+  /// Guides available on this platform. See [_GuideItem.dosing].
+  List<_GuideItem> get _visibleGuides => (!kIsWeb && Platform.isIOS)
+      ? _guides.where((g) => !g.dosing).toList()
+      : _guides;
 
   late final List<_GuideItem> _guides = [
     // Neonatal Scores — surfaced first and highlighted; bundles all the
@@ -159,6 +167,7 @@ class _GuidesScreenState extends State<GuidesScreen> {
       icon: Icons.water_drop_outlined,
       categories: const [_kEmergency],
       build: (_) => const DkaAlgorithmScreen(),
+      dosing: true,
     ),
     _GuideItem(
       title: 'Snake Envenomation',
@@ -166,6 +175,7 @@ class _GuidesScreenState extends State<GuidesScreen> {
       icon: Icons.warning_amber_rounded,
       categories: const [_kEmergency],
       build: (_) => const SnakeEnvenomationScreen(),
+      dosing: true,
     ),
     _GuideItem(
       title: 'Scorpion Sting',
@@ -180,6 +190,7 @@ class _GuidesScreenState extends State<GuidesScreen> {
       icon: Icons.science_outlined,
       categories: const [_kEmergency, _kReference],
       build: (_) => const PoisoningAntidotesScreen(),
+      dosing: true,
     ),
     _GuideItem(
       title: 'Acute Severe Asthma',
@@ -187,6 +198,7 @@ class _GuidesScreenState extends State<GuidesScreen> {
       icon: Icons.air_outlined,
       categories: const [_kEmergency],
       build: (_) => const AcuteSevereAsthmaScreen(),
+      dosing: true,
     ),
     _GuideItem(
       title: 'Hypertensive Emergency',
@@ -194,6 +206,7 @@ class _GuidesScreenState extends State<GuidesScreen> {
       icon: Icons.favorite_outline,
       categories: const [_kEmergency],
       build: (_) => const HypertensiveEmergencyScreen(),
+      dosing: true,
     ),
     _GuideItem(
       title: 'AVPU Scale',
@@ -208,6 +221,7 @@ class _GuidesScreenState extends State<GuidesScreen> {
       icon: Icons.calculate_outlined,
       categories: const [_kScoring, _kEmergency],
       build: (_) => const GcsScreen(),
+      dosing: true,
     ),
     _GuideItem(
       title: 'RSI — Rapid Sequence Intubation',
@@ -215,6 +229,7 @@ class _GuidesScreenState extends State<GuidesScreen> {
       icon: Icons.air_outlined,
       categories: const [_kEmergency, _kResus],
       build: (_) => const RsiGuideScreen(),
+      dosing: true,
     ),
     _GuideItem(
       title: 'Electrolyte Corrections',
@@ -222,6 +237,7 @@ class _GuidesScreenState extends State<GuidesScreen> {
       icon: Icons.water_drop_outlined,
       categories: const [_kReference, _kEmergency],
       build: (_) => const ElectrolyteCorrectionsScreen(),
+      dosing: true,
     ),
     _GuideItem(
       title: 'Emergency ICU Drugs',
@@ -229,6 +245,7 @@ class _GuidesScreenState extends State<GuidesScreen> {
       icon: Icons.medical_services_outlined,
       categories: const [_kEmergency, _kReference],
       build: (_) => const EmergencyIcuDrugsScreen(),
+      dosing: true,
     ),
     _GuideItem(
       title: 'Sedation, Analgesia & Paralytics',
@@ -236,6 +253,7 @@ class _GuidesScreenState extends State<GuidesScreen> {
       icon: Icons.bedtime_outlined,
       categories: const [_kEmergency, _kReference],
       build: (_) => const SedationParalyticsScreen(),
+      dosing: true,
     ),
     _GuideItem(
       title: 'Seizure Medications',
@@ -243,6 +261,7 @@ class _GuidesScreenState extends State<GuidesScreen> {
       icon: Icons.flash_on_outlined,
       categories: const [_kEmergency, _kReference],
       build: (_) => const SeizureMedsScreen(),
+      dosing: true,
     ),
     _GuideItem(
       title: 'Sepsis Protocols',
@@ -255,12 +274,12 @@ class _GuidesScreenState extends State<GuidesScreen> {
   ];
 
   List<_GuideItem> get _filtered => _selected == _kAll
-      ? _guides
-      : _guides.where((g) => g.categories.contains(_selected)).toList();
+      ? _visibleGuides
+      : _visibleGuides.where((g) => g.categories.contains(_selected)).toList();
 
   int _countFor(String category) {
-    if (category == _kAll) return _guides.length;
-    return _guides.where((g) => g.categories.contains(category)).length;
+    if (category == _kAll) return _visibleGuides.length;
+    return _visibleGuides.where((g) => g.categories.contains(category)).length;
   }
 
   @override
@@ -489,6 +508,14 @@ class _GuideItem {
   final IconData icon;
   final List<String> categories;
   final WidgetBuilder? build;
+  /// Contains per-kilogram drug doses.
+  ///
+  /// App Store guideline 1.4.2 restricts drug dosage tools to manufacturers,
+  /// hospitals, universities and similar approved entities. A lookup table of
+  /// mg/kg is the same thing as a calculator for that purpose, so these are
+  /// withheld on iOS only. Android and web are unaffected.
+  final bool dosing;
+
   final bool comingSoon;
   final bool highlight;
   final String? badge;
@@ -499,6 +526,7 @@ class _GuideItem {
     required this.icon,
     required this.categories,
     required this.build,
+    this.dosing = false,
     this.comingSoon = false,
     this.highlight = false,
     this.badge,

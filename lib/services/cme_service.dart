@@ -39,6 +39,13 @@ class CmeCoordinator {
 class CmeEvent {
   final String id;
   final String slug;
+
+  /// Human-usable reference, e.g. PA-CME-00042.
+  ///
+  /// Returned by the API since reference codes were added, but never read
+  /// here — so the one identifier an organiser or attendee can quote was
+  /// absent from every screen that shows an event.
+  final String? referenceCode;
   final String title;
   final String? subtitle;
   final String eventType; // conference | webinar | workshop | course
@@ -109,7 +116,8 @@ class CmeEvent {
     required this.createdBy,
     required this.createdAt,
     required this.updatedAt,
-  });
+      this.referenceCode,
+});
 
   factory CmeEvent.fromJson(Map<String, dynamic> json) {
     double? parseDouble(dynamic v) {
@@ -122,6 +130,7 @@ class CmeEvent {
     return CmeEvent(
       id: json['id'] as String,
       slug: (json['slug'] as String?) ?? '',
+      referenceCode: json['referenceCode'] as String?,
       title: (json['title'] as String?) ?? '',
       subtitle: json['subtitle'] as String?,
       eventType: (json['eventType'] as String?) ?? 'conference',

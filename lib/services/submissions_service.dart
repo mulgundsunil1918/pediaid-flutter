@@ -116,6 +116,12 @@ class Submission {
   final String? adminFeedback;
   final String? slug;
 
+  /// Human-usable reference, e.g. PA-CME-00042.
+  ///
+  /// The API has always returned this; the model simply never read it, so the
+  /// one identifier a submitter can quote was invisible in the app.
+  final String? referenceCode;
+
   const Submission({
     required this.submissionId,
     required this.module,
@@ -124,12 +130,14 @@ class Submission {
     required this.createdAt,
     this.adminFeedback,
     this.slug,
-  });
+      this.referenceCode,
+});
 
   factory Submission.fromJson(Map<String, dynamic> json) {
     return Submission(
       submissionId: (json['submissionId'] ?? '') as String,
       module: _moduleFromApi((json['moduleType'] ?? '') as String),
+      referenceCode: json['referenceCode'] as String?,
       title: (json['title'] ?? '') as String,
       status: _statusFromApi((json['status'] ?? 'submitted') as String),
       createdAt:

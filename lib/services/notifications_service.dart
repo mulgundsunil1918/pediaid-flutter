@@ -97,6 +97,22 @@ class NotificationsService {
         .timeout(const Duration(seconds: 15));
   }
 
+  /// Deletes every notification for the signed-in user.
+  ///
+  /// Distinct from [markAllRead]: read notifications still pile up, and a list
+  /// that only grows is one people stop opening. The server scopes the delete
+  /// to the authenticated account, so it can never reach anyone else's.
+  Future<void> deleteAll() async {
+    final token = AuthService.instance.accessToken;
+    if (token == null) return;
+    await http
+        .delete(
+          Uri.parse('$_base/api/academics/notifications'),
+          headers: AuthService.instance.authHeadersNoBody,
+        )
+        .timeout(const Duration(seconds: 15));
+  }
+
   Future<void> markAllRead() async {
     final token = AuthService.instance.accessToken;
     if (token == null) return;

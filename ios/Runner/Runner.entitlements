@@ -2,6 +2,21 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<!-- Push notifications. 'development' is correct for debug and TestFlight;
+	     Xcode rewrites it to 'production' for an App Store archive. Without
+	     this, FirebaseMessaging cannot obtain an APNs token and push silently
+	     never arrives on iOS. -->
+	<key>aps-environment</key>
+	<string>development</string>
+	<!-- Sign in with Apple.
+	     Required by App Store guideline 4.8 whenever a third-party login is
+	     offered, and the app offers Google. Without this capability the button
+	     renders but authorization fails at the system level, which is what
+	     produced AuthorizationErrorCode.unknown. -->
+	<key>com.apple.developer.applesignin</key>
+	<array>
+		<string>Default</string>
+	</array>
 	<key>keychain-access-groups</key>
 	<array>
 		<string>$(AppIdentifierPrefix)app.pediaid.pediaid</string>

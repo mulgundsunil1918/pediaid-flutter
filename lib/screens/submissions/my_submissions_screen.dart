@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import '../../services/submissions_service.dart';
+import 'package:share_plus/share_plus.dart';
 
 class MySubmissionsScreen extends StatefulWidget {
   const MySubmissionsScreen({super.key});
@@ -60,7 +61,9 @@ class _MySubmissionsScreenState extends State<MySubmissionsScreen> {
         future: _future,
         builder: (context, snap) {
           if (snap.connectionState != ConnectionState.done) {
-            return const Center(child: CircularProgressIndicator(strokeWidth: 2));
+            return const Center(
+              child: CircularProgressIndicator(strokeWidth: 2),
+            );
           }
 
           if (snap.hasError) {
@@ -68,7 +71,10 @@ class _MySubmissionsScreenState extends State<MySubmissionsScreen> {
               icon: Icons.cloud_off_rounded,
               title: "Couldn't load your submissions",
               body: 'Check your connection and try again.',
-              action: TextButton(onPressed: _reload, child: const Text('Retry')),
+              action: TextButton(
+                onPressed: _reload,
+                child: const Text('Retry'),
+              ),
             );
           }
 
@@ -83,13 +89,15 @@ class _MySubmissionsScreenState extends State<MySubmissionsScreen> {
             );
           }
 
-          final visible =
-              _filter == null ? all : all.where((s) => s.status == _filter).toList();
+          final visible = _filter == null
+              ? all
+              : all.where((s) => s.status == _filter).toList();
 
           // Only offer filters the user actually has submissions for —
           // a fixed 8-chip row would be mostly dead options.
-          final present = <SubmissionStatus>{for (final s in all) s.status}.toList()
-            ..sort((a, b) => a.index.compareTo(b.index));
+          final present = <SubmissionStatus>{
+            for (final s in all) s.status,
+          }.toList()..sort((a, b) => a.index.compareTo(b.index));
 
           return Column(
             children: [
@@ -110,7 +118,8 @@ class _MySubmissionsScreenState extends State<MySubmissionsScreen> {
                         padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
                         itemCount: visible.length,
                         separatorBuilder: (_, _) => const SizedBox(height: 10),
-                        itemBuilder: (_, i) => _SubmissionCard(item: visible[i]),
+                        itemBuilder: (_, i) =>
+                            _SubmissionCard(item: visible[i]),
                       ),
               ),
             ],
@@ -163,7 +172,11 @@ class _FilterRow extends StatelessWidget {
 }
 
 class _Chip extends StatelessWidget {
-  const _Chip({required this.label, required this.selected, required this.onTap});
+  const _Chip({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
 
   final String label;
   final bool selected;
@@ -185,7 +198,9 @@ class _Chip extends StatelessWidget {
           style: GoogleFonts.plusJakartaSans(
             fontSize: 12,
             fontWeight: FontWeight.w700,
-            color: selected ? cs.onPrimary : cs.onSurface.withValues(alpha: 0.65),
+            color: selected
+                ? cs.onPrimary
+                : cs.onSurface.withValues(alpha: 0.65),
           ),
         ),
       ),
@@ -200,22 +215,43 @@ class _SubmissionCard extends StatelessWidget {
   final Submission item;
 
   (String, Color) get _statusMeta => switch (item.status) {
-        SubmissionStatus.published => ('LIVE', const Color(0xFF2E7D32)),
-        SubmissionStatus.approved => ('APPROVED', const Color(0xFF2E7D32)),
-        SubmissionStatus.rejected => ('NOT APPROVED', const Color(0xFFC62828)),
-        SubmissionStatus.needsEdit => ('NEEDS CHANGES', const Color(0xFFEF6C00)),
-        SubmissionStatus.underReview => ('UNDER REVIEW', const Color(0xFF1565C0)),
-        SubmissionStatus.archived => ('ARCHIVED', const Color(0xFF546E7A)),
-        SubmissionStatus.draft => ('DRAFT', const Color(0xFF546E7A)),
-        SubmissionStatus.submitted => ('UNDER REVIEW', const Color(0xFFF9A825)),
-      };
+    SubmissionStatus.published => ('LIVE', const Color(0xFF2E7D32)),
+    SubmissionStatus.approved => ('APPROVED', const Color(0xFF2E7D32)),
+    SubmissionStatus.rejected => ('NOT APPROVED', const Color(0xFFC62828)),
+    SubmissionStatus.needsEdit => ('NEEDS CHANGES', const Color(0xFFEF6C00)),
+    SubmissionStatus.underReview => ('UNDER REVIEW', const Color(0xFF1565C0)),
+    SubmissionStatus.archived => ('ARCHIVED', const Color(0xFF546E7A)),
+    SubmissionStatus.draft => ('DRAFT', const Color(0xFF546E7A)),
+    SubmissionStatus.submitted => ('UNDER REVIEW', const Color(0xFFF9A825)),
+  };
+
+  /// Share text for an approved submission.
+  ///
+  /// Carries the reference code with the details rather than only a link: the
+  /// code is what identifies this entry in any later query, and a link alone
+  /// leaves the person sharing it unable to say which submission they mean.
+  void _share(Submission item) {
+    final buf = StringBuffer()
+      ..writeln(item.title)
+      ..writeln()
+      ..writeln('${submissionModuleLabel(item.module)} on PediAid')
+      ..writeln('PediAid ID no.: ${item.referenceCode}');
+    final slug = item.slug;
+    if (slug != null && slug.isNotEmpty) {
+      buf
+        ..writeln()
+        ..writeln('https://academics.pediaid.bridgr.co.in/academics/cme/$slug');
+    }
+    Share.share(buf.toString().trim(), subject: item.title);
+  }
 
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     final (label, color) = _statusMeta;
     final feedback = item.adminFeedback;
-    final showFeedback = feedback != null &&
+    final showFeedback =
+        feedback != null &&
         feedback.trim().isNotEmpty &&
         (item.status == SubmissionStatus.needsEdit ||
             item.status == SubmissionStatus.rejected);
@@ -278,6 +314,50 @@ class _SubmissionCard extends StatelessWidget {
               color: cs.onSurface.withValues(alpha: 0.85),
             ),
           ),
+          // Reference code plus a share action, once there is something to
+          // share. The code is the only handle a submitter has on their entry —
+          // it is what they quote in a query — so it is selectable, and the
+          // share text carries it alongside the details rather than leaving
+          // someone to copy it out separately.
+          if (item.referenceCode != null && item.referenceCode!.isNotEmpty) ...[
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                Icon(
+                  Icons.tag_rounded,
+                  size: 14,
+                  color: cs.onSurface.withValues(alpha: 0.45),
+                ),
+                const SizedBox(width: 5),
+                Expanded(
+                  child: SelectableText(
+                    item.referenceCode!,
+                    style: GoogleFonts.robotoMono(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: cs.onSurface.withValues(alpha: 0.6),
+                    ),
+                  ),
+                ),
+                if (item.status == SubmissionStatus.published)
+                  TextButton.icon(
+                    onPressed: () => _share(item),
+                    icon: const Icon(Icons.share_rounded, size: 15),
+                    label: Text(
+                      'Share',
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 12.5,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    style: TextButton.styleFrom(
+                      visualDensity: VisualDensity.compact,
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                    ),
+                  ),
+              ],
+            ),
+          ],
           if (showFeedback) ...[
             const SizedBox(height: 10),
             Container(

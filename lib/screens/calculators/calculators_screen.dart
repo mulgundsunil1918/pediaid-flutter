@@ -56,6 +56,7 @@ import 'umbilical_catheter_calculator.dart';
 import 'ett_calculator.dart';
 import 'mid_parental_height_calculator.dart';
 import '../guides/gcs_screen.dart';
+import '../../widgets/tool_gate.dart';
 
 // ── Category catalogue ──────────────────────────────────────────────────────
 //
@@ -73,7 +74,14 @@ const String _kBurns = 'Burns';
 const String _kProc = 'Procedures';
 
 const List<String> _kCategories = [
-  _kAll, _kNICU, _kPICU, _kFluids, _kCardiac, _kResp, _kBurns, _kProc,
+  _kAll,
+  _kNICU,
+  _kPICU,
+  _kFluids,
+  _kCardiac,
+  _kResp,
+  _kBurns,
+  _kProc,
 ];
 
 class CalculatorsScreen extends StatefulWidget {
@@ -145,6 +153,7 @@ class _CalculatorsScreenState extends State<CalculatorsScreen> {
     ),
     _CalculatorItem(
       title: 'Blood Gas Analyser',
+      iosHidden: true,
       subtitle: '7-step interpretation',
       icon: Icons.air,
       categories: [_kPICU, _kResp, _kFluids],
@@ -311,6 +320,7 @@ class _CalculatorsScreenState extends State<CalculatorsScreen> {
     // ── Neuro scoring (PIC) ───────────────────────────────────────────
     _CalculatorItem(
       title: 'Glasgow Coma Scale',
+      iosHidden: true,
       subtitle: 'Smart paediatric scorer',
       icon: Icons.psychology_outlined,
       categories: [_kPICU],
@@ -384,11 +394,11 @@ class _CalculatorsScreenState extends State<CalculatorsScreen> {
                               itemCount: filtered.length,
                               gridDelegate:
                                   SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: cols,
-                                crossAxisSpacing: 10,
-                                mainAxisSpacing: 10,
-                                childAspectRatio: 1.1,
-                              ),
+                                    crossAxisCount: cols,
+                                    crossAxisSpacing: 10,
+                                    mainAxisSpacing: 10,
+                                    childAspectRatio: 1.1,
+                                  ),
                               itemBuilder: (context, index) {
                                 final item = filtered[index];
                                 return _CalculatorCard(
@@ -411,104 +421,320 @@ class _CalculatorsScreenState extends State<CalculatorsScreen> {
   void _navigate(BuildContext context, String title) {
     switch (title) {
       case 'Gestational Age & EDD':
-        Navigator.push(context,
-            MaterialPageRoute(builder: (_) => const GestationalAgeCalculator()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) =>
+                ToolGate(toolId: 'ga', child: const GestationalAgeCalculator()),
+          ),
+        );
       case 'Ponderal Index':
-        Navigator.push(context,
-            MaterialPageRoute(builder: (_) => const PonderalIndexCalculator()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => ToolGate(
+              toolId: 'ponderal',
+              child: const PonderalIndexCalculator(),
+            ),
+          ),
+        );
       case 'Mid-Parental Height':
-        Navigator.push(context,
-            MaterialPageRoute(builder: (_) => const MidParentalHeightCalculator()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => ToolGate(
+              toolId: 'mph',
+              child: const MidParentalHeightCalculator(),
+            ),
+          ),
+        );
       case 'Body Surface Area':
-        Navigator.push(context,
-            MaterialPageRoute(builder: (_) => const BSACalculator()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) =>
+                ToolGate(toolId: 'bsa', child: const BSACalculator()),
+          ),
+        );
       case 'Nutritional Audit':
-        Navigator.push(context,
-            MaterialPageRoute(builder: (_) => const NutritionalAuditCalculator()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => ToolGate(
+              toolId: 'nutri',
+              child: const NutritionalAuditCalculator(),
+            ),
+          ),
+        );
       case 'TPN Calculator':
-        Navigator.push(context,
-            MaterialPageRoute(builder: (_) => const TpnCalculator()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) =>
+                ToolGate(toolId: 'tpn', child: const TpnCalculator()),
+          ),
+        );
       case 'CGA / PMA Calculator':
-        Navigator.push(context,
-            MaterialPageRoute(builder: (_) => const CGAPMACalculator()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) =>
+                ToolGate(toolId: 'cga', child: const CGAPMACalculator()),
+          ),
+        );
       case 'GIR Calculator':
-        Navigator.push(context,
-            MaterialPageRoute(builder: (_) => const GIRCalculator()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) =>
+                ToolGate(toolId: 'gir', child: const GIRCalculator()),
+          ),
+        );
       case 'Schwartz eGFR':
-        Navigator.push(context,
-            MaterialPageRoute(builder: (_) => const SchwartzEGFRCalculator()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) =>
+                ToolGate(toolId: 'egfr', child: const SchwartzEGFRCalculator()),
+          ),
+        );
       case 'Blood Gas Analyser':
-        Navigator.push(context,
-            MaterialPageRoute(builder: (_) => const BloodGasAnalyser()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) =>
+                ToolGate(toolId: 'gas', child: const BloodGasAnalyser()),
+          ),
+        );
       case 'DVET Calculator':
-        Navigator.push(context,
-            MaterialPageRoute(builder: (_) => const DoubleVolumeExchange()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) =>
+                ToolGate(toolId: 'dve', child: const DoubleVolumeExchange()),
+          ),
+        );
       case 'Ventilator Parameters':
-        Navigator.push(context,
-            MaterialPageRoute(builder: (_) => const VentilatorParameters()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) =>
+                ToolGate(toolId: 'vent', child: const VentilatorParameters()),
+          ),
+        );
       case 'BPD Estimator':
         launchUrl(
-          Uri.parse('https://neonatal.rti.org/index.cfm?fuseaction=BPD_Calculator2.start'),
+          Uri.parse(
+            'https://neonatal.rti.org/index.cfm?fuseaction=BPD_Calculator2.start',
+          ),
           mode: LaunchMode.externalApplication,
         );
       case 'Blood Pressure':
-        Navigator.push(context,
-            MaterialPageRoute(builder: (_) => const BPHubScreen()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => ToolGate(toolId: 'bp', child: const BPHubScreen()),
+          ),
+        );
       case 'Neonatal Jaundice':
-        Navigator.push(context,
-            MaterialPageRoute(builder: (_) => const JaundiceHubScreen()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) =>
+                ToolGate(toolId: 'bili', child: const JaundiceHubScreen()),
+          ),
+        );
       case 'Maintenance Fluids':
-        Navigator.push(context,
-            MaterialPageRoute(builder: (_) => const MaintenanceFluidCalculator()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => ToolGate(
+              toolId: 'fluid',
+              child: const MaintenanceFluidCalculator(),
+            ),
+          ),
+        );
       case 'Parkland Formula':
-        Navigator.push(context,
-            MaterialPageRoute(builder: (_) => const ParklandCalculatorScreen()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => ToolGate(
+              toolId: 'parkland',
+              child: const ParklandCalculatorScreen(),
+            ),
+          ),
+        );
       case 'Lund & Browder Chart':
-        Navigator.push(context,
-            MaterialPageRoute(builder: (_) => const LundBrowderScreen()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) =>
+                ToolGate(toolId: 'lund', child: const LundBrowderScreen()),
+          ),
+        );
       case 'Burn Mortality':
-        Navigator.push(context,
-            MaterialPageRoute(builder: (_) => const BurnMortalityCalculator()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => ToolGate(
+              toolId: 'burn',
+              child: const BurnMortalityCalculator(),
+            ),
+          ),
+        );
       case 'PET Calculator':
-        Navigator.push(context,
-            MaterialPageRoute(builder: (_) => const PETCalculatorScreen()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) =>
+                ToolGate(toolId: 'pet', child: const PETCalculatorScreen()),
+          ),
+        );
       case '2D Echo Calculators':
-        Navigator.push(context,
-            MaterialPageRoute(builder: (_) => const EchoCalculatorsScreen()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) =>
+                ToolGate(toolId: 'echo', child: const EchoCalculatorsScreen()),
+          ),
+        );
       case 'Anion Gap':
-        Navigator.push(context, MaterialPageRoute(builder: (_) => const AnionGapCalculator()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => ToolGate(
+              toolId: 'anion-gap',
+              child: const AnionGapCalculator(),
+            ),
+          ),
+        );
       case 'Corrected AG (Albumin)':
-        Navigator.push(context, MaterialPageRoute(builder: (_) => const CorrectedAnionGapCalculator()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const CorrectedAnionGapCalculator(),
+          ),
+        );
       case 'Urine Anion Gap':
-        Navigator.push(context, MaterialPageRoute(builder: (_) => const UrineAnionGapCalculator()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => ToolGate(
+              toolId: 'urine-anion-gap',
+              child: const UrineAnionGapCalculator(),
+            ),
+          ),
+        );
       case 'Serum Osmolality':
-        Navigator.push(context, MaterialPageRoute(builder: (_) => const SerumOsmolalityCalculator()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => ToolGate(
+              toolId: 'serum-osmolality',
+              child: const SerumOsmolalityCalculator(),
+            ),
+          ),
+        );
       case 'Corrected Na (hyperglycaemia)':
-        Navigator.push(context, MaterialPageRoute(builder: (_) => const CorrectedSodiumCalculator()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => ToolGate(
+              toolId: 'corrected-sodium',
+              child: const CorrectedSodiumCalculator(),
+            ),
+          ),
+        );
       case 'Blood Volume':
-        Navigator.push(context, MaterialPageRoute(builder: (_) => const BloodVolumeCalculator()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => ToolGate(
+              toolId: 'blood-volume',
+              child: const BloodVolumeCalculator(),
+            ),
+          ),
+        );
       case 'Free Water Deficit (↑Na)':
-        Navigator.push(context, MaterialPageRoute(builder: (_) => const FreeWaterDeficitCalculator()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => ToolGate(
+              toolId: 'free-water-deficit',
+              child: const FreeWaterDeficitCalculator(),
+            ),
+          ),
+        );
       case 'Na Correction (↓Na)':
-        Navigator.push(context, MaterialPageRoute(builder: (_) => const SodiumCorrectionCalculator()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => ToolGate(
+              toolId: 'sodium-correction',
+              child: const SodiumCorrectionCalculator(),
+            ),
+          ),
+        );
       case 'K Correction (↓/↑K)':
-        Navigator.push(context, MaterialPageRoute(builder: (_) => const PotassiumCorrectionCalculator()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const PotassiumCorrectionCalculator(),
+          ),
+        );
       case 'Calcium Correction (↓Ca)':
-        Navigator.push(context, MaterialPageRoute(builder: (_) => const CalciumCorrectionCalculator()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const CalciumCorrectionCalculator(),
+          ),
+        );
       case 'Magnesium Correction (↓Mg)':
-        Navigator.push(context, MaterialPageRoute(builder: (_) => const MagnesiumCorrectionCalculator()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const MagnesiumCorrectionCalculator(),
+          ),
+        );
       case 'Phosphate Correction (↓PO₄)':
-        Navigator.push(context, MaterialPageRoute(builder: (_) => const PhosphateCorrectionCalculator()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const PhosphateCorrectionCalculator(),
+          ),
+        );
       case 'Hypoglycaemia Bolus':
-        Navigator.push(context, MaterialPageRoute(builder: (_) => const DextroseBolusCalculator()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => ToolGate(
+              toolId: 'dextrose-bolus',
+              child: const DextroseBolusCalculator(),
+            ),
+          ),
+        );
       case 'Glasgow Coma Scale':
-        Navigator.push(context, MaterialPageRoute(builder: (_) => const GcsScreen()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => ToolGate(toolId: 'gcs', child: const GcsScreen()),
+          ),
+        );
       case 'UVC / UAC Depth':
-        Navigator.push(context,
-            MaterialPageRoute(builder: (_) => const UmbilicalCatheterCalculator()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const UmbilicalCatheterCalculator(),
+          ),
+        );
       case 'ETT Size + Depth':
-        Navigator.push(context,
-            MaterialPageRoute(builder: (_) => const EttCalculator()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) =>
+                ToolGate(toolId: 'ett', child: const EttCalculator()),
+          ),
+        );
     }
   }
 }
@@ -620,8 +846,11 @@ class _EmptyState extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.filter_alt_off_outlined,
-              size: 48, color: cs.onSurface.withValues(alpha: 0.3)),
+          Icon(
+            Icons.filter_alt_off_outlined,
+            size: 48,
+            color: cs.onSurface.withValues(alpha: 0.3),
+          ),
           const SizedBox(height: 12),
           Text(
             'Nothing in this category yet.',
@@ -692,7 +921,9 @@ class _CalculatorCard extends StatelessWidget {
               Text(
                 item.subtitle,
                 style: TextStyle(
-                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.65),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withValues(alpha: 0.65),
                   fontSize: 12,
                 ),
                 maxLines: 1,

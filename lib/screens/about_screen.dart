@@ -636,7 +636,7 @@ class AboutScreen extends StatelessWidget {
             // ── Footer ──────────────────────────────────────────────────
             Center(
               child: Text(
-                'PediAid v${AppConfigService.instance.currentVersion.isEmpty ? "1.3.0" : AppConfigService.instance.currentVersion}',
+                'PediAid v${AppConfigService.instance.versionLabel.isEmpty ? "1.3.0" : AppConfigService.instance.versionLabel}',
                 style: GoogleFonts.plusJakartaSans(
                   fontSize: 11,
                   color: cs.onSurface.withValues(alpha: 0.45),

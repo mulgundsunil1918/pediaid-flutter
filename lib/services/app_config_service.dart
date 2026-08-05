@@ -108,6 +108,19 @@ class AppConfigService {
   String _version = '';
   String get currentVersion => _version;
 
+  /// Build number, shown alongside the version.
+  ///
+  /// versionName alone is ambiguous: 1.3.0+10 and 1.3.0+13 both report "1.3.0",
+  /// so "which build is this?" was unanswerable from inside the app — and the
+  /// two differ in whether they can reach the remote config at all. The build
+  /// number is the only thing that identifies an install exactly.
+  String _buildNumber = '';
+  String get buildNumber => _buildNumber;
+
+  /// e.g. "1.3.0 (13)".
+  String get versionLabel =>
+      _buildNumber.isEmpty ? _version : '$_version ($_buildNumber)';
+
   /// True when this build is older than the configured minimum.
   bool get updateRequired {
     final min = _config.minVersion;
@@ -122,6 +135,7 @@ class AppConfigService {
     try {
       final info = await PackageInfo.fromPlatform();
       _version = info.version;
+      _buildNumber = info.buildNumber;
     } catch (_) {
       // Without a version the minVersion check cannot run; the tool and notice
       // levers still work.
@@ -143,7 +157,14 @@ class AppConfigService {
           // Cache-busted: a stale copy of the very file used to announce an
           // emergency would defeat the purpose.
           .get(Uri.parse('$url?t=${DateTime.now().millisecondsSinceEpoch}'))
-          .timeout(const Duration(seconds: 4));
+          // Generous on purpose. AppConfigGate renders the app immediately and
+          // only blocks once this resolves, so a slow answer delays nothing —
+          // whereas giving up early means the emergency lever silently does
+          // nothing. The backend is on a free tier that sleeps and can take
+          // most of a minute to wake, and a 4s budget lost that race on almost
+          // every cold launch: the check timed out, fell through to the static
+          // file, read "nothing is wrong", and let an unsafe build run.
+          .timeout(const Duration(seconds: 45));
       if (res.statusCode != 200) return false;
       final decoded = jsonDecode(res.body);
       if (decoded is! Map<String, dynamic>) return false;

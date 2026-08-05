@@ -16,6 +16,9 @@
 // AppConfigService for why failing open is the only defensible default here.
 // =============================================================================
 
+import 'dart:io' show Platform;
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -58,6 +61,25 @@ class _AppConfigGateState extends State<AppConfigGate> {
   }
 }
 
+/// Where "Update now" should send this user.
+///
+/// Prefers the store the app was installed from, because that is the only
+/// place an update can actually come from. A configured noticeUrl is used on
+/// web — where there is no store — and as an override anywhere the admin has
+/// pointed at something specific.
+String? _updateUrl(String? noticeUrl) {
+  const play =
+      'https://play.google.com/store/apps/details?id=com.pediaid.pediaid';
+  const appStore = 'https://apps.apple.com/app/id6748139585';
+
+  if (!kIsWeb) {
+    if (Platform.isAndroid) return play;
+    if (Platform.isIOS) return appStore;
+  }
+  final n = noticeUrl?.trim();
+  return (n == null || n.isEmpty) ? null : n;
+}
+
 class _UpdateRequiredScreen extends StatelessWidget {
   const _UpdateRequiredScreen();
 
@@ -85,8 +107,11 @@ class _UpdateRequiredScreen extends StatelessWidget {
                       color: cs.errorContainer,
                       borderRadius: BorderRadius.circular(16),
                     ),
-                    child: Icon(Icons.warning_amber_rounded,
-                        color: cs.onErrorContainer, size: 30),
+                    child: Icon(
+                      Icons.warning_amber_rounded,
+                      color: cs.onErrorContainer,
+                      size: 30,
+                    ),
                   ),
                   const SizedBox(height: 20),
                   Text(
@@ -113,10 +138,19 @@ class _UpdateRequiredScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 22),
-                  if (cfg.noticeUrl != null && cfg.noticeUrl!.isNotEmpty)
+                  // Send people to the store they actually installed from.
+                  //
+                  // noticeUrl is a single field shared by every platform, and
+                  // the admin page suggests a Play Store link — so an iOS user
+                  // tapping "Update now" during an incident would be sent to
+                  // Google Play and left with no way to update. The store link
+                  // is therefore derived from the platform, and noticeUrl is
+                  // honoured only where there is no store to send them to
+                  // (web), or when it points somewhere other than a store.
+                  if (_updateUrl(cfg.noticeUrl) != null)
                     FilledButton(
                       onPressed: () => launchUrl(
-                        Uri.parse(cfg.noticeUrl!),
+                        Uri.parse(_updateUrl(cfg.noticeUrl)!),
                         mode: LaunchMode.externalApplication,
                       ),
                       style: FilledButton.styleFrom(
@@ -135,7 +169,11 @@ class _UpdateRequiredScreen extends StatelessWidget {
                     ),
                   const SizedBox(height: 14),
                   Text(
-                    'Installed version ${AppConfigService.instance.currentVersion}. '
+                    // Build number included: versionName alone cannot identify
+                    // an install (1.3.0+10 and 1.3.0+15 both read "1.3.0"), and
+                    // this screen is the one place a blocked user can still
+                    // see it — every other surface is behind the block.
+                    'Installed version ${AppConfigService.instance.versionLabel}. '
                     'Questions: help@bridgr.co.in',
                     style: GoogleFonts.plusJakartaSans(
                       fontSize: 12,
