@@ -535,6 +535,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         },
                       ),
                       if (kIsWeb || !Platform.isIOS)
+                        _buildRatingFooter(context, isDark),
                         _buildDonationFooter(context, isDark),
                       // The iOS-only "More features on the Web App" banner is
                       // deliberately not rendered.
@@ -562,6 +563,101 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  // ── Rating footer (sits just above the donation card) ────────────────────
+  //
+  // Five filled gold stars and one line of reason. Every star and the button
+  // open the store listing — the stars are an invitation, not an input, since
+  // nothing here can capture a rating.
+  //
+  // The copy asks for a rating, never for five. Google's policy prohibits
+  // soliciting a specific score, and "helps other doctors find it" is both
+  // true and the actual reason ratings matter.
+  //
+  // Hidden on web, where there is no store to send anyone to.
+  Widget _buildRatingFooter(BuildContext context, bool isDark) {
+    if (kIsWeb) return const SizedBox.shrink();
+
+    Future<void> openStore() async {
+      final url = Platform.isIOS
+          ? 'https://apps.apple.com/app/id6748139585?action=write-review'
+          : 'https://play.google.com/store/apps/details?id=com.pediaid.pediaid';
+      await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+    }
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(18, 24, 18, 0),
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(18, 18, 18, 14),
+        decoration: BoxDecoration(
+          color: isDark ? const Color(0xFF1E1A12) : const Color(0xFFFFFBEB),
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(
+            color: isDark
+                ? const Color(0xFF92400E).withValues(alpha: 0.4)
+                : const Color(0xFFFDE68A),
+            width: 1.5,
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Enjoying PediAid?',
+              style: GoogleFonts.plusJakartaSans(
+                fontSize: 14,
+                fontWeight: FontWeight.w800,
+                color: isDark ? Colors.white : const Color(0xFF1F2937),
+              ),
+            ),
+            const SizedBox(height: 3),
+            Text(
+              'Your rating helps other doctors find it.',
+              style: GoogleFonts.plusJakartaSans(
+                fontSize: 12.5,
+                height: 1.4,
+                color: isDark ? Colors.white70 : const Color(0xFF6B7280),
+              ),
+            ),
+            const SizedBox(height: 12),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                for (var i = 0; i < 5; i++)
+                  IconButton(
+                    onPressed: openStore,
+                    visualDensity: VisualDensity.compact,
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    constraints: const BoxConstraints(),
+                    tooltip: 'Rate PediAid',
+                    icon: const Icon(
+                      Icons.star_rounded,
+                      size: 32,
+                      color: Color(0xFFF59E0B),
+                    ),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 6),
+            Align(
+              alignment: Alignment.center,
+              child: TextButton(
+                onPressed: openStore,
+                child: Text(
+                  Platform.isIOS ? 'Rate on the App Store' : 'Rate on Play Store',
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 12.5,
+                    fontWeight: FontWeight.w700,
+                    color: const Color(0xFFB45309),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
