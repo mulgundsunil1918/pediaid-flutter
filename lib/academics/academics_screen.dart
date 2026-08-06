@@ -29,7 +29,7 @@ class AcademicsScreen extends StatelessWidget {
             color: const Color(0xFF1565C0),
             title: 'PediAid Academics',
             subtitle:
-                'Peer-reviewed content, contributor platform, CME events & more',
+                'Landmark trials, guidelines, CME events & more',
             onTap: () => Navigator.push(
               context,
               MaterialPageRoute(

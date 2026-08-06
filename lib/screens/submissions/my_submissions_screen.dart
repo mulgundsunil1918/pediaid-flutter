@@ -236,12 +236,8 @@ class _SubmissionCard extends StatelessWidget {
       ..writeln()
       ..writeln('${submissionModuleLabel(item.module)} on PediAid')
       ..writeln('PediAid ID no.: ${item.referenceCode}');
-    final slug = item.slug;
-    if (slug != null && slug.isNotEmpty) {
-      buf
-        ..writeln()
-        ..writeln('https://academics.pediaid.bridgr.co.in/academics/cme/$slug');
-    }
+    // No link — Academics is kept off public surfaces, and the PediAid ID
+    // is what identifies this submission.
     Share.share(buf.toString().trim(), subject: item.title);
   }
 

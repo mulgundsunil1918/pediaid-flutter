@@ -1070,11 +1070,13 @@ class _FooterButtons extends StatelessWidget {
         ..writeln()
         ..writeln('PediAid ID no.: ${e.referenceCode}');
     }
-    if (e.slug.isNotEmpty) {
-      buf.writeln(
-        'https://academics.pediaid.bridgr.co.in/academics/cme/${e.slug}',
-      );
-    }
+    // Deliberately no link.
+    //
+    // The only public page for an event lives on the Academics site, which is
+    // intentionally kept off public surfaces — so pasting its URL into every
+    // shared event advertised exactly what should stay unlisted. The PediAid
+    // ID above is what identifies the event, and anyone with the app can
+    // search it.
 
     Share.share(buf.toString().trim(), subject: e.title);
   }

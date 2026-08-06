@@ -486,6 +486,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                   crossAxisAlignment:
                                       CrossAxisAlignment.stretch,
                                   children: [
+                                    // Web only: which platform gets the full
+                                    // experience. Kept to one line per box —
+                                    // this sits above the primary grid, so
+                                    // anything longer gets skipped, not read.
+                                    // Not shown in the apps: the iOS build
+                                    // must not reference the fuller web
+                                    // version (App Store guideline 1.4.2 /
+                                    // 2.3.1), and Android already IS the full
+                                    // app.
+                                    if (kIsWeb) ...[
+                                      _PlatformNoticeBoxes(cs: cs),
+                                      const SizedBox(height: 16),
+                                    ],
                                     _buildFeatureGrid(context, isDark, cs),
                                     const SizedBox(height: 24),
                                     // Recents row — only renders when the user
@@ -1020,10 +1033,11 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       _FeatureDef(
         'Academics',
-        'Peer-reviewed content',
+        'Trials, CME & guidelines',
         Icons.auto_stories_rounded,
         const Color(0xFF283593),
         () => open('academics', 'Academics', () => const AcademicsWebScreen()),
+        highlight: true,
       ),
       _FeatureDef(
         'Never Again',
@@ -1901,13 +1915,22 @@ class _FeatureDef {
   final IconData icon;
   final Color accent;
   final VoidCallback onTap;
+
+  /// Draws the card in warm amber instead of plain white.
+  ///
+  /// Reserved for one card at a time. The grid works because every tile looks
+  /// alike and the eye scans them evenly — highlighting a second one would
+  /// just restore that uniformity at a louder volume and single out neither.
+  final bool highlight;
+
   const _FeatureDef(
     this.title,
     this.subtitle,
     this.icon,
     this.accent,
-    this.onTap,
-  );
+    this.onTap, {
+    this.highlight = false,
+  });
 }
 
 class _ChipDef {
@@ -1927,15 +1950,29 @@ class _FeatureCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
-    final cardBg = isDark ? AppTheme.dCard : Colors.white;
-    final border = isDark ? AppTheme.dBorder : const Color(0xFFCBD8EB);
+    // Amber wash for the highlighted card. Tinted rather than saturated: it
+    // has to read as "start here" against a grid of white tiles without
+    // fighting the icon colour or looking like a warning.
+    const highlightBg = Color(0xFFFFF8E1);
+    const highlightBorder = Color(0xFFFFC107);
+    const highlightBgDark = Color(0xFF2A2415);
+
+    final cardBg = card.highlight
+        ? (isDark ? highlightBgDark : highlightBg)
+        : (isDark ? AppTheme.dCard : Colors.white);
+    final border = card.highlight
+        ? highlightBorder
+        : (isDark ? AppTheme.dBorder : const Color(0xFFCBD8EB));
     final accent = card.accent;
 
     return Container(
       decoration: BoxDecoration(
         color: cardBg,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: border),
+        border: Border.all(
+          color: border,
+          width: card.highlight ? 1.6 : 1.0,
+        ),
       ),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
@@ -2124,6 +2161,131 @@ class _RecentChip extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+// ── Web-only platform notice ──────────────────────────────────────────────────
+
+/// Two one-line boxes above the feature grid, web only.
+///
+/// The single message that matters per platform, and nothing else: iPhone
+/// users need to know THIS is the full PediAid (the iOS app is reduced under
+/// App Store policy), Android users need to know the Play app is. Sits above
+/// the primary grid, so it is written to be caught in a glance — one bold
+/// hook, one short line. Anything longer here gets skipped, not read.
+class _PlatformNoticeBoxes extends StatelessWidget {
+  const _PlatformNoticeBoxes({required this.cs});
+
+  final ColorScheme cs;
+
+  static const _playUrl =
+      'https://play.google.com/store/apps/details?id=com.pediaid.pediaid';
+
+  @override
+  Widget build(BuildContext context) {
+    final apple = _NoticeBox(
+      icon: Icons.apple_rounded,
+      accent: const Color(0xFF1565C0),
+      title: 'iPhone / iPad?',
+      line:
+          'Use this web version — it has everything. '
+          'The iOS app is limited by App Store rules.',
+    );
+    final android = _NoticeBox(
+      icon: Icons.android_rounded,
+      accent: const Color(0xFF2E7D32),
+      title: 'Android?',
+      line: 'Get the full app on Google Play →',
+      onTap: () =>
+          launchUrl(Uri.parse(_playUrl), mode: LaunchMode.externalApplication),
+    );
+
+    return LayoutBuilder(
+      builder: (context, box) {
+        if (box.maxWidth >= 640) {
+          // IntrinsicHeight, not CrossAxisAlignment.stretch: this sits in a
+          // scrollable Column, so a stretching Row asks for unbounded height
+          // and throws — taking the whole home grid down with it.
+          return IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(child: apple),
+                const SizedBox(width: 12),
+                Expanded(child: android),
+              ],
+            ),
+          );
+        }
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [apple, const SizedBox(height: 10), android],
+        );
+      },
+    );
+  }
+}
+
+class _NoticeBox extends StatelessWidget {
+  const _NoticeBox({
+    required this.icon,
+    required this.accent,
+    required this.title,
+    required this.line,
+    this.onTap,
+  });
+
+  final IconData icon;
+  final Color accent;
+  final String title;
+  final String line;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return Material(
+      color: accent.withValues(alpha: 0.06),
+      borderRadius: BorderRadius.circular(14),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(14),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+          decoration: BoxDecoration(
+            border: Border.all(color: accent.withValues(alpha: 0.35)),
+            borderRadius: BorderRadius.circular(14),
+          ),
+          child: Row(
+            children: [
+              Icon(icon, size: 22, color: accent),
+              const SizedBox(width: 10),
+              Expanded(
+                child: RichText(
+                  text: TextSpan(
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 12.5,
+                      height: 1.4,
+                      color: cs.onSurface.withValues(alpha: 0.85),
+                    ),
+                    children: [
+                      TextSpan(
+                        text: '$title  ',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w800,
+                          color: accent,
+                        ),
+                      ),
+                      TextSpan(text: line),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -2,26 +2,22 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>destination</key>
+	<string>export</string>
 	<key>method</key>
-	<string>app-store</string>
-	<key>teamID</key>
-	<string>SR35PG294W</string>
-	<key>signingStyle</key>
-	<string>manual</string>
+	<string>app-store-connect</string>
 	<key>provisioningProfiles</key>
 	<dict>
 		<key>app.pediaid.pediaid</key>
-		<string>app.pediaid.pediaid AppStore</string>
+		<string>PediAid App Store 2026</string>
 	</dict>
-	<key>uploadBitcode</key>
-	<false/>
-	<key>compileBitcode</key>
-	<false/>
+	<key>signingCertificate</key>
+	<string>Apple Distribution</string>
+	<key>signingStyle</key>
+	<string>manual</string>
+	<key>teamID</key>
+	<string>SR35PG294W</string>
 	<key>uploadSymbols</key>
 	<true/>
-	<key>stripSwiftSymbols</key>
-	<true/>
-	<key>destination</key>
-	<string>export</string>
 </dict>
 </plist>

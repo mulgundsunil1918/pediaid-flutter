@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -19,6 +22,35 @@ class _AcademicsWebScreenState extends State<AcademicsWebScreen> {
   InAppWebViewController? _controller;
   bool _loading = true;
   int _progress = 0;
+
+  /// Guarantees the loading overlay comes down even if the webview never
+  /// reports anything.
+  ///
+  /// On web, flutter_inappwebview renders an iframe and fires none of the
+  /// progress/load callbacks this overlay was keyed on — so the page loaded
+  /// underneath while the overlay sat on top saying "Connecting…" forever.
+  /// The overlay is cosmetic; the page beneath has its own boot UI. So it is
+  /// removed on the FIRST of: a real load signal (native platforms), or this
+  /// timer. Web gets a short fuse because no signal will ever come; native
+  /// gets a long one purely as a safety net behind the real callbacks.
+  Timer? _overlayFailsafe;
+
+  @override
+  void initState() {
+    super.initState();
+    _overlayFailsafe = Timer(
+      Duration(milliseconds: kIsWeb ? 2500 : 20000),
+      () {
+        if (mounted && _loading) setState(() => _loading = false);
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _overlayFailsafe?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +122,12 @@ class _AcademicsWebScreenState extends State<AcademicsWebScreen> {
                 },
               );
             },
-            onLoadStart: (c, url) => setState(() => _loading = true),
+            // Web never re-raises the overlay: its only dismissal there is the
+            // one-shot failsafe timer, so a late onLoadStart would bring the
+            // overlay back with nothing left to take it down.
+            onLoadStart: (c, url) {
+              if (!kIsWeb) setState(() => _loading = true);
+            },
             onLoadStop: (c, url) => setState(() => _loading = false),
             onProgressChanged: (c, progress) =>
                 setState(() => _progress = progress),
