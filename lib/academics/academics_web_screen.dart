@@ -5,6 +5,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../services/auth_service.dart';
 
 /// Loads the PediAid Academics web platform inside the Flutter app.
@@ -136,6 +137,13 @@ class _AcademicsWebScreenState extends State<AcademicsWebScreen> {
               domStorageEnabled: true,
               databaseEnabled: true,
               useShouldOverrideUrlLoading: true,
+              // Guideline chapters open their PDF with target="_blank". A
+              // WebView refuses new windows by default and drops the tap
+              // silently — the link simply did nothing, with nothing on screen
+              // to say why. These two let the request reach onCreateWindow
+              // below, which sends it to the device browser.
+              supportMultipleWindows: true,
+              javaScriptCanOpenWindowsAutomatically: true,
               mediaPlaybackRequiresUserGesture: false,
               transparentBackground: true,
               supportZoom: false,
@@ -161,6 +169,20 @@ class _AcademicsWebScreenState extends State<AcademicsWebScreen> {
             // overlay back with nothing left to take it down.
             onLoadStart: (c, url) {
               if (!kIsWeb) setState(() => _loading = true);
+            },
+            // A tap that asks for a new window — target="_blank", or
+            // window.open — is sent to the device browser rather than opened
+            // here. A PDF viewer inside this WebView has no address bar, no
+            // share and no way back, so the browser is the better home for it.
+            //
+            // Returns false: the WebView must not also create a window of its
+            // own, or the page opens twice.
+            onCreateWindow: (c, req) async {
+              final url = req.request.url;
+              if (url != null) {
+                await launchUrl(url, mode: LaunchMode.externalApplication);
+              }
+              return false;
             },
             onLoadStop: (c, url) => setState(() => _loading = false),
             onProgressChanged: (c, progress) =>
