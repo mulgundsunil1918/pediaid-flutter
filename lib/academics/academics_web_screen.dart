@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -150,10 +151,33 @@ class _AcademicsWebScreenState extends State<AcademicsWebScreen> {
 /// more here than it usually would, because the Academics backend can be
 /// waking from sleep and a wait of several seconds is normal — a spinner would
 /// leave someone unable to tell a slow load from a hung one.
-class _AcademicsLoader extends StatelessWidget {
+/// Books toppling like dominoes while Academics loads.
+///
+/// Stateful and driven by a repeating controller rather than by `progress`,
+/// because the webview reports progress in a few large jumps — an animation
+/// tied to it would sit still and then lurch. The books loop on their own
+/// clock; the bar underneath is what actually reports progress.
+class _AcademicsLoader extends StatefulWidget {
   const _AcademicsLoader({required this.progress});
 
   final int progress;
+
+  @override
+  State<_AcademicsLoader> createState() => _AcademicsLoaderState();
+}
+
+class _AcademicsLoaderState extends State<_AcademicsLoader>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _c = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 2600),
+  )..repeat();
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -161,7 +185,7 @@ class _AcademicsLoader extends StatelessWidget {
     // Never show a full bar before the page is actually ready: the webview
     // reports 100 slightly before first paint, and a filled bar sitting on a
     // blank screen looks more broken than a partial one.
-    final fraction = (progress.clamp(0, 100)) / 100 * 0.98;
+    final fraction = (widget.progress.clamp(0, 100)) / 100 * 0.98;
 
     return Positioned.fill(
       child: ColoredBox(
@@ -170,6 +194,21 @@ class _AcademicsLoader extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              SizedBox(
+                width: 190,
+                height: 92,
+                child: AnimatedBuilder(
+                  animation: _c,
+                  builder: (context, _) => CustomPaint(
+                    painter: _FallingBooksPainter(
+                      t: _c.value,
+                      colour: cs.primary,
+                      shelf: cs.onSurface.withValues(alpha: 0.25),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 18),
               // Brand name, filled left-to-right in step with progress.
               ShaderMask(
                 shaderCallback: (bounds) => LinearGradient(
@@ -192,7 +231,7 @@ class _AcademicsLoader extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(999),
                   child: LinearProgressIndicator(
-                    value: progress <= 0 ? null : fraction,
+                    value: widget.progress <= 0 ? null : fraction,
                     minHeight: 4,
                     backgroundColor: cs.onSurface.withValues(alpha: 0.08),
                     color: cs.primary,
@@ -201,7 +240,9 @@ class _AcademicsLoader extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               Text(
-                progress <= 0 ? 'Connecting…' : '$progress%',
+                widget.progress <= 0
+                    ? 'Connecting…'
+                    : '${widget.progress}%',
                 style: GoogleFonts.plusJakartaSans(
                   fontSize: 12.5,
                   fontWeight: FontWeight.w600,
@@ -214,4 +255,94 @@ class _AcademicsLoader extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Five upright books that topple left-to-right like dominoes, then reset.
+///
+/// Each book leans on its own slice of the timeline, offset from the last, so
+/// the fall reads as one pushing the next rather than five rotating together.
+/// Books are drawn as outlines on a transparent ground to match the rest of
+/// the loading screen, which is type and a hairline bar — a block of solid
+/// colour here would be the loudest thing on a screen that is meant to be
+/// waited through, not looked at.
+class _FallingBooksPainter extends CustomPainter {
+  _FallingBooksPainter({
+    required this.t,
+    required this.colour,
+    required this.shelf,
+  });
+
+  /// 0…1, looping.
+  final double t;
+  final Color colour;
+  final Color shelf;
+
+  static const _count = 5;
+  static const _bookW = 15.0;
+  static const _bookH = 52.0;
+  static const _gap = 7.0;
+
+  /// Fraction of the loop each book takes to fall. The rest of the loop is the
+  /// pause at the end, which is what makes the reset read as deliberate.
+  static const _fallSpan = 0.13;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final stroke = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.6
+      ..strokeJoin = StrokeJoin.round
+      ..color = colour;
+
+    final baseY = size.height - 14;
+    final totalW = _count * _bookW + (_count - 1) * _gap;
+    final startX = (size.width - totalW) / 2;
+
+    // Shelf line.
+    canvas.drawLine(
+      Offset(startX - 10, baseY + 1),
+      Offset(startX + totalW + 10, baseY + 1),
+      Paint()
+        ..color = shelf
+        ..strokeWidth = 1.4,
+    );
+
+    for (var i = 0; i < _count; i++) {
+      final begin = i * _fallSpan;
+      final raw = ((t - begin) / _fallSpan).clamp(0.0, 1.0);
+      // Ease-in: a book accelerates as it goes over, it does not fall linearly.
+      final eased = raw * raw;
+      // Just under 90° so the fallen book still reads as a book, not a line.
+      final angle = eased * (math.pi / 2 * 0.92);
+
+      final x = startX + i * (_bookW + _gap);
+
+      canvas.save();
+      // Pivot at the bottom-right corner — the edge it tips over.
+      canvas.translate(x + _bookW, baseY);
+      canvas.rotate(angle);
+
+      final rect = Rect.fromLTWH(-_bookW, -_bookH, _bookW, _bookH);
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(rect, const Radius.circular(2)),
+        stroke,
+      );
+      // Spine detail, so a rotated book still reads as a book.
+      canvas.drawLine(
+        Offset(-_bookW + 3.5, -_bookH + 6),
+        Offset(-3.5, -_bookH + 6),
+        stroke,
+      );
+      canvas.drawLine(
+        Offset(-_bookW + 3.5, -_bookH + 11),
+        Offset(-3.5, -_bookH + 11),
+        stroke,
+      );
+      canvas.restore();
+    }
+  }
+
+  @override
+  bool shouldRepaint(_FallingBooksPainter old) =>
+      old.t != t || old.colour != colour || old.shelf != shelf;
 }
