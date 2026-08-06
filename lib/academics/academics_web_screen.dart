@@ -195,8 +195,8 @@ class _AcademicsLoaderState extends State<_AcademicsLoader>
             mainAxisSize: MainAxisSize.min,
             children: [
               SizedBox(
-                width: 190,
-                height: 92,
+                width: 220,
+                height: 86,
                 child: AnimatedBuilder(
                   animation: _c,
                   builder: (context, _) => CustomPaint(
@@ -257,14 +257,17 @@ class _AcademicsLoaderState extends State<_AcademicsLoader>
   }
 }
 
-/// Five upright books that topple left-to-right like dominoes, then reset.
+/// Books toppling left to right, coming to rest against each other.
 ///
-/// Each book leans on its own slice of the timeline, offset from the last, so
-/// the fall reads as one pushing the next rather than five rotating together.
-/// Books are drawn as outlines on a transparent ground to match the rest of
-/// the loading screen, which is type and a hairline bar — a block of solid
-/// colour here would be the loudest thing on a screen that is meant to be
-/// waited through, not looked at.
+/// The first version rotated every book a full 90°, so each one swung through
+/// the space of the one before it and the fallen pile overlapped into a
+/// scribble. Real dominoes do not do that: the leading one lies flat and every
+/// one after it stops when it lands on its neighbour.
+///
+/// So the rest angle is derived from the spacing rather than fixed —
+/// asin(spacing / height) is the angle at which a book of this height, pivoted
+/// this far from the next, just touches it. Change the spacing or the height
+/// and the lean follows instead of needing a new magic number.
 class _FallingBooksPainter extends CustomPainter {
   _FallingBooksPainter({
     required this.t,
@@ -278,13 +281,15 @@ class _FallingBooksPainter extends CustomPainter {
   final Color shelf;
 
   static const _count = 5;
-  static const _bookW = 15.0;
-  static const _bookH = 52.0;
-  static const _gap = 7.0;
+  static const _bookW = 13.0;
+  static const _bookH = 46.0;
+  /// Wide enough that a leaning book clears its neighbour's spine.
+  static const _gap = 13.0;
+  static const _pitch = _bookW + _gap;
 
-  /// Fraction of the loop each book takes to fall. The rest of the loop is the
-  /// pause at the end, which is what makes the reset read as deliberate.
-  static const _fallSpan = 0.13;
+  /// Fraction of the loop each book takes to fall; the remainder is the pause
+  /// before the reset, which is what makes the loop read as deliberate.
+  static const _fallSpan = 0.15;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -293,49 +298,59 @@ class _FallingBooksPainter extends CustomPainter {
       ..strokeWidth = 1.6
       ..strokeJoin = StrokeJoin.round
       ..color = colour;
+    // Filled, but lightly — this sits behind the brand name and must not
+    // become the loudest thing on a screen meant to be waited through.
+    final fill = Paint()
+      ..style = PaintingStyle.fill
+      ..color = colour.withValues(alpha: 0.16);
 
-    final baseY = size.height - 14;
+    final baseY = size.height - 12;
     final totalW = _count * _bookW + (_count - 1) * _gap;
     final startX = (size.width - totalW) / 2;
 
-    // Shelf line.
     canvas.drawLine(
-      Offset(startX - 10, baseY + 1),
-      Offset(startX + totalW + 10, baseY + 1),
+      Offset(startX - 12, baseY + 1),
+      Offset(startX + totalW + 12, baseY + 1),
       Paint()
         ..color = shelf
         ..strokeWidth = 1.4,
     );
 
-    for (var i = 0; i < _count; i++) {
+    // ~56°: far enough over to read as fallen, short of flat so the stack
+    // still reads as books leaning rather than a heap.
+    const restAngle = math.pi / 2 * 0.62;
+
+    // Painted right to left so a leaning book overlaps the one it rests on,
+    // rather than appearing to pass through it.
+    for (var i = _count - 1; i >= 0; i--) {
       final begin = i * _fallSpan;
       final raw = ((t - begin) / _fallSpan).clamp(0.0, 1.0);
-      // Ease-in: a book accelerates as it goes over, it does not fall linearly.
-      final eased = raw * raw;
-      // Just under 90° so the fallen book still reads as a book, not a line.
-      final angle = eased * (math.pi / 2 * 0.92);
+      final eased = raw * raw; // accelerates, as a falling book does
 
-      final x = startX + i * (_bookW + _gap);
+      // The leading book has nothing to catch it, so it goes all the way down.
+      final target = i == 0 ? math.pi / 2 * 0.96 : restAngle;
+      final angle = eased * target;
+
+      final x = startX + i * _pitch;
 
       canvas.save();
-      // Pivot at the bottom-right corner — the edge it tips over.
-      canvas.translate(x + _bookW, baseY);
+      canvas.translate(x + _bookW, baseY); // pivot: the edge it tips over
       canvas.rotate(angle);
 
       final rect = Rect.fromLTWH(-_bookW, -_bookH, _bookW, _bookH);
-      canvas.drawRRect(
-        RRect.fromRectAndRadius(rect, const Radius.circular(2)),
+      final rrect = RRect.fromRectAndRadius(rect, const Radius.circular(2));
+      canvas.drawRRect(rrect, fill);
+      canvas.drawRRect(rrect, stroke);
+
+      // Two spine bands, so a rotated book still reads as a book.
+      canvas.drawLine(
+        Offset(-_bookW + 3, -_bookH + 7),
+        Offset(-3, -_bookH + 7),
         stroke,
       );
-      // Spine detail, so a rotated book still reads as a book.
       canvas.drawLine(
-        Offset(-_bookW + 3.5, -_bookH + 6),
-        Offset(-3.5, -_bookH + 6),
-        stroke,
-      );
-      canvas.drawLine(
-        Offset(-_bookW + 3.5, -_bookH + 11),
-        Offset(-3.5, -_bookH + 11),
+        Offset(-_bookW + 3, -_bookH + 12),
+        Offset(-3, -_bookH + 12),
         stroke,
       );
       canvas.restore();
