@@ -60,6 +60,7 @@ import '../never_again/never_again_screen.dart';
 import '../resources/resources_screen.dart';
 import '../../utils/support_contact.dart';
 import '../submissions/my_submissions_screen.dart';
+import '../saved/saved_screen.dart';
 import '../guides/developmental_milestones/dev_milestones_hub.dart';
 import '../guides/developmental_milestones/tdsc/tdsc_assistant_screen.dart';
 import '../../services/app_config_service.dart';
@@ -1783,6 +1784,17 @@ class _HomeScreenState extends State<HomeScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (_) => const AccountScreen()),
+                    );
+                  },
+                ),
+                _DrawerItem(
+                  icon: Icons.bookmark_border,
+                  label: 'Saved',
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const SavedScreen()),
                     );
                   },
                 ),
