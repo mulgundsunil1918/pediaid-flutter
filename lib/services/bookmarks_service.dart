@@ -113,6 +113,59 @@ class BookmarksService {
     return BookmarksResult(bookmarks: marks, tags: tags);
   }
 
+  /// The set of saved items as "type:id", cached for the session so a list of
+  /// twenty cards costs one request rather than twenty.
+  Set<String>? _idCache;
+
+  Future<Set<String>> savedIds({bool refresh = false}) async {
+    final token = AuthService.instance.accessToken;
+    if (token == null) return <String>{};
+    if (_idCache != null && !refresh) return _idCache!;
+
+    try {
+      final res = await http
+          .get(Uri.parse('$_apiBase/api/academics/bookmarks/ids'),
+              headers: _headers(token))
+          .timeout(const Duration(seconds: 15));
+      if (res.statusCode != 200) return _idCache ?? <String>{};
+      final body = jsonDecode(res.body) as Map<String, dynamic>;
+      _idCache = (body['ids'] as List? ?? []).map((e) => e.toString()).toSet();
+      return _idCache!;
+    } catch (_) {
+      // A failed lookup must not break the card it sits on — the icon just
+      // renders unsaved, and tapping still works.
+      return _idCache ?? <String>{};
+    }
+  }
+
+  /// Toggles, returning the new state. The server decides from whether the row
+  /// exists, so two taps from two devices cannot drift.
+  Future<bool> toggle(String itemType, String itemId) async {
+    final token = AuthService.instance.accessToken;
+    if (token == null) throw const NotSignedInException();
+
+    final res = await http
+        .post(
+          Uri.parse('$_apiBase/api/academics/bookmarks/toggle'),
+          headers: _headers(token),
+          body: jsonEncode({'itemType': itemType, 'itemId': itemId}),
+        )
+        .timeout(const Duration(seconds: 20));
+
+    if (res.statusCode == 401) throw const NotSignedInException();
+    if (res.statusCode != 200) {
+      throw Exception('Could not save that (${res.statusCode}).');
+    }
+    final saved = (jsonDecode(res.body) as Map<String, dynamic>)['saved'] == true;
+    final key = '$itemType:$itemId';
+    if (saved) {
+      (_idCache ??= <String>{}).add(key);
+    } else {
+      _idCache?.remove(key);
+    }
+    return saved;
+  }
+
   /// Removes one saved item. Idempotent on the server, so a double tap or a
   /// retry cannot put it back.
   Future<void> remove(String itemType, String itemId) async {
@@ -131,5 +184,6 @@ class BookmarksService {
     if (res.statusCode != 200) {
       throw Exception('Could not remove that item (${res.statusCode}).');
     }
+    _idCache?.remove('$itemType:$itemId');
   }
 }

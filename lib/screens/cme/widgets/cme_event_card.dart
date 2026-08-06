@@ -18,6 +18,7 @@ import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../../widgets/save_button.dart';
 
 import '../../../utils/calendar_export.dart';
 import 'package:intl/intl.dart';
@@ -936,29 +937,36 @@ class _FooterButtons extends StatelessWidget {
     // someone forwarding it — refers to this listing, so it belongs wherever
     // the event is shown; and sharing an event without it forces the recipient
     // to search by title.
+    // The row renders whether or not there is a reference code, because Save
+    // and Share live here too — gating the whole row on the code meant an
+    // event without one had no way to be saved.
     final code = event.referenceCode;
-    final referenceRow = (code == null || code.isEmpty)
-        ? null
-        : Padding(
+    final hasCode = code != null && code.isNotEmpty;
+    final referenceRow = Padding(
             padding: const EdgeInsets.only(top: 4, bottom: 2),
             child: Row(
               children: [
-                Icon(
-                  Icons.tag_rounded,
-                  size: 14,
-                  color: cs.onSurface.withValues(alpha: 0.45),
-                ),
-                const SizedBox(width: 5),
-                Expanded(
-                  child: SelectableText(
-                    code,
-                    style: GoogleFonts.robotoMono(
-                      fontSize: 11.5,
-                      fontWeight: FontWeight.w600,
-                      color: cs.onSurface.withValues(alpha: 0.55),
-                    ),
+                if (hasCode) ...[
+                  Icon(
+                    Icons.tag_rounded,
+                    size: 14,
+                    color: cs.onSurface.withValues(alpha: 0.45),
                   ),
+                  const SizedBox(width: 5),
+                ],
+                Expanded(
+                  child: hasCode
+                      ? SelectableText(
+                          code,
+                          style: GoogleFonts.robotoMono(
+                            fontSize: 11.5,
+                            fontWeight: FontWeight.w600,
+                            color: cs.onSurface.withValues(alpha: 0.55),
+                          ),
+                        )
+                      : const SizedBox.shrink(),
                 ),
+                SaveButton(itemType: 'cme', itemId: event.id, size: 18),
                 TextButton.icon(
                   onPressed: () => _shareEvent(),
                   icon: const Icon(Icons.share_rounded, size: 15),
@@ -1020,7 +1028,7 @@ class _FooterButtons extends StatelessWidget {
         calendarRow,
         if (actions.isNotEmpty) Row(children: actions),
         ?joinHint,
-        ?referenceRow,
+        referenceRow,
       ],
     );
   }
