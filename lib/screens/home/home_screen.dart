@@ -65,6 +65,7 @@ import '../guides/developmental_milestones/dev_milestones_hub.dart';
 import '../guides/developmental_milestones/tdsc/tdsc_assistant_screen.dart';
 import '../../services/app_config_service.dart';
 import '../../services/rate_prompt_service.dart';
+import '../../services/support_prompt_service.dart';
 import '../../widgets/tool_gate.dart';
 
 // ── All available quick-access items ─────────────────────────────────────────
@@ -199,6 +200,12 @@ class _HomeScreenState extends State<HomeScreen> {
     await Future<void>.delayed(const Duration(seconds: 4));
     if (!mounted) return;
     await RatePromptService.instance.maybeAsk(context);
+
+    // Support ask, after the review ask and only if that one did not fire —
+    // two prompts in one session is how an app gets uninstalled. The service
+    // decides whether it is due; it never runs on iOS.
+    if (!mounted) return;
+    await SupportPromptService.instance.maybeShow(context);
   }
 
   Future<void> _fetchVisitorCount() async {
