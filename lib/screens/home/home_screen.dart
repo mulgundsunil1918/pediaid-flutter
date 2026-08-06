@@ -44,7 +44,6 @@ import '../shared/suggest_feature_sheet.dart';
 import '../../academics/academics_web_screen.dart';
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:in_app_review/in_app_review.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -1834,31 +1833,30 @@ class _HomeScreenState extends State<HomeScreen> {
                   label: 'Rate PediAid',
                   onTap: () async {
                     Navigator.pop(context);
-                    // requestReview() is quota-limited by Google and does
-                    // nothing at all when the app was not installed from the
-                    // Play Store — a sideloaded build gets silence, with no
-                    // error to explain it. isAvailable() does not catch that,
-                    // so the tap has to fall back to the store listing rather
-                    // than trusting the card appeared.
-                    final review = InAppReview.instance;
-                    var shown = false;
-                    try {
-                      if (await review.isAvailable()) {
-                        await review.requestReview();
-                        shown = true;
-                      }
-                    } catch (_) {
-                      // Fall through to the listing below.
-                    }
-                    if (!shown) {
-                      await launchUrl(
-                        Uri.parse(
-                          'https://play.google.com/store/apps/details'
-                          '?id=com.pediaid.pediaid',
-                        ),
-                        mode: LaunchMode.externalApplication,
-                      );
-                    }
+                    // Straight to the store listing, deliberately.
+                    //
+                    // This used to try requestReview() first and fall back only
+                    // if it "failed". But requestReview() reports nothing about
+                    // whether the sheet actually appeared: Google quota-limits
+                    // it and shows nothing at all if the user already reviewed
+                    // or the quota is spent, while the call still returns
+                    // successfully. The old code set shown = true on that
+                    // success, so the fallback never ran and the tap did
+                    // nothing — which is exactly how it behaved.
+                    //
+                    // The in-app sheet belongs in the automatic prompt, where
+                    // being silently skipped costs nothing. Someone who opened
+                    // the drawer and chose "Rate PediAid" asked for this, and
+                    // must always get somewhere they can actually leave one.
+                    await launchUrl(
+                      Uri.parse(
+                        Platform.isIOS
+                            ? 'https://apps.apple.com/app/id6748139585?action=write-review'
+                            : 'https://play.google.com/store/apps/details'
+                                '?id=com.pediaid.pediaid',
+                      ),
+                      mode: LaunchMode.externalApplication,
+                    );
                   },
                 ),
                 _DrawerItem(
