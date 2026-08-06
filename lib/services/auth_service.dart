@@ -34,6 +34,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'web_session_stub.dart'
+    if (dart.library.html) 'web_session_web.dart';
 
 // Circular with push_service.dart (it reads apiBase/accessToken from here).
 // Safe: both sides are lazy singletons, so nothing runs at import time.
@@ -187,6 +189,19 @@ class AuthService extends ChangeNotifier {
         debugPrint('[AuthService] shared_prefs fallback read failed: $e');
       }
     }
+    // Academics may have been signed into first. Same origin, same backend,
+    // interchangeable tokens — so adopt its session rather than showing a
+    // second sign-in screen for the same product. No-op off web.
+    if (token == null || token.isEmpty) {
+      final shared = readSharedSession();
+      if (shared != null) {
+        token = shared['access'];
+        refresh = refresh ?? shared['refresh'];
+        blob = blob ?? shared['user'];
+        debugPrint('[AuthService] adopted the session Academics wrote');
+      }
+    }
+
     // Mobile fallback — if secure storage returned no refresh token but
     // an older build wrote one to SharedPreferences, pick it up.
     if (!kIsWeb && refresh == null) {
@@ -234,6 +249,11 @@ class AuthService extends ChangeNotifier {
     } catch (e) {
       debugPrint('[AuthService] secure_storage write failed: $e');
     }
+
+    // Mirror into the keys Academics reads. Both are served from this origin
+    // now and both sessions mean the same backend account, so writing it here
+    // is what lets one sign-in cover both surfaces. No-op off web.
+    writeSharedSession(token, refresh, userJsonStr);
     // Always mirror to SharedPreferences on web, and ALSO on mobile so
     // that an older build that only reads from one backend still gets
     // the refresh token on upgrade.
@@ -254,6 +274,9 @@ class AuthService extends ChangeNotifier {
       await _storage.delete(key: _kAccessToken);
       await _storage.delete(key: _kRefreshToken);
       await _storage.delete(key: _kUserBlob);
+      // Signing out of one surface must sign out of both — leaving the shared
+      // copy behind would silently sign the user back in on next load.
+      clearSharedSession();
     } catch (_) {}
     try {
       final prefs = await SharedPreferences.getInstance();
