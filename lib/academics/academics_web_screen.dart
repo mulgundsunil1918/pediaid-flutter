@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'dart:convert';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../services/auth_service.dart';
 
 /// Loads the PediAid Academics web platform inside the Flutter app.
 class AcademicsWebScreen extends StatefulWidget {
@@ -51,6 +53,60 @@ class _AcademicsWebScreenState extends State<AcademicsWebScreen> {
   void dispose() {
     _overlayFailsafe?.cancel();
     super.dispose();
+  }
+
+  /// Hands the app's session to the web view.
+  ///
+  /// Without this the two surfaces sign in separately and end up as two
+  /// different `acad_users` rows, so anything account-scoped — saved items
+  /// most visibly — is split in half: a bookmark made in the app is invisible
+  /// on the web and the other way round. Both saves work; they just belong to
+  /// different people as far as the database is concerned.
+  ///
+  /// Written into localStorage rather than passed on the URL. A token in a
+  /// query string ends up in history, in logs and in any referrer the page
+  /// sends — a URL is the wrong place for a credential.
+  ///
+  /// Only ever writes the app's own session to the app's own domain, and
+  /// writes nothing at all when signed out, so it cannot clobber a session the
+  /// web view established on its own.
+  Future<void> _shareSessionWithWebView(InAppWebViewController c) async {
+    final auth = AuthService.instance;
+    final access = auth.accessToken;
+    final refresh = auth.refreshToken;
+    final user = auth.currentUser;
+    if (access == null || user == null) return;
+
+    final payload = jsonEncode({
+      'access': access,
+      'refresh': refresh,
+      'user': user.toJson(),
+    });
+
+    try {
+      // Re-read after writing: if the web view already held this same token
+      // there is nothing to do, and reloading on every page load would put the
+      // view into a refresh loop.
+      final changed = await c.evaluateJavascript(source: """
+        (function () {
+          try {
+            var d = $payload;
+            var had = localStorage.getItem('acad_access_token');
+            if (had === d.access) return false;
+            localStorage.setItem('acad_access_token', d.access);
+            if (d.refresh) localStorage.setItem('acad_refresh_token', d.refresh);
+            localStorage.setItem('acad_user', JSON.stringify(d.user));
+            return true;
+          } catch (e) { return false; }
+        })();
+      """);
+      if (changed == true || changed == 'true') {
+        await c.reload();
+      }
+    } catch (_) {
+      // A failed injection must not block the page — the web view still works,
+      // it is just signed in separately, which is the behaviour before this.
+    }
   }
 
   @override
@@ -129,7 +185,10 @@ class _AcademicsWebScreenState extends State<AcademicsWebScreen> {
             onLoadStart: (c, url) {
               if (!kIsWeb) setState(() => _loading = true);
             },
-            onLoadStop: (c, url) => setState(() => _loading = false),
+            onLoadStop: (c, url) async {
+              await _shareSessionWithWebView(c);
+              if (mounted) setState(() => _loading = false);
+            },
             onProgressChanged: (c, progress) =>
                 setState(() => _progress = progress),
             shouldOverrideUrlLoading: (c, action) async {
