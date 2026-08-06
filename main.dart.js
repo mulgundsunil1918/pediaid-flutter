@@ -36948,7 +36948,7 @@ k[0]=a.a2()
 l=l[0]
 r=a.aK()
 q=a.aK()
-p=B.Uh[a.a2()]
+p=B.Ui[a.a2()]
 a.a2()
 k[0]=a.a2()
 k[0]=a.a2()
@@ -87666,7 +87666,7 @@ A.axX.prototype={
 oB(){return this.cy},
 rt(a){this.ag()},
 mV(a){a.toString
-return B.Ul[A.bG(a)]},
+return B.Um[A.bG(a)]},
 nb(){var s=this.y
 return(s==null?A.B(this).j("b0.T").a(s):s).a}}
 A.apP.prototype={
@@ -101788,7 +101788,7 @@ return r.bhR(s.d.y.a.a)},
 $S:0}
 A.a00.prototype={
 O(){var s=null
-return new A.a7N(new A.bq(s,t.am),new A.wQ(B.ij,A.ka(B.Ul,t.Rs),$.a8(),t.dX),s,A.S(t.yb,t.M),s,!0,s)}}
+return new A.a7N(new A.bq(s,t.am),new A.wQ(B.ij,A.ka(B.Um,t.Rs),$.a8(),t.dX),s,A.S(t.yb,t.M),s,!0,s)}}
 A.a7N.prototype={
 gpw(){var s,r,q,p=this,o=p.d
 if(o===$){s=p.a.z
@@ -142222,7 +142222,7 @@ k[0]=a9.a2()
 l=l[0]
 i=a9.aK()
 h=a9.aK()
-g=B.Uh[a9.a2()]
+g=B.Ui[a9.a2()]
 a9.a2()
 k[0]=a9.a2()
 k[0]=a9.a2()
@@ -142800,12 +142800,12 @@ gaF(a){return this.b}}
 A.aU2.prototype={}
 A.aia.prototype={
 Bp(a){var s,r=A.cy(a,!0,null,0).eR(8)
-for(s=0;s<8;++s)if(J.L(r.a,r.d+s)!==B.Uk[s])return!1
+for(s=0;s<8;++s)if(J.L(r.a,r.d+s)!==B.Ul[s])return!1
 return!0},
 it(b6){var s,r,q,p,o,n,m,l,k,j,i,h,g,f,e,d,c,b,a,a0,a1,a2,a3,a4,a5,a6,a7,a8,a9,b0,b1,b2,b3=this,b4=null,b5=A.cy(b6,!0,b4,0)
 b3.d=b5
 s=b5.eR(8)
-for(r=0;r<8;++r)if(J.L(s.a,s.d+r)!==B.Uk[r])return b4
+for(r=0;r<8;++r)if(J.L(s.a,s.d+r)!==B.Ul[r])return b4
 for(b5=b3.a,q=b5.cx,p=t.t,o=b5.cy,n=t.Q,m=b5.ax;;){l=b3.d
 k=l.d-l.b
 j=l.a2()
@@ -152116,8 +152116,8 @@ case B.a6F:return A.o7(s.b,0.91,562,-0.22,A.a([-113,-250,749,801],t.t),"Courier-
 case B.a6K:return A.o7(s.b,0.91,562,-0.22,A.a([-57,-250,869,801],t.t),"Courier-BoldOblique",!0,-12,84,106,B.l6)
 case B.a6L:return A.o7(s.b,0.91,562,-0.22,A.a([-27,-250,849,805],t.t),"Courier-Oblique",!0,-12,51,51,B.l6)
 case B.Gh:return A.cfL(s.b)
-case B.Gi:return A.o7(s.b,0.962,718,-0.228,A.a([-170,-228,1003,962],t.t),"Helvetica-Bold",!1,0,118,140,B.Uj)
-case B.Gj:return A.o7(s.b,0.962,718,-0.228,A.a([-170,-228,1114,962],t.t),"Helvetica-BoldOblique",!1,-12,118,140,B.Uj)
+case B.Gi:return A.o7(s.b,0.962,718,-0.228,A.a([-170,-228,1003,962],t.t),"Helvetica-Bold",!1,0,118,140,B.Uk)
+case B.Gj:return A.o7(s.b,0.962,718,-0.228,A.a([-170,-228,1114,962],t.t),"Helvetica-BoldOblique",!1,-12,118,140,B.Uk)
 case B.Gk:return A.o7(s.b,0.931,718,-0.225,A.a([-170,-225,1116,931],t.t),"Helvetica-Oblique",!1,-12,76,88,B.byp)
 case B.a6M:return A.o7(s.b,0.898,662,-0.218,A.a([-168,-218,1000,898],t.t),"Times-Roman",!1,0,28,84,B.bm6)
 case B.a6N:return A.o7(s.b,0.935,676,-0.218,A.a([-168,-218,1000,935],t.t),"Times-Bold",!1,0,44,139,B.b9C)
@@ -153006,7 +153006,7 @@ this.X()},
 Kd(){var s=0,r=A.F(t.N),q,p=this,o,n
 var $async$Kd=A.G(function(a,b){if(a===1)return A.C(b,r)
 for(;;)switch(s){case 0:p.a.toString
-o="https://academics.pediaid.bridgr.co.in/"+(B.u.q("/","?")?"&":"?")+"embed=1"
+o="https://pediaid.bridgr.co.in/academics/"+(B.u.q("/","?")?"&":"?")+"embed=1"
 s=3
 return A.u($.ft().P4(),$async$Kd)
 case 3:n=b
@@ -164154,7 +164154,7 @@ o=this.c
 o.toString
 o=A.d(o)
 l[s]=A.i(n,A.c(p,n,n,n,n,new A.N(!0,o.ax.b,n,n,n,n,11,B.w,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n),B.a9,n,n),B.l,q,n,n,n,n,n,n,B.alm,n,n,r)}r=A.a([A.r(l,B.v,B.e,B.f,0,n,n)],t.p)
-q=new A.dl(B.Ui,t.FE)
+q=new A.dl(B.Uj,t.FE)
 B.h.A(r,q.gdD(q).cC(0,new A.bDt(this),m))
 return A.l(r,B.v,B.e,B.f,0,B.t)},
 aEh(){var s,r=this,q=null,p=r.c
@@ -164253,7 +164253,7 @@ if(h>0)n+="<div>Orofer: "+A.p(h)+" ml/day</div>"
 for(h=a.ch,r=h.length,q=0;q<r;++q){m=h[q]
 n+="<div>"+m.a+" (Custom): "+A.p(m.b)+" ml/day</div>"}if(n.length===0)n=i
 h=t.fV
-l=new A.K(B.Ui,new A.bDp(),h).aT(0,"\n")
+l=new A.K(B.Uj,new A.bDp(),h).aT(0,"\n")
 k=new A.K(B.Ty,new A.bDq(),h).aT(0,"\n")
 j=new A.K(B.TO,new A.bDr(),t.a4).aT(0,"\n")
 h=A.p(a.a)
@@ -173761,7 +173761,7 @@ return s},
 a9(){var s,r,q
 this.ao()
 s=A.S(t.N,t.yi)
-for(r=t.B,q=0;q<31;++q)s.n(0,B.Ue[q].a,new A.bq(null,r))
+for(r=t.B,q=0;q<31;++q)s.n(0,B.Uf[q].a,new A.bq(null,r))
 this.e!==$&&A.bi()
 this.e=s},
 p(a0){var s,r,q,p,o,n,m,l,k=this,j=null,i=A.d(a0).ax,h=A.d(a0),g=A.bo(j,j,j,!0,!0,j,j,1,j,j,j,!1,j,!1,j,j,A.bx(j,j,j,B.cB,j,j,new A.bt9(a0),j,j,j,j,j),j,!0,j,j,j,j,j,B.c4Y,j,j,j,1,j,!0),f=k.aEa(i),e=i.b,d=e.i(0.05),c=A.f(12),b=i.ry,a=b==null
@@ -173809,7 +173809,7 @@ return A.r(A.a([A.i(s,s,B.l,s,s,new A.j(a,s,s,s,s,s,B.aX),s,10,s,s,s,s,s,10),B.Z
 aE2(a){var s=null
 return A.aV(A.m2(s,new A.bt1(this,a),32,s,s,B.b6,new A.bt2()),36,s)},
 aFX(a){var s,r,q,p,o,n,m,l,k,j,i,h=null,g=t.p,f=A.a([],g)
-for(s=a.b,r=h,q=0;q<31;++q){p=B.Ue[q]
+for(s=a.b,r=h,q=0;q<31;++q){p=B.Uf[q]
 o=p.c
 if(o!==r){if(r!=null)f.push(B.K)
 n=o===1
@@ -181420,7 +181420,7 @@ return A.E($async$Eq,r)},
 tT(){var s=0,r=A.F(t.H),q=1,p=[],o=this,n,m,l,k,j,i,h,g
 var $async$tT=A.G(function(a,b){if(a===1){p.push(b)
 s=q}for(;;)switch(s){case 0:k=t.aH
-j=A.R(new A.K(B.Um,new A.aRz(o),k),k.j("aj.E"))
+j=A.R(new A.K(B.Ue,new A.aRz(o),k),k.j("aj.E"))
 s=2
 return A.u(A.lg(j,!1,t.Me),$async$tT)
 case 2:i=b
@@ -181511,7 +181511,7 @@ if(l>0)break}return l},
 aKQ(a){var s=A.a9(a).j("K<1,aH<k,ac>>"),r=A.R(new A.K(a,new A.aRy(),s),s.j("aj.E"))
 return B.b0.iV(A.au(["v",1,"hits",r],t.N,t.K),null)},
 aIX(a){var s,r,q,p=t.P,o=t.j.a(J.L(p.a(B.b0.eX(0,a,null)),"hits")),n=A.S(t.N,t.JV)
-for(s=0;s<3;++s){r=B.Um[s]
+for(s=0;s<3;++s){r=B.Ue[s]
 n.n(0,r.a,r)}p=J.q8(o,p)
 q=t.lj
 p=A.R(new A.dd(A.hn(p,new A.aRx(n),p.$ti.j("z.E"),t.mH),q),q.j("z.E"))
@@ -196064,6 +196064,10 @@ B.bBb=s(["Salicylates","Phenobarbital","Carbamazepine","Digoxin","Theophylline"]
 B.alY=new A.mO(B.bBb,!1,null)
 B.bxL=s([B.c51,B.W,B.alY],t.p)
 B.bxR=s(["nrp","newborn resuscitation","neonatal resuscitation","delivery room","resuscitation algorithm","9th edition","apnea","intubation","PPV","positive pressure ventilation","CPAP","chest compressions","golden minute","meconium","birth asphyxia","delayed cord clamping","T-piece","epinephrine","adrenaline","UVC","heart rate","SpO2 target"],t.s)
+B.atp=new A.tp("iap-stg-2022","IAP STG 2022",4280171103,"https://mulgundsunil1918.github.io/pediaid-stg/stg_index.json")
+B.atq=new A.tp("iap-action-plan-2026","IAP Action Plan 2026",4293548044,"https://pediaid.bridgr.co.in/academics/data/iap-action-plan-2026-index.json")
+B.atr=new A.tp("nnf-cpg","NNF CPG",4286331629,"https://pediaid.bridgr.co.in/academics/data/nnf-cpg-index.json")
+B.Ue=s([B.atp,B.atq,B.atr],A.ag("J<tp>"))
 B.fd=new A.t(0,2)
 B.abj=new A.bS(0.75,B.aV,B.IN,B.fd,1.5)
 B.bxX=s([B.abj],t.V)
@@ -196178,7 +196182,7 @@ B.bwY=s(["The fetus is now full term.","The average 39-week fetus is 19.7 inches
 B.ccQ=new A.is(B.lL,"FULL TERM (39\u201341 weeks)")
 B.bvT=s([B.ccQ],t.BS)
 B.coI=new A.f8("39-41","WEEKS 39\u201341 \u2014 Fetal age 37\u201339 weeks \u2014 9 to 9.4 months \u2014 FULL TERM",3,"Week 39: ~50.1 cm/3435 g  |  Week 40: ~51 cm/3619 g  |  Week 41: ~51.8 cm/3787 g",B.bwY,B.bvT)
-B.Ue=s([B.coS,B.coA,B.coW,B.coL,B.coM,B.coV,B.coU,B.coy,B.coz,B.coG,B.coC,B.coP,B.cov,B.coZ,B.coR,B.coE,B.coO,B.coN,B.coT,B.coX,B.coJ,B.cox,B.coQ,B.cow,B.coB,B.coK,B.coD,B.coF,B.coY,B.coH,B.coI],A.ag("J<f8>"))
+B.Uf=s([B.coS,B.coA,B.coW,B.coL,B.coM,B.coV,B.coU,B.coy,B.coz,B.coG,B.coC,B.coP,B.cov,B.coZ,B.coR,B.coE,B.coO,B.coN,B.coT,B.coX,B.coJ,B.cox,B.coQ,B.cow,B.coB,B.coK,B.coD,B.coF,B.coY,B.coH,B.coI],A.ag("J<f8>"))
 B.by9=s(["emergency drugs","NICU drugs","resuscitation drugs","adrenaline","epinephrine","atropine","naloxone","sodium bicarbonate","calcium gluconate","D10","NICU code","crash cart neonatal","neonatal emergency","code blue NICU","prostaglandin","PGE1","surfactant","dopamine","dobutamine","milrinone","phenobarbitone loading","volume expander"],t.s)
 B.byh=s(["Sweating","Salivation","Mydriasis","Priapism","Hypertension","Hypotension","Cold extremities"],t.s)
 B.byl=s(["Source: Report of the Second Task Force on Blood Pressure Control in Children, Pediatrics 1987;79(1):1\u201325 \u2014 the reference AAP 2017 itself points to for infants 1\u201312 months (AAP 2017 publishes no infant data of its own).","The 1987 infant norms are presented as a PLOTTED CURVE (figure), not a numeric percentile table \u2014 so exact by-month values require digitising the figure or a cited textbook reproduction.","Original values were auscultatory/Doppler; today\u2019s oscillometric monitors can read differently, especially diastolic.","Infant BP swings with state \u2014 crying, feeding, pain and wakefulness raise it. Measure calm/supine, right arm, and repeat.","Cuff size matters: bladder should encircle 80\u2013100% of the arm circumference; a small cuff over-reads.","Only hard threshold shipped today: systolic < 70 mmHg = hypotension (PALS), for screening. A reading above 70 is NOT confirmed normal-for-age until the percentile layer is populated."],t.s)
@@ -196269,14 +196273,14 @@ B.Un=s([253,255,255,255,255,255,255,255,255,255,255],t.t)
 B.blM=s([B.bps,B.bov,B.Un],t.q)
 B.bAY=s([255,246,254,255,255,255,255,255,255,255,255],t.t)
 B.bvI=s([239,253,254,255,255,255,255,255,255,255,255],t.t)
-B.Ug=s([254,255,254,255,255,255,255,255,255,255,255],t.t)
-B.byE=s([B.bAY,B.bvI,B.Ug],t.q)
+B.Uh=s([254,255,254,255,255,255,255,255,255,255,255],t.t)
+B.byE=s([B.bAY,B.bvI,B.Uh],t.q)
 B.TC=s([255,248,254,255,255,255,255,255,255,255,255],t.t)
 B.bmW=s([251,255,254,255,255,255,255,255,255,255,255],t.t)
 B.bu5=s([B.TC,B.bmW,B.fV],t.q)
 B.D1=s([255,253,254,255,255,255,255,255,255,255,255],t.t)
 B.btX=s([251,254,254,255,255,255,255,255,255,255,255],t.t)
-B.bn8=s([B.D1,B.btX,B.Ug],t.q)
+B.bn8=s([B.D1,B.btX,B.Uh],t.q)
 B.b5G=s([255,254,253,255,254,255,255,255,255,255,255],t.t)
 B.bpk=s([250,255,254,255,254,255,255,255,255,255,255],t.t)
 B.wo=s([254,255,255,255,255,255,255,255,255,255,255],t.t)
@@ -196354,7 +196358,7 @@ B.a9D=new A.kv(10,"reserved10")
 B.a9E=new A.kv(11,"cmyk")
 B.a9F=new A.kv(12,"cmykRle8")
 B.a9G=new A.kv(13,"cmykRle4")
-B.Uh=s([B.Hy,B.a9C,B.a9H,B.zc,B.a9I,B.a9J,B.zd,B.a9K,B.a9L,B.a9M,B.a9D,B.a9E,B.a9F,B.a9G],A.ag("J<kv>"))
+B.Ui=s([B.Hy,B.a9C,B.a9H,B.zc,B.a9I,B.a9J,B.zd,B.a9K,B.a9L,B.a9M,B.a9D,B.a9E,B.a9F,B.a9G],A.ag("J<kv>"))
 B.caM=new A.pA("Preterm neonate (<28 wks)","~0.10 m\xb2",0.1)
 B.caK=new A.pA("Term neonate","0.19\u20130.21 m\xb2",0.2)
 B.caI=new A.pA("Infant (~1 year)","~0.40 m\xb2",0.4)
@@ -196426,7 +196430,7 @@ B.aUw=s(["Neo PF (1gm sachet)","0.75","-","-","-","-","-","-","4"],t.s)
 B.bpq=s(["Simyl MCT (1ml)","-","0.945","-","-","-","-","-","7.8"],t.s)
 B.bqK=s(["Calcimax (1ml)","-","-","-","30","15","-","20","-"],t.s)
 B.bqT=s(["Orofer (0.1ml)","-","-","-","-","-","1","-","-"],t.s)
-B.Ui=s([B.bqI,B.btC,B.brL,B.bnU,B.aSc,B.bCC,B.bmz,B.aUw,B.bpq,B.bqK,B.bqT],t.rj)
+B.Uj=s([B.bqI,B.btC,B.brL,B.bnU,B.aSc,B.bCC,B.bmz,B.aUw,B.bpq,B.bqK,B.bqT],t.rj)
 B.bPu=new A.eN("Preterm 26\u201330 wks",null,"3.5\u20135.5 cm/s")
 B.bPz=new A.eN("Term \u226537 wks",null,"4.5\u20137.0 cm/s")
 B.bzw=s([B.bPu,B.bPz],t.Rr)
@@ -196437,12 +196441,12 @@ B.a8Z=new A.yb(2,"average")
 B.bzA=s([B.a8X,B.a8Y,B.a8Z],A.ag("J<yb>"))
 B.bzD=s(["CAN score","clinical assessment nutrition","fetal malnutrition","nutritional assessment","metcoff","IUGR","intrauterine growth restriction","fat wasting","muscle wasting","newborn nutrition","birth nutrition","SGA nutrition","subcutaneous fat","skin fold","hair quality","nail","cheek fat","breast tissue","buttocks","abdomen","arms","legs"],t.s)
 B.bzE=s(["Airway + NG tube","Breathing (100 % oxygen)","Circulation (0.9 % saline) 10\u201320 mL/kg over 1\u20132 h, and repeat until circulation is restored","See CE Management (cerebral oedema risk)"],t.s)
-B.Uj=s([0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.333,0.474,0.556,0.556,0.889,0.722,0.238,0.333,0.333,0.389,0.584,0.278,0.333,0.278,0.278,0.556,0.556,0.556,0.556,0.556,0.556,0.556,0.556,0.556,0.556,0.333,0.333,0.584,0.584,0.584,0.611,0.975,0.722,0.722,0.722,0.722,0.667,0.611,0.778,0.722,0.278,0.556,0.722,0.611,0.833,0.722,0.778,0.667,0.778,0.722,0.667,0.611,0.722,0.667,0.944,0.667,0.667,0.611,0.333,0.278,0.333,0.584,0.556,0.333,0.556,0.611,0.556,0.611,0.556,0.333,0.611,0.611,0.278,0.278,0.556,0.278,0.889,0.611,0.611,0.611,0.611,0.389,0.556,0.333,0.611,0.556,0.778,0.556,0.556,0.5,0.389,0.28,0.389,0.584,0.35,0.556,0.35,0.278,0.556,0.5,1,0.556,0.556,0.333,1,0.667,0.333,1,0.35,0.611,0.35,0.35,0.278,0.278,0.5,0.5,0.35,0.556,1,0.333,1,0.556,0.333,0.944,0.35,0.5,0.667,0.278,0.333,0.556,0.556,0.556,0.556,0.28,0.556,0.333,0.737,0.37,0.556,0.584,0.333,0.737,0.333,0.4,0.584,0.333,0.333,0.333,0.611,0.556,0.278,0.333,0.333,0.365,0.556,0.834,0.834,0.834,0.611,0.722,0.722,0.722,0.722,0.722,0.722,1,0.722,0.667,0.667,0.667,0.667,0.278,0.278,0.278,0.278,0.722,0.722,0.778,0.778,0.778,0.778,0.778,0.584,0.778,0.722,0.722,0.722,0.722,0.667,0.667,0.611,0.556,0.556,0.556,0.556,0.556,0.556,0.889,0.556,0.556,0.556,0.556,0.556,0.278,0.278,0.278,0.278,0.611,0.611,0.611,0.611,0.611,0.611,0.611,0.584,0.611,0.611,0.611,0.611,0.611,0.556,0.611,0.556],t.n)
+B.Uk=s([0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.278,0.333,0.474,0.556,0.556,0.889,0.722,0.238,0.333,0.333,0.389,0.584,0.278,0.333,0.278,0.278,0.556,0.556,0.556,0.556,0.556,0.556,0.556,0.556,0.556,0.556,0.333,0.333,0.584,0.584,0.584,0.611,0.975,0.722,0.722,0.722,0.722,0.667,0.611,0.778,0.722,0.278,0.556,0.722,0.611,0.833,0.722,0.778,0.667,0.778,0.722,0.667,0.611,0.722,0.667,0.944,0.667,0.667,0.611,0.333,0.278,0.333,0.584,0.556,0.333,0.556,0.611,0.556,0.611,0.556,0.333,0.611,0.611,0.278,0.278,0.556,0.278,0.889,0.611,0.611,0.611,0.611,0.389,0.556,0.333,0.611,0.556,0.778,0.556,0.556,0.5,0.389,0.28,0.389,0.584,0.35,0.556,0.35,0.278,0.556,0.5,1,0.556,0.556,0.333,1,0.667,0.333,1,0.35,0.611,0.35,0.35,0.278,0.278,0.5,0.5,0.35,0.556,1,0.333,1,0.556,0.333,0.944,0.35,0.5,0.667,0.278,0.333,0.556,0.556,0.556,0.556,0.28,0.556,0.333,0.737,0.37,0.556,0.584,0.333,0.737,0.333,0.4,0.584,0.333,0.333,0.333,0.611,0.556,0.278,0.333,0.333,0.365,0.556,0.834,0.834,0.834,0.611,0.722,0.722,0.722,0.722,0.722,0.722,1,0.722,0.667,0.667,0.667,0.667,0.278,0.278,0.278,0.278,0.722,0.722,0.778,0.778,0.778,0.778,0.778,0.584,0.778,0.722,0.722,0.722,0.722,0.667,0.667,0.611,0.556,0.556,0.556,0.556,0.556,0.556,0.889,0.556,0.556,0.556,0.556,0.556,0.278,0.278,0.278,0.278,0.611,0.611,0.611,0.611,0.611,0.611,0.611,0.584,0.611,0.611,0.611,0.611,0.611,0.556,0.611,0.556],t.n)
 B.azR=new A.LO(0,"success")
 B.azS=new A.LO(1,"failure")
 B.bzJ=s([B.azR,B.azS],A.ag("J<LO>"))
 B.DN=s([0,128,192,224,240,248,252,254,255],t.t)
-B.Uk=s([137,80,78,71,13,10,26,10],t.t)
+B.Ul=s([137,80,78,71,13,10,26,10],t.t)
 B.DO=s([0,1,3,7,15,31,63,127,255,511,1023,2047,4095,8191,16383,32767,65535,131071,262143,524287,1048575,2097151,4194303,8388607,16777215,33554431,67108863,134217727,268435455,536870911,1073741823,2147483647,4294967295],t.t)
 B.bzP=s([3,4,5,6,7,8,9,10,11,13,15,17,19,23,27,31,35,43,51,59,67,83,99,115,131,163,195,227,258],t.t)
 B.aeK=new A.M(1,1,0.803921568627451,0.8235294117647058,B.B)
@@ -196460,13 +196464,9 @@ B.bOp=new A.ay(120,130)
 B.bOr=new A.ay(130,150)
 B.bOs=new A.ay(160,180)
 B.bzU=s([B.bOD,B.bOn,B.bOp,B.bOr,B.ES,B.bOs],t.UO)
-B.Ul=s([B.ij,B.lR,B.Hs,B.r7,B.Ht],A.ag("J<nE>"))
+B.Um=s([B.ij,B.lR,B.Hs,B.r7,B.Ht],A.ag("J<nE>"))
 B.bzY=s(["Hypertension","Tachycardia","Cold extremities"],t.s)
 B.bzZ=s(["phosphate","po4 correction","hypophosphataemia","hypophosphatemia","metabolic bone disease of prematurity","MBDP","rickets"],t.s)
-B.atq=new A.tp("iap-stg-2022","IAP STG 2022",4280171103,"https://mulgundsunil1918.github.io/pediaid-stg/stg_index.json")
-B.atp=new A.tp("iap-action-plan-2026","IAP Action Plan 2026",4293548044,"https://academics.pediaid.bridgr.co.in/data/iap-action-plan-2026-index.json")
-B.atr=new A.tp("nnf-cpg","NNF CPG",4286331629,"https://academics.pediaid.bridgr.co.in/data/nnf-cpg-index.json")
-B.Um=s([B.atq,B.atp,B.atr],A.ag("J<tp>"))
 B.bA4=s([1,2,3,4,5,7,9,13,17,25,33,49,65,97,129,193,257,385,513,769,1025,1537,2049,3073,4097,6145,8193,12289,16385,24577],t.t)
 B.aNx=s(["Dull, dry, brittle; easily pluckable; sparse or depigmented","Slightly dull or sparse; mildly reduced luster","Slightly less shiny than expected; subtle changes only","Shiny, strong, well-implanted; not easily pluckable"],t.s)
 B.clH=new A.pN("Hair",B.aNx)
@@ -201195,8 +201195,8 @@ B.bok=s([108,109,111,112,113,115,116],t.t)
 B.bvj=s([112,113,114,116,118,120,121],t.t)
 B.aKb=s([59,60,61,62,63,63,64],t.t)
 B.bB9=s([72,73,74,74,75,75,76],t.t)
-B.Uf=s([76,76,77,77,78,78,78],t.t)
-B.a8y=new A.ez(B.bzX,B.bBY,B.bok,B.bvj,B.aKb,B.bB9,B.Uf)
+B.Ug=s([76,76,77,77,78,78,78],t.t)
+B.a8y=new A.ez(B.bzX,B.bBY,B.bok,B.bvj,B.aKb,B.bB9,B.Ug)
 B.byg=s([134.7,137.3,141.5,146.4,151.3,155.8,158.6],t.n)
 B.bma=s([99,99,101,102,103,104,106],t.t)
 B.bsC=s([110,111,112,114,116,117,118],t.t)
@@ -201381,7 +201381,7 @@ B.bur=s([107,108,109,110,110,110,111],t.t)
 B.bqN=s([120,121,123,124,124,125,125],t.t)
 B.bi2=s([125,125,126,127,128,128,128],t.t)
 B.brH=s([64,64,65,66,66,66,67],t.t)
-B.a8P=new A.ez(B.bCf,B.bur,B.bqN,B.bi2,B.brH,B.Uf,B.DR)
+B.a8P=new A.ez(B.bCf,B.bur,B.bqN,B.bi2,B.brH,B.Ug,B.DR)
 B.iX=new A.bP([1,B.a8S,2,B.a8E,3,B.a8o,4,B.a8p,5,B.a8Q,6,B.a8x,7,B.a8D,8,B.a8s,9,B.a8q,10,B.a8N,11,B.a8u,12,B.a8z,13,B.a8r,14,B.a8K,15,B.a8R,16,B.a8T,17,B.a8P],t.QD)
 B.bIO={Premie:0,Newborn:1,"6 Months":2,"1 Year":3,"2\u20133 Years":4,"4\u20136 Years":5,"7\u201310 Years":6,"11\u201315 Years":7,">16 Years":8}
 B.iZ={Weight:0,"Bag Valve Mask":1,"Nasal Airway":2,"Oral Airway":3,Blade:4,ETT:5,LMA:6,Glidescope:7,"IV Catheter":8,CVL:9,"NGT / OGT":10,"Chest Tube":11,Foley:12}
