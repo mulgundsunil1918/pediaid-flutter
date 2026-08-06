@@ -11,6 +11,7 @@
 // =============================================================================
 
 import 'package:flutter/material.dart';
+import '../../academics/academics_web_screen.dart';
 import '../../services/bookmarks_service.dart';
 
 class SavedScreen extends StatefulWidget {
@@ -35,6 +36,29 @@ class _SavedScreenState extends State<SavedScreen> {
     setState(() {
       _future = BookmarksService.instance.getSaved();
     });
+  }
+
+  /// Opens a saved item where it lives.
+  ///
+  /// Everything saveable is an Academics page, so this pushes the Academics
+  /// web view at the path the server returned. Null when there is no path —
+  /// the card then simply is not tappable, rather than tapping to nowhere.
+  VoidCallback? _openerFor(Bookmark b) {
+    var path = b.linkPath;
+    if (path == null || path.isEmpty) return null;
+    // The server returns paths like /academics/trials/... while the web view's
+    // base URL already ends in /academics. Passing it through unchanged would
+    // request /academics/academics/trials/... and 404.
+    if (path.startsWith('/academics')) {
+      path = path.substring('/academics'.length);
+      if (path.isEmpty) path = '/';
+    }
+    return () => Navigator.push(
+          context,
+          MaterialPageRoute<void>(
+            builder: (_) => AcademicsWebScreen(path: path!),
+          ),
+        );
   }
 
   Future<void> _remove(Bookmark b) async {
@@ -129,8 +153,11 @@ class _SavedScreenState extends State<SavedScreen> {
                         padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
                         itemCount: visible.length,
                         separatorBuilder: (context, index) => const SizedBox(height: 10),
-                        itemBuilder: (context, i) =>
-                            _SavedCard(b: visible[i], onRemove: () => _remove(visible[i])),
+                        itemBuilder: (context, i) => _SavedCard(
+                          b: visible[i],
+                          onRemove: () => _remove(visible[i]),
+                          onOpen: _openerFor(visible[i]),
+                        ),
                       ),
               ),
             ],
@@ -178,15 +205,25 @@ class _ChipRow extends StatelessWidget {
 }
 
 class _SavedCard extends StatelessWidget {
-  const _SavedCard({required this.b, required this.onRemove});
+  const _SavedCard({
+    required this.b,
+    required this.onRemove,
+    required this.onOpen,
+  });
 
   final Bookmark b;
   final VoidCallback onRemove;
+  final VoidCallback? onOpen;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Container(
+    // The whole card opens the thing. A saved list you can only look at is
+    // a list of titles; the point is getting back to the item.
+    return InkWell(
+      onTap: onOpen,
+      borderRadius: BorderRadius.circular(14),
+      child: Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: theme.cardColor,
@@ -222,12 +259,16 @@ class _SavedCard extends StatelessWidget {
               ],
             ),
           ),
+          if (onOpen != null)
+            Icon(Icons.chevron_right_rounded,
+                size: 20, color: theme.disabledColor),
           IconButton(
             icon: const Icon(Icons.delete_outline, size: 20),
             tooltip: 'Remove from saved',
             onPressed: onRemove,
           ),
         ],
+      ),
       ),
     );
   }
