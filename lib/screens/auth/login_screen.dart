@@ -42,17 +42,24 @@ import '../../services/push_service.dart';
 import '../../utils/prefs_keys.dart';
 import '../onboarding/profile_setup_screen.dart';
 
-/// Apple platforms — iOS and macOS, natively or in a browser there.
+/// The native iOS app, and nowhere else.
 ///
-/// Deliberately NOT `!kIsWeb && Platform.isIOS`, which is what this was: that
-/// hid the Apple button from every Mac and from Safari on iPhone, even though
-/// Apple sign-in works in both through Firebase's OAuth popup.
-/// defaultTargetPlatform reports the underlying OS on web too, so one check
-/// covers native and browser alike — and it never touches Platform, so there
-/// is nothing to throw on web.
+/// This once covered macOS and browsers on Apple devices too, on the reasoning
+/// that Firebase's OAuth popup works there. It does not: Sign in with Apple on
+/// the web needs a Services ID, Team ID, Key ID and private key registered
+/// with Firebase, and that was never set up — so the button returned "This
+/// sign-in method is not enabled" every time. A button that always fails is
+/// worse than no button.
+///
+/// It stays on native iOS, where it works through Apple's own SDK with no web
+/// OAuth config, and where App Store guideline 4.8 requires a
+/// privacy-preserving option alongside Google. 4.8 governs apps, not websites,
+/// so nothing is owed on web or macOS.
+///
+/// kIsWeb is checked first: on web, defaultTargetPlatform reports the
+/// underlying OS, so a Mac browser would otherwise still match.
 bool get _isApplePlatform =>
-    defaultTargetPlatform == TargetPlatform.iOS ||
-    defaultTargetPlatform == TargetPlatform.macOS;
+    !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS;
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
