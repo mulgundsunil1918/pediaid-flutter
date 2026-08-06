@@ -89,7 +89,7 @@ class GuidelinesSearchService {
       fullName: 'IAP Action Plan 2026 — Practice Guidelines',
       colorArgb: 0xFFEA580C,
       indexUrl:
-          'https://academics.pediaid.bridgr.co.in/data/iap-action-plan-2026-index.json',
+          'https://pediaid.bridgr.co.in/academics/data/iap-action-plan-2026-index.json',
     ),
     GuidelineSource(
       slug: 'nnf-cpg',
@@ -97,7 +97,7 @@ class GuidelinesSearchService {
       fullName: 'NNF Clinical Practice Guidelines',
       colorArgb: 0xFF7C3AED,
       indexUrl:
-          'https://academics.pediaid.bridgr.co.in/data/nnf-cpg-index.json',
+          'https://pediaid.bridgr.co.in/academics/data/nnf-cpg-index.json',
     ),
   ];
 

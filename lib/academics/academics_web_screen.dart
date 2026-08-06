@@ -19,7 +19,11 @@ class AcademicsWebScreen extends StatefulWidget {
 }
 
 class _AcademicsWebScreenState extends State<AcademicsWebScreen> {
-  static const _baseUrl = 'https://academics.pediaid.bridgr.co.in';
+  // Same origin as the app now. On its own subdomain the browser scoped
+  // Academics' session separately, so signing in here never signed you in
+  // there — pressing Save asked for Google again even though the app already
+  // knew who you were. One origin, one session, both directions.
+  static const _baseUrl = 'https://pediaid.bridgr.co.in/academics';
 
   InAppWebViewController? _controller;
   /// Null until the sign-in code comes back; the plain URL is used meanwhile.
