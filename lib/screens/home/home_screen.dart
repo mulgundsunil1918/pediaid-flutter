@@ -1820,6 +1820,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const Divider(height: 24, indent: 16, endIndent: 16),
                 // ── Rate, Share, Web, Feedback ────────────────────────
+                if (SupportPromptService.isAvailable)
+                  _DrawerItem(
+                    icon: Icons.favorite_rounded,
+                    label: 'Support PediAid',
+                    onTap: () {
+                      Navigator.pop(context);
+                      SupportPromptService.instance.showNow(context);
+                    },
+                  ),
                 _DrawerItem(
                   icon: Icons.star_rounded,
                   label: 'Rate PediAid',

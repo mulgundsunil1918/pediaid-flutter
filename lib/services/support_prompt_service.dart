@@ -56,6 +56,24 @@ class SupportPromptService {
   /// because Platform throws on web.
   static bool get _isIos => !kIsWeb && Platform.isIOS;
 
+  /// Opens the sheet on demand, ignoring every gate.
+  ///
+  /// For the drawer entry: someone who has gone looking for a way to support
+  /// the project should not be told to wait eight launches for a prompt. Does
+  /// not touch the ask counter, so choosing to open it here never uses up one
+  /// of the automatic asks — and it stays available on iOS is NOT true: the
+  /// same 3.1.1/3.1.3 rules apply to a menu item, so it is hidden there too.
+  Future<void> showNow(BuildContext context) async {
+    if (_isIos) return;
+    final prefs = await SharedPreferences.getInstance();
+    if (!context.mounted) return;
+    await _show(context, prefs, prefs.getInt(_kAskCountKey) ?? 0,
+        countsAsAsk: false);
+  }
+
+  /// True when the drawer entry should be shown at all.
+  static bool get isAvailable => !_isIos;
+
   /// Call once on app open. Never from inside a tool.
   Future<void> maybeShow(BuildContext context) async {
     if (_isIos) return;
@@ -90,13 +108,16 @@ class SupportPromptService {
   Future<void> _show(
     BuildContext context,
     SharedPreferences prefs,
-    int asked,
-  ) async {
-    await prefs.setInt(_kAskCountKey, asked + 1);
-    await prefs.setInt(
-      _kLastAskedKey,
-      DateTime.now().millisecondsSinceEpoch,
-    );
+    int asked, {
+    bool countsAsAsk = true,
+  }) async {
+    if (countsAsAsk) {
+      await prefs.setInt(_kAskCountKey, asked + 1);
+      await prefs.setInt(
+        _kLastAskedKey,
+        DateTime.now().millisecondsSinceEpoch,
+      );
+    }
 
     if (!context.mounted) return;
     final isDark = Theme.of(context).brightness == Brightness.dark;

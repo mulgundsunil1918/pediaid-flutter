@@ -204,6 +204,7 @@ class _AcademicsLoaderState extends State<_AcademicsLoader>
                       t: _c.value,
                       colour: cs.primary,
                       shelf: cs.onSurface.withValues(alpha: 0.25),
+                      background: Theme.of(context).scaffoldBackgroundColor,
                     ),
                   ),
                 ),
@@ -273,12 +274,14 @@ class _FallingBooksPainter extends CustomPainter {
     required this.t,
     required this.colour,
     required this.shelf,
+    required this.background,
   });
 
   /// 0…1, looping.
   final double t;
   final Color colour;
   final Color shelf;
+  final Color background;
 
   static const _count = 5;
   static const _bookW = 13.0;
@@ -298,19 +301,22 @@ class _FallingBooksPainter extends CustomPainter {
       ..strokeWidth = 1.6
       ..strokeJoin = StrokeJoin.round
       ..color = colour;
-    // Filled, but lightly — this sits behind the brand name and must not
-    // become the loudest thing on a screen meant to be waited through.
+    // OPAQUE, not translucent. A fallen book physically covers the one it
+    // landed on, so it has to occlude it — with a see-through fill every
+    // outline showed through every other and the stack read as a scribble.
+    // The tint is pre-blended against the page background so it stays as light
+    // as a 16% wash while still hiding what is underneath.
     final fill = Paint()
       ..style = PaintingStyle.fill
-      ..color = colour.withValues(alpha: 0.16);
+      ..color = Color.alphaBlend(colour.withValues(alpha: 0.16), background);
 
     final baseY = size.height - 12;
     final totalW = _count * _bookW + (_count - 1) * _gap;
     final startX = (size.width - totalW) / 2;
 
     canvas.drawLine(
-      Offset(startX - 12, baseY + 1),
-      Offset(startX + totalW + 12, baseY + 1),
+      Offset(startX - 6, baseY + 1),
+      Offset(startX + totalW + _bookH * 0.5, baseY + 1),
       Paint()
         ..color = shelf
         ..strokeWidth = 1.4,
