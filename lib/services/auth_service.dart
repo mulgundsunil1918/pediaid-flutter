@@ -118,6 +118,34 @@ class AuthService extends ChangeNotifier {
   /// a single network call.
   Future<bool>? _inflightRefresh;
 
+  /// Mints a one-time code that Academics can trade for this same session.
+  ///
+  /// The two are separate origins and cannot share a session, so without this
+  /// signing into the app never signed you into Academics. Returns null when
+  /// signed out or if anything fails — the caller then opens Academics plainly,
+  /// which is what it always did.
+  Future<String?> createSsoCode() async {
+    final token = _accessToken;
+    if (token == null) return null;
+    try {
+      final res = await http
+          .post(
+            Uri.parse('$apiBase/api/academics/auth/sso-code'),
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer $token',
+            },
+          )
+          .timeout(const Duration(seconds: 12));
+      if (res.statusCode != 200) return null;
+      final body = jsonDecode(res.body) as Map<String, dynamic>;
+      final code = body['code'];
+      return code is String && code.isNotEmpty ? code : null;
+    } catch (_) {
+      return null;
+    }
+  }
+
   String? get accessToken => _accessToken;
   String? get refreshToken => _refreshToken;
   AuthUser? get currentUser => _user;

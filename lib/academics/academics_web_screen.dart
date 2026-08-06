@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'dart:convert';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
@@ -23,6 +22,13 @@ class _AcademicsWebScreenState extends State<AcademicsWebScreen> {
   static const _baseUrl = 'https://academics.pediaid.bridgr.co.in';
 
   InAppWebViewController? _controller;
+  /// Null until the sign-in code comes back; the plain URL is used meanwhile.
+  String? _url;
+
+  String get _plainUrl {
+    final sep = widget.path.contains('?') ? '&' : '?';
+    return '$_baseUrl${widget.path}${sep}embed=1';
+  }
   bool _loading = true;
   int _progress = 0;
 
@@ -41,6 +47,11 @@ class _AcademicsWebScreenState extends State<AcademicsWebScreen> {
   @override
   void initState() {
     super.initState();
+    // Resolve the URL — with a handoff code when signed in — before the web
+    // view is built, so the page is never loaded twice.
+    _buildUrl().then((u) {
+      if (mounted) setState(() => _url = u);
+    });
     _overlayFailsafe = Timer(
       Duration(milliseconds: kIsWeb ? 2500 : 20000),
       () {
@@ -55,58 +66,22 @@ class _AcademicsWebScreenState extends State<AcademicsWebScreen> {
     super.dispose();
   }
 
-  /// Hands the app's session to the web view.
+  /// The URL to open, carrying a one-time sign-in code when we have one.
   ///
-  /// Without this the two surfaces sign in separately and end up as two
-  /// different `acad_users` rows, so anything account-scoped — saved items
-  /// most visibly — is split in half: a bookmark made in the app is invisible
-  /// on the web and the other way round. Both saves work; they just belong to
-  /// different people as far as the database is concerned.
+  /// Replaces an earlier attempt that wrote the app's tokens into the web
+  /// view's localStorage. That only ever worked inside the mobile in-app web
+  /// view — on the web build the two are different origins and localStorage
+  /// cannot cross them, which is exactly the case that was broken.
   ///
-  /// Written into localStorage rather than passed on the URL. A token in a
-  /// query string ends up in history, in logs and in any referrer the page
-  /// sends — a URL is the wrong place for a credential.
-  ///
-  /// Only ever writes the app's own session to the app's own domain, and
-  /// writes nothing at all when signed out, so it cannot clobber a session the
-  /// web view established on its own.
-  Future<void> _shareSessionWithWebView(InAppWebViewController c) async {
-    final auth = AuthService.instance;
-    final access = auth.accessToken;
-    final refresh = auth.refreshToken;
-    final user = auth.currentUser;
-    if (access == null || user == null) return;
-
-    final payload = jsonEncode({
-      'access': access,
-      'refresh': refresh,
-      'user': user.toJson(),
-    });
-
-    try {
-      // Re-read after writing: if the web view already held this same token
-      // there is nothing to do, and reloading on every page load would put the
-      // view into a refresh loop.
-      final changed = await c.evaluateJavascript(source: """
-        (function () {
-          try {
-            var d = $payload;
-            var had = localStorage.getItem('acad_access_token');
-            if (had === d.access) return false;
-            localStorage.setItem('acad_access_token', d.access);
-            if (d.refresh) localStorage.setItem('acad_refresh_token', d.refresh);
-            localStorage.setItem('acad_user', JSON.stringify(d.user));
-            return true;
-          } catch (e) { return false; }
-        })();
-      """);
-      if (changed == true || changed == 'true') {
-        await c.reload();
-      }
-    } catch (_) {
-      // A failed injection must not block the page — the web view still works,
-      // it is just signed in separately, which is the behaviour before this.
-    }
+  /// The code is single-use and expires in 60 seconds, so what it leaves in
+  /// history is dead almost immediately, and Academics strips it from the
+  /// address bar on arrival.
+  Future<String> _buildUrl() async {
+    final sep = widget.path.contains('?') ? '&' : '?';
+    final base = '$_baseUrl${widget.path}${sep}embed=1';
+    final code = await AuthService.instance.createSsoCode();
+    if (code == null) return base;
+    return '$base&sso=${Uri.encodeQueryComponent(code)}';
   }
 
   @override
@@ -116,8 +91,6 @@ class _AcademicsWebScreenState extends State<AcademicsWebScreen> {
     // notification bell. All three are duplicates of chrome this Scaffold and
     // the app already provide, and the bell in particular belongs in PediAid
     // proper, not buried in a web view where notifications would be missed.
-    final sep = widget.path.contains('?') ? '&' : '?';
-    final url = '$_baseUrl${widget.path}${sep}embed=1';
 
     return Scaffold(
       appBar: AppBar(
@@ -152,8 +125,8 @@ class _AcademicsWebScreenState extends State<AcademicsWebScreen> {
       // progress, so a slow load reads as loading rather than as broken.
       body: Stack(
         children: [
-          InAppWebView(
-            initialUrlRequest: URLRequest(url: WebUri(url)),
+          if (_url != null) InAppWebView(
+            initialUrlRequest: URLRequest(url: WebUri(_url ?? _plainUrl)),
             initialSettings: InAppWebViewSettings(
               javaScriptEnabled: true,
               domStorageEnabled: true,
@@ -185,10 +158,7 @@ class _AcademicsWebScreenState extends State<AcademicsWebScreen> {
             onLoadStart: (c, url) {
               if (!kIsWeb) setState(() => _loading = true);
             },
-            onLoadStop: (c, url) async {
-              await _shareSessionWithWebView(c);
-              if (mounted) setState(() => _loading = false);
-            },
+            onLoadStop: (c, url) => setState(() => _loading = false),
             onProgressChanged: (c, progress) =>
                 setState(() => _progress = progress),
             shouldOverrideUrlLoading: (c, action) async {
