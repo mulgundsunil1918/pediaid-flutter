@@ -148,10 +148,20 @@ class _AcademicsWebScreenState extends State<AcademicsWebScreen> {
 
     if (token != null) {
       final user = auth.currentUser;
+      // Access token and user ONLY — never the refresh token.
+      //
+      // Refresh tokens on this backend are single-use: spending one revokes
+      // it. Handing the app's refresh token to the web view put one
+      // single-use credential in two pockets. Academics rotates the pair on
+      // boot, which revoked the app's copy; the next time this screen
+      // opened it re-injected that revoked token over the web view's good
+      // one, Academics' boot rotation then failed and cleared its whole
+      // session — and Save was back to asking for Google. Each surface owns
+      // its session now: the web view lives on this 7-day access token,
+      // re-injected fresh on every open, and can mint its own pair through
+      // the ?sso= code when it needs one.
       final sets = <String>[
         'localStorage.setItem("acad_access_token", ${jsonEncode(token)});',
-        if (auth.refreshToken != null)
-          'localStorage.setItem("acad_refresh_token", ${jsonEncode(auth.refreshToken)});',
         if (user != null)
           'localStorage.setItem("acad_user", ${jsonEncode(jsonEncode(user.toJson()))});',
       ];
