@@ -299,7 +299,16 @@ class _AcademicsWebScreenState extends State<AcademicsWebScreen> {
               disableHorizontalScroll: true,
               useWideViewPort: true,
               loadWithOverviewMode: true,
+              // Without this the callback below never fires and a tapped
+              // download dies silently — the web view neither renders nor
+              // saves PDFs on its own.
+              useOnDownloadStart: true,
             ),
+            // Any download the page triggers goes to the system browser,
+            // which can actually save it and shows its own progress UI.
+            onDownloadStartRequest: (c, req) async {
+              await launchUrl(req.url, mode: LaunchMode.externalApplication);
+            },
             onWebViewCreated: (c) {
               _controller = c;
               c.addJavaScriptHandler(
