@@ -76,6 +76,12 @@ class AuthProvider extends ChangeNotifier {
   /// AuthService.instance.loadFromStorage() have run at boot, so the
   /// isLoggedIn check below reflects the legacy session actually restored
   /// from its own storage rather than its pre-hydration default.
+  /// Why the last bridge attempt failed, or null if it worked / never ran.
+  ///
+  /// Surfaced in the Academics screen so a broken backend session is visible
+  /// instead of presenting as "Save keeps asking me to sign in".
+  String? lastBridgeError;
+
   Future<void> bridgeLegacySessionIfNeeded() async {
     if (_currentUser != null && !AuthService.instance.isLoggedIn) {
       await _bridgeLegacySession(_currentUser!);
@@ -211,11 +217,21 @@ class AuthProvider extends ChangeNotifier {
     try {
       final idToken = await _service.firebaseUser?.getIdToken();
       if (idToken == null) {
+        lastBridgeError = 'No Firebase token available.';
         debugPrint('[AuthProvider] legacy bridge skipped: no Firebase token');
         return;
       }
       await AuthService.instance.loginWithFirebaseToken(idToken);
+      lastBridgeError = null;
     } catch (e) {
+      // Recorded, not just printed. This failure is invisible to the user and
+      // to anyone reading a bug report: the app stays signed in to Firebase
+      // while the backend session is missing, so Save, Like and Submit all
+      // ask an already-signed-in person to sign in again, and nothing on
+      // screen or in a release build says why. debugPrint does not exist in a
+      // release APK. Whoever needs to explain this — the user or us — needs
+      // the reason, so keep it.
+      lastBridgeError = e.toString().replaceFirst('AuthException: ', '');
       debugPrint('[AuthProvider] legacy bridge failed for ${user.email}: $e');
     }
   }

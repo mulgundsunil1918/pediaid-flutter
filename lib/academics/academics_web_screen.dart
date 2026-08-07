@@ -94,14 +94,39 @@ class _AcademicsWebScreenState extends State<AcademicsWebScreen> {
   Future<void> _prepare() async {
     try {
       if (AuthService.instance.accessToken == null && mounted) {
-        await context.read<AuthProvider>().bridgeLegacySessionIfNeeded();
+        final auth = context.read<AuthProvider>();
+        await auth.bridgeLegacySessionIfNeeded();
+        // Signed in to Firebase, still no backend session: the repair failed
+        // too. Say so. Silently loading signed out is what turned one broken
+        // request into days of "Save keeps asking me to sign in".
+        if (auth.isLoggedIn && AuthService.instance.accessToken == null) {
+          _sessionError = auth.lastBridgeError ?? 'Could not reach the server.';
+        }
       }
-    } catch (_) {
-      // A failed repair must not stop Academics from opening. It loads signed
-      // out, exactly as before this call existed.
+    } catch (e) {
+      _sessionError = e.toString().replaceFirst('Exception: ', '');
     }
     final u = await _buildUrl();
     if (mounted) setState(() => _url = u);
+  }
+
+  /// Set when the app is signed in but Academics could not be.
+  String? _sessionError;
+
+  Future<void> _retrySession() async {
+    setState(() => _sessionError = null);
+    final auth = context.read<AuthProvider>();
+    await auth.bridgeLegacySessionIfNeeded();
+    if (!mounted) return;
+    if (AuthService.instance.accessToken == null) {
+      setState(() =>
+          _sessionError = auth.lastBridgeError ?? 'Could not reach the server.');
+      return;
+    }
+    // Session recovered — reload so the injected tokens actually land.
+    final u = await _buildUrl();
+    if (mounted) setState(() => _url = u);
+    await _controller?.loadUrl(urlRequest: URLRequest(url: WebUri(u)));
   }
 
   /// Scripts injected before any page script runs.
@@ -314,6 +339,51 @@ class _AcademicsWebScreenState extends State<AcademicsWebScreen> {
               return NavigationActionPolicy.ALLOW;
             },
           ),
+          // Signed in to the app, not to Academics. Every button that needs an
+          // account will send you to Google from here, and until this banner
+          // existed nothing said why — the page just behaved as though you had
+          // never signed in.
+          if (_sessionError != null)
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: Material(
+                color: const Color(0xFFFEF3C7),
+                child: SafeArea(
+                  bottom: false,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(12, 8, 8, 8),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.warning_amber_rounded,
+                            size: 18, color: Color(0xFF92400E)),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            'Signed in, but Academics could not be reached — '
+                            'Save and Like will ask you to sign in.\n$_sessionError',
+                            style: GoogleFonts.plusJakartaSans(
+                              fontSize: 11.5,
+                              height: 1.35,
+                              color: const Color(0xFF92400E),
+                            ),
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: _retrySession,
+                          style: TextButton.styleFrom(
+                            visualDensity: VisualDensity.compact,
+                            foregroundColor: const Color(0xFF92400E),
+                          ),
+                          child: const Text('Retry'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
           if (_loading) _AcademicsLoader(progress: _progress),
         ],
       ),
