@@ -1402,7 +1402,6 @@ class _SubmitSheetState extends State<_SubmitSheet> {
                 label: 'What happened?',
                 hint: 'Briefly describe the clinical scenario…',
                 maxLines: 4,
-                maxLength: 500,
                 onChanged: (_) => setState(() {}),
               ),
               const SizedBox(height: 12),
@@ -1413,7 +1412,6 @@ class _SubmitSheetState extends State<_SubmitSheet> {
                 label: 'What went wrong?',
                 hint: 'What was the root cause or missed step?',
                 maxLines: 4,
-                maxLength: 500,
                 onChanged: (_) => setState(() {}),
               ),
               const SizedBox(height: 12),
@@ -1424,7 +1422,6 @@ class _SubmitSheetState extends State<_SubmitSheet> {
                 label: 'The lesson',
                 hint: 'What would you do differently? What should others know?',
                 maxLines: 3,
-                maxLength: 500,
                 onChanged: (_) => setState(() {}),
               ),
               const SizedBox(height: 12),
@@ -1629,7 +1626,7 @@ class _SheetTextField extends StatelessWidget {
     required this.label,
     required this.hint,
     required this.maxLines,
-    required this.maxLength,
+    this.maxLength,
     required this.onChanged,
   });
 
@@ -1637,7 +1634,7 @@ class _SheetTextField extends StatelessWidget {
   final String label;
   final String hint;
   final int maxLines;
-  final int maxLength;
+  final int? maxLength;
   final ValueChanged<String> onChanged;
 
   @override
