@@ -30,6 +30,14 @@
           }
         },
         {
+          "client_id": "11076606207-on87oll80b3ev0eju51farcm9aqonb52.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pediaid.pediaid",
+            "certificate_hash": "7bde8a7818d5aa7b9731be997a63086ead1bc005"
+          }
+        },
+        {
           "client_id": "11076606207-02kg8ensf5br3gk3lkhfcuv6hghpacu6.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -45,6 +53,13 @@
             {
               "client_id": "11076606207-02kg8ensf5br3gk3lkhfcuv6hghpacu6.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "11076606207-3grv5stb6t8s0db6cihn8ls731tjj0if.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "app.pediaid.pediaid"
+              }
             }
           ]
         }
