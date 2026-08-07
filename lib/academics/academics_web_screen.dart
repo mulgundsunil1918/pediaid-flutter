@@ -7,8 +7,10 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../providers/auth_provider.dart';
 import '../services/auth_service.dart';
 
 /// Loads the PediAid Academics web platform inside the Flutter app.
@@ -55,11 +57,21 @@ class _AcademicsWebScreenState extends State<AcademicsWebScreen> {
   @override
   void initState() {
     super.initState();
-    // Resolve the URL — with a handoff code when signed in — before the web
-    // view is built, so the page is never loaded twice.
-    _buildUrl().then((u) {
-      if (mounted) setState(() => _url = u);
-    });
+    // Repair the Academics session first, then resolve the URL — with the
+    // handoff code and the injected tokens — before the web view is built, so
+    // the page is never loaded twice.
+    //
+    // The repair matters because the legacy bridge only ran once, at boot,
+    // from main.dart. Its request has a 30s timeout and this backend sleeps
+    // when idle, so an app opened against a cold server loses the bridge and
+    // stays half-signed-in for the whole run: Firebase says signed in, the
+    // Academics token was never issued, and every Save and Like therefore
+    // asked an already-signed-in user to sign in with Google. Nothing
+    // reported it — the bridge logs to debugPrint and returns.
+    //
+    // Here is the right place to retry: it is the moment the token is
+    // actually needed, and by now the server is awake.
+    _prepare();
     _overlayFailsafe = Timer(
       Duration(milliseconds: kIsWeb ? 2500 : 20000),
       () {
@@ -74,16 +86,24 @@ class _AcademicsWebScreenState extends State<AcademicsWebScreen> {
     super.dispose();
   }
 
-  /// The URL to open, carrying a one-time sign-in code when we have one.
+  /// Re-issues the Academics session if the app has a Firebase user but no
+  /// backend token, then resolves the URL.
   ///
-  /// Replaces an earlier attempt that wrote the app's tokens into the web
-  /// view's localStorage. That only ever worked inside the mobile in-app web
-  /// view — on the web build the two are different origins and localStorage
-  /// cannot cross them, which is exactly the case that was broken.
-  ///
-  /// The code is single-use and expires in 60 seconds, so what it leaves in
-  /// history is dead almost immediately, and Academics strips it from the
-  /// address bar on arrival.
+  /// Cheap when there is nothing to do — [bridgeLegacySessionIfNeeded] returns
+  /// immediately unless the token is genuinely missing.
+  Future<void> _prepare() async {
+    try {
+      if (AuthService.instance.accessToken == null && mounted) {
+        await context.read<AuthProvider>().bridgeLegacySessionIfNeeded();
+      }
+    } catch (_) {
+      // A failed repair must not stop Academics from opening. It loads signed
+      // out, exactly as before this call existed.
+    }
+    final u = await _buildUrl();
+    if (mounted) setState(() => _url = u);
+  }
+
   /// Scripts injected before any page script runs.
   ///
   /// Two jobs, both fixing "the app is signed in but the web view is not":
@@ -144,6 +164,15 @@ class _AcademicsWebScreenState extends State<AcademicsWebScreen> {
     return scripts;
   }
 
+  /// The URL to open, carrying a one-time sign-in code when we have one.
+  ///
+  /// Kept as a fallback alongside the injected tokens: on the web build the
+  /// app and Academics are the same origin and share localStorage directly,
+  /// but the code is what covers a web view whose storage was cleared, and it
+  /// is what the site consumes on arrival.
+  ///
+  /// Single-use and expires in 60 seconds, so what it leaves in history is
+  /// dead almost immediately, and Academics strips it from the address bar.
   Future<String> _buildUrl() async {
     final sep = widget.path.contains('?') ? '&' : '?';
     final base = '$_baseUrl${widget.path}${sep}embed=1';
