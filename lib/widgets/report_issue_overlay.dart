@@ -115,7 +115,11 @@ class _ReportFab extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         onTap: _openSheet,
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          // Icon only. The word "Report" reads as an accusation sitting on top
+          // of clinical content, and the flag alone is the understood symbol
+          // for it — so the control stays, the wording goes. Circular now that
+          // there is no label to make it a pill.
+          padding: const EdgeInsets.all(9),
           decoration: BoxDecoration(
             color: cs.surface.withValues(alpha: 0.92),
             borderRadius: BorderRadius.circular(20),
@@ -128,17 +132,11 @@ class _ReportFab extends StatelessWidget {
               ),
             ],
           ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.flag_outlined, size: 15, color: cs.onSurface.withValues(alpha: 0.7)),
-              const SizedBox(width: 5),
-              Text('Report',
-                  style: TextStyle(
-                      fontSize: 12.5,
-                      fontWeight: FontWeight.w600,
-                      color: cs.onSurface.withValues(alpha: 0.75))),
-            ],
+          child: Icon(
+            Icons.flag_outlined,
+            size: 17,
+            color: cs.onSurface.withValues(alpha: 0.7),
+            semanticLabel: 'Report an issue',
           ),
         ),
       ),

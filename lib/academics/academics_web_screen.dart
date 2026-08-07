@@ -1,10 +1,13 @@
 import 'dart:async';
+import 'dart:collection';
+import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../services/auth_service.dart';
 
@@ -81,6 +84,66 @@ class _AcademicsWebScreenState extends State<AcademicsWebScreen> {
   /// The code is single-use and expires in 60 seconds, so what it leaves in
   /// history is dead almost immediately, and Academics strips it from the
   /// address bar on arrival.
+  /// Scripts injected before any page script runs.
+  ///
+  /// Two jobs, both fixing "the app is signed in but the web view is not":
+  ///
+  ///  * the session, written straight into the keys Academics reads. The
+  ///    ?sso= code still goes on the URL as a fallback, but it is a round trip
+  ///    whose every failure returns the same silent null, and when it failed
+  ///    Save and Like sent an already-signed-in user to Google.
+  ///  * navigator.share, which does not exist in an Android web view. The site
+  ///    checks for it and falls back to the clipboard, which is why Share only
+  ///    ever said "Link copied". Polyfilling it here fixes sharing on every
+  ///    page at once rather than page by page.
+  List<UserScript> _sessionUserScripts() {
+    final scripts = <UserScript>[];
+    final auth = AuthService.instance;
+    final token = auth.accessToken;
+
+    if (token != null) {
+      final user = auth.currentUser;
+      final sets = <String>[
+        'localStorage.setItem("acad_access_token", ${jsonEncode(token)});',
+        if (auth.refreshToken != null)
+          'localStorage.setItem("acad_refresh_token", ${jsonEncode(auth.refreshToken)});',
+        if (user != null)
+          'localStorage.setItem("acad_user", ${jsonEncode(jsonEncode(user.toJson()))});',
+      ];
+      scripts.add(UserScript(
+        source: '(function(){try{${sets.join()}}catch(e){}})();',
+        injectionTime: UserScriptInjectionTime.AT_DOCUMENT_START,
+      ));
+    }
+
+    scripts.add(UserScript(
+      source: r'''
+(function () {
+  try {
+    if (navigator.share) return;
+    navigator.share = function (data) {
+      try {
+        var d = data || {};
+        var parts = [];
+        if (d.text) parts.push(d.text);
+        else if (d.title) parts.push(d.title);
+        if (d.url && parts.join(" ").indexOf(d.url) === -1) parts.push(d.url);
+        window.flutter_inappwebview.callHandler("nativeShare", parts.join("\n\n"));
+        return Promise.resolve();
+      } catch (e) {
+        return Promise.reject(e);
+      }
+    };
+    navigator.canShare = function () { return true; };
+  } catch (e) {}
+})();
+''',
+      injectionTime: UserScriptInjectionTime.AT_DOCUMENT_START,
+    ));
+
+    return scripts;
+  }
+
   Future<String> _buildUrl() async {
     final sep = widget.path.contains('?') ? '&' : '?';
     final base = '$_baseUrl${widget.path}${sep}embed=1';
@@ -132,6 +195,24 @@ class _AcademicsWebScreenState extends State<AcademicsWebScreen> {
         children: [
           if (_url != null) InAppWebView(
             initialUrlRequest: URLRequest(url: WebUri(_url ?? _plainUrl)),
+            // Hand the session over directly, before any page script runs.
+            //
+            // The ?sso= one-time code still goes on the URL, but it is a round
+            // trip — mint a code, redeem it — and every failure along the way
+            // (no token yet, a non-200, a dropped connection) collapses to the
+            // same silent null, leaving Academics signed out with nothing on
+            // screen to say why. That is what made Save keep asking people to
+            // sign in when they already had.
+            //
+            // The app is already holding the tokens. Writing them into the
+            // origin's localStorage removes the round trip entirely, and
+            // AT_DOCUMENT_START guarantees they are there before main.tsx
+            // reads them, so the store hydrates signed in on first paint.
+            // Same origin, same keys the web build already mirrors into
+            // (see services/web_session_web.dart), same backend tokens.
+            initialUserScripts: UnmodifiableListView<UserScript>(
+              _sessionUserScripts(),
+            ),
             initialSettings: InAppWebViewSettings(
               javaScriptEnabled: true,
               domStorageEnabled: true,
@@ -161,6 +242,18 @@ class _AcademicsWebScreenState extends State<AcademicsWebScreen> {
                 handlerName: 'goToAppHome',
                 callback: (args) {
                   if (mounted) Navigator.of(context).pop();
+                },
+              );
+              // Receives the polyfilled navigator.share and opens the real
+              // Android/iOS sheet, so Share offers WhatsApp and the rest
+              // instead of quietly copying to the clipboard.
+              c.addJavaScriptHandler(
+                handlerName: 'nativeShare',
+                callback: (args) {
+                  final text = args.isNotEmpty ? args.first?.toString() : null;
+                  if (text != null && text.trim().isNotEmpty) {
+                    Share.share(text);
+                  }
                 },
               );
             },
