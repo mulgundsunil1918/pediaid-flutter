@@ -157,6 +157,12 @@ class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   List<String> _selectedKeys = List.from(_kDefaultKeys);
 
+  /// Quick Access chips shown before "+N more". Two rows on a typical phone —
+  /// enough to look like a shortcut strip rather than a menu, while the count
+  /// chip says out loud how many more there are.
+  static const int _kCollapsedChips = 8;
+  bool _chipsExpanded = false;
+
   // Scroll-driven hero header animation.
   final ScrollController _scrollController = ScrollController();
   final ValueNotifier<double> _scrollY = ValueNotifier<double>(0);
@@ -1279,49 +1285,85 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     }
 
-    // Horizontal-scrolling carousel — with the new default of 26 chips,
-    // a Wrap would push the page down by 4-5 rows. ListView.separated keeps
-    // the row a single line and slides under the user's finger on Android +
-    // iOS without fighting the parent CustomScrollView (we cap with
-    // shrinkWrap + a fixed height).
-    return SizedBox(
-      height: 38,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        physics: const ClampingScrollPhysics(),
-        itemCount: visible.length,
-        separatorBuilder: (_, __) => const SizedBox(width: 8),
-        itemBuilder: (_, i) {
-          final c = visible[i];
-          return InkWell(
-            onTap: () => _navigateChip(context, c.key),
+    // Wraps, and shows a few rows until asked for the rest.
+    //
+    // This was one horizontal scroller. All thirty chips were in it, but only
+    // about five fitted on a phone and nothing on screen suggested the row
+    // moved — so the other twenty-five may as well not have existed, and the
+    // feature read as "most of my modules are missing". A sideways scroller
+    // hides its own contents.
+    //
+    // A plain Wrap shows everything but costs six rows before the page even
+    // starts, which is what the carousel was avoiding. So: wrap, capped at
+    // the first _kCollapsedChips, with a count chip that opens the rest. The
+    // count is the affordance the scroller never had — you can see how many
+    // you have without discovering a gesture.
+    Widget chip({
+      required IconData icon,
+      required String label,
+      required VoidCallback onTap,
+      bool accent = false,
+    }) {
+      return InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(30),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+          decoration: BoxDecoration(
+            color: accent ? cs.primary.withValues(alpha: 0.10) : chipBg,
             borderRadius: BorderRadius.circular(30),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-              decoration: BoxDecoration(
-                color: chipBg,
-                borderRadius: BorderRadius.circular(30),
-                border: Border.all(color: chipBorder),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(c.icon, size: 15, color: cs.primary),
-                  const SizedBox(width: 6),
-                  Text(
-                    c.label,
-                    style: GoogleFonts.plusJakartaSans(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: cs.onSurface,
-                    ),
-                  ),
-                ],
-              ),
+            border: Border.all(
+              color: accent ? cs.primary.withValues(alpha: 0.35) : chipBorder,
             ),
-          );
-        },
-      ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, size: 15, color: cs.primary),
+              const SizedBox(width: 6),
+              Text(
+                label,
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  color: accent ? cs.primary : cs.onSurface,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    final bool truncated =
+        !_chipsExpanded && visible.length > _kCollapsedChips;
+    final shown = truncated ? visible.take(_kCollapsedChips) : visible;
+
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children: [
+        for (final c in shown)
+          chip(
+            icon: c.icon,
+            label: c.label,
+            onTap: () => _navigateChip(context, c.key),
+          ),
+        if (truncated)
+          chip(
+            icon: Icons.expand_more_rounded,
+            label: '+${visible.length - _kCollapsedChips} more',
+            accent: true,
+            onTap: () => setState(() => _chipsExpanded = true),
+          )
+        else if (visible.length > _kCollapsedChips)
+          chip(
+            icon: Icons.expand_less_rounded,
+            label: 'Show less',
+            accent: true,
+            onTap: () => setState(() => _chipsExpanded = false),
+          ),
+      ],
     );
   }
 
