@@ -301,29 +301,62 @@ class _NeverAgainScreenState extends State<NeverAgainScreen> {
           // appears on long-press — which nobody does while hunting for
           // something. The "+" beside it stays an icon: that one really is
           // universally read as "add".
-          TextButton.icon(
-            onPressed: _openMySubmissions,
-            icon: const Icon(Icons.fact_check_outlined, size: 18),
-            label: Text(
-              'My Submissions',
-              style: GoogleFonts.plusJakartaSans(
-                fontWeight: FontWeight.w600,
-                fontSize: 13,
+          // Icon-only under 420dp: two labelled buttons plus the title overflow
+          // a phone app bar. If one has to lose its label it is this one —
+          // "Share a mistake" is the action the screen exists for.
+          if (MediaQuery.of(context).size.width < 420)
+            IconButton(
+              onPressed: _openMySubmissions,
+              icon: const Icon(Icons.fact_check_outlined),
+              tooltip: 'My Submissions',
+              color: Colors.white,
+            )
+          else
+            TextButton.icon(
+              onPressed: _openMySubmissions,
+              icon: const Icon(Icons.fact_check_outlined, size: 18),
+              label: Text(
+                'My Submissions',
+                style: GoogleFonts.plusJakartaSans(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 13,
+                ),
+              ),
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.white.withValues(alpha: 0.16),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
               ),
             ),
-            style: TextButton.styleFrom(
-              foregroundColor: Colors.white,
-              backgroundColor: Colors.white.withValues(alpha: 0.16),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
+          // Solid and labelled. A bare "+" reads as "add" in the abstract, but
+          // nothing about it says what gets added — and on a screen whose whole
+          // point is that people contribute, the one action that matters was the
+          // least visible thing in the bar. Filled white against the blue so it
+          // is unmistakably the primary action.
+          Padding(
+            padding: const EdgeInsets.only(left: 6, right: 8),
+            child: FilledButton.icon(
+              onPressed: _openSubmitSheet,
+              icon: const Icon(Icons.add, size: 18),
+              label: Text(
+                'Share a mistake',
+                style: GoogleFonts.plusJakartaSans(
+                  fontWeight: FontWeight.w800,
+                  fontSize: 13,
+                ),
+              ),
+              style: FilledButton.styleFrom(
+                backgroundColor: Colors.white,
+                foregroundColor: const Color(0xFF1565C0),
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
               ),
             ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.add),
-            tooltip: 'Share a mistake',
-            onPressed: _openSubmitSheet,
           ),
         ],
       ),

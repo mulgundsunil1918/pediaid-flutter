@@ -220,8 +220,13 @@ class _TdscChartViewState extends State<TdscChartView>
     required double maxMonth,
     required Color barColor,
   }) {
-    const labelColWidth = 156.0;
-    const rowHeight = 30.0;
+    // Milestone names run long — "Balance on one foot for 5 seconds",
+    // "Draws person with 3 parts". A 156px column at 30px tall fitted only
+    // one line, so most rows ended in an ellipsis and the chart could not
+    // be read without tapping each one. Wider column, and tall enough for
+    // the two lines maxLines already permitted.
+    const labelColWidth = 190.0;
+    const rowHeight = 40.0;
     final span = maxMonth - minMonth;
     final cursorVisible = _ageMonths >= minMonth && _ageMonths <= maxMonth;
 
