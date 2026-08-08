@@ -229,21 +229,34 @@ class _CategoryChipBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(14, 8, 14, 8),
-      child: Wrap(
-        spacing: 8,
-        runSpacing: 8,
-        children: [
-          for (final cat in categories)
-            _chip(
+    // One scrolling line, not a wrapped block. Twelve categories wrapped to
+    // six rows on a phone and pushed the resources themselves below the fold
+    // — you arrived at a filter and had to scroll past it to reach anything
+    // worth filtering. Sideways it is: the selected chip stays visible at the
+    // start, and the row is obviously draggable because chips are clipped at
+    // the right edge rather than ending neatly.
+    return SizedBox(
+      height: 52,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.fromLTRB(14, 8, 14, 8),
+        physics: const ClampingScrollPhysics(),
+        itemCount: categories.length,
+        separatorBuilder: (_, __) => const SizedBox(width: 8),
+        itemBuilder: (_, i) {
+          final cat = categories[i];
+          // Center, so the chip keeps its own height instead of being
+          // stretched to the row's by the horizontal list's constraints.
+          return Center(
+            child: _chip(
               cs,
               label: cat,
               count: countFor(cat),
               selected: cat == selected,
               onTap: () => onSelect(cat),
             ),
-        ],
+          );
+        },
       ),
     );
   }
