@@ -111,15 +111,142 @@ class _SearchItem {
     required this.navigate,
   });
 
+  /// Everything this item can be found by, lowercased once.
+  ///
+  /// Includes the synonym table below, so a tool is reachable by the words
+  /// people actually type rather than only by its printed title.
+  String get _haystack {
+    final extra = _kSynonyms[title] ?? const <String>[];
+    return [title, subtitle, category, ...keywords, ...extra]
+        .join(' ')
+        .toLowerCase();
+  }
+
+  /// True when EVERY word of the query appears somewhere in the item.
+  ///
+  /// This used to test the whole query as one contiguous substring, which
+  /// meant only an exact fragment of a single field could ever match:
+  /// "fenton" found the Fenton charts, but "fenton chart plotter" found
+  /// nothing, because no field contains that phrase. Word order, extra
+  /// words and words drawn from different fields all failed the same way —
+  /// and since almost nothing carried keywords, there was rarely a second
+  /// field to match against anyway.
+  ///
+  /// Per-word AND matching fixes all of it: "jaundice 2022 guideline" hits
+  /// the item whose text carries jaundice, 2022 and guideline between them,
+  /// in any order.
   bool matches(String query) {
     if (query.isEmpty) return true;
-    final q = query.toLowerCase();
-    return title.toLowerCase().contains(q) ||
-        subtitle.toLowerCase().contains(q) ||
-        category.toLowerCase().contains(q) ||
-        keywords.any((k) => k.toLowerCase().contains(q));
+    final words = query.toLowerCase().split(RegExp(r'\s+'))
+      ..removeWhere((w) => w.isEmpty);
+    if (words.isEmpty) return true;
+    final hay = _haystack;
+    return words.every(hay.contains);
   }
 }
+
+/// Extra words each tool should be findable by: synonyms, abbreviations,
+/// source names and the years people search by.
+///
+/// Kept as a table beside the index rather than inline on all 82 items, so
+/// adding a synonym is a one-line change and the item definitions stay
+/// readable. Keys must match the item title exactly.
+const Map<String, List<String>> _kSynonyms = {
+  'Fenton Preterm Charts': [
+    'plotter', 'plot', 'preterm growth', 'premature', 'growth chart',
+    '2013', 'z score', 'zscore', 'percentile',
+  ],
+  'WHO Growth Charts': [
+    'plotter', 'plot', 'growth chart', 'height', 'weight', 'length',
+    'head circumference', 'ofc', 'bmi', 'z score', 'zscore', 'percentile',
+    '2006', '2007',
+  ],
+  'IAP Growth Charts': [
+    'plotter', 'plot', 'growth chart', 'indian', 'height', 'weight',
+    'bmi', 'percentile', '2015',
+  ],
+  'INTERGROWTH-21st': ['plotter', 'plot', 'growth chart', 'intergrowth', 'preterm'],
+  'Neonatal Jaundice': [
+    'bilirubin', 'bili', 'tsb', 'phototherapy', 'exchange transfusion',
+    'hyperbilirubinaemia', 'hyperbilirubinemia', 'aap', '2022', 'nice',
+    'cg98', 'guideline', 'nomogram', 'icterus', 'kernicterus',
+  ],
+  'Blood Pressure': [
+    'bp', 'hypertension', 'percentile', 'aap', '2017', 'guideline',
+  ],
+  'Neonatal BP': ['bp', 'blood pressure', 'hypotension', 'gestational age'],
+  'Infant BP (1-12 Months)': ['bp', 'blood pressure', 'percentile'],
+  'GIR Calculator': [
+    'glucose infusion rate', 'dextrose', 'sugar', 'hypoglycaemia',
+    'hypoglycemia', 'mg/kg/min',
+  ],
+  'Maintenance Fluids': [
+    'iv fluids', 'holliday', 'segar', 'drip', 'hydration', 'deficit',
+  ],
+  'TPN Calculator': ['parenteral nutrition', 'total parenteral', 'lipids', 'amino acid'],
+  'DVET Calculator': ['double volume exchange', 'exchange transfusion', 'bilirubin'],
+  'PET Calculator': ['partial exchange', 'polycythemia', 'polycythaemia', 'hematocrit'],
+  'Body Surface Area': ['bsa', 'mosteller', 'dubois', 'chemo'],
+  'Schwartz eGFR': ['gfr', 'creatinine', 'renal', 'kidney', 'clearance'],
+  'Blood Gas Analyser': ['abg', 'vbg', 'acid base', 'ph', 'metabolic acidosis', 'anion'],
+  'Ventilator Parameters': [
+    'tidal volume', 'map', 'oi', 'osi', 'oxygenation index', 'ventilation',
+    'peep', 'pip',
+  ],
+  'CGA / PMA Calculator': [
+    'corrected gestational age', 'postmenstrual age', 'corrected age', 'pma',
+  ],
+  'Gestational Age & EDD': ['edd', 'due date', 'lmp', 'dating'],
+  'Mid-Parental Height': ['target height', 'genetic potential', 'final height', 'mph'],
+  'Drug Formulary': [
+    'drugs', 'medication', 'dose', 'dosing', 'neofax', 'harriet lane',
+    'formulary',
+  ],
+  'Drug Formulary 2.0': ['drugs', 'medication', 'dose', 'dosing', 'neofax', 'harriet lane'],
+  'Emergency NICU Drugs': ['resuscitation', 'code', 'crash', 'infusion', 'neonatal'],
+  'Emergency PICU Drugs': ['resuscitation', 'code', 'crash', 'infusion', 'paediatric'],
+  'NRP 9th Edition': ['resuscitation', 'neonatal resuscitation', 'delivery room', 'algorithm'],
+  'PALS Algorithms': ['resuscitation', 'cardiac arrest', 'algorithm', 'acls'],
+  'Immunisation Schedule': ['vaccine', 'vaccination', 'immunization', 'iap schedule'],
+  'Neonatal Scores': ['apgar', 'snappe', 'crib', 'downe', 'silverman', 'score'],
+  'Modified Ballard Score': ['ballard', 'gestational age assessment', 'maturity'],
+  'NICHD HIE Assessment': ['hie', 'asphyxia', 'cooling', 'encephalopathy', 'sarnat'],
+  'Lab Reference': ['normal values', 'reference range', 'labs', 'investigations'],
+  'Developmental Milestones': ['milestones', 'development', 'ddst', 'delay'],
+  'Trivandrum DSC (TDSC)': ['trivandrum', 'development screening', 'tdsc'],
+  'Resources': ['pdf', 'download', 'charts', 'handout', 'teaching'],
+  'Academics': [
+    'trials', 'landmark trials', 'guidelines', 'stg', 'nnf', 'iap',
+    'action plan', 'journal', 'reviews', 'recent guides',
+  ],
+  'CME & Webinars': ['conference', 'workshop', 'course', 'webinar', 'credits', 'certificate'],
+  'Never Again': ['mistakes', 'lessons', 'incident', 'safety', 'error'],
+  'DKA Algorithm': ['diabetic ketoacidosis', 'insulin', 'ketones', 'diabetes'],
+  'Acute Severe Asthma': ['wheeze', 'bronchodilator', 'salbutamol', 'status asthmaticus'],
+  'Rapid Sequence Intubation': ['rsi', 'intubation', 'airway', 'induction'],
+  'ETT Size & Depth': ['tube size', 'intubation', 'airway', 'endotracheal'],
+  'Poisoning Antidotes': ['toxicology', 'overdose', 'antidote', 'poison'],
+  'Snake Envenomation': ['snake bite', 'antivenom', 'asv'],
+  'Scorpion Sting': ['prazosin', 'envenomation', 'sting'],
+  'Seizure Medications': ['status epilepticus', 'anticonvulsant', 'fits', 'convulsion'],
+  'Electrolyte Corrections': [
+    'sodium', 'potassium', 'calcium', 'magnesium', 'phosphate', 'correction',
+  ],
+  'Burn Mortality': ['burns', 'tbsa', 'baux'],
+  'Parkland Formula': ['burns', 'fluid resuscitation', 'tbsa'],
+  'Lund & Browder Chart': ['burns', 'tbsa', 'body surface'],
+  'Neonatal Echo': ['echocardiography', 'cardiac', 'heart', 'pda', 'shunt'],
+  '2D Echo Calculators': ['echocardiography', 'cardiac', 'z score', 'valve'],
+  'Umbilical Catheter Depth': ['uac', 'uvc', 'umbilical line', 'catheter'],
+  'Birthweight Classification': ['lbw', 'vlbw', 'elbw', 'sga', 'aga', 'lga'],
+  'Gestational Age Classification': ['preterm', 'term', 'post term', 'classification'],
+  'Polycythemia in Newborn': ['polycythaemia', 'hematocrit', 'haematocrit', 'partial exchange'],
+  'Blood Volume': ['circulating volume', 'transfusion', 'ebv'],
+  'Serum Osmolality': ['osmolality', 'osmolar gap', 'tonicity'],
+  'Free Water Deficit': ['hypernatremia', 'hypernatraemia', 'water deficit'],
+  'Dextrose Bolus': ['hypoglycaemia', 'hypoglycemia', 'sugar', 'd10'],
+  'FAQ & Help': ['help', 'support', 'how to', 'contact'],
+};
 
 // ── Master item list ──────────────────────────────────────────────────────────
 
