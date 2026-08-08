@@ -89,6 +89,7 @@ import '../never_again/never_again_screen.dart';
 import '../calculators/infant_bp_calculator.dart';
 import '../../academics/academics_web_screen.dart';
 import '../resources/resources_screen.dart';
+import '../../services/academics_search_service.dart';
 
 // ── Search item model ─────────────────────────────────────────────────────────
 
@@ -1290,6 +1291,14 @@ class AppSearchDelegate extends SearchDelegate<void> {
             cs: cs,
           ),
 
+        // ── Academics library (landmark trials, guideline notes, CME events)
+        // Lives on the server rather than in the app, so this is the only
+        // section that needs the network. Public content — no sign-in — and
+        // a failed request renders nothing rather than an error, because
+        // everything above it is already on screen and usable.
+        if (query.trim().isNotEmpty)
+          _AcademicsResultsSection(query: query.trim(), cs: cs),
+
         if (query.trim().isNotEmpty && localItems.isEmpty)
           // Empty state ONLY shows once we know neither local nor
           // guideline results matched.
@@ -1438,6 +1447,93 @@ class _DrugResultTile extends StatelessWidget {
 }
 
 // ── Guideline results section ────────────────────────────────────────────────
+// ── Academics results section ────────────────────────────────────────────────
+
+class _AcademicsResultsSection extends StatelessWidget {
+  final String query;
+  final ColorScheme cs;
+  const _AcademicsResultsSection({required this.query, required this.cs});
+
+  static const _kColor = Color(0xFF0EA5E9);
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<List<AcademicsHit>>(
+      // Results are cached per query inside the service, so the rebuild on
+      // every keystroke costs one request per distinct string, not per frame.
+      future: AcademicsSearchService.instance.search(query),
+      builder: (context, snap) {
+        // Nothing while in flight and nothing on failure: the local results
+        // above are already usable, and a spinner or an error for a section
+        // that may well be empty is just noise.
+        final hits = snap.data ?? const <AcademicsHit>[];
+        if (hits.isEmpty) return const SizedBox.shrink();
+
+        final grouped = <String, List<AcademicsHit>>{};
+        for (final h in hits) {
+          grouped.putIfAbsent(h.kindLabel, () => []).add(h);
+        }
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: grouped.entries.expand((entry) => <Widget>[
+                _CategoryHeader(label: 'Academics · ${entry.key}', cs: cs),
+                ...entry.value.map(
+                  (h) => ListTile(
+                    dense: true,
+                    leading: Container(
+                      width: 34,
+                      height: 34,
+                      decoration: BoxDecoration(
+                        color: _kColor.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Icon(
+                        switch (h.kind) {
+                          AcademicsHitKind.trial => Icons.science_rounded,
+                          AcademicsHitKind.note => Icons.article_rounded,
+                          AcademicsHitKind.event => Icons.event_available_rounded,
+                        },
+                        size: 17,
+                        color: _kColor,
+                      ),
+                    ),
+                    title: Text(
+                      h.title,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 13.5,
+                        fontWeight: FontWeight.w600,
+                        color: cs.onSurface,
+                      ),
+                    ),
+                    subtitle: h.subtitle.isEmpty
+                        ? null
+                        : Text(
+                            h.subtitle,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.plusJakartaSans(
+                              fontSize: 11.5,
+                              color: cs.onSurface.withValues(alpha: 0.6),
+                            ),
+                          ),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => AcademicsWebScreen(path: h.path),
+                      ),
+                    ),
+                  ),
+                ),
+              ]).toList(),
+        );
+      },
+    );
+  }
+}
+
 class _GuidelineResultsSection extends StatelessWidget {
   final String query;
   final GuidelinesSearchService service;
