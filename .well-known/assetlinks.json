@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.pediaid.pediaid",
+      "sha256_cert_fingerprints": [
+        "D1:D2:53:4C:D7:E1:77:EB:21:AB:0D:B7:24:22:D9:66:2A:BA:93:9A:C2:23:A7:17:F4:4F:AD:B7:5C:7F:48:7E"
+      ]
+    }
+  }
+]
