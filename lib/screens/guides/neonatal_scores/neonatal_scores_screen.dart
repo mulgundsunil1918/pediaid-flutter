@@ -119,7 +119,7 @@ class _NeonatalScoresScreenState extends State<NeonatalScoresScreen> {
                 return _ExtraScoreCard(
                   title: 'Modified Ballard Score',
                   subtitle: 'Gestational age assessment (neuromuscular + physical maturity)',
-                  icon: Icons.child_care,
+                  number: 3,
                   onTap: () => Navigator.push(context,
                       MaterialPageRoute(builder: (_) => const ModifiedBallardScreen())),
                 );
@@ -129,7 +129,7 @@ class _NeonatalScoresScreenState extends State<NeonatalScoresScreen> {
                 return _ExtraScoreCard(
                   title: 'POFRAS',
                   subtitle: 'Preterm Oral Feeding Readiness Assessment Scale',
-                  icon: Icons.child_care_outlined,
+                  number: 4,
                   onTap: () => Navigator.push(context,
                       MaterialPageRoute(builder: (_) => const PofrasScreen())),
                 );
@@ -139,7 +139,7 @@ class _NeonatalScoresScreenState extends State<NeonatalScoresScreen> {
                 return _ExtraScoreCard(
                   title: 'CAN Score',
                   subtitle: 'Clinical Assessment of Nutrition at Birth',
-                  icon: Icons.monitor_weight_outlined,
+                  number: 5,
                   onTap: () => Navigator.push(context,
                       MaterialPageRoute(builder: (_) => const CanScoreScreen())),
                 );
@@ -147,7 +147,9 @@ class _NeonatalScoresScreenState extends State<NeonatalScoresScreen> {
               final score = scores[i - 5];
               return _ScoreCard(
                 score: score,
-                index: i - 2,
+                // Five cards precede the list, and the card renders index + 1, so the
+                // sequence continues at 6 instead of restarting at 4.
+                index: i,
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -251,12 +253,18 @@ class _LusCard extends StatelessWidget {
 class _ExtraScoreCard extends StatelessWidget {
   final String title;
   final String subtitle;
-  final IconData icon;
+  /// Position in the list, 1-based.
+  ///
+  /// These three cards used to show a topic icon where every other card shows
+  /// its number, so the list read 1, 2, [icon], [icon], [icon], 4, 5 — three
+  /// entries with no number and a sequence that then skipped 3. One card, one
+  /// number, counted from the same place.
+  final int number;
   final VoidCallback onTap;
   const _ExtraScoreCard({
     required this.title,
     required this.subtitle,
-    required this.icon,
+    required this.number,
     required this.onTap,
   });
 
@@ -289,7 +297,14 @@ class _ExtraScoreCard extends StatelessWidget {
                   shape: BoxShape.circle,
                 ),
                 alignment: Alignment.center,
-                child: Icon(icon, size: 16, color: cs.primary),
+                child: Text(
+                  '$number',
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                    color: cs.primary,
+                  ),
+                ),
               ),
               const SizedBox(width: 12),
               Expanded(

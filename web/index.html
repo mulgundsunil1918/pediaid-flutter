@@ -234,6 +234,128 @@
     })();
   </script>
 
+
+  <!-- ═══ Install prompt, mobile web only ══════════════════════════════════
+       Someone on a phone browser is one tap from a far better experience, and
+       most never find it: Chrome buries "Install app" in a menu and iOS
+       Safari has no install API at all — only Share → Add to Home Screen,
+       which nobody discovers unaided.
+
+       So the prompt is explicit, and different per platform because the
+       destination genuinely differs:
+         Android  — the real app exists, so send them to Play.
+         iPhone   — no App Store build yet, so walk them through Add to Home
+                    Screen, which gives a full-screen icon off the same code.
+
+       Never shown when already installed (standalone display mode), never on
+       desktop, and dismissible — but the dismissal lasts a week rather than
+       forever, since someone who says "not now" on a night shift may well
+       want it next week. -->
+  <style>
+    #pa-install{position:fixed;left:12px;right:12px;bottom:12px;z-index:99999;
+      display:none;background:#fff;border-radius:16px;padding:14px 14px 12px;
+      box-shadow:0 18px 50px -12px rgba(15,35,70,.45),0 4px 14px -6px rgba(15,35,70,.25);
+      font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+      border:1px solid rgba(15,35,70,.10);animation:pa-rise .32s ease both}
+    @keyframes pa-rise{from{transform:translateY(120%);opacity:0}to{transform:none;opacity:1}}
+    #pa-install .pa-row{display:flex;align-items:flex-start;gap:11px}
+    #pa-install .pa-ico{width:40px;height:40px;border-radius:11px;flex:0 0 auto;
+      background:#1e3a5f;color:#fff;display:flex;align-items:center;justify-content:center;
+      font-weight:800;font-size:17px;letter-spacing:-.02em}
+    #pa-install h4{margin:0 0 3px;font-size:14.5px;font-weight:800;color:#0f2540}
+    #pa-install p{margin:0;font-size:12.5px;line-height:1.45;color:#475569}
+    #pa-install .pa-x{margin-left:auto;background:none;border:0;font-size:20px;
+      line-height:1;color:#94a3b8;cursor:pointer;padding:0 2px}
+    #pa-install .pa-cta{display:block;width:100%;margin-top:11px;text-align:center;
+      background:linear-gradient(135deg,#1e3a5f,#2c5282);color:#fff;text-decoration:none;
+      font-size:14px;font-weight:800;padding:11px;border-radius:11px;border:0;cursor:pointer}
+    #pa-install .pa-hint{margin-top:9px;font-size:12px;color:#334155;
+      background:#f1f5f9;border-radius:10px;padding:9px 11px;line-height:1.5}
+  </style>
+  <div id="pa-install" role="dialog" aria-live="polite">
+    <div class="pa-row">
+      <span class="pa-ico">P</span>
+      <div>
+        <h4 id="pa-title">Install PediAid</h4>
+        <p id="pa-text">Faster, works offline, and opens straight from your home screen.</p>
+      </div>
+      <button class="pa-x" id="pa-close" aria-label="Dismiss">&times;</button>
+    </div>
+    <div id="pa-action"></div>
+  </div>
+  <script>
+    (function () {
+      var KEY = 'pediaid_install_dismissed_at';
+      var WEEK = 7 * 24 * 60 * 60 * 1000;
+      var el = document.getElementById('pa-install');
+
+      function installed() {
+        return (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches)
+            || window.navigator.standalone === true;
+      }
+      function dismissedRecently() {
+        try {
+          var t = parseInt(localStorage.getItem(KEY) || '0', 10);
+          return t && (Date.now() - t) < WEEK;
+        } catch (e) { return false; }
+      }
+
+      var ua = navigator.userAgent || '';
+      var isIOS = /iPad|iPhone|iPod/.test(ua)
+               || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+      var isAndroid = /Android/.test(ua);
+      if ((!isIOS && !isAndroid) || installed() || dismissedRecently()) return;
+
+      document.getElementById('pa-close').addEventListener('click', function () {
+        el.style.display = 'none';
+        try { localStorage.setItem(KEY, String(Date.now())); } catch (e) {}
+      });
+
+      var action = document.getElementById('pa-action');
+
+      if (isAndroid) {
+        document.getElementById('pa-title').textContent = 'Get the PediAid app';
+        document.getElementById('pa-text').textContent =
+          'The full app is on Google Play - faster, and works without a connection.';
+        var a = document.createElement('a');
+        a.className = 'pa-cta';
+        a.href = 'https://play.google.com/store/apps/details?id=com.pediaid.pediaid';
+        a.target = '_blank'; a.rel = 'noopener';
+        a.textContent = 'Get it on Google Play';
+        action.appendChild(a);
+
+        // Chrome may still offer a real PWA install; prefer it when present,
+        // since it is one tap rather than a store round trip.
+        window.addEventListener('beforeinstallprompt', function (e) {
+          e.preventDefault();
+          var b = document.createElement('button');
+          b.className = 'pa-cta';
+          b.style.marginTop = '8px';
+          b.style.background = '#0f766e';
+          b.textContent = 'Or install this web app';
+          b.addEventListener('click', function () {
+            b.disabled = true;
+            e.prompt();
+          });
+          action.appendChild(b);
+        });
+      } else {
+        // iOS: no install API exists. Instructions are the only route.
+        document.getElementById('pa-title').textContent = 'Add PediAid to your Home Screen';
+        document.getElementById('pa-text').textContent =
+          'Two taps, and it opens full screen like an app - no App Store needed.';
+        var d = document.createElement('div');
+        d.className = 'pa-hint';
+        d.innerHTML = 'Tap <strong>Share</strong> at the bottom of Safari, then '
+                    + '<strong>Add to Home Screen</strong>.';
+        action.appendChild(d);
+      }
+
+      // After first paint, so it never competes with the app booting.
+      setTimeout(function () { el.style.display = 'block'; }, 2500);
+    })();
+  </script>
+
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>
