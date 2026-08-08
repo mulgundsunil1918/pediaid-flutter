@@ -1,0 +1,19 @@
+# PediAid — https://pediaid.bridgr.co.in
+#
+# This is the robots.txt crawlers actually read: only the one at the origin
+# root counts, so the copy at /academics/robots.txt is informational.
+
+User-agent: *
+Allow: /
+
+# Signed-in surfaces. Tidiness, not security — these sit behind
+# authentication, and robots.txt is a request rather than a control.
+Disallow: /academics/admin
+Disallow: /academics/dashboard
+Disallow: /academics/editor
+Disallow: /academics/moderation
+Disallow: /academics/login
+Disallow: /academics/my-submissions
+
+Sitemap: https://pediaid.bridgr.co.in/academics/sitemap.xml
+Sitemap: https://info.pediaid.bridgr.co.in/sitemap.xml
