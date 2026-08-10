@@ -123,26 +123,47 @@ class _SearchItem {
         .toLowerCase();
   }
 
-  /// True when EVERY word of the query appears somewhere in the item.
+  /// A single trailing 's' removed, for words longer than three letters.
   ///
-  /// This used to test the whole query as one contiguous substring, which
-  /// meant only an exact fragment of a single field could ever match:
-  /// "fenton" found the Fenton charts, but "fenton chart plotter" found
-  /// nothing, because no field contains that phrase. Word order, extra
-  /// words and words drawn from different fields all failed the same way —
-  /// and since almost nothing carried keywords, there was rarely a second
-  /// field to match against anyway.
-  ///
-  /// Per-word AND matching fixes all of it: "jaundice 2022 guideline" hits
-  /// the item whose text carries jaundice, 2022 and guideline between them,
-  /// in any order.
-  bool matches(String query) {
-    if (query.isEmpty) return true;
+  /// The cheapest useful stemming: it makes "charts"/"chart", "plotters"/
+  /// "plotter" and, crucially, "fentons"/"fenton" the same token. Without it,
+  /// exact-substring matching failed on the plural or possessive form people
+  /// actually type — "fentons growth chart" found nothing because "fentons"
+  /// is not inside "fenton preterm charts".
+  static String _stem(String w) =>
+      (w.length > 3 && w.endsWith('s')) ? w.substring(0, w.length - 1) : w;
+
+  /// How many words of the query this item matches, after stemming both
+  /// sides. Zero means no match. Used for both filtering and ranking.
+  int score(String query) {
     final words = query.toLowerCase().split(RegExp(r'\s+'))
       ..removeWhere((w) => w.isEmpty);
-    if (words.isEmpty) return true;
-    final hay = _haystack;
-    return words.every(hay.contains);
+    if (words.isEmpty) return 1;
+
+    // Stem the haystack once so "charts" in the query hits "chart" in a title.
+    final hay = _haystack.split(RegExp(r'\s+')).map(_stem).join(' ');
+
+    var hits = 0;
+    for (final w in words) {
+      if (hay.contains(_stem(w))) hits++;
+    }
+    return hits;
+  }
+
+  /// Whether the item should appear for this query.
+  ///
+  /// Every word must match on short queries. On a query of three or more
+  /// words, one miss is forgiven — so "iap growth charts download" still
+  /// finds IAP Growth Charts on the strength of iap + growth + charts, even
+  /// though nothing indexes "download". A single stray or unindexed word no
+  /// longer erases an otherwise obvious result. Results are ranked by [score]
+  /// elsewhere, so the closest matches still lead.
+  bool matches(String query) {
+    if (query.isEmpty) return true;
+    final n = query.toLowerCase().split(RegExp(r'\s+')).where((w) => w.isNotEmpty).length;
+    if (n == 0) return true;
+    final s = score(query);
+    return n >= 3 ? s >= n - 1 : s == n;
   }
 }
 
@@ -1183,8 +1204,15 @@ class AppSearchDelegate extends SearchDelegate<void> {
 
   late final List<_SearchItem> _allItems = _buildAllItems();
 
-  List<_SearchItem> get _filtered =>
-      query.isEmpty ? _allItems : _allItems.where((i) => i.matches(query)).toList();
+  List<_SearchItem> get _filtered {
+    if (query.isEmpty) return _allItems;
+    final hits = _allItems.where((i) => i.matches(query)).toList();
+    // Rank by how many query words matched, so an item hitting all four words
+    // sits above one that matched three of four under the one-miss rule.
+    // Stable within a score, so the original curated order is preserved.
+    hits.sort((a, b) => b.score(query).compareTo(a.score(query)));
+    return hits;
+  }
 
   // ── Theming ────────────────────────────────────────────────────────────────
 
