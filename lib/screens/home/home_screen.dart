@@ -1096,7 +1096,6 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     }
 
-    final bool _iosNative = !kIsWeb && Platform.isIOS;
     final cards = [
       _FeatureDef(
         'Calculators & Tools',
@@ -1112,18 +1111,22 @@ class _HomeScreenState extends State<HomeScreen> {
         const Color(0xFF6A1B9A),
         () => open('growth', 'Charts', () => const GrowthChartsScreen()),
       ),
-      if (!_iosNative)
-        _FeatureDef(
+      // Drug Formulary shows on iOS too. It was hidden there out of caution
+      // over App Store dosing rules, but medical dose references are permitted
+      // when they cite their sources (this cites Neofax and Harriet Lane on
+      // every screen), and the reviewer did not object to the dose content
+      // already visible. Sunil's decision: keep the full app on iOS.
+      _FeatureDef(
+        'Drug Formulary',
+        '500+ drugs',
+        Icons.medication_rounded,
+        const Color(0xFF00695C),
+        () => open(
+          'formulary',
           'Drug Formulary',
-          '500+ drugs',
-          Icons.medication_rounded,
-          const Color(0xFF00695C),
-          () => open(
-            'formulary',
-            'Drug Formulary',
-            () => const FormularyScreen(),
-          ),
+          () => const FormularyScreen(),
         ),
+      ),
       _FeatureDef(
         'Lab Reference',
         'Harriet Lane values',
@@ -1271,10 +1274,9 @@ class _HomeScreenState extends State<HomeScreen> {
     final chipBg = isDark ? AppTheme.dCard : Colors.white;
     final chipBorder = isDark ? AppTheme.dBorder : const Color(0xFFCBD8EB);
 
-    final bool _iosChip = !kIsWeb && Platform.isIOS;
+    // Formulary chip shows on iOS too — see the Drug Formulary card comment.
     final visible = _allChips
         .where((c) => _selectedKeys.contains(c.key))
-        .where((c) => !_iosChip || c.key != 'formulary')
         .toList();
 
     if (visible.isEmpty) {

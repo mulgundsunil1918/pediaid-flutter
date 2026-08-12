@@ -11,7 +11,6 @@
 // to see everything.
 // =============================================================================
 
-import 'dart:io' show Platform;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -70,9 +69,10 @@ class _GuidesScreenState extends State<GuidesScreen> {
   String _selected = _kAll;
 
   /// Guides available on this platform. See [_GuideItem.dosing].
-  List<_GuideItem> get _visibleGuides => (!kIsWeb && Platform.isIOS)
-      ? _guides.where((g) => !g.dosing).toList()
-      : _guides;
+  // All guides show on every platform, including the dose guides that were
+  // hidden on iOS — see the calculators screen for the reasoning. The `dosing`
+  // flags stay on the items, unused, so this is one line to reverse.
+  List<_GuideItem> get _visibleGuides => _guides;
 
   late final List<_GuideItem> _guides = [
     // Neonatal Scores — surfaced first and highlighted; bundles all the

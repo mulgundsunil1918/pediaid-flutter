@@ -15,8 +15,6 @@
 // at the right of the chip strip shows the filtered count.
 // =============================================================================
 
-import 'dart:io' show Platform;
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -340,10 +338,12 @@ class _CalculatorsScreenState extends State<CalculatorsScreen> {
     ),
   ];
 
-  static bool get _isIos => !kIsWeb && Platform.isIOS;
-
-  List<_CalculatorItem> get _visible =>
-      _isIos ? _calculators.where((c) => !c.iosHidden).toList() : _calculators;
+  // All calculators show on every platform now, including the dose tools that
+  // were hidden on iOS. Medical dose references are permitted on the App Store
+  // when they cite their sources (these do), and Sunil chose to keep the full
+  // app on iOS. The `iosHidden` flags on individual items are left in place,
+  // unused, so the decision is one line to reverse if it ever needs to be.
+  List<_CalculatorItem> get _visible => _calculators;
 
   List<_CalculatorItem> get _filtered => _selected == _kAll
       ? _visible

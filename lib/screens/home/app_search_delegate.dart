@@ -1,4 +1,3 @@
-import 'dart:io' show Platform;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -282,49 +281,11 @@ const _kAcademicsColor = Color(0xFF7C3AED);
 const _kResourceColor  = Color(0xFFAD1457);
 
 
-/// Titles withheld from search on iOS.
-///
-/// App Store guideline 1.4.2 restricts drug dosage tools to manufacturers,
-/// hospitals, universities and similar approved entities, so these screens are
-/// hidden from the calculators list and the guides list on iOS. Search reaches
-/// them by a different path, and a gate that every other route respects but
-/// search ignores is not a gate at all — someone typing "TPN" would still land
-/// on the screen the build is meant not to have.
-///
-/// Kept in step with `iosHidden` in calculators_screen.dart and `dosing` in
-/// guides_screen.dart. Those lists are the source of truth; this mirrors them
-/// because the search index is built from a separate set of entries.
-const Set<String> _kIosHiddenTitles = {
-  'Acute Severe Asthma',
-  'Blood Gas Analyser',
-  'Calcium Correction (↓Ca)',
-  'DKA Algorithm',
-  'DVET Calculator',
-  'Electrolyte Corrections',
-  'Emergency ICU Drugs',
-  'Free Water Deficit (↑Na)',
-  'GIR Calculator',
-  'Glasgow Coma Scale',
-  'Hypertensive Emergency',
-  'Hypoglycaemia Bolus',
-  'K Correction (↓/↑K)',
-  'Magnesium Correction (↓Mg)',
-  'Maintenance Fluids',
-  'Na Correction (↓Na)',
-  'PET Calculator',
-  'Parkland Formula',
-  'Phosphate Correction (↓PO₄)',
-  'Poisoning & Antidotes',
-  'RSI — Rapid Sequence Intubation',
-  'Sedation, Analgesia & Paralytics',
-  'Seizure Medications',
-  'Snake Envenomation',
-  'TPN Calculator',
-};
 
-List<_SearchItem> _buildAllItems() => _allItemsUnfiltered()
-    .where((i) => !(!kIsWeb && Platform.isIOS && _kIosHiddenTitles.contains(i.title)))
-    .toList();
+// Everything is searchable on every platform. Dose tools were previously
+// hidden from iOS search while remaining reachable elsewhere in the app —
+// findable now, matching the rest of the iOS build.
+List<_SearchItem> _buildAllItems() => _allItemsUnfiltered();
 
 List<_SearchItem> _allItemsUnfiltered() => [
 
