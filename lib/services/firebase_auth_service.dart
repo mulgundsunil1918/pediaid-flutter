@@ -193,24 +193,39 @@ class FirebaseAuthService {
     final user = cred.user;
     if (user == null) return null;
 
-    final doc = await _users.doc(user.uid).get();
-    if (!doc.exists) {
-      final composed = [givenName ?? '', familyName ?? '']
-          .where((s) => s.isNotEmpty)
-          .join(' ')
-          .trim();
-      final displayName = composed.isNotEmpty
-          ? composed
-          : (user.displayName ?? (user.email ?? 'Apple user').split('@').first);
-      await _users.doc(user.uid).set({
-        'name': displayName,
-        'email': user.email ?? appleEmail ?? '',
-        'role': 'doctor',
-        'avatarUrl': user.photoURL,
-        'createdAt': Timestamp.fromDate(DateTime.now()),
-      });
+    // The profile write is best-effort, never a gate on sign-in. Firebase Auth
+    // has already succeeded here — the credential was accepted and `user`
+    // exists. If the Firestore read/write then fails (rules not yet propagated,
+    // a transient network error, a Firestore cold start), the sign-in must
+    // still count, because the user IS authenticated. Letting it throw made the
+    // whole login collapse into "sign-in failed" even though the hard part
+    // worked — a failure mode a reviewer can trip on a slow network. So it is
+    // wrapped, and on any failure we return a profile built straight from the
+    // Firebase user rather than null.
+    try {
+      final doc = await _users.doc(user.uid).get();
+      if (!doc.exists) {
+        final composed = [givenName ?? '', familyName ?? '']
+            .where((s) => s.isNotEmpty)
+            .join(' ')
+            .trim();
+        final displayName = composed.isNotEmpty
+            ? composed
+            : (user.displayName ?? (user.email ?? 'Apple user').split('@').first);
+        await _users.doc(user.uid).set({
+          'name': displayName,
+          'email': user.email ?? appleEmail ?? '',
+          'role': 'doctor',
+          'avatarUrl': user.photoURL,
+          'createdAt': Timestamp.fromDate(DateTime.now()),
+        });
+      }
+      final fetched = await _fetchUser(user.uid);
+      if (fetched != null) return fetched;
+    } catch (_) {
+      // Fall through to the Firebase-user fallback.
     }
-    return _fetchUser(user.uid);
+    return AppUser.fromFirebaseUser(user);
   }
 
   // ── Sign out ───────────────────────────────────────────────────────────────

@@ -540,9 +540,14 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         },
                       ),
-                      if (kIsWeb || !Platform.isIOS)
+                      // BOTH footers are iOS-excluded. Without the braces the
+                      // if guarded only the rating footer, and the donation
+                      // card rendered on iOS anyway — a link out to an external
+                      // payment page, which is exactly the 3.1.1 rejection.
+                      if (kIsWeb || !Platform.isIOS) ...[
                         _buildRatingFooter(context, isDark),
                         _buildDonationFooter(context, isDark),
+                      ],
                       // The iOS-only "More features on the Web App" banner is
                       // deliberately not rendered.
                       //

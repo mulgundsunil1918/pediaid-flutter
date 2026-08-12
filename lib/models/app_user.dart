@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 enum UserRole { doctor, nurse, admin }
 
@@ -33,6 +34,21 @@ class AppUser {
     this.specialty,
     required this.createdAt,
   });
+
+  /// A minimal profile built straight from the Firebase auth user, for when
+  /// the Firestore profile document can't be read (rules mid-propagation, a
+  /// transient error, a cold start). Sign-in has already succeeded by the time
+  /// this is used, so the app treats the person as signed in with whatever the
+  /// auth token already carries — name and email — rather than failing the
+  /// whole login over an unreadable side document.
+  factory AppUser.fromFirebaseUser(User u) => AppUser(
+        uid: u.uid,
+        name: u.displayName ?? (u.email ?? 'User').split('@').first,
+        email: u.email ?? '',
+        role: UserRole.doctor,
+        avatarUrl: u.photoURL,
+        createdAt: u.metadata.creationTime ?? DateTime.now(),
+      );
 
   factory AppUser.fromFirestore(DocumentSnapshot<Map<String, dynamic>> doc) {
     final d = doc.data()!;
