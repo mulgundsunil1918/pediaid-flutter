@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script>
+      // Academics moved to pediaid.bridgr.co.in/academics so it shares one
+      // browser session with the app. Anyone still on the old subdomain —
+      // a bookmark, a shared link — is sent across, path and query intact.
+      //
+      // This must be the first thing in <head>: the build now points its
+      // asset URLs at /academics/, which do not exist on the old host, so
+      // that page can never finish loading. Redirect before it tries.
+      (function () {
+        try {
+          if (location.hostname === 'academics.pediaid.bridgr.co.in') {
+            var p = location.pathname;
+            // Paths already start with /academics on this app, so do not
+            // double it up when moving to the /academics base.
+            var rest = p.indexOf('/academics') === 0 ? p.slice('/academics'.length) : p;
+            location.replace(
+              'https://pediaid.bridgr.co.in/academics' + rest + location.search + location.hash
+            );
+          }
+        } catch (e) {}
+      })();
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Indexable, deliberately.
+         Academics used to carry noindex/nofollow here because it was shared by
+         direct link only. The public library — landmark trial reviews,
+         guideline notes, CME events — is now meant to be found: someone
+         searching "FEAST trial review" or "AAP 2022 jaundice guideline"
+         should land on it.
+         Signed-in surfaces (admin, dashboard, editor, moderation) are not
+         listed in any sitemap and sit behind auth, so nothing private becomes
+         reachable by removing this. The prerender step below writes per-page
+         titles and descriptions; this default covers routes it does not
+         cover. Expect Google to take a few weeks to re-crawl. -->
+    <meta name="robots" content="index, follow" />
+
+    <!-- Always revalidate this document.
+
+         Each deploy emits a new hashed bundle and deletes the previous one.
+         A browser holding a cached index.html therefore requests a script
+         that no longer exists, gets a 404, and renders a blank page. The
+         hashed assets are safe to cache forever precisely because their
+         names change; the HTML that points at them must not be. -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <link rel="icon" type="image/png" href="/academics/pediaid-logo.png" />
+    <link rel="apple-touch-icon" href="/academics/pediaid-logo.png" />
+    
+
+    <!-- Warm the TLS connection to the backend so the very first API call
+         doesn't pay a full handshake. Combined with the wake-up fetch
+         below, this hides most of Render's cold-start latency behind the
+         splash screen. -->
+    <link rel="preconnect" href="https://pediaid-backend.onrender.com" crossorigin />
+
+    <script>
+      // Restore the path that 404.html encoded into ?p=
+      //
+      // Rebuilt against the app's base, not the domain root. This app used to
+      // live at the root of its own subdomain, so '/' + p was correct. It now
+      // sits under /academics, and dropping that prefix turned every shared
+      // deep link into a 404: /academics/trials/x redirected to
+      // /academics/?p=trials/x and was restored as /trials/x, which matches no
+      // route. The base is read from where this page actually is, so it stays
+      // right if the app is ever moved again.
+      (function() {
+        var m = window.location.search.match(/p=([^&]*)/);
+        if (!m) return;
+        var base = window.location.pathname.replace(/\/[^/]*$/, '');
+        var rest = decodeURIComponent(m[1]).replace(/^\/+/, '');
+        window.history.replaceState(
+          null, null, base + '/' + rest + window.location.hash
+        );
+      })();
+
+      // Kick the backend awake while the splash is on screen. Render's free
+      // tier sleeps after 15 min of inactivity, so the first request from a
+      // cold visitor would otherwise block on a ~30s spin-up. Firing this
+      // ping during the splash hides that latency. Fire-and-forget — we
+      // don't care about the response, only about triggering the boot.
+      //
+      // Uses /api/ping rather than /health because /api/ping is the
+      // lightweight keep-alive route that skips rate limiting and DB
+      // checks — it's the fastest possible wake-up signal.
+      try {
+        fetch('https://pediaid-backend.onrender.com/api/ping', {
+          method: 'GET',
+          mode: 'cors',
+          cache: 'no-store',
+          credentials: 'omit',
+        }).catch(function() { /* offline or cors blocked — ignore */ });
+      } catch (e) { /* ancient browser — ignore */ }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* Splash screen — shown immediately while the JS bundle parses and
+         React hydrates. Removed via a MutationObserver in src/main.tsx
+         the moment the app mounts its first child into #root, then the
+         app fades in over 0.3s.
+
+         The splash is inlined here so it shows with zero additional
+         network requests on a cold visit. */
+      html, body {
+        margin: 0;
+        padding: 0;
+        background: #1e3a5f;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      }
+      #acad-splash {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        background: #1e3a5f;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        opacity: 1;
+        transition: opacity 0.35s ease-out;
+      }
+      #acad-splash.fading { opacity: 0; pointer-events: none; }
+      #acad-splash .acad-title {
+        color: #ffffff;
+        font-size: 38px;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+        opacity: 0;
+        animation:
+          acad-fade-in 0.5s ease-out 0.05s forwards,
+          acad-pulse 2.2s ease-in-out 0.6s infinite;
+        transform-origin: center;
+      }
+      #acad-splash .acad-dot {
+        width: 64px;
+        height: 64px;
+        border-radius: 14px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        animation: acad-fade-in 0.5s ease-out forwards;
+        box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.45);
+      }
+      #acad-splash .acad-dot img { width: 100%; height: 100%; display: block; -o-object-fit: cover; object-fit: cover; }
+      #acad-splash .acad-sub {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 12px;
+        font-weight: 500;
+        letter-spacing: 0.3px;
+        opacity: 0;
+        animation: acad-fade-in 0.6s ease-out 0.25s forwards;
+      }
+      @keyframes acad-fade-in {
+        from { opacity: 0; transform: translateY(4px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+      @keyframes acad-pulse {
+        0%, 100% { transform: scale(1);    opacity: 1;   }
+        50%      { transform: scale(1.05); opacity: 0.9; }
+      }
+      /* App fade-in. #root starts hidden and fades in once React renders
+         its first child, coordinated by src/main.tsx. */
+      #root {
+        opacity: 0;
+        transition: opacity 0.3s ease-out;
+      }
+      #root.ready { opacity: 1; }
+    </style>
+    <script type="module" crossorigin src="/academics/assets/index-Ct0mZfNd.js"></script>
+    <link rel="stylesheet" crossorigin href="/academics/assets/index-DDVFM8Jy.css">
+  
+    <title>Neocritocon | PediAid CME</title>
+    <meta name="description" content="it's going to be held in KIMS Kondapur on 9 th August" />
+    <link rel="canonical" href="https://pediaid.bridgr.co.in/academics/cme/neocritocon-jphr9wkt/" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Neocritocon | PediAid CME" />
+    <meta property="og:description" content="it's going to be held in KIMS Kondapur on 9 th August" />
+    <meta property="og:url" content="https://pediaid.bridgr.co.in/academics/cme/neocritocon-jphr9wkt/" />
+    <meta name="twitter:card" content="summary_large_image" />
+  </head>
+  <body>
+    <!-- Splash screen — removed by main.tsx once React mounts. -->
+    <div id="acad-splash">
+      <div class="acad-dot">
+        <img src="/academics/pediaid-logo.png" alt="PediAid" />
+      </div>
+      <div class="acad-title">PediAid</div>
+      <div class="acad-sub">loading academics…</div>
+    </div>
+    <div id="root"><article>
+        <h1>Neocritocon</h1>
+        <p>conference · KIMS Kondapur</p>
+        <p>it's going to be held in KIMS Kondapur on 9 th August</p>
+      </article></div>
+  </body>
+</html>
