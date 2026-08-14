@@ -58,7 +58,9 @@ class PushService {
   }
 
   static bool get _supported =>
-      kIsWeb || defaultTargetPlatform == TargetPlatform.android;
+      kIsWeb ||
+      defaultTargetPlatform == TargetPlatform.android ||
+      defaultTargetPlatform == TargetPlatform.iOS;
 
   /// Fire-and-forget from main(). Never throws — push being unavailable
   /// must not affect the rest of the app.
@@ -87,6 +89,19 @@ class PushService {
       final messaging = FirebaseMessaging.instance;
       final settings = await messaging.requestPermission();
       if (settings.authorizationStatus == AuthorizationStatus.denied) return;
+
+      // iOS only hands out an FCM token once the APNS token is set. On a cold
+      // first launch getToken() would otherwise return null, leaving the device
+      // unregistered — no token row, no topic subscription, so nothing ever
+      // reaches the notification centre (only the in-app bell, which is a DB
+      // read). Wait briefly for the APNS token before asking for the FCM one.
+      if (!kIsWeb && defaultTargetPlatform == TargetPlatform.iOS) {
+        var apns = await messaging.getAPNSToken();
+        for (var i = 0; apns == null && i < 8; i++) {
+          await Future<void>.delayed(const Duration(milliseconds: 500));
+          apns = await messaging.getAPNSToken();
+        }
+      }
 
       // Every platform needs its token registered, not just web.
       //
