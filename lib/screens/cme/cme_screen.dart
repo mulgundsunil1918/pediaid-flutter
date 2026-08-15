@@ -237,8 +237,8 @@ class _CmeScreenState extends State<CmeScreen>
                   fontWeight: FontWeight.w700,
                 ),
               ),
-              backgroundColor: cs.primary,
-              foregroundColor: cs.onPrimary,
+              backgroundColor: const Color(0xFFE53E3E),
+              foregroundColor: Colors.white,
             )
           : null,
     );

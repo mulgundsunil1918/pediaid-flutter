@@ -717,6 +717,10 @@ class _PostEventScreenState extends State<PostEventScreen> {
               SizedBox(
                 height: 52,
                 child: FilledButton(
+                  style: FilledButton.styleFrom(
+                    backgroundColor: const Color(0xFFE53E3E),
+                    foregroundColor: Colors.white,
+                  ),
                   onPressed: _submitting ? null : _submit,
                   child: _submitting
                       ? const SizedBox(

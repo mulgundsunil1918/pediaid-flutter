@@ -349,8 +349,8 @@ class _NeverAgainScreenState extends State<NeverAgainScreen> {
                 ),
               ),
               style: FilledButton.styleFrom(
-                backgroundColor: Colors.white,
-                foregroundColor: const Color(0xFF1565C0),
+                backgroundColor: const Color(0xFFE53E3E),
+                foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
@@ -1120,8 +1120,8 @@ class _EmptyState extends StatelessWidget {
               icon: const Icon(Icons.add, size: 18),
               label: const Text('Share a lesson'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: cs.primary,
-                foregroundColor: cs.onPrimary,
+                backgroundColor: const Color(0xFFE53E3E),
+                foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(
                   horizontal: 22,
                   vertical: 12,
@@ -1333,7 +1333,7 @@ class _SubmitSheetState extends State<_SubmitSheet> {
             reason.isEmpty ? 'Something went wrong. Please try again.' : reason,
           ),
           behavior: SnackBarBehavior.floating,
-          backgroundColor: const Color(0xFFC62828),
+          backgroundColor: const Color(0xFFE53E3E),
           duration: const Duration(seconds: 6),
         ),
       );
