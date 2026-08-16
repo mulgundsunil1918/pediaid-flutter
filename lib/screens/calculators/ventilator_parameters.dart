@@ -212,7 +212,9 @@ class _VentilatorParametersState extends State<VentilatorParameters> {
       setState(() => _sfResult = null);
       return;
     }
-    final sf = _sfSpo2! / _sfFio2!;
+    // FiO2 is a fraction (0.21–1.0). If a percent slipped in (>1), convert it.
+    final fio2 = _sfFio2! > 1.0 ? _sfFio2! / 100 : _sfFio2!;
+    final sf = _sfSpo2! / fio2;
     setState(() => _sfResult = (sf * 10).round() / 10);
   }
 
@@ -222,7 +224,10 @@ class _VentilatorParametersState extends State<VentilatorParameters> {
       setState(() => _roxResult = null);
       return;
     }
-    final rox = (_roxSpo2! / _roxFio2!) / _roxRr!;
+    // ROX = (SpO2 / FiO2) / RR, with FiO2 as a fraction (0.21–1.0). If a percent
+    // was entered (>1), convert it so the index isn't 100× too small.
+    final fio2 = _roxFio2! > 1.0 ? _roxFio2! / 100 : _roxFio2!;
+    final rox = (_roxSpo2! / fio2) / _roxRr!;
     setState(() => _roxResult = (rox * 100).round() / 100);
   }
 
@@ -1039,7 +1044,7 @@ class _VentilatorParametersState extends State<VentilatorParameters> {
         _numField(label: 'SpO2 (%)', ctrl: _sfSpo2Ctrl, hint: 'e.g., 92', helperText: '',
             onChanged: (v) { _sfSpo2 = double.tryParse(v); _calcSF(); }),
         const SizedBox(height: 8),
-        _numField(label: 'FiO2 (%)', ctrl: _sfFio2Ctrl, hint: 'e.g., 40', helperText: '',
+        _numField(label: 'FiO₂ (decimal)', ctrl: _sfFio2Ctrl, hint: 'e.g., 0.4', helperText: '0.21–1.0',
             onChanged: (v) { _sfFio2 = double.tryParse(v); _calcSF(); }),
         if (_sfResult != null) ...[
           const SizedBox(height: 12),
@@ -1066,7 +1071,7 @@ class _VentilatorParametersState extends State<VentilatorParameters> {
         _numField(label: 'SpO2 (%)', ctrl: _roxSpo2Ctrl, hint: 'e.g., 94', helperText: '',
             onChanged: (v) { _roxSpo2 = double.tryParse(v); _calcROX(); }),
         const SizedBox(height: 8),
-        _numField(label: 'FiO2 (%)', ctrl: _roxFio2Ctrl, hint: 'e.g., 30', helperText: '',
+        _numField(label: 'FiO₂ (decimal)', ctrl: _roxFio2Ctrl, hint: 'e.g., 0.4', helperText: '0.21–1.0',
             onChanged: (v) { _roxFio2 = double.tryParse(v); _calcROX(); }),
         const SizedBox(height: 8),
         _numField(label: 'Respiratory Rate', ctrl: _roxRrCtrl, hint: 'e.g., 45', helperText: 'breaths/min',
