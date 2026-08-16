@@ -125,6 +125,7 @@ void main() async {
   // Push notifications (Android + web only for now — see push_service.dart).
   // Fire-and-forget: a slow Firebase handshake must never block app start.
   PushService.messengerKey = rootMessengerKey;
+  PushService.navigatorKey = reportNavigatorKey;
   // ignore: unawaited_futures
   PushService.instance.init();
 

@@ -23,6 +23,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../firebase_options.dart';
+import '../academics/academics_web_screen.dart';
 import 'auth_service.dart';
 
 /// Paste the Web Push certificate key pair here (Firebase console →
@@ -38,6 +39,9 @@ class PushService {
   /// Set from main.dart so foreground pushes can surface as a SnackBar on
   /// whatever screen is open, without each screen needing wiring.
   static GlobalKey<ScaffoldMessengerState>? messengerKey;
+
+  /// The app's root navigator, so a notification tap can push a screen.
+  static GlobalKey<NavigatorState>? navigatorKey;
 
   bool _initialized = false;
 
@@ -145,10 +149,36 @@ class PushService {
         );
       });
 
+      // A tap on the notification must open the linked item, not just the app.
+      // The backend puts the deep-link path in the message data; without these
+      // handlers a tap only ever landed on the home screen.
+      FirebaseMessaging.onMessageOpenedApp.listen(_openFromMessage);
+      final initialMessage = await messaging.getInitialMessage();
+      if (initialMessage != null) {
+        // At cold start the navigator isn't mounted yet — wait for first frame.
+        WidgetsBinding.instance.addPostFrameCallback(
+          (_) => _openFromMessage(initialMessage),
+        );
+      }
+
       _initialized = true;
     } catch (e) {
       debugPrint('[push] init failed (non-fatal): $e');
     }
+  }
+
+  /// Open the Academics WebView at the notification's deep-link path.
+  static void _openFromMessage(RemoteMessage message) {
+    final link = message.data['linkPath'];
+    if (link == null || link.isEmpty) return;
+    final nav = navigatorKey?.currentState;
+    if (nav == null) return;
+    // linkPath is an absolute web path (e.g. /academics/trials/x/y), but
+    // AcademicsWebScreen's base URL already ends in /academics — strip that
+    // prefix so the URL is not doubled to /academics/academics.
+    var rel = link.startsWith('/academics') ? link.substring('/academics'.length) : link;
+    if (rel.isEmpty) rel = '/';
+    nav.push(MaterialPageRoute(builder: (_) => AcademicsWebScreen(path: rel)));
   }
 
   Future<void> _registerTokenWithBackend(String token) async {
