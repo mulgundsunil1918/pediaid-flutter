@@ -19,14 +19,16 @@ const Color _noteAmber   = Color(0xFFF57C00);
 
 // ─────────────────────────────────────────────────────────────────────────────
 class VaccineScreen extends StatefulWidget {
-  const VaccineScreen({super.key});
+  /// 0 = IAP, 1 = NIS, 2 = Catch-up. Lets search open a specific tab.
+  final int initialSched;
+  const VaccineScreen({super.key, this.initialSched = 0});
 
   @override
   State<VaccineScreen> createState() => _VaccineScreenState();
 }
 
 class _VaccineScreenState extends State<VaccineScreen> {
-  int _schedIdx = 0; // 0 = IAP, 1 = NIS
+  late int _schedIdx = widget.initialSched; // 0 = IAP, 1 = NIS, 2 = Catch-up
   int _viewIdx  = 0; // 0 = Table, 1 = Smart
 
   VaccineSchedule? _iap;

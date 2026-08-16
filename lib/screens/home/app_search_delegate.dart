@@ -574,13 +574,23 @@ List<_SearchItem> _allItemsUnfiltered() => [
   ),
 
   _SearchItem(
-    title: 'Immunisation Schedule',
-    subtitle: 'IAP 2022 & National (NIS)',
+    title: 'Vaccination / Immunisation',
+    subtitle: 'IAP 2022 · NIS · Catch-up',
     category: 'Guides',
     icon: Icons.vaccines_outlined,
     color: _kGuideColor,
     keywords: const ['vaccine', 'immunization', 'immunisation', 'schedule', 'iap', 'nis', 'vaccination', 'bcg', 'opv', 'dpt', 'hepb', 'mmr', 'typhoid', 'varicella', 'pneumococcal', 'pcv', 'rotavirus', 'hib', 'hepatitis', 'meningococcal', 'catch up', 'booster', 'birth dose', 'ipv', 'tdap', 'flu vaccine', 'influenza', 'hpv', 'pentavalent'],
     navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const VaccineScreen())),
+  ),
+
+  _SearchItem(
+    title: 'Catch-up Immunization',
+    subtitle: 'Age-based catch-up calculator (IAP-ACVIP)',
+    category: 'Guides',
+    icon: Icons.event_repeat,
+    color: _kGuideColor,
+    keywords: const ['catch up', 'catchup', 'catch-up', 'catch up immunization', 'catch up immunisation', 'catch up vaccination', 'missed vaccine', 'missed doses', 'overdue vaccine', 'delayed vaccination', 'unvaccinated child', 'incomplete vaccination', 'catch up schedule', 'immunization calculator', 'vaccine calculator', 'due vaccines', 'which vaccines due', 'behind on vaccines', 'iap acvip', 'age appropriate vaccines'],
+    navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const VaccineScreen(initialSched: 2))),
   ),
 
   _SearchItem(

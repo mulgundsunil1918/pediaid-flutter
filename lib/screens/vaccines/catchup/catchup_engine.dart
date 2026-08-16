@@ -108,6 +108,10 @@ class VaccineRule {
   /// never shown as routinely due; surfaced under "Special situations".
   final bool specialOnly;
 
+  /// Max doses to offer in the history picker. Defaults to the largest band
+  /// requirement, so a single-dose vaccine (BCG, OPV, TCV) shows 0–1, not 0–4.
+  final int? maxDosesInput;
+
   final String route;
   final String notes;
   final String source;
@@ -123,6 +127,7 @@ class VaccineRule {
     this.maxCompleteAgeDays,
     required this.bands,
     this.specialOnly = false,
+    this.maxDosesInput,
     this.route = '',
     this.notes = '',
     this.source = '',
@@ -130,6 +135,13 @@ class VaccineRule {
   });
 
   bool get isLive => kind == VaccineKind.live;
+
+  /// Doses to offer in the history picker (chips 0..maxDoses).
+  int get maxDoses =>
+      maxDosesInput ??
+      (specialOnly
+          ? 1
+          : bands.map((b) => b.dosesRequired).fold(1, (a, b) => a > b ? a : b));
 
   /// The dose band that applies given the age (in days) at the FIRST dose.
   DoseBand bandForFirstDoseAge(int firstDoseAgeDays) {

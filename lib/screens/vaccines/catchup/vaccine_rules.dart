@@ -54,6 +54,7 @@ const List<VaccineRule> kCatchupRules = [
   VaccineRule(
     id: 'ipv',
     name: 'IPV (inactivated polio)',
+    maxDosesInput: 4,
     shortName: 'IPV',
     kind: VaccineKind.inactivated,
     minAgeDays: 6 * _wk,
@@ -67,6 +68,7 @@ const List<VaccineRule> kCatchupRules = [
   VaccineRule(
     id: 'dtp',
     name: 'DTwP / DTaP',
+    maxDosesInput: 5,
     shortName: 'DTP',
     kind: VaccineKind.inactivated,
     minAgeDays: 6 * _wk,
@@ -95,6 +97,7 @@ const List<VaccineRule> kCatchupRules = [
   VaccineRule(
     id: 'hib',
     name: 'Hib',
+    maxDosesInput: 4,
     shortName: 'Hib',
     kind: VaccineKind.inactivated,
     minAgeDays: 6 * _wk,
@@ -111,6 +114,7 @@ const List<VaccineRule> kCatchupRules = [
   VaccineRule(
     id: 'pcv',
     name: 'PCV',
+    maxDosesInput: 4,
     shortName: 'PCV',
     kind: VaccineKind.inactivated,
     minAgeDays: 6 * _wk,
@@ -144,6 +148,7 @@ const List<VaccineRule> kCatchupRules = [
   VaccineRule(
     id: 'influenza',
     name: 'Influenza',
+    maxDosesInput: 4,
     shortName: 'Influenza',
     kind: VaccineKind.inactivated,
     minAgeDays: 6 * _mo,
@@ -157,6 +162,7 @@ const List<VaccineRule> kCatchupRules = [
   VaccineRule(
     id: 'mmr',
     name: 'MMR',
+    maxDosesInput: 3,
     shortName: 'MMR',
     kind: VaccineKind.live,
     minAgeDays: 9 * _mo,

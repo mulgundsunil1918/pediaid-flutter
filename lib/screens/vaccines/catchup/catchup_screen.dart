@@ -217,7 +217,7 @@ class _CatchupViewState extends State<CatchupView> {
                     fontWeight: FontWeight.w600,
                     color: cs.onSurface)),
           ),
-          Wrap(spacing: 4, children: List.generate(5, (i) {
+          Wrap(spacing: 4, runSpacing: 4, children: List.generate(r.maxDoses + 1, (i) {
             final sel = i == c;
             return GestureDetector(
               onTap: () => setState(() {
