@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../services/vaccine_service.dart';
+import 'catchup/catchup_screen.dart';
 
 // ── Table column widths ───────────────────────────────────────────────────────
 const double _kAgeW   = 110.0;
@@ -11,9 +12,10 @@ const double _kNotesW = 170.0;
 const double _kTotalW = _kAgeW + _kVaccW + _kDoseW + _kRouteW + _kSiteW + _kNotesW;
 
 // ── Palette ───────────────────────────────────────────────────────────────────
-const Color _iapAccent  = Color(0xFF1565C0);
-const Color _nisAccent  = Color(0xFF2E7D32);
-const Color _noteAmber  = Color(0xFFF57C00);
+const Color _iapAccent   = Color(0xFF1565C0);
+const Color _nisAccent   = Color(0xFF2E7D32);
+const Color _catchAccent = Color(0xFF6A1B9A);
+const Color _noteAmber   = Color(0xFFF57C00);
 
 // ─────────────────────────────────────────────────────────────────────────────
 class VaccineScreen extends StatefulWidget {
@@ -49,15 +51,19 @@ class _VaccineScreenState extends State<VaccineScreen> {
   }
 
   VaccineSchedule? get _current => _schedIdx == 0 ? _iap : _nis;
-  Color get _accent => _schedIdx == 0 ? _iapAccent : _nisAccent;
+  Color get _accent => _schedIdx == 0
+      ? _iapAccent
+      : _schedIdx == 1
+          ? _nisAccent
+          : _catchAccent;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text('Immunisation Schedule',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17)),
+        title: const Text('Vaccination / Immunisation',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
         elevation: 0,
       ),
       body: _loading
@@ -126,23 +132,28 @@ class _VaccineScreenState extends State<VaccineScreen> {
       padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
       child: Column(
         children: [
-          // Primary: IAP | NIS
+          // Primary: IAP | NIS | Catch-up
           Row(children: [
             _toggleBtn('IAP 2022', 0, _schedIdx, _iapAccent,
                 () => setState(() => _schedIdx = 0)),
             const SizedBox(width: 8),
-            _toggleBtn('NIS (National)', 1, _schedIdx, _nisAccent,
+            _toggleBtn('NIS', 1, _schedIdx, _nisAccent,
                 () => setState(() => _schedIdx = 1)),
-          ]),
-          const SizedBox(height: 8),
-          // Secondary: Table | Smart
-          Row(children: [
-            _toggleBtn('Table View', 0, _viewIdx, cs.primary,
-                () => setState(() => _viewIdx = 0)),
             const SizedBox(width: 8),
-            _toggleBtn('Smart View', 1, _viewIdx, cs.primary,
-                () => setState(() => _viewIdx = 1)),
+            _toggleBtn('Catch-up', 2, _schedIdx, _catchAccent,
+                () => setState(() => _schedIdx = 2)),
           ]),
+          // Secondary Table | Smart only applies to the schedule views.
+          if (_schedIdx != 2) ...[
+            const SizedBox(height: 8),
+            Row(children: [
+              _toggleBtn('Table View', 0, _viewIdx, cs.primary,
+                  () => setState(() => _viewIdx = 0)),
+              const SizedBox(width: 8),
+              _toggleBtn('Smart View', 1, _viewIdx, cs.primary,
+                  () => setState(() => _viewIdx = 1)),
+            ]),
+          ],
         ],
       ),
     );
@@ -179,6 +190,7 @@ class _VaccineScreenState extends State<VaccineScreen> {
   // ── Body ──────────────────────────────────────────────────────────────────
 
   Widget _buildBody() {
+    if (_schedIdx == 2) return const CatchupView(accent: _catchAccent);
     final schedule = _current;
     if (schedule == null) return const SizedBox.shrink();
     if (_viewIdx == 0) return _TableView(schedule: schedule, accent: _accent);
