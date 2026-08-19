@@ -1,36 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'who_chart_selection_screen.dart';
+import 'who_chart_input_screen.dart';
 import 'iap_chart_screen.dart';
 import 'fenton_chart_screen.dart';
 import '../calculators/bp_hub_screen.dart';
 import '../calculators/jaundice_hub_screen.dart';
 
-const _intergrowthUrl =
-    'https://intergrowth21.ndog.ox.ac.uk/en/ManualEntry';
-
 class GrowthChartsScreen extends StatelessWidget {
   const GrowthChartsScreen({super.key});
-
-  Future<void> _launchIntergrowth(BuildContext context) async {
-    final uri = Uri.parse(_intergrowthUrl);
-    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
-      if (context.mounted) {
-        _showSnackBar(context, 'Could not open browser.');
-      }
-    }
-  }
-
-  void _showSnackBar(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,35 +27,18 @@ class GrowthChartsScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // ── CARD 1: WHO 0-5 Years (ACTIVE) ────────────────────────────
-            _ActiveChartCard(
+            // ONE "Growth Charts" entry — WHO / IAP / Fenton / INTERGROWTH
+            // live inside it rather than as four cards on this screen.
+            _SimpleChartCard(
+              icon: Icons.insights_rounded,
+              accent: const Color(0xFF1565C0),
+              title: 'Growth Charts',
+              subtitle: 'WHO · IAP · Fenton · INTERGROWTH-21st',
+              chips: const ['0–5 y', '5–18 y', 'Preterm'],
               onTap: () => Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (_) => const WhoChartSelectionScreen()),
+                MaterialPageRoute(builder: (_) => const GrowthChartsListScreen()),
               ),
-            ),
-            const SizedBox(height: 14),
-            // ── CARD 2: IAP 5-18 Years (ACTIVE) ───────────────────────────
-            _IAPChartCard(
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const IAPChartScreen()),
-              ),
-            ),
-            const SizedBox(height: 14),
-            // ── CARD 3: Fenton Preterm (ACTIVE) ───────────────────────────
-            _FentonChartCard(
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (_) => const FentonChartScreen()),
-              ),
-            ),
-            const SizedBox(height: 14),
-            // ── CARD 4: INTERGROWTH-21st (external) ───────────────────────
-            _IntergrowthCard(
-              onTap: () => _launchIntergrowth(context),
             ),
             const SizedBox(height: 14),
             // ── CARD 5: Blood Pressure centiles (ACTIVE) ──────────────────
@@ -283,6 +243,75 @@ class _IAPChartCard extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               const Icon(Icons.chevron_right, color: _iapTeal, size: 26),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ── Growth-charts sub-screen ─────────────────────────────────────────────────
+
+/// The four growth-chart references, reached from the single "Growth Charts"
+/// card on the Charts hub.
+class GrowthChartsListScreen extends StatelessWidget {
+  const GrowthChartsListScreen({super.key});
+
+  static const _intergrowth = 'https://intergrowth21.ndog.ox.ac.uk/en/ManualEntry';
+
+  Future<void> _openIntergrowth(BuildContext context) async {
+    final uri = Uri.parse(_intergrowth);
+    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Could not open browser.')),
+        );
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      appBar: AppBar(
+        title: const Text('Growth Charts'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
+      body: SafeArea(
+        bottom: true,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _ActiveChartCard(
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const WhoChartInputScreen()),
+                ),
+              ),
+              const SizedBox(height: 14),
+              _IAPChartCard(
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const IAPChartScreen()),
+                ),
+              ),
+              const SizedBox(height: 14),
+              _FentonChartCard(
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const FentonChartScreen()),
+                ),
+              ),
+              const SizedBox(height: 14),
+              _IntergrowthCard(onTap: () => _openIntergrowth(context)),
+              const SizedBox(height: 24),
             ],
           ),
         ),

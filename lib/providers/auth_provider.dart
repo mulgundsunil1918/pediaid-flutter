@@ -101,6 +101,7 @@ class AuthProvider extends ChangeNotifier {
       _setLoading(false);
       return _currentUser != null;
     } catch (e) {
+      debugPrint('[AuthProvider] Google sign-in error: $e'); // logged, not shown
       _error = friendlyError(e);
       _setLoading(false);
       return false;
@@ -116,6 +117,7 @@ class AuthProvider extends ChangeNotifier {
       _setLoading(false);
       return _currentUser != null;
     } catch (e) {
+      debugPrint('[AuthProvider] Apple sign-in error: $e'); // logged, not shown
       _error = friendlyError(e);
       _setLoading(false);
       return false;

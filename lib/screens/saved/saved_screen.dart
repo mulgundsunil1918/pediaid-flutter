@@ -11,6 +11,8 @@
 // =============================================================================
 
 import 'package:flutter/material.dart';
+
+import '../../widgets/skeleton.dart';
 import '../../academics/academics_web_screen.dart';
 import '../../services/bookmarks_service.dart';
 
@@ -85,7 +87,7 @@ class _SavedScreenState extends State<SavedScreen> {
         future: _future,
         builder: (context, snap) {
           if (snap.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const SkeletonList(items: 6);
           }
 
           if (snap.error is NotSignedInException) {

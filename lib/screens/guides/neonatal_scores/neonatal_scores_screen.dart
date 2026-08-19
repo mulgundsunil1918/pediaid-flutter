@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../../../widgets/skeleton.dart';
 import '../../../data/scores_data_loader.dart';
 import 'score_detail_screen.dart';
 import 'nichd_hie_screen.dart';
@@ -14,10 +16,115 @@ class NeonatalScoresScreen extends StatefulWidget {
   State<NeonatalScoresScreen> createState() => _NeonatalScoresScreenState();
 }
 
+/// One row of the list. The five hardcoded cards and the JSON-driven scores
+/// are different widgets, so each entry carries its own builder — that lets a
+/// single filter run over the whole list instead of only the JSON half.
+class _Entry {
+  final String title;
+  final String keywords;
+  final WidgetBuilder build;
+  const _Entry(this.title, this.keywords, this.build);
+
+  bool matches(String q) =>
+      title.toLowerCase().contains(q) || keywords.toLowerCase().contains(q);
+}
+
 class _NeonatalScoresScreenState extends State<NeonatalScoresScreen> {
   NeonatalScoresData? _data;
   bool _loading = true;
   String? _error;
+
+  final TextEditingController _searchCtl = TextEditingController();
+  String _query = '';
+
+  @override
+  void dispose() {
+    _searchCtl.dispose();
+    super.dispose();
+  }
+
+  /// Numbers are fixed to each score's position in the full list, not the
+  /// filtered one, so a score keeps the same number while searching.
+  List<_Entry> _entries() {
+    final list = <_Entry>[
+      _Entry(
+        'NICHD HIE Assessment',
+        'cooling eligibility hypoxic ischaemic encephalopathy therapeutic hypothermia sarnat',
+        (ctx) => _NichdCard(
+          onTap: () => Navigator.push(
+            ctx,
+            MaterialPageRoute(builder: (_) => const NichdHieScreen()),
+          ),
+        ),
+      ),
+      _Entry(
+        'Lung Ultrasound Score (LUS)',
+        'neonatal lung aeration 6 or 10-zone method surfactant respiratory distress',
+        (ctx) => _LusCard(
+          onTap: () => Navigator.push(
+            ctx,
+            MaterialPageRoute(builder: (_) => const LusScoreScreen()),
+          ),
+        ),
+      ),
+      _Entry(
+        'Modified Ballard Score',
+        'gestational age assessment neuromuscular physical maturity new ballard',
+        (ctx) => _ExtraScoreCard(
+          title: 'Modified Ballard Score',
+          subtitle:
+              'Gestational age assessment (neuromuscular + physical maturity)',
+          number: 3,
+          onTap: () => Navigator.push(ctx,
+              MaterialPageRoute(builder: (_) => const ModifiedBallardScreen())),
+        ),
+      ),
+      _Entry(
+        'POFRAS',
+        'preterm oral feeding readiness assessment scale breastfeeding',
+        (ctx) => _ExtraScoreCard(
+          title: 'POFRAS',
+          subtitle: 'Preterm Oral Feeding Readiness Assessment Scale',
+          number: 4,
+          onTap: () => Navigator.push(
+              ctx, MaterialPageRoute(builder: (_) => const PofrasScreen())),
+        ),
+      ),
+      _Entry(
+        'CAN Score',
+        'clinical assessment of nutrition at birth malnutrition metcoff',
+        (ctx) => _ExtraScoreCard(
+          title: 'CAN Score',
+          subtitle: 'Clinical Assessment of Nutrition at Birth',
+          number: 5,
+          onTap: () => Navigator.push(
+              ctx, MaterialPageRoute(builder: (_) => const CanScoreScreen())),
+        ),
+      ),
+    ];
+
+    final scores = _data!.scores;
+    for (var i = 0; i < scores.length; i++) {
+      final score = scores[i];
+      final number = list.length + i + 1;
+      list.add(_Entry(
+        score.name,
+        [
+          for (final sub in score.subsections) sub.title,
+          score.reference,
+        ].join(' '),
+        (ctx) => _ScoreCard(
+          score: score,
+          index: number - 1,
+          onTap: () => Navigator.push(
+            ctx,
+            MaterialPageRoute(builder: (_) => ScoreDetailScreen(score: score)),
+          ),
+        ),
+      ));
+    }
+    return list;
+  }
 
   @override
   void initState() {
@@ -50,7 +157,7 @@ class _NeonatalScoresScreenState extends State<NeonatalScoresScreen> {
 
   Widget _buildBody(ColorScheme cs) {
     if (_loading) {
-      return const Center(child: CircularProgressIndicator());
+      return const SkeletonList(items: 8);
     }
     if (_error != null) {
       return Center(
@@ -65,7 +172,10 @@ class _NeonatalScoresScreenState extends State<NeonatalScoresScreen> {
       );
     }
 
-    final scores = _data!.scores;
+    final entries = _entries();
+    final q = _query.trim().toLowerCase();
+    final visible =
+        q.isEmpty ? entries : entries.where((e) => e.matches(q)).toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -89,76 +199,76 @@ class _NeonatalScoresScreenState extends State<NeonatalScoresScreen> {
           ),
         ),
 
+        // ── Search ────────────────────────────────────────────────────────
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 10, 16, 2),
+          child: TextField(
+            controller: _searchCtl,
+            onChanged: (v) => setState(() => _query = v),
+            textInputAction: TextInputAction.search,
+            style: TextStyle(fontSize: 14, color: cs.onSurface),
+            decoration: InputDecoration(
+              isDense: true,
+              hintText: 'Search ${entries.length} neonatal scores…',
+              hintStyle: TextStyle(
+                  fontSize: 13.5,
+                  color: cs.onSurface.withValues(alpha: 0.45)),
+              prefixIcon: Icon(Icons.search,
+                  size: 20, color: cs.onSurface.withValues(alpha: 0.5)),
+              suffixIcon: _query.isEmpty
+                  ? null
+                  : IconButton(
+                      icon: Icon(Icons.close,
+                          size: 18,
+                          color: cs.onSurface.withValues(alpha: 0.6)),
+                      onPressed: () {
+                        _searchCtl.clear();
+                        setState(() => _query = '');
+                      },
+                    ),
+              filled: true,
+              fillColor: Theme.of(context).cardColor,
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide:
+                    BorderSide(color: cs.outline.withValues(alpha: 0.35)),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide:
+                    BorderSide(color: cs.outline.withValues(alpha: 0.35)),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide(color: cs.primary, width: 1.4),
+              ),
+            ),
+          ),
+        ),
+
         // ── Score list ────────────────────────────────────────────────────
         Expanded(
-          child: ListView.separated(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
-            itemCount: scores.length + 5,
-            separatorBuilder: (context, i) => const SizedBox(height: 8),
-            itemBuilder: (context, i) {
-              // NICHD HIE Assessment — hardcoded card at top
-              if (i == 0) {
-                return _NichdCard(
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const NichdHieScreen()),
+          child: visible.isEmpty
+              ? Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(32),
+                    child: Text(
+                      'No score matches "${_searchCtl.text}".',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 13.5,
+                          color: cs.onSurface.withValues(alpha: 0.55)),
+                    ),
                   ),
-                );
-              }
-              // LUS — Lung Ultrasound Score
-              if (i == 1) {
-                return _LusCard(
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const LusScoreScreen()),
-                  ),
-                );
-              }
-              // Modified Ballard — gestational age assessment
-              if (i == 2) {
-                return _ExtraScoreCard(
-                  title: 'Modified Ballard Score',
-                  subtitle: 'Gestational age assessment (neuromuscular + physical maturity)',
-                  number: 3,
-                  onTap: () => Navigator.push(context,
-                      MaterialPageRoute(builder: (_) => const ModifiedBallardScreen())),
-                );
-              }
-              // POFRAS — preterm oral feeding readiness
-              if (i == 3) {
-                return _ExtraScoreCard(
-                  title: 'POFRAS',
-                  subtitle: 'Preterm Oral Feeding Readiness Assessment Scale',
-                  number: 4,
-                  onTap: () => Navigator.push(context,
-                      MaterialPageRoute(builder: (_) => const PofrasScreen())),
-                );
-              }
-              // CAN Score — clinical assessment of nutrition
-              if (i == 4) {
-                return _ExtraScoreCard(
-                  title: 'CAN Score',
-                  subtitle: 'Clinical Assessment of Nutrition at Birth',
-                  number: 5,
-                  onTap: () => Navigator.push(context,
-                      MaterialPageRoute(builder: (_) => const CanScoreScreen())),
-                );
-              }
-              final score = scores[i - 5];
-              return _ScoreCard(
-                score: score,
-                // Five cards precede the list, and the card renders index + 1, so the
-                // sequence continues at 6 instead of restarting at 4.
-                index: i,
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => ScoreDetailScreen(score: score),
-                  ),
+                )
+              : ListView.separated(
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
+                  itemCount: visible.length,
+                  separatorBuilder: (context, i) => const SizedBox(height: 8),
+                  itemBuilder: (context, i) => visible[i].build(context),
                 ),
-              );
-            },
-          ),
         ),
       ],
     );

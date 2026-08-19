@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../services/lab_reference_service.dart';
 import 'lab_item_detail_screen.dart';
+import '../../widgets/list_search_field.dart';
 
-class LabSystemScreen extends StatelessWidget {
+class LabSystemScreen extends StatefulWidget {
   final LabSystem system;
   final LabReferenceService service;
   final Color accent;
@@ -17,10 +18,38 @@ class LabSystemScreen extends StatelessWidget {
   });
 
   @override
+  State<LabSystemScreen> createState() => _LabSystemScreenState();
+}
+
+class _LabSystemScreenState extends State<LabSystemScreen> {
+  final TextEditingController _searchCtl = TextEditingController();
+  String _query = '';
+
+  @override
+  void dispose() {
+    _searchCtl.dispose();
+    super.dispose();
+  }
+
+  List<String> _match(List<String> items) {
+    final q = _query.trim().toLowerCase();
+    if (q.isEmpty) return items;
+    return items.where((i) => i.toLowerCase().contains(q)).toList();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
-    final hasLabs = system.labs.isNotEmpty;
-    final hasGuides = system.guides.isNotEmpty;
+    final system = widget.system;
+    final service = widget.service;
+    final accent = widget.accent;
+
+    final labs = _match(system.labs);
+    final guides = _match(system.guides);
+    final hasLabs = labs.isNotEmpty;
+    final hasGuides = guides.isNotEmpty;
+    final total = system.labs.length + system.guides.length;
+    final searching = _query.trim().isNotEmpty;
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -38,9 +67,26 @@ class LabSystemScreen extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
         ),
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
+      body: Column(
         children: [
+          // Sunil's rule: more than ~8 items on a page gets a search bar.
+          if (total > 8)
+            ListSearchField(
+              controller: _searchCtl,
+              hintText: 'Search $total in ${system.name}…',
+              onChanged: (v) => setState(() => _query = v),
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+            ),
+          if (searching && !hasLabs && !hasGuides)
+            Expanded(
+              child: ListSearchEmptyState(
+                  query: _searchCtl.text, noun: 'entries'),
+            )
+          else
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.all(16),
+                children: [
           // ── Labs ──────────────────────────────────────────────────────────
           if (hasLabs) ...[
             _SectionHeader(
@@ -49,7 +95,7 @@ class LabSystemScreen extends StatelessWidget {
               accent: accent,
             ),
             const SizedBox(height: 8),
-            ...system.labs.map(
+            ...labs.map(
               (lab) => _ItemTile(
                 name: lab,
                 isGuide: false,
@@ -69,7 +115,7 @@ class LabSystemScreen extends StatelessWidget {
               accent: accent,
             ),
             const SizedBox(height: 8),
-            ...system.guides.map(
+            ...guides.map(
               (guide) => _ItemTile(
                 name: guide,
                 isGuide: true,
@@ -82,15 +128,18 @@ class LabSystemScreen extends StatelessWidget {
           ],
 
           // ── Footer ────────────────────────────────────────────────────────
-          _buildFooter(context),
+          if (!searching) _buildFooter(context),
           const SizedBox(height: 16),
+                ],
+              ),
+            ),
         ],
       ),
     );
   }
 
   void _navigate(BuildContext context, String itemName) {
-    final table = service.getTable(itemName);
+    final table = widget.service.getTable(itemName);
     if (table == null) return; // Coming Soon — not tappable
     Navigator.push(
       context,

@@ -142,6 +142,31 @@ class _CGAPMACalculatorState extends State<CGAPMACalculator>
     final cgaNeg = cgaTotalDays < 0;
     final cgaStr = cgaNeg ? '−${cgaWks}w ${cgaDys}d' : '${cgaWks}w ${cgaDys}d';
 
+    // Same corrected age, expressed in calendar months + days. Counted from the
+    // EDD (due date) the way clinicians report corrected age for developmental
+    // follow-up, so it spans the exact same days as the weeks/days form above.
+    final dobDate = DateTime(dob.year, dob.month, dob.day);
+    final nowDate = DateTime(now.year, now.month, now.day);
+    final eddDate = dobDate.add(Duration(days: termDays - gaTotalDays));
+    String cgaMonthsStr;
+    if (cgaTotalDays < 0) {
+      cgaMonthsStr = '−'; // before term-equivalent; CGA not yet applicable
+    } else {
+      var cgaMonths =
+          (nowDate.year - eddDate.year) * 12 + (nowDate.month - eddDate.month);
+      var cgaMonDays = nowDate.day - eddDate.day;
+      if (cgaMonDays < 0) {
+        cgaMonths -= 1;
+        // Borrow the length of the month that just ended.
+        cgaMonDays += DateTime(nowDate.year, nowDate.month, 0).day;
+      }
+      if (cgaMonths < 0) {
+        cgaMonths = 0;
+        cgaMonDays = 0;
+      }
+      cgaMonthsStr = '${cgaMonths}mo ${cgaMonDays}d';
+    }
+
     // Birth status
     final String birthStatus;
     if (gaw < 37) {
@@ -166,6 +191,7 @@ class _CGAPMACalculatorState extends State<CGAPMACalculator>
         cgaStr: cgaStr,
         cgaWks: cgaWks,
         cgaDys: cgaDys,
+        cgaMonthsStr: cgaMonthsStr,
         birthStatus: birthStatus,
         weeksPrem: weeksPrem,
       );
@@ -537,6 +563,8 @@ class _CGAPMACalculatorState extends State<CGAPMACalculator>
                     ? r.cgaStr
                     : 'N/A — ${r.cgaNotApplicableReason ?? ''}',
               ),
+              if (r.cgaApplicable)
+                _detailRow('Corrected Age (months)', r.cgaMonthsStr),
               _detailRow('Post-Menstrual Age',
                   '${pmaFmt.w}w ${pmaFmt.d}d'),
               _detailRow(
@@ -589,7 +617,7 @@ class _CGAPMACalculatorState extends State<CGAPMACalculator>
             ),
             child: Text(
               r.cgaApplicable
-                  ? 'CGA: ${r.cgaStr}'
+                  ? 'CGA: ${r.cgaStr}  ·  ${r.cgaMonthsStr}'
                   : 'CGA: N/A — ${r.cgaNotApplicableReason ?? 'await 40w'}',
               style: const TextStyle(
                   color: Colors.white,
@@ -1188,6 +1216,7 @@ class _CalcResult {
   final String cgaStr;
   final int cgaWks;
   final int cgaDys;
+  final String cgaMonthsStr;
   final String birthStatus;
   final double weeksPrem;
 
@@ -1204,6 +1233,7 @@ class _CalcResult {
     required this.cgaStr,
     required this.cgaWks,
     required this.cgaDys,
+    required this.cgaMonthsStr,
     required this.birthStatus,
     required this.weeksPrem,
   });

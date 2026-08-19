@@ -5,12 +5,17 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../services/recents_service.dart';
+import '../../services/tool_registry.dart';
+import '../../utils/share_message.dart';
+import '../../widgets/list_search_field.dart';
+import '../../providers/auth_provider.dart';
 import '../../theme/theme_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../utils/prefs_keys.dart';
 import '../../widgets/notification_bell.dart';
 import '../../widgets/install_prompt.dart';
-import '../calculators/calculators_screen.dart';
+import '../calculators/calculators_hub_screen.dart';
+import '../vaccines/immunisation_hub_screen.dart';
 import '../calculators/gir_calculator.dart';
 import '../calculators/blood_gas_analyser.dart';
 import '../calculators/tpn_calculator.dart';
@@ -340,6 +345,36 @@ class _HomeScreenState extends State<HomeScreen> {
     return 'Good Evening';
   }
 
+  /// Matches [_greeting] so the pill's icon and its words agree.
+  IconData get _greetingIcon {
+    final hour = DateTime.now().hour;
+    if (hour < 12) return Icons.wb_twilight_rounded;
+    if (hour < 17) return Icons.wb_sunny_outlined;
+    return Icons.nightlight_round;
+  }
+
+  /// The signed-in doctor's name, or null when signed out or unnamed — the
+  /// greeting then falls back to the plain greeting it showed before.
+  String? _doctorName(BuildContext context) {
+    final raw = context.watch<AuthProvider>().currentUser?.name.trim();
+    if (raw == null || raw.isEmpty) return null;
+    final first = raw.split(RegExp(r'\s+')).first;
+    if (first.isEmpty) return null;
+    // Firebase falls back to the email prefix when no name was ever set;
+    // "Good Morning, Dr mulgundsunil" reads worse than no name at all.
+    if (raw.contains('@') || RegExp(r'\d').hasMatch(first)) return null;
+    // Don't produce "Dr Dr Sunil" for users who typed the title themselves.
+    final lower = first.toLowerCase();
+    if (lower == 'dr' || lower == 'dr.') return raw;
+    final cap = first[0].toUpperCase() + first.substring(1);
+    return 'Dr $cap';
+  }
+
+  String _greetingLine(BuildContext context) {
+    final name = _doctorName(context);
+    return name == null ? _greeting : '$_greeting, $name';
+  }
+
   @override
   Widget build(BuildContext context) {
     return ShowCaseWidget(
@@ -548,21 +583,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         _buildRatingFooter(context, isDark),
                         _buildDonationFooter(context, isDark),
                       ],
-                      // The iOS-only "More features on the Web App" banner is
-                      // deliberately not rendered.
-                      //
-                      // It named the drug formulary and dose calculators and
-                      // linked to the site that still has them — on the one
-                      // platform where those tools are withheld to satisfy App
-                      // Store guideline 1.4.2. To a reviewer that reads as
-                      // routing users around the restriction rather than
-                      // complying with it, which is treated more harshly than
-                      // simply shipping the feature, and it also invites 2.3.1
-                      // (functionality not evident in the app itself).
-                      //
-                      // Kept as a widget rather than deleted: it is legitimate
-                      // on any platform that is not iOS, if it is ever wanted
-                      // there without naming the withheld tools.
+                      // The "More features on the Web App" banner was removed
+                      // entirely: the formulary and dose calculators it pointed
+                      // to on the web now ship inside the iOS app too, so it was
+                      // both redundant and an outbound link a reviewer could read
+                      // as routing users off-platform (2.3.1 / 3.1.1).
                       if (kIsWeb) _buildVisitorCounter(context),
                       SizedBox(
                         height: MediaQuery.of(context).padding.bottom + 16,
@@ -594,7 +619,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     Future<void> openStore() async {
       final url = Platform.isIOS
-          ? 'https://apps.apple.com/app/id6748139585?action=write-review'
+          ? 'https://apps.apple.com/app/id6777623709?action=write-review'
           : 'https://play.google.com/store/apps/details?id=com.pediaid.pediaid';
       await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
     }
@@ -849,72 +874,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // ── Web promo footer — NOT rendered on iOS (see call site) ──────────────
-  // ignore: unused_element
-  Widget _buildWebPromoFooter(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(18, 24, 18, 8),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(16),
-        onTap: () => launchUrl(
-          Uri.parse('https://pediaid.bridgr.co.in'),
-          mode: LaunchMode.externalApplication,
-        ),
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: cs.primaryContainer.withValues(alpha: 0.35),
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: cs.primary.withValues(alpha: 0.25)),
-          ),
-          child: Row(
-            children: [
-              Container(
-                width: 42,
-                height: 42,
-                decoration: BoxDecoration(
-                  color: cs.primary,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Icon(
-                  Icons.language_rounded,
-                  color: Colors.white,
-                  size: 22,
-                ),
-              ),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'More features on the Web App',
-                      style: GoogleFonts.plusJakartaSans(
-                        fontSize: 13.5,
-                        fontWeight: FontWeight.w700,
-                        color: cs.onSurface,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      'Drug formulary, dose calculators & more at pediaid.bridgr.co.in',
-                      style: GoogleFonts.plusJakartaSans(
-                        fontSize: 11.5,
-                        color: cs.onSurface.withValues(alpha: 0.6),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Icon(Icons.open_in_new_rounded, size: 16, color: cs.primary),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   // ── Welcome banner (below AppBar, in scroll body) ────────────────────────
 
   Widget _buildWelcomeBanner(BuildContext context, bool isDark) {
@@ -957,18 +916,21 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(
-                        Icons.wb_sunny_outlined,
+                      Icon(
+                        _greetingIcon,
                         color: Colors.white,
                         size: 12,
                       ),
                       const SizedBox(width: 5),
-                      Text(
-                        _greeting,
-                        style: GoogleFonts.plusJakartaSans(
-                          color: Colors.white,
-                          fontSize: 11,
-                          fontWeight: FontWeight.w500,
+                      Flexible(
+                        child: Text(
+                          _greetingLine(context),
+                          overflow: TextOverflow.ellipsis,
+                          style: GoogleFonts.plusJakartaSans(
+                            color: Colors.white,
+                            fontSize: 11,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
                     ],
@@ -1099,14 +1061,14 @@ class _HomeScreenState extends State<HomeScreen> {
     final cards = [
       _FeatureDef(
         'Calculators & Tools',
-        'Calc · BP · Bili · More',
+        'Neonatal & paediatric · 80+ tools',
         Icons.calculate_rounded,
         const Color(0xFF1565C0),
-        () => open('allcalc', 'Calculators', () => const CalculatorsScreen()),
+        () => open('allcalc', 'Calculators', () => const CalculatorsHubScreen()),
       ),
       _FeatureDef(
         'Charts',
-        'Growth · Fenton · IAP',
+        'Growth · BP · Bilirubin · Fenton',
         Icons.show_chart_rounded,
         const Color(0xFF6A1B9A),
         () => open('growth', 'Charts', () => const GrowthChartsScreen()),
@@ -1128,33 +1090,26 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       _FeatureDef(
-        'Lab Reference',
-        'Harriet Lane values',
-        Icons.biotech_rounded,
-        const Color(0xFF00838F),
-        () => open('labref', 'Lab Reference', () => const LabReferenceScreen()),
-      ),
-      _FeatureDef(
-        'Guides',
-        'Fetal Dev · Protocols',
+        'Guides & Scores',
+        'Protocols, algorithms & 110 scores',
         Icons.menu_book_outlined,
         const Color(0xFF6D4C41),
-        () => open('guides', 'Guides', () => const GuidesScreen()),
-      ),
-      _FeatureDef(
-        'CME & Webinars',
-        'Conferences · Webinars',
-        Icons.event_note_rounded,
-        const Color(0xFF7B1FA2),
-        () => open('cme', 'CME & Webinars', () => const CmeScreen()),
+        () => open('guides', 'Guides & Scores', () => const GuidesScreen()),
       ),
       _FeatureDef(
         'Academics',
-        'Trials, CME & guidelines',
+        'Trials · IAP · NNF',
         Icons.auto_stories_rounded,
         const Color(0xFF283593),
         () => open('academics', 'Academics', () => const AcademicsWebScreen()),
         highlight: true,
+      ),
+      _FeatureDef(
+        'CME & Webinars',
+        'Find & post events',
+        Icons.event_note_rounded,
+        const Color(0xFF7B1FA2),
+        () => open('cme', 'CME & Webinars', () => const CmeScreen()),
       ),
       _FeatureDef(
         'Never Again',
@@ -1164,22 +1119,43 @@ class _HomeScreenState extends State<HomeScreen> {
         () => open('neveragain', 'Never Again', () => const NeverAgainScreen()),
       ),
       _FeatureDef(
+        'Immunisation',
+        'IAP · National (NIS) · Catch-up',
+        Icons.vaccines_rounded,
+        const Color(0xFF00897B),
+        () => open('immunisation', 'Immunisation',
+            () => const ImmunisationHubScreen()),
+      ),
+      _FeatureDef(
+        'Lab Reference',
+        'Normal values by system',
+        Icons.biotech_rounded,
+        const Color(0xFF00838F),
+        () => open('labref', 'Lab Reference', () => const LabReferenceScreen()),
+      ),
+      _FeatureDef(
         'Resources',
-        'Charts · scores · templates',
+        'Guidelines, links & downloads',
         Icons.download_rounded,
         const Color(0xFFAD1457),
         () => open('resources', 'Resources', () => const ResourcesScreen()),
       ),
     ];
 
+    // Phone-width check drives the card height below.
+    final isPhone = MediaQuery.of(context).size.width < 600;
+
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         crossAxisSpacing: 12,
         mainAxisSpacing: 12,
-        childAspectRatio: 1.55,
+        // Shorter cards on a phone: 10 tiles at 136pt pushed Resources three
+        // scrolls down. 116 fits two more rows in the same first screen while
+        // still clearing the icon + two-line subtitle.
+        mainAxisExtent: isPhone ? 116 : 136,
       ),
       itemCount: cards.length,
       itemBuilder: (_, i) {
@@ -1270,14 +1246,27 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // ── Quick chips ───────────────────────────────────────────────────────────
 
+  /// Resolve a Quick Access key to something renderable. Module keys come
+  /// from the hand-written table; anything else is one of the ~160 tools in
+  /// [ToolRegistry], so a pinned calculator or score renders and navigates
+  /// exactly like a module chip.
+  _ChipDef? _chipFor(String key) {
+    for (final c in _allChips) {
+      if (c.key == key) return c;
+    }
+    final t = ToolRegistry.instance.byKey(key);
+    return t == null ? null : _ChipDef(t.key, t.label, t.icon);
+  }
+
   Widget _buildQuickChips(BuildContext context, ColorScheme cs, bool isDark) {
     final chipBg = isDark ? AppTheme.dCard : Colors.white;
     final chipBorder = isDark ? AppTheme.dBorder : const Color(0xFFCBD8EB);
 
+    // Driven by _selectedKeys (not _allChips) so pinned tools appear in the
+    // order the user added them, and unknown keys drop out silently.
     // Formulary chip shows on iOS too — see the Drug Formulary card comment.
-    final visible = _allChips
-        .where((c) => _selectedKeys.contains(c.key))
-        .toList();
+    final visible =
+        _selectedKeys.map(_chipFor).whereType<_ChipDef>().toList();
 
     if (visible.isEmpty) {
       return Padding(
@@ -1385,10 +1374,25 @@ class _HomeScreenState extends State<HomeScreen> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       builder: (ctx) {
+        final sheetSearch = TextEditingController();
+        var sheetQuery = '';
         return StatefulBuilder(
           builder: (ctx, setLocal) {
             final cs = Theme.of(ctx).colorScheme;
             final maxH = MediaQuery.of(ctx).size.height * 0.85;
+            final q = sheetQuery.trim().toLowerCase();
+            final matchingModules = q.isEmpty
+                ? _allChips
+                : _allChips
+                    .where((c) => c.label.toLowerCase().contains(q))
+                    .toList();
+            // Unsearched, the full 163-tool list would bury the modules, so
+            // only already-pinned tools show until the doctor types.
+            final matchingTools = q.isEmpty
+                ? ToolRegistry.instance.all
+                    .where((t) => _selectedKeys.contains(t.key))
+                    .toList()
+                : ToolRegistry.instance.search(q);
             return ConstrainedBox(
               constraints: BoxConstraints(maxHeight: maxH),
               child: Padding(
@@ -1424,19 +1428,30 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Select which shortcuts appear on your home screen.',
+                      'Pin any module, calculator or score to your home '
+                      'screen.',
                       style: GoogleFonts.plusJakartaSans(
                         fontSize: 12,
                         color: cs.onSurface.withValues(alpha: 0.5),
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 10),
+                    ListSearchField(
+                      controller: sheetSearch,
+                      hintText:
+                          'Search ${_allChips.length + ToolRegistry.instance.all.length} shortcuts…',
+                      onChanged: (v) => setLocal(() => sheetQuery = v),
+                      padding: const EdgeInsets.only(bottom: 8),
+                    ),
+                    const SizedBox(height: 2),
                     Flexible(
                       child: ListView(
                         shrinkWrap: true,
                         padding: const EdgeInsets.only(bottom: 8),
                         children: [
-                          for (final chip in _allChips)
+                          if (matchingModules.isNotEmpty)
+                            _SheetSectionLabel('Modules', cs),
+                          for (final chip in matchingModules)
                             Builder(
                               builder: (_) {
                                 final selected = _selectedKeys.contains(
@@ -1487,6 +1502,61 @@ class _HomeScreenState extends State<HomeScreen> {
                                 );
                               },
                             ),
+                          if (matchingTools.isNotEmpty) ...[
+                            const SizedBox(height: 6),
+                            _SheetSectionLabel(
+                                'Calculators & Scores', cs),
+                          ],
+                          for (final tool in matchingTools)
+                            CheckboxListTile(
+                              value: _selectedKeys.contains(tool.key),
+                              onChanged: (v) {
+                                setLocal(() {
+                                  if (v == true) {
+                                    _selectedKeys.add(tool.key);
+                                  } else {
+                                    _selectedKeys.remove(tool.key);
+                                  }
+                                });
+                                setState(() {});
+                                _savePrefs();
+                              },
+                              secondary: Container(
+                                width: 36,
+                                height: 36,
+                                decoration: BoxDecoration(
+                                  color: cs.primary.withValues(alpha: 0.10),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Icon(tool.icon,
+                                    size: 19, color: cs.primary),
+                              ),
+                              title: Text(
+                                tool.label,
+                                style: GoogleFonts.plusJakartaSans(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: cs.onSurface,
+                                ),
+                              ),
+                              subtitle: Text(
+                                tool.subtitle,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: GoogleFonts.plusJakartaSans(
+                                  fontSize: 11.5,
+                                  color:
+                                      cs.onSurface.withValues(alpha: 0.55),
+                                ),
+                              ),
+                              controlAffinity:
+                                  ListTileControlAffinity.trailing,
+                              contentPadding: EdgeInsets.zero,
+                            ),
+                          if (matchingModules.isEmpty &&
+                              matchingTools.isEmpty)
+                            ListSearchEmptyState(
+                                query: sheetSearch.text, noun: 'shortcuts'),
                         ],
                       ),
                     ),
@@ -1535,7 +1605,7 @@ class _HomeScreenState extends State<HomeScreen> {
       'vent': () => const VentilatorParameters(),
       'nutri': () => const NutritionalAuditCalculator(),
       'dve': () => const DoubleVolumeExchange(),
-      'allcalc': () => const CalculatorsScreen(),
+      'allcalc': () => const CalculatorsHubScreen(),
       'growth': () => const GrowthChartsScreen(),
       'devmile': () => const DevMilestonesHub(),
       'tdsc': () => const TdscAssistantScreen(),
@@ -1547,7 +1617,20 @@ class _HomeScreenState extends State<HomeScreen> {
       'resources': () => const ResourcesScreen(),
     };
     final builder = routes[key];
-    if (builder == null) return;
+    if (builder == null) {
+      // Not a module — resolve it as one of the ~160 registered tools.
+      final tool = ToolRegistry.instance.byKey(key);
+      if (tool == null) return;
+      // ignore: unawaited_futures
+      RecentsService.instance.record(key, tool.label);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => ToolGate(toolId: key, child: tool.build()),
+        ),
+      );
+      return;
+    }
     // Record into Recents using the chip's display label.
     final chip = _allChips.firstWhere(
       (c) => c.key == key,
@@ -1996,7 +2079,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     await launchUrl(
                       Uri.parse(
                         Platform.isIOS
-                            ? 'https://apps.apple.com/app/id6748139585?action=write-review'
+                            ? 'https://apps.apple.com/app/id6777623709?action=write-review'
                             : 'https://play.google.com/store/apps/details'
                                 '?id=com.pediaid.pediaid',
                       ),
@@ -2009,11 +2092,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   label: 'Share with Colleagues',
                   onTap: () {
                     Navigator.pop(context);
-                    Share.share(
-                      'Check out PediAid — a free paediatric & neonatal clinical reference app for drug doses, calculators, and growth charts.\n\n'
-                      '📱 iOS: https://apps.apple.com/app/id6748139585\n'
-                      '🤖 Android: https://play.google.com/store/apps/details?id=com.pediaid.pediaid',
-                    );
+                    Share.share(kShareMessage, subject: kShareSubject);
                   },
                 ),
                 _DrawerItem(
@@ -2102,6 +2181,27 @@ class _FeatureDef {
     this.onTap, {
     this.highlight = false,
   });
+}
+
+/// Group heading inside the Quick Access sheet.
+class _SheetSectionLabel extends StatelessWidget {
+  const _SheetSectionLabel(this.text, this.cs);
+  final String text;
+  final ColorScheme cs;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.fromLTRB(2, 6, 0, 2),
+        child: Text(
+          text.toUpperCase(),
+          style: GoogleFonts.plusJakartaSans(
+            fontSize: 11,
+            fontWeight: FontWeight.w800,
+            letterSpacing: 1.1,
+            color: cs.primary,
+          ),
+        ),
+      );
 }
 
 class _ChipDef {
@@ -2361,9 +2461,7 @@ class _PlatformNoticeBoxes extends StatelessWidget {
       icon: Icons.apple_rounded,
       accent: const Color(0xFF1565C0),
       title: 'iPhone / iPad?',
-      line:
-          'Use this web version — it has everything. '
-          'The iOS app is limited by App Store rules.',
+      line: 'Use this web version — it has everything.',
     );
     final android = _NoticeBox(
       icon: Icons.android_rounded,
@@ -2374,28 +2472,19 @@ class _PlatformNoticeBoxes extends StatelessWidget {
           launchUrl(Uri.parse(_playUrl), mode: LaunchMode.externalApplication),
     );
 
-    return LayoutBuilder(
-      builder: (context, box) {
-        if (box.maxWidth >= 640) {
-          // IntrinsicHeight, not CrossAxisAlignment.stretch: this sits in a
-          // scrollable Column, so a stretching Row asks for unbounded height
-          // and throws — taking the whole home grid down with it.
-          return IntrinsicHeight(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Expanded(child: apple),
-                const SizedBox(width: 12),
-                Expanded(child: android),
-              ],
-            ),
-          );
-        }
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [apple, const SizedBox(height: 10), android],
-        );
-      },
+    // Always side-by-side (iPhone | Android), including on phones — requested.
+    // IntrinsicHeight (not CrossAxisAlignment.stretch) because this sits in a
+    // scrollable Column, where a stretching Row asks for unbounded height and
+    // throws, taking the whole home grid down with it.
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(child: apple),
+          const SizedBox(width: 10),
+          Expanded(child: android),
+        ],
+      ),
     );
   }
 }
@@ -2425,22 +2514,22 @@ class _NoticeBox extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(14),
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 8),
           decoration: BoxDecoration(
             border: Border.all(color: accent.withValues(alpha: 0.35)),
             borderRadius: BorderRadius.circular(14),
           ),
           child: Row(
             children: [
-              Icon(icon, size: 22, color: accent),
-              const SizedBox(width: 10),
+              Icon(icon, size: 17, color: accent),
+              const SizedBox(width: 8),
               Expanded(
                 child: RichText(
                   text: TextSpan(
                     style: GoogleFonts.plusJakartaSans(
-                      fontSize: 12.5,
-                      height: 1.4,
-                      color: cs.onSurface.withValues(alpha: 0.85),
+                      fontSize: 10.5,
+                      height: 1.3,
+                      color: cs.onSurface.withValues(alpha: 0.8),
                     ),
                     children: [
                       TextSpan(

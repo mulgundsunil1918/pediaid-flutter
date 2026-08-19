@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../../widgets/skeleton.dart';
 import '../../services/lab_reference_service.dart';
 import 'lab_system_screen.dart';
 import 'lab_item_detail_screen.dart';
@@ -100,7 +102,7 @@ class _LabReferenceScreenState extends State<LabReferenceScreen> {
         ),
       ),
       body: !_svc.isLoaded
-          ? Center(child: CircularProgressIndicator(color: cs.primary))
+          ? const SkeletonList(items: 8)
           : _query.isNotEmpty
               ? _buildSearchResults()
               : _buildSystemGrid(),

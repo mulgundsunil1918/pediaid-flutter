@@ -34,9 +34,11 @@ import 'package:crypto/crypto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:http/http.dart' as http;
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import '../firebase_options.dart';
 import '../models/app_user.dart';
+import 'auth_service.dart';
 
 bool get _isDesktop =>
     !kIsWeb &&
@@ -164,11 +166,39 @@ class FirebaseAuthService {
       nonce: hashedNonce, // HASHED goes to Apple
     );
 
-    final oauthCred = OAuthProvider('apple.com').credential(
-      idToken: appleCredential.identityToken,
-      rawNonce: rawNonce, // RAW goes to Firebase
+    // ── The Flutter firebase_auth SDK mishandles the Apple credential here ────
+    // signInWithCredential(OAuthProvider('apple.com')…) makes Firebase attempt a
+    // server-side authorization-code exchange with Apple that it then rejects as
+    // "invalid-credential / Invalid OAuth response from apple.com" — even though
+    // the identity token is valid. Proven on a real device: the raw REST
+    // signInWithIdp call accepts the identical token and returns a full session,
+    // while the SDK rejects it in the same breath.
+    //
+    // So the backend runs that same working REST call and mints a Firebase
+    // custom token, and we finish with signInWithCustomToken() — a clean SDK
+    // path that never touches Apple OAuth, so the broken exchange never happens.
+    final idToken = appleCredential.identityToken;
+    if (idToken == null || idToken.isEmpty) {
+      throw FirebaseAuthException(
+        code: 'invalid-credential',
+        message: 'Apple did not return an identity token.',
+      );
+    }
+
+    final resp = await http.post(
+      Uri.parse('${AuthService.apiBase}/api/academics/auth/apple-native'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'identityToken': idToken, 'rawNonce': rawNonce}),
     );
-    final cred = await _auth.signInWithCredential(oauthCred);
+    if (resp.statusCode != 200) {
+      throw FirebaseAuthException(
+        code: 'invalid-credential',
+        message: 'Apple sign-in could not be completed (${resp.statusCode}).',
+      );
+    }
+    final customToken =
+        (jsonDecode(resp.body) as Map<String, dynamic>)['customToken'] as String;
+    final cred = await _auth.signInWithCustomToken(customToken);
     return _afterAppleSignIn(
       cred,
       // Apple returns the name only on the very first grant, and only to the

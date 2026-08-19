@@ -16,6 +16,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../widgets/list_search_field.dart';
+
 const String _kAll = 'All';
 const String _kGrowthCharts = 'Growth Charts';
 const String _kBpCharts = 'BP Charts';
@@ -29,11 +31,14 @@ const String _kQuickRef = 'Quick Reference';
 const String _kGuidelines = 'Guidelines';
 const String _kTeaching = 'Teaching Templates';
 const String _kNutrition = 'Nutrition';
+const String _kDrugs = 'Drug References';
+const String _kCommunity = 'Community Paediatrics';
+const String _kExam = 'Exam & Viva';
 
 const List<String> _kCategories = [
   _kAll, _kGrowthCharts, _kBpCharts, _kJaundice, _kScoring, _kNeuro,
   _kVaccination, _kEcho, _kVentilation, _kQuickRef, _kGuidelines,
-  _kTeaching, _kNutrition,
+  _kTeaching, _kNutrition, _kDrugs, _kCommunity, _kExam,
 ];
 
 const Map<String, IconData> _kCategoryIcons = {
@@ -49,6 +54,9 @@ const Map<String, IconData> _kCategoryIcons = {
   _kGuidelines: Icons.rule_rounded,
   _kTeaching: Icons.description_rounded,
   _kNutrition: Icons.restaurant_rounded,
+  _kDrugs: Icons.medication_rounded,
+  _kCommunity: Icons.groups_rounded,
+  _kExam: Icons.school_rounded,
 };
 
 class ResourceItem {
@@ -109,6 +117,28 @@ const List<ResourceItem> kResourceItems = [
   ResourceItem(title: 'Growing Preterm Case Proforma', filename: 'Growing Preterm Case Proforma Sunil.pdf', driveId: '1y-pb-PoXVDb1kxo6EGYtOU7RkpvRVbkC', category: _kTeaching),
 
   ResourceItem(title: 'Nutritional Audit in Preterm Babies', filename: 'Nutritional Audit in Preterm babies.xlsx', driveId: '1TyyGLgEr0cAUfYwCZJ6lRQRf7sy37nN7', category: _kNutrition),
+
+  // ── Added 2026-08-19 from the shared Drive folder ──────────────────────
+  ResourceItem(title: 'BLS & Choking Algorithms', filename: 'BLS and CHOKING.pdf', driveId: '146RHWabJWdl6gyTJ5ZFWdRSOuFz8ViCI', category: _kGuidelines),
+  ResourceItem(title: 'NRP 9th Edition Manual', filename: 'NRP 9th edition.pdf', driveId: '1zgi3OyKiBIg4Z-lBYZya4fRaVeIOjyW6', category: _kGuidelines),
+  ResourceItem(title: 'PALS Algorithms 2020', filename: 'PALS-Algorithms-2020.pdf', driveId: '1F_0BTUc9BbU2C1Ef1JB41TLsvFH7-KBB', category: _kGuidelines),
+  ResourceItem(title: 'NeoFax (Nov 2024)', filename: 'NEOFAX NOV. 2024.pdf', driveId: '1n-zeI8Duyn3cl-xOVPW03Vs203Djg2ro', category: _kDrugs),
+  ResourceItem(title: 'Frank Shann Drug Doses (2017)', filename: 'Drug_Dose_Frank_Shann_2017_pdf.pdf', driveId: '1tcJRA5e89lZSQhuqLJPbPxzEFX1O_FpY', category: _kDrugs),
+  ResourceItem(title: 'Immunisation in Special Situations', filename: 'IMMUNIZATION  IN SPECIAL SITUATIONS..pptx', driveId: '10QcNd5CZm61lsZgzHdNHuwlCffH8VkPT', category: _kVaccination),
+  ResourceItem(title: 'Paediatric Nutrition', filename: 'PEDIATRIC NUTRITION .pdf', driveId: '13m-w6J6__1y545j_OYE4jVckRak5qYSj', category: _kNutrition),
+  ResourceItem(title: 'Nutritive Value of Common Foods', filename: 'NUTRITIVE VALUE OF COMMON FOODS.pptx', driveId: '1vVm6Yw0Em9tQSvRQjNwqcObXH3ltn8EV', category: _kNutrition),
+  ResourceItem(title: 'Cerebral Palsy Case Presentation', filename: 'Cerebral palsy case presentation notes.pdf', driveId: '1KROf-QRzkIJ1HX9MG9Ov0zwlL3Q8zT66', category: _kTeaching),
+  ResourceItem(title: 'Paediatric Case Format', filename: 'Pedia format.pdf', driveId: '1asI_XR4olS6QDeVLs0nVBd0c0Epe2cOT', category: _kTeaching),
+  ResourceItem(title: 'Social Paediatrics', filename: 'Social pediatrics.pdf', driveId: '1H8BPF06HeDC8Vhl3WkQV1snJq7FyS5tF', category: _kCommunity),
+  ResourceItem(title: 'National Health Programmes — Brief Notes', filename: 'BRIEF NOTES ON NATIONAL HEALTH PROGRAMS.pdf', driveId: '1cVxtjNFLLETB6CItJ6t_S2nK7CFMqQOt', category: _kCommunity),
+  ResourceItem(title: 'Sankalan — National Health Programmes Handbook', filename: 'Sankalan-National Health Programmes Handbook.pdf', driveId: '1HQXZ951u2v7tGnVTkXToGo5gotXKAbS8', category: _kCommunity),
+  ResourceItem(title: 'NNF Fellowship Question Bank (to 2026)', filename: 'NNF Fellowship All QBANK till 2026.pdf', driveId: '1SCrguB_n4S8VV0LUUjvXjwBzTuRfEsZN', category: _kExam),
+  ResourceItem(title: 'MD Paediatrics Question Paper Compilation', filename: 'M.D., Peds Qn. Paper Compilation.pdf', driveId: '1l7s9uso3GQu2L75ozx3K_QY1L1KZDyV_', category: _kExam),
+  ResourceItem(title: 'System-wise Question Bank', filename: 'Systemwise question bank-1-1.pdf (1).pdf', driveId: '18RKkAjF0tadrYsfDAUPPsW14xIih540x', category: _kExam),
+  ResourceItem(title: 'Instruments Viva', filename: 'INSTRUMENTS VIVA.pptx', driveId: '12vLfM3D1whyNyHuY_M8qPMX9CGjGXj9A', category: _kExam),
+  ResourceItem(title: 'Instruments Reference', filename: 'Instruments.pdf', driveId: '1WTgyAYQh07h-dZSvSBEMFy71nJQH_ETj', category: _kExam),
+  ResourceItem(title: 'Final Year X-Ray Viva', filename: 'final year X rays viva-1.pptx', driveId: '1rdpM0Mio1WKpN1FKg0KecBBke9HDHIw0', category: _kExam),
+  ResourceItem(title: 'X-Ray Viva — PG', filename: 'xray-pg.pptx', driveId: '1XgQ_iZh0z8xK5U-cSi9AusWVPThiVzGj', category: _kExam),
 ];
 
 class ResourcesScreen extends StatefulWidget {
@@ -120,10 +150,31 @@ class ResourcesScreen extends StatefulWidget {
 
 class _ResourcesScreenState extends State<ResourcesScreen> {
   String _selected = _kAll;
+  final TextEditingController _searchCtl = TextEditingController();
+  String _query = '';
 
-  List<ResourceItem> get _filtered => _selected == _kAll
-      ? kResourceItems
-      : kResourceItems.where((r) => r.category == _selected).toList();
+  @override
+  void dispose() {
+    _searchCtl.dispose();
+    super.dispose();
+  }
+
+  /// A query searches every resource, not just the selected chip's — a hit
+  /// hidden behind an unrelated chip reads as "not in the app".
+  List<ResourceItem> get _filtered {
+    final q = _query.trim().toLowerCase();
+    if (q.isNotEmpty) {
+      return kResourceItems
+          .where((r) =>
+              r.title.toLowerCase().contains(q) ||
+              r.filename.toLowerCase().contains(q) ||
+              r.category.toLowerCase().contains(q))
+          .toList();
+    }
+    return _selected == _kAll
+        ? kResourceItems
+        : kResourceItems.where((r) => r.category == _selected).toList();
+  }
 
   int _countFor(String category) {
     if (category == _kAll) return kResourceItems.length;
@@ -179,12 +230,26 @@ class _ResourcesScreenState extends State<ResourcesScreen> {
                     _CategoryChipBar(
                       categories: _kCategories,
                       selected: _selected,
+                      onSelect: (c) => setState(() {
+                        _selected = c;
+                        _query = '';
+                        _searchCtl.clear();
+                      }),
                       countFor: _countFor,
-                      onSelect: (c) => setState(() => _selected = c),
+                    ),
+                    ListSearchField(
+                      controller: _searchCtl,
+                      hintText:
+                          'Search ${kResourceItems.length} resources…',
+                      onChanged: (v) => setState(() => _query = v),
+                      padding: const EdgeInsets.fromLTRB(14, 2, 14, 6),
                     ),
                     Expanded(
                       child: filtered.isEmpty
-                          ? const _EmptyState()
+                          ? (_query.trim().isEmpty
+                              ? const _EmptyState()
+                              : ListSearchEmptyState(
+                                  query: _searchCtl.text, noun: 'resources'))
                           : GridView.builder(
                               padding: const EdgeInsets.fromLTRB(14, 4, 14, 14),
                               itemCount: filtered.length,

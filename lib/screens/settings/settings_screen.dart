@@ -19,6 +19,8 @@
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+
+import '../../utils/share_message.dart';
 import '../../utils/support_contact.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -357,12 +359,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Future<void> _shareApp() async {
     try {
       // ignore: deprecated_member_use
-      await Share.share(
-        'PediAid — paediatric & neonatal clinical reference. '
-        'Calculators, growth charts, drug formulary, NICE & AAP bilirubin '
-        'pathways, IAP STG and more. $_kPlayStoreUrl',
-        subject: 'PediAid — clinical reference for paediatricians',
-      );
+      await Share.share(kShareMessage, subject: kShareSubject);
     } catch (e) {
       if (mounted) _toast(friendlyError(e));
     }

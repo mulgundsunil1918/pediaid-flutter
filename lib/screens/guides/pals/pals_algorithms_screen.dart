@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../../../widgets/list_search_field.dart';
 import 'pals_pdf_viewer.dart';
 
 // ── Algorithm list ─────────────────────────────────────────────────────────────
@@ -24,11 +26,32 @@ const List<_Algorithm> _algorithms = [
 
 // ── Screen ─────────────────────────────────────────────────────────────────────
 
-class PalsAlgorithmsScreen extends StatelessWidget {
+class PalsAlgorithmsScreen extends StatefulWidget {
   const PalsAlgorithmsScreen({super.key});
 
   @override
+  State<PalsAlgorithmsScreen> createState() => _PalsAlgorithmsScreenState();
+}
+
+class _PalsAlgorithmsScreenState extends State<PalsAlgorithmsScreen> {
+  final TextEditingController _searchCtl = TextEditingController();
+  String _query = '';
+
+  @override
+  void dispose() {
+    _searchCtl.dispose();
+    super.dispose();
+  }
+
+  List<_Algorithm> get _visible {
+    final q = _query.trim().toLowerCase();
+    if (q.isEmpty) return _algorithms;
+    return _algorithms.where((a) => a.name.toLowerCase().contains(q)).toList();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final visible = _visible;
     final cs     = Theme.of(context).colorScheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
@@ -65,17 +88,27 @@ class PalsAlgorithmsScreen extends StatelessWidget {
               ),
             ),
 
+            ListSearchField(
+              controller: _searchCtl,
+              hintText: 'Search ${_algorithms.length} PALS algorithms…',
+              onChanged: (v) => setState(() => _query = v),
+              padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
+            ),
+
             // ── List ────────────────────────────────────────────────────
             Expanded(
-              child: ListView.separated(
+              child: visible.isEmpty
+                  ? ListSearchEmptyState(
+                      query: _searchCtl.text, noun: 'algorithms')
+                  : ListView.separated(
                 padding: const EdgeInsets.fromLTRB(16, 10, 16, 24),
-                itemCount: _algorithms.length,
+                itemCount: visible.length,
                 separatorBuilder: (_, __) => const SizedBox(height: 6),
                 itemBuilder: (context, i) {
-                  final algo = _algorithms[i];
+                  final algo = visible[i];
                   return _AlgoTile(
                     algo: algo,
-                    index: i,
+                    index: _algorithms.indexOf(algo),
                     cs: cs,
                     isDark: isDark,
                     onTap: () => Navigator.push(

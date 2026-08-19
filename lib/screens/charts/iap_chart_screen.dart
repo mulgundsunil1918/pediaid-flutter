@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../widgets/pediaid_loader.dart';
 
 class IAPChartScreen extends StatefulWidget {
   const IAPChartScreen({super.key});
@@ -133,29 +134,8 @@ class _IAPChartScreenState extends State<IAPChartScreen> {
             },
           ),
           if (_isLoading)
-            Container(
-              color: bgColor,
-              child: Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    CircularProgressIndicator(
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      'Loading IAP Charts...',
-                      style: TextStyle(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withValues(alpha: 0.6),
-                        fontSize: 14,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+            const Positioned.fill(
+              child: PediAidLoader(message: 'Preparing IAP growth charts'),
             ),
         ],
       ),

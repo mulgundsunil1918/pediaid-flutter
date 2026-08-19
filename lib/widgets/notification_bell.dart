@@ -12,6 +12,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../academics/academics_web_screen.dart';
 import '../services/auth_service.dart';
 import '../services/notifications_service.dart';
 
@@ -229,10 +230,18 @@ class _NotificationSheetState extends State<_NotificationSheet> {
     }
   }
 
-  Future<void> _markOne(PediaidNotification n) async {
-    if (n.isRead) return;
-    try {
-      await NotificationsService.instance.markRead(n.id);
+  /// Tapping a notification marks it read AND opens whatever it points to —
+  /// a trial, guideline note, CME event, never-again post, anything with a
+  /// linkPath. Same target-resolution as the native push handler, so the
+  /// notification-centre tap and the in-app panel tap land in the same place.
+  void _openNotification(PediaidNotification n) {
+    // Mark read (best-effort, non-blocking) and update the row locally. A
+    // failed mark-read must not stop the item from opening.
+    if (!n.isRead) {
+      NotificationsService.instance
+          .markRead(n.id)
+          .then((_) => widget.onChanged())
+          .catchError((_) {});
       setState(() {
         _items = _items
             .map((x) => x.id == n.id
@@ -249,10 +258,22 @@ class _NotificationSheetState extends State<_NotificationSheet> {
             .toList();
         _unread = (_unread - 1).clamp(0, _unread);
       });
-      await widget.onChanged();
-    } catch (_) {
-      // ignore
     }
+
+    final link = n.linkPath?.trim() ?? '';
+    if (link.isEmpty) return; // notification has nothing to open
+
+    // Close the sheet, then open the target on the root navigator.
+    final rootNav = Navigator.of(context, rootNavigator: true);
+    Navigator.of(context).pop();
+    // linkPath is an absolute web path (e.g. /academics/trials/x/y or
+    // /academics/guideline-notes/z). AcademicsWebScreen's base already ends in
+    // /academics, so strip that prefix to avoid /academics/academics.
+    var rel = link.startsWith('/academics')
+        ? link.substring('/academics'.length)
+        : link;
+    if (rel.isEmpty) rel = '/';
+    rootNav.push(MaterialPageRoute(builder: (_) => AcademicsWebScreen(path: rel)));
   }
 
   @override
@@ -377,7 +398,7 @@ class _NotificationSheetState extends State<_NotificationSheet> {
                         final n = _items[i];
                         return _NotificationRow(
                           notification: n,
-                          onTap: () => _markOne(n),
+                          onTap: () => _openNotification(n),
                         );
                       },
                     ),

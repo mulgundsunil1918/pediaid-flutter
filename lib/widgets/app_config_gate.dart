@@ -70,7 +70,7 @@ class _AppConfigGateState extends State<AppConfigGate> {
 String? _updateUrl(String? noticeUrl) {
   const play =
       'https://play.google.com/store/apps/details?id=com.pediaid.pediaid';
-  const appStore = 'https://apps.apple.com/app/id6748139585';
+  const appStore = 'https://apps.apple.com/app/id6777623709';
 
   if (!kIsWeb) {
     if (Platform.isAndroid) return play;

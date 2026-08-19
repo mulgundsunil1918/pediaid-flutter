@@ -66,11 +66,10 @@ import 'screens/charts/iap_chart_screen.dart';
 import 'screens/charts/fenton_chart_screen.dart';
 
 import 'screens/formulary/formulary_screen.dart';
-import 'screens/formulary_v2/formulary_v2_hub.dart';
 
 import 'screens/guides/fetal_development_screen.dart';
 import 'screens/guides/nrp_pdf_viewer.dart';
-import 'screens/vaccines/vaccine_screen.dart';
+import 'screens/vaccines/immunisation_hub_screen.dart';
 import 'screens/guides/neonatal_scores/neonatal_scores_screen.dart';
 import 'screens/guides/modified_ballard_screen.dart';
 import 'screens/guides/pals/pals_algorithms_screen.dart';
@@ -130,11 +129,13 @@ final Map<String, WidgetBuilder> deepLinkRoutes = {
   'fenton-growth-chart': (_) => const FentonChartScreen(),
 
   'pediatric-drug-formulary': (_) => const FormularyScreen(),
-  'drug-formulary-v2': (_) => const FormularyV2Hub(),
+  // Drug 2.0 is hidden for now — keep the old deep-link working by pointing it
+  // at the book-based formulary instead of the (unreferenced) v2 hub.
+  'drug-formulary-v2': (_) => const FormularyScreen(),
 
   'fetal-development-week-by-week': (_) => const FetalDevelopmentScreen(),
   'nrp-algorithm-neonatal-resuscitation': (_) => const NrpPdfViewer(),
-  'iap-immunization-schedule': (_) => const VaccineScreen(),
+  'iap-immunization-schedule': (_) => const ImmunisationHubScreen(),
   'neonatal-scoring-systems': (_) => const NeonatalScoresScreen(),
   'nichd-hie-assessment-tool': (_) => const NeonatalScoresScreen(),
   'modified-ballard-score-calculator': (_) => const ModifiedBallardScreen(),

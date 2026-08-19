@@ -1,18 +1,24 @@
 // =============================================================================
 // lib/screens/formulary/drug_pdf_viewer_screen.dart
 //
-// Opens a NEOFAX or Harriet Lane drug PDF at a specific page. On mobile
-// + desktop uses syncfusion_flutter_pdfviewer for fast inline rendering
-// with page snapping. On Flutter web both PDFs are tens of megabytes
-// and SfPdfViewer on canvaskit chokes trying to render them — we bounce
-// the user straight into the browser's native PDF viewer via
-// url_launcher, deep-linked to the exact drug page with a #page=N
-// fragment (supported by Chrome, Edge, Firefox).
+// Shows a NEOFAX or Harriet Lane drug at its exact page.
+//
+// Native (Android/iOS/desktop): syncfusion_flutter_pdfviewer renders the
+// bundled PDF inline, opened at the drug's page — works offline.
+//
+// Web: the full books are multi-megabyte and SfPdfViewer chokes on canvaskit,
+// so instead we show ONLY that drug's page as a pre-rendered image
+// (`/drug-pages/{book}/{page}.webp`, ~150 KB) inline with pinch-zoom — the
+// whole book never downloads. If the image can't load, a button falls back to
+// opening the full PDF at #page=N in the browser's native viewer.
 // =============================================================================
+
+import 'dart:convert';
 
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../services/formulary_service.dart';
@@ -29,11 +35,10 @@ class DrugPdfViewerScreen extends StatefulWidget {
 
 class _DrugPdfViewerScreenState extends State<DrugPdfViewerScreen> {
   final GlobalKey<SfPdfViewerState> _pdfViewerKey = GlobalKey();
-  bool _isLoading = true;
-  bool _webLaunched = false;
-  String? _webError;
+  bool _isLoading = true; // native PDF load state
 
-  bool get _isHarrietLane => widget.entry.source == 'Harriet Lane 2023';
+  bool get _isHarrietLane =>
+      widget.entry.source.toLowerCase().contains('harriet');
 
   Color _appBarColor(BuildContext context) =>
       _isHarrietLane ? const Color(0xFF53D2DC) : Theme.of(context).colorScheme.primary;
@@ -42,45 +47,43 @@ class _DrugPdfViewerScreenState extends State<DrugPdfViewerScreen> {
       ? 'assets/data/formulary/harriet-lane-drug.pdf'
       : 'assets/data/formulary/neofax-nov-2024.pdf';
 
-  @override
-  void initState() {
-    super.initState();
-    if (kIsWeb) {
-      WidgetsBinding.instance.addPostFrameCallback((_) => _launchOnWeb());
-    }
-  }
+  String get _book => _isHarrietLane ? 'harriet' : 'neofax';
 
-  Future<void> _launchOnWeb() async {
+  /// Fallback only: opens the full PDF at the drug's page in the browser's
+  /// native viewer, used if the single-page image fails to load.
+  Future<void> _launchFullPdf() async {
     final base = webAssetUrl(_pdfAsset);
     if (base == null) return;
-    // #page=N makes Chrome/Edge/Firefox open the PDF at the drug's page
-    // instead of page 1.
     final url = '$base#page=${widget.entry.page}';
+    await launchUrl(
+      Uri.parse(url),
+      mode: LaunchMode.externalApplication,
+      webOnlyWindowName: '_blank',
+    );
+  }
+
+  // A monograph can run several pages. spans.json (shipped with the page
+  // images) maps each drug's start page → its last page, so web shows the
+  // whole drug, not just the first page. Cached across viewer opens.
+  static Map<String, dynamic>? _spansCache;
+  static Future<Map<String, dynamic>?>? _spansFuture;
+
+  Future<int> _endPage() async {
+    final start = widget.entry.page;
     try {
-      final ok = await launchUrl(
-        Uri.parse(url),
-        mode: LaunchMode.externalApplication,
-        webOnlyWindowName: '_blank',
-      );
-      if (!ok && mounted) {
-        setState(() {
-          _webError = 'Browser blocked the PDF popup.';
-          _isLoading = false;
-        });
-      } else if (mounted) {
-        setState(() {
-          _webLaunched = true;
-          _isLoading = false;
-        });
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          _webError = e.toString();
-          _isLoading = false;
-        });
-      }
+      _spansFuture ??= http
+          .get(Uri.parse('${Uri.base.origin}/drug-pages/spans.json'))
+          .then((r) => r.statusCode == 200
+              ? jsonDecode(r.body) as Map<String, dynamic>
+              : null);
+      _spansCache ??= await _spansFuture;
+      final book = _spansCache?[_book] as Map<String, dynamic>?;
+      final end = book?['$start'];
+      if (end is num && end.toInt() >= start) return end.toInt();
+    } catch (_) {
+      // Fall back to a single page.
     }
+    return start;
   }
 
   @override
@@ -100,7 +103,7 @@ class _DrugPdfViewerScreenState extends State<DrugPdfViewerScreen> {
               color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
         ),
       ),
-      body: kIsWeb ? _buildWebFallback() : _buildNativeViewer(),
+      body: kIsWeb ? _buildWebPage() : _buildNativeViewer(),
     );
   }
 
@@ -150,60 +153,115 @@ class _DrugPdfViewerScreenState extends State<DrugPdfViewerScreen> {
     );
   }
 
-  Widget _buildWebFallback() {
+  // Web: every page of the drug's monograph, stacked in a scroll.
+  Widget _buildWebPage() {
+    return FutureBuilder<int>(
+      future: _endPage(),
+      builder: (ctx, snap) {
+        if (snap.connectionState != ConnectionState.done) {
+          return Center(
+              child: CircularProgressIndicator(color: _appBarColor(context)));
+        }
+        final end = snap.data ?? widget.entry.page;
+        final pages = [for (var p = widget.entry.page; p <= end; p++) p];
+        return Column(
+          children: [
+            Expanded(
+              child: ColoredBox(
+                color: const Color(0xFFEDEFF3),
+                child: ListView.separated(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  itemCount: pages.length,
+                  separatorBuilder: (_, __) => const SizedBox(height: 10),
+                  itemBuilder: (ctx, i) =>
+                      _webPageImage(pages[i], isFirst: i == 0),
+                ),
+              ),
+            ),
+            _buildBottomStrip(pageCount: pages.length),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _webPageImage(int page, {required bool isFirst}) {
+    final url = '${Uri.base.origin}/drug-pages/$_book/$page.webp';
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 860),
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 8),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.08),
+                blurRadius: 6,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Image.network(
+            url,
+            fit: BoxFit.fitWidth,
+            loadingBuilder: (ctx, child, progress) {
+              if (progress == null) return child;
+              return Container(
+                height: 360,
+                alignment: Alignment.center,
+                child: CircularProgressIndicator(color: _appBarColor(context)),
+              );
+            },
+            // Only the first page failing is worth a full error card; a missing
+            // continuation page just drops out silently.
+            errorBuilder: (ctx, err, st) =>
+                isFirst ? _buildWebImageError() : const SizedBox.shrink(),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildWebImageError() {
     final cs = Theme.of(context).colorScheme;
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(32),
+        padding: const EdgeInsets.all(28),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(Icons.picture_as_pdf_rounded,
-                size: 72, color: _appBarColor(context)),
-            const SizedBox(height: 16),
+                size: 56, color: _appBarColor(context)),
+            const SizedBox(height: 12),
             Text(
-              _webLaunched
-                  ? '${widget.entry.name} opened in a new tab'
-                  : 'Opening ${widget.entry.name}…',
+              "Couldn't load this drug's page.",
               textAlign: TextAlign.center,
               style: GoogleFonts.plusJakartaSans(
-                fontSize: 16,
+                fontSize: 15,
                 fontWeight: FontWeight.w700,
                 color: cs.onSurface,
               ),
             ),
             const SizedBox(height: 6),
             Text(
-              'Page ${widget.entry.page} · ${widget.entry.source}',
-              style: GoogleFonts.plusJakartaSans(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: _appBarColor(context),
-              ),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              _webError ??
-                  "If the tab didn't open, your browser may have blocked the popup.",
+              '${widget.entry.name} · page ${widget.entry.page} · ${widget.entry.source}',
               textAlign: TextAlign.center,
               style: GoogleFonts.plusJakartaSans(
                 fontSize: 12,
                 color: cs.onSurface.withValues(alpha: 0.65),
-                height: 1.5,
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 18),
             FilledButton.icon(
-              onPressed: _launchOnWeb,
+              onPressed: _launchFullPdf,
               icon: const Icon(Icons.open_in_new_rounded, size: 18),
               label: Text(
-                _webLaunched ? 'Open again' : 'Open drug PDF',
-                style:
-                    GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700),
+                'Open the full page',
+                style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700),
               ),
-              style: FilledButton.styleFrom(
-                backgroundColor: _appBarColor(context),
-              ),
+              style:
+                  FilledButton.styleFrom(backgroundColor: _appBarColor(context)),
             ),
           ],
         ),
@@ -211,7 +269,11 @@ class _DrugPdfViewerScreenState extends State<DrugPdfViewerScreen> {
     );
   }
 
-  Widget _buildBottomStrip() {
+  Widget _buildBottomStrip({int? pageCount}) {
+    final start = widget.entry.page;
+    final pageLabel = (pageCount != null && pageCount > 1)
+        ? 'Pages $start–${start + pageCount - 1}'
+        : 'Page $start';
     return Container(
       height: 32,
       color: Theme.of(context).colorScheme.surface,
@@ -220,7 +282,7 @@ class _DrugPdfViewerScreenState extends State<DrugPdfViewerScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            'Page ${widget.entry.page}',
+            pageLabel,
             style: TextStyle(fontSize: 11, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)),
           ),
           Text(

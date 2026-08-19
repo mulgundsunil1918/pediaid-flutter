@@ -11,6 +11,8 @@
 // =============================================================================
 
 import 'package:flutter/material.dart';
+
+import '../../widgets/skeleton.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import '../../services/submissions_service.dart';
@@ -61,9 +63,7 @@ class _MySubmissionsScreenState extends State<MySubmissionsScreen> {
         future: _future,
         builder: (context, snap) {
           if (snap.connectionState != ConnectionState.done) {
-            return const Center(
-              child: CircularProgressIndicator(strokeWidth: 2),
-            );
+            return const SkeletonList(items: 5);
           }
 
           if (snap.hasError) {

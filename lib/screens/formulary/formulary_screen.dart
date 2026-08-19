@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+
+import '../../widgets/skeleton.dart';
 import '../../services/formulary_service.dart';
 import 'drug_pdf_viewer_screen.dart';
 import '../drugs/emergency_nicu_drugs_screen.dart';
 import '../drugs/emergency_picu_drugs_screen.dart';
-import '../formulary_v2/formulary_v2_hub.dart';
 import '../../widgets/ios_feature_gate.dart';
 import '../../widgets/educational_disclaimer_banner.dart';
 
@@ -271,9 +272,7 @@ class _FormularyScreenState extends State<FormularyScreen> {
     final cs = Theme.of(context).colorScheme;
 
     if (_loading) {
-      return Center(
-        child: CircularProgressIndicator(color: cs.primary),
-      );
+      return const SkeletonList(items: 7);
     }
 
     final results = _results ?? [];

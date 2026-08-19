@@ -11,15 +11,36 @@ import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import '../widgets/list_search_field.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class ReferencesScreen extends StatelessWidget {
+class ReferencesScreen extends StatefulWidget {
   const ReferencesScreen({super.key});
+
+  @override
+  State<ReferencesScreen> createState() => _ReferencesScreenState();
+}
+
+class _ReferencesScreenState extends State<ReferencesScreen> {
+  final TextEditingController _searchCtl = TextEditingController();
+  String _query = '';
+
+  /// Counted while building so the empty state knows whether ANY section
+  /// survived the filter — the sections are inline, not a single list.
+  int _shown = 0;
+
+  @override
+  void dispose() {
+    _searchCtl.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final cs = Theme.of(context).colorScheme;
+    _shown = 0;
 
     return Scaffold(
       appBar: AppBar(
@@ -32,8 +53,16 @@ class ReferencesScreen extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          _disclaimer(context, isDark, cs),
-          const SizedBox(height: 20),
+          ListSearchField(
+            controller: _searchCtl,
+            hintText: 'Search references & sources…',
+            onChanged: (v) => setState(() => _query = v),
+            padding: const EdgeInsets.only(bottom: 14),
+          ),
+          if (_query.trim().isEmpty) ...[
+            _disclaimer(context, isDark, cs),
+            const SizedBox(height: 20),
+          ],
           // Withheld on iOS along with the formulary and the dosing screens.
           //
           // This section states that PediAid's drug dosage data comes from
@@ -216,6 +245,10 @@ class ReferencesScreen extends StatelessWidget {
               ),
             ),
           ),
+          // Evaluated last, so every _section above has already updated
+          // _shown — a zero here means the query matched nothing anywhere.
+          if (_query.trim().isNotEmpty && _shown == 0)
+            ListSearchEmptyState(query: _searchCtl.text, noun: 'references'),
           const SizedBox(height: 24),
         ],
       ),
@@ -269,6 +302,18 @@ class ReferencesScreen extends StatelessWidget {
     Color color,
     List<_Ref> refs,
   ) {
+    final q = _query.trim().toLowerCase();
+    if (q.isNotEmpty) {
+      refs = refs
+          .where((r) =>
+              r.title.toLowerCase().contains(q) ||
+              r.subtitle.toLowerCase().contains(q) ||
+              r.detail.toLowerCase().contains(q))
+          .toList();
+      // A section with no surviving reference would render as a bare heading.
+      if (refs.isEmpty) return const SizedBox.shrink();
+    }
+    _shown += refs.length;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

@@ -42,24 +42,24 @@ import '../../services/push_service.dart';
 import '../../utils/prefs_keys.dart';
 import '../onboarding/profile_setup_screen.dart';
 
-/// The native iOS app, and nowhere else.
+/// Where the Apple button is shown: native iOS, and now the web too.
 ///
-/// This once covered macOS and browsers on Apple devices too, on the reasoning
-/// that Firebase's OAuth popup works there. It does not: Sign in with Apple on
-/// the web needs a Services ID, Team ID, Key ID and private key registered
-/// with Firebase, and that was never set up — so the button returned "This
-/// sign-in method is not enabled" every time. A button that always fails is
-/// worse than no button.
+/// Web Sign in with Apple needs the Firebase Apple provider's OAuth config —
+/// Services ID (app.pediaid.pediaid.signin), Team ID, Key ID and the .p8
+/// private key — plus that Services ID configured in the Apple portal with the
+/// return URL https://pediaid-app.firebaseapp.com/__/auth/handler and the
+/// domain verified. That is now in place, so the web popup flow works; it was
+/// previously excluded only because the config was missing ("this sign-in
+/// method is not enabled").
 ///
-/// It stays on native iOS, where it works through Apple's own SDK with no web
-/// OAuth config, and where App Store guideline 4.8 requires a
-/// privacy-preserving option alongside Google. 4.8 governs apps, not websites,
-/// so nothing is owed on web or macOS.
+/// Native iOS needs none of that web OAuth config — it uses Apple's own SDK —
+/// and App Store guideline 4.8 requires a privacy-preserving option alongside
+/// Google there.
 ///
-/// kIsWeb is checked first: on web, defaultTargetPlatform reports the
-/// underlying OS, so a Mac browser would otherwise still match.
+/// kIsWeb short-circuits so any browser (where defaultTargetPlatform reports
+/// the underlying OS) takes the web popup path via FirebaseAuthService.
 bool get _isApplePlatform =>
-    !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS;
+    kIsWeb || defaultTargetPlatform == TargetPlatform.iOS;
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});

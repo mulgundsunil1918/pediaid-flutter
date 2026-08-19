@@ -149,7 +149,7 @@ class AboutScreen extends StatelessWidget {
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              'MBBS · MD (Paediatrics) · DNB (Paediatrics) · NNF Fellowship in Neonatology',
+                              'MBBS · MD Paediatrics & Neonatology (RGUHS Karnataka Gold Medalist) · DNB Paediatrics & Neonatology · NNF Fellowship',
                               style: GoogleFonts.plusJakartaSans(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,

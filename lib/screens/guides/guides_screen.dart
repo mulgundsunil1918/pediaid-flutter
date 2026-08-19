@@ -11,14 +11,15 @@
 // to see everything.
 // =============================================================================
 
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import '../../widgets/list_search_field.dart';
 import 'fetal_development_screen.dart';
 import 'nrp_pdf_viewer.dart';
-import '../vaccines/vaccine_screen.dart';
 import 'neonatal_scores/neonatal_scores_screen.dart';
+import '../scores/paediatric_scores_hub.dart';
 import 'pals/pals_algorithms_screen.dart';
 import 'neonatal_echo_screen.dart';
 import '../tools/paediatric_parameters_screen.dart';
@@ -58,6 +59,213 @@ const List<String> _kCategories = [
   _kReference,
 ];
 
+// ── Guide catalogue ────────────────────────────────────────────────────────
+//
+// Top-level (not a field on the State) so ToolRegistry can read it without
+// building the screen — that is what makes a guide pinnable to Quick Access.
+final List<_GuideItem> _kGuideItems = [
+  // Neonatal Scores — surfaced first and highlighted; bundles all the
+  // neonatal scoring tools (incl. LATCH, POFRAS, Modified Ballard).
+  _GuideItem(
+    title: 'Neonatal Scores',
+    subtitle: 'Apgar, Downes, Sarnat, Thompson, LATCH, POFRAS, Ballard & more',
+    icon: Icons.assessment,
+    categories: const [_kNeonatal, _kScoring],
+    highlight: true,
+    badge: '14 scores',
+    build: (_) => const NeonatalScoresScreen(),
+  ),
+  // Paediatric Scores — the non-neonatal counterpart to the hub above,
+  // grouped by system with an A–Z toggle and its own search.
+  _GuideItem(
+    title: 'Paediatric Scores',
+    subtitle: 'Croup, Kawasaki, PECARN, asthma severity, DSM-5 screens & more',
+    icon: Icons.fact_check_outlined,
+    categories: const [_kScoring, _kEmergency],
+    highlight: true,
+    badge: '96 scores',
+    build: (_) => const PaediatricScoresHub(),
+  ),
+  _GuideItem(
+    title: 'GA Classification',
+    subtitle: 'Gestational Age Definitions · Table 6-2',
+    icon: Icons.calendar_month,
+    categories: const [_kNeonatal, _kReference],
+    build: (_) => const GAClassificationScreen(),
+  ),
+  _GuideItem(
+    title: 'Birthweight Classification',
+    subtitle: 'ELBW · VLBW · LBW · NBW · Macrosomia',
+    icon: Icons.monitor_weight_outlined,
+    categories: const [_kNeonatal, _kReference],
+    build: (_) => const BirthweightClassificationScreen(),
+  ),
+  _GuideItem(
+    title: 'Fetal Development',
+    subtitle: 'Week-by-week from LMP',
+    icon: Icons.child_care_outlined,
+    categories: const [_kNeonatal, _kReference],
+    build: (_) => const FetalDevelopmentScreen(),
+  ),
+  _GuideItem(
+    title: 'Developmental Milestones',
+    subtitle: 'AIIMS reference · 76 milestones · 23 red flags · DQ calculator',
+    icon: Icons.child_friendly_rounded,
+    categories: const [_kNeonatal, _kScoring, _kReference],
+    build: (_) => const DevMilestonesHub(),
+  ),
+  _GuideItem(
+    title: 'NRP 9th Edition',
+    subtitle: 'Neonatal Resuscitation Program • 9th Edition',
+    icon: Icons.menu_book,
+    categories: const [_kResus, _kNeonatal, _kEmergency],
+    build: (_) => const NrpPdfViewer(),
+  ),
+  // Immunisation moved OUT of Guides — it is its own top-level tile now
+  // (IAP / NIS / Catch-up), so listing it here duplicated the entry.
+  // Modified Ballard & POFRAS now live inside "Neonatal Scores" (above).
+  _GuideItem(
+    title: 'PALS Algorithms',
+    subtitle: 'Pediatric Advanced Life Support',
+    icon: Icons.monitor_heart,
+    categories: const [_kResus, _kEmergency],
+    build: (_) => const PalsAlgorithmsScreen(),
+  ),
+  _GuideItem(
+    title: 'Neonatal Echo',
+    subtitle: 'TnECHO & Neonatal Hemodynamics — 23 measurements',
+    icon: Icons.monitor_heart,
+    categories: const [_kNeonatal, _kReference],
+    build: (_) => const NeonatalEchoScreen(),
+  ),
+  _GuideItem(
+    title: 'Paediatric Parameters',
+    subtitle: 'Weight-banded vital sign + equipment table',
+    icon: Icons.medical_services_outlined,
+    categories: const [_kReference],
+    build: (_) => const PaediatricParametersScreen(),
+  ),
+  _GuideItem(
+    title: 'Polycythemia in Newborn',
+    subtitle: 'Management Algorithm — AIIMS Protocol',
+    icon: Icons.bloodtype,
+    categories: const [_kNeonatal],
+    build: (_) => const PolycythemiaGuideScreen(),
+  ),
+  // CAN Score moved into Neonatal Scores screen
+  // ── Emergency protocol guides ────────────────────────────────────────
+  _GuideItem(
+    title: 'DKA Algorithm',
+    subtitle: 'Diabetic ketoacidosis — paediatric flowchart',
+    icon: Icons.water_drop_outlined,
+    categories: const [_kEmergency],
+    build: (_) => const DkaAlgorithmScreen(),
+    dosing: true,
+  ),
+  _GuideItem(
+    title: 'Snake Envenomation',
+    subtitle: 'First aid · ASV · neuro/haem/renal features',
+    icon: Icons.warning_amber_rounded,
+    categories: const [_kEmergency],
+    build: (_) => const SnakeEnvenomationScreen(),
+    dosing: true,
+  ),
+  _GuideItem(
+    title: 'Scorpion Sting',
+    subtitle: '5-stage management · ASV + Prazosin',
+    icon: Icons.bug_report_outlined,
+    categories: const [_kEmergency],
+    build: (_) => const ScorpionStingScreen(),
+  ),
+  _GuideItem(
+    title: 'Poisoning & Antidotes',
+    subtitle: 'Substance → antidote → dose · charcoal · HD',
+    icon: Icons.science_outlined,
+    categories: const [_kEmergency, _kReference],
+    build: (_) => const PoisoningAntidotesScreen(),
+    dosing: true,
+  ),
+  _GuideItem(
+    title: 'Acute Severe Asthma',
+    subtitle: 'Status asthmaticus — drug ladder',
+    icon: Icons.air_outlined,
+    categories: const [_kEmergency],
+    build: (_) => const AcuteSevereAsthmaScreen(),
+    dosing: true,
+  ),
+  _GuideItem(
+    title: 'Hypertensive Emergency',
+    subtitle: 'Triage · IV labetalol/SNP · drug doses',
+    icon: Icons.favorite_outline,
+    categories: const [_kEmergency],
+    build: (_) => const HypertensiveEmergencyScreen(),
+    dosing: true,
+  ),
+  _GuideItem(
+    title: 'AVPU Scale',
+    subtitle: 'Level of consciousness — Alert / Voice / Pain / Unresponsive',
+    icon: Icons.psychology_outlined,
+    categories: const [_kScoring, _kEmergency],
+    build: (_) => const AvpuScreen(),
+  ),
+  _GuideItem(
+    title: 'Glasgow Coma Scale',
+    subtitle: 'Smart scorer + paediatric reference tables',
+    icon: Icons.calculate_outlined,
+    categories: const [_kScoring, _kEmergency],
+    build: (_) => const GcsScreen(),
+    dosing: true,
+  ),
+  _GuideItem(
+    title: 'RSI — Rapid Sequence Intubation',
+    subtitle: '7 P\'s + drug table + 5 scenario sequences',
+    icon: Icons.air_outlined,
+    categories: const [_kEmergency, _kResus],
+    build: (_) => const RsiGuideScreen(),
+    dosing: true,
+  ),
+  _GuideItem(
+    title: 'Electrolyte Corrections',
+    subtitle: 'Treatment + work-up + cross-linked calculators',
+    icon: Icons.water_drop_outlined,
+    categories: const [_kReference, _kEmergency],
+    build: (_) => const ElectrolyteCorrectionsScreen(),
+    dosing: true,
+  ),
+  _GuideItem(
+    title: 'Emergency ICU Drugs',
+    subtitle: 'Bolus + vasoactive infusion drug doses',
+    icon: Icons.medical_services_outlined,
+    categories: const [_kEmergency, _kReference],
+    build: (_) => const EmergencyIcuDrugsScreen(),
+    dosing: true,
+  ),
+  _GuideItem(
+    title: 'Sedation, Analgesia & Paralytics',
+    subtitle: 'PICU/NICU infusion reference (18 drugs)',
+    icon: Icons.bedtime_outlined,
+    categories: const [_kEmergency, _kReference],
+    build: (_) => const SedationParalyticsScreen(),
+    dosing: true,
+  ),
+  _GuideItem(
+    title: 'Seizure Medications',
+    subtitle: 'Status epilepticus ladder + reference table',
+    icon: Icons.flash_on_outlined,
+    categories: const [_kEmergency, _kReference],
+    build: (_) => const SeizureMedsScreen(),
+    dosing: true,
+  ),
+  _GuideItem(
+    title: 'Sepsis Protocols',
+    subtitle: 'Neonatal & paediatric sepsis',
+    icon: Icons.biotech_outlined,
+    categories: const [_kEmergency, _kNeonatal],
+    comingSoon: true,
+    build: null, // shows coming-soon snackbar instead of navigating
+  ),
+];
+
 class GuidesScreen extends StatefulWidget {
   const GuidesScreen({super.key});
 
@@ -66,6 +274,15 @@ class GuidesScreen extends StatefulWidget {
 }
 
 class _GuidesScreenState extends State<GuidesScreen> {
+  final TextEditingController _searchCtl = TextEditingController();
+  String _query = '';
+
+  @override
+  void dispose() {
+    _searchCtl.dispose();
+    super.dispose();
+  }
+
   String _selected = _kAll;
 
   /// Guides available on this platform. See [_GuideItem.dosing].
@@ -74,208 +291,28 @@ class _GuidesScreenState extends State<GuidesScreen> {
   // flags stay on the items, unused, so this is one line to reverse.
   List<_GuideItem> get _visibleGuides => _guides;
 
-  late final List<_GuideItem> _guides = [
-    // Neonatal Scores — surfaced first and highlighted; bundles all the
-    // neonatal scoring tools (incl. LATCH, POFRAS, Modified Ballard).
-    _GuideItem(
-      title: 'Neonatal Scores',
-      subtitle:
-          'Apgar, Downes, Sarnat, Thompson, LATCH, POFRAS, Ballard & more',
-      icon: Icons.assessment,
-      categories: const [_kNeonatal, _kScoring],
-      highlight: true,
-      badge: '14 scores',
-      build: (_) => const NeonatalScoresScreen(),
-    ),
-    _GuideItem(
-      title: 'GA Classification',
-      subtitle: 'Gestational Age Definitions · Table 6-2',
-      icon: Icons.calendar_month,
-      categories: const [_kNeonatal, _kReference],
-      build: (_) => const GAClassificationScreen(),
-    ),
-    _GuideItem(
-      title: 'Birthweight Classification',
-      subtitle: 'ELBW · VLBW · LBW · NBW · Macrosomia',
-      icon: Icons.monitor_weight_outlined,
-      categories: const [_kNeonatal, _kReference],
-      build: (_) => const BirthweightClassificationScreen(),
-    ),
-    _GuideItem(
-      title: 'Fetal Development',
-      subtitle: 'Week-by-week from LMP',
-      icon: Icons.child_care_outlined,
-      categories: const [_kNeonatal, _kReference],
-      build: (_) => const FetalDevelopmentScreen(),
-    ),
-    _GuideItem(
-      title: 'Developmental Milestones',
-      subtitle:
-          'AIIMS reference · 76 milestones · 23 red flags · DQ calculator',
-      icon: Icons.child_friendly_rounded,
-      categories: const [_kNeonatal, _kScoring, _kReference],
-      build: (_) => const DevMilestonesHub(),
-    ),
-    _GuideItem(
-      title: 'NRP 9th Edition',
-      subtitle: 'Neonatal Resuscitation Program • 9th Edition',
-      icon: Icons.menu_book,
-      categories: const [_kResus, _kNeonatal, _kEmergency],
-      build: (_) => const NrpPdfViewer(),
-    ),
-    _GuideItem(
-      title: 'Immunisation Schedule',
-      subtitle: 'IAP 2022 & National (NIS)',
-      icon: Icons.vaccines_outlined,
-      categories: const [_kReference],
-      build: (_) => const VaccineScreen(),
-    ),
-    // Modified Ballard & POFRAS now live inside "Neonatal Scores" (above).
-    _GuideItem(
-      title: 'PALS Algorithms',
-      subtitle: 'Pediatric Advanced Life Support',
-      icon: Icons.monitor_heart,
-      categories: const [_kResus, _kEmergency],
-      build: (_) => const PalsAlgorithmsScreen(),
-    ),
-    _GuideItem(
-      title: 'Neonatal Echo',
-      subtitle: 'TnECHO & Neonatal Hemodynamics — 23 measurements',
-      icon: Icons.monitor_heart,
-      categories: const [_kNeonatal, _kReference],
-      build: (_) => const NeonatalEchoScreen(),
-    ),
-    _GuideItem(
-      title: 'Paediatric Parameters',
-      subtitle: 'Weight-banded vital sign + equipment table',
-      icon: Icons.medical_services_outlined,
-      categories: const [_kReference],
-      build: (_) => const PaediatricParametersScreen(),
-    ),
-    _GuideItem(
-      title: 'Polycythemia in Newborn',
-      subtitle: 'Management Algorithm — AIIMS Protocol',
-      icon: Icons.bloodtype,
-      categories: const [_kNeonatal],
-      build: (_) => const PolycythemiaGuideScreen(),
-    ),
-    // CAN Score moved into Neonatal Scores screen
-    // ── Emergency protocol guides ────────────────────────────────────────
-    _GuideItem(
-      title: 'DKA Algorithm',
-      subtitle: 'Diabetic ketoacidosis — paediatric flowchart',
-      icon: Icons.water_drop_outlined,
-      categories: const [_kEmergency],
-      build: (_) => const DkaAlgorithmScreen(),
-      dosing: true,
-    ),
-    _GuideItem(
-      title: 'Snake Envenomation',
-      subtitle: 'First aid · ASV · neuro/haem/renal features',
-      icon: Icons.warning_amber_rounded,
-      categories: const [_kEmergency],
-      build: (_) => const SnakeEnvenomationScreen(),
-      dosing: true,
-    ),
-    _GuideItem(
-      title: 'Scorpion Sting',
-      subtitle: '5-stage management · ASV + Prazosin',
-      icon: Icons.bug_report_outlined,
-      categories: const [_kEmergency],
-      build: (_) => const ScorpionStingScreen(),
-    ),
-    _GuideItem(
-      title: 'Poisoning & Antidotes',
-      subtitle: 'Substance → antidote → dose · charcoal · HD',
-      icon: Icons.science_outlined,
-      categories: const [_kEmergency, _kReference],
-      build: (_) => const PoisoningAntidotesScreen(),
-      dosing: true,
-    ),
-    _GuideItem(
-      title: 'Acute Severe Asthma',
-      subtitle: 'Status asthmaticus — drug ladder',
-      icon: Icons.air_outlined,
-      categories: const [_kEmergency],
-      build: (_) => const AcuteSevereAsthmaScreen(),
-      dosing: true,
-    ),
-    _GuideItem(
-      title: 'Hypertensive Emergency',
-      subtitle: 'Triage · IV labetalol/SNP · drug doses',
-      icon: Icons.favorite_outline,
-      categories: const [_kEmergency],
-      build: (_) => const HypertensiveEmergencyScreen(),
-      dosing: true,
-    ),
-    _GuideItem(
-      title: 'AVPU Scale',
-      subtitle: 'Level of consciousness — Alert / Voice / Pain / Unresponsive',
-      icon: Icons.psychology_outlined,
-      categories: const [_kScoring, _kEmergency],
-      build: (_) => const AvpuScreen(),
-    ),
-    _GuideItem(
-      title: 'Glasgow Coma Scale',
-      subtitle: 'Smart scorer + paediatric reference tables',
-      icon: Icons.calculate_outlined,
-      categories: const [_kScoring, _kEmergency],
-      build: (_) => const GcsScreen(),
-      dosing: true,
-    ),
-    _GuideItem(
-      title: 'RSI — Rapid Sequence Intubation',
-      subtitle: '7 P\'s + drug table + 5 scenario sequences',
-      icon: Icons.air_outlined,
-      categories: const [_kEmergency, _kResus],
-      build: (_) => const RsiGuideScreen(),
-      dosing: true,
-    ),
-    _GuideItem(
-      title: 'Electrolyte Corrections',
-      subtitle: 'Treatment + work-up + cross-linked calculators',
-      icon: Icons.water_drop_outlined,
-      categories: const [_kReference, _kEmergency],
-      build: (_) => const ElectrolyteCorrectionsScreen(),
-      dosing: true,
-    ),
-    _GuideItem(
-      title: 'Emergency ICU Drugs',
-      subtitle: 'Bolus + vasoactive infusion drug doses',
-      icon: Icons.medical_services_outlined,
-      categories: const [_kEmergency, _kReference],
-      build: (_) => const EmergencyIcuDrugsScreen(),
-      dosing: true,
-    ),
-    _GuideItem(
-      title: 'Sedation, Analgesia & Paralytics',
-      subtitle: 'PICU/NICU infusion reference (18 drugs)',
-      icon: Icons.bedtime_outlined,
-      categories: const [_kEmergency, _kReference],
-      build: (_) => const SedationParalyticsScreen(),
-      dosing: true,
-    ),
-    _GuideItem(
-      title: 'Seizure Medications',
-      subtitle: 'Status epilepticus ladder + reference table',
-      icon: Icons.flash_on_outlined,
-      categories: const [_kEmergency, _kReference],
-      build: (_) => const SeizureMedsScreen(),
-      dosing: true,
-    ),
-    _GuideItem(
-      title: 'Sepsis Protocols',
-      subtitle: 'Neonatal & paediatric sepsis',
-      icon: Icons.biotech_outlined,
-      categories: const [_kEmergency, _kNeonatal],
-      comingSoon: true,
-      build: null, // shows coming-soon snackbar instead of navigating
-    ),
-  ];
+  List<_GuideItem> get _guides => _kGuideItems;
 
-  List<_GuideItem> get _filtered => _selected == _kAll
-      ? _visibleGuides
-      : _visibleGuides.where((g) => g.categories.contains(_selected)).toList();
+  /// A typed query searches EVERY guide, not just the selected chip's — a
+  /// result hidden behind an unrelated chip reads as "not in the app".
+  List<_GuideItem> get _filtered {
+    final q = _query.trim().toLowerCase();
+    if (q.isNotEmpty) {
+      return _visibleGuides
+          .where(
+            (g) =>
+                g.title.toLowerCase().contains(q) ||
+                g.subtitle.toLowerCase().contains(q) ||
+                g.categories.any((c) => c.toLowerCase().contains(q)),
+          )
+          .toList();
+    }
+    return _selected == _kAll
+        ? _visibleGuides
+        : _visibleGuides
+              .where((g) => g.categories.contains(_selected))
+              .toList();
+  }
 
   int _countFor(String category) {
     if (category == _kAll) return _visibleGuides.length;
@@ -288,7 +325,7 @@ class _GuidesScreenState extends State<GuidesScreen> {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text('Guides'),
+        title: const Text('Guides & Scores'),
         leading: Navigator.canPop(context)
             ? IconButton(
                 icon: const Icon(Icons.arrow_back),
@@ -312,7 +349,18 @@ class _GuidesScreenState extends State<GuidesScreen> {
                       categories: _kCategories,
                       selected: _selected,
                       countFor: _countFor,
-                      onSelect: (c) => setState(() => _selected = c),
+                      onSelect: (c) => setState(() {
+                        _selected = c;
+                        _query = '';
+                        _searchCtl.clear();
+                      }),
+                    ),
+                    ListSearchField(
+                      controller: _searchCtl,
+                      hintText:
+                          'Search ${_visibleGuides.length} guides & scores…',
+                      onChanged: (v) => setState(() => _query = v),
+                      padding: const EdgeInsets.fromLTRB(14, 2, 14, 8),
                     ),
                     Expanded(
                       child: filtered.isEmpty
@@ -508,6 +556,7 @@ class _GuideItem {
   final IconData icon;
   final List<String> categories;
   final WidgetBuilder? build;
+
   /// Contains per-kilogram drug doses.
   ///
   /// App Store guideline 1.4.2 restricts drug dosage tools to manufacturers,
@@ -716,3 +765,31 @@ class _GuideCard extends StatelessWidget {
     );
   }
 }
+
+/// Guides that have a real screen, as plain data. Coming-soon entries are
+/// excluded — there is nothing for a shortcut to open.
+class GuideCatalogEntry {
+  final String title;
+  final String subtitle;
+  final IconData icon;
+  final WidgetBuilder build;
+
+  const GuideCatalogEntry({
+    required this.title,
+    required this.subtitle,
+    required this.icon,
+    required this.build,
+  });
+}
+
+final List<GuideCatalogEntry> guideCatalogue = _kGuideItems
+    .where((g) => g.build != null && !g.comingSoon)
+    .map(
+      (g) => GuideCatalogEntry(
+        title: g.title,
+        subtitle: g.subtitle,
+        icon: g.icon,
+        build: g.build!,
+      ),
+    )
+    .toList(growable: false);

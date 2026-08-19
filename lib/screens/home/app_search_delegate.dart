@@ -1,10 +1,9 @@
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../services/guidelines_search_service.dart';
-import '../../services/formulary_v2_service.dart';
+import '../../services/formulary_service.dart';
 import '../../utils/friendly_error.dart';
 
 import '../calculators/gestational_age_calculator.dart';
@@ -48,8 +47,7 @@ import '../charts/who_chart_selection_screen.dart';
 import '../charts/iap_chart_screen.dart';
 import '../charts/fenton_chart_screen.dart';
 import '../formulary/formulary_screen.dart';
-import '../formulary/drug_detail_v2_screen.dart';
-import '../formulary_v2/formulary_v2_hub.dart';
+import '../formulary/drug_pdf_viewer_screen.dart';
 import '../drugs/emergency_nicu_drugs_screen.dart';
 import '../drugs/emergency_picu_drugs_screen.dart';
 import '../guides/fetal_development_screen.dart';
@@ -74,6 +72,12 @@ import '../guides/sedation_paralytics_screen.dart';
 import '../guides/seizure_meds_screen.dart';
 import '../guides/snake_envenomation_screen.dart';
 import '../vaccines/vaccine_screen.dart';
+import '../vaccines/immunisation_hub_screen.dart';
+import '../scores/paediatric_scores_hub.dart';
+import '../scores/score_scaffold.dart';
+import '../calculators/new_clinical_calculators.dart';
+import '../calculators/remaining_calculators.dart';
+import '../calculators/converter_calculators.dart';
 import '../guides/neonatal_scores/neonatal_scores_screen.dart';
 import '../guides/modified_ballard_screen.dart';
 import '../guides/pals/pals_algorithms_screen.dart';
@@ -580,7 +584,7 @@ List<_SearchItem> _allItemsUnfiltered() => [
     icon: Icons.vaccines_outlined,
     color: _kGuideColor,
     keywords: const ['vaccine', 'immunization', 'immunisation', 'schedule', 'iap', 'nis', 'vaccination', 'bcg', 'opv', 'dpt', 'hepb', 'mmr', 'typhoid', 'varicella', 'pneumococcal', 'pcv', 'rotavirus', 'hib', 'hepatitis', 'meningococcal', 'catch up', 'booster', 'birth dose', 'ipv', 'tdap', 'flu vaccine', 'influenza', 'hpv', 'pentavalent'],
-    navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const VaccineScreen())),
+    navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const ImmunisationHubScreen())),
   ),
 
   _SearchItem(
@@ -590,7 +594,8 @@ List<_SearchItem> _allItemsUnfiltered() => [
     icon: Icons.event_repeat,
     color: _kGuideColor,
     keywords: const ['catch up', 'catchup', 'catch-up', 'catch up immunization', 'catch up immunisation', 'catch up vaccination', 'missed vaccine', 'missed doses', 'overdue vaccine', 'delayed vaccination', 'unvaccinated child', 'incomplete vaccination', 'catch up schedule', 'immunization calculator', 'vaccine calculator', 'due vaccines', 'which vaccines due', 'behind on vaccines', 'iap acvip', 'age appropriate vaccines'],
-    navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const VaccineScreen(initialSched: 2))),
+    navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) =>
+        const VaccineScreen(initialSched: 2, showPicker: false))),
   ),
 
   _SearchItem(
@@ -875,14 +880,268 @@ List<_SearchItem> _allItemsUnfiltered() => [
     navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const EmergencyPICUDrugsScreen())),
   ),
   _SearchItem(
-    title: 'Drug Formulary 2.0',
-    subtitle: 'Premium UI · Neonatology + Paediatrics',
-    category: 'Drug Formulary',
-    icon: Icons.menu_book_rounded,
-    color: _kDrugColor,
-    keywords: const ['drug formulary 2.0', 'drug formulary v2', 'curated formulary', 'NICU drugs', 'paediatric drugs', 'india brands', 'cross-checked', 'WMFc', 'NNF CPG', 'AAP red book'],
-    navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const FormularyV2Hub())),
+    title: 'Absolute Counts (ANC / AEC / ALC)',
+    subtitle: 'Neutrophil, eosinophil & lymphocyte counts',
+    category: 'Calculators & Tools',
+    icon: Icons.calculate_outlined,
+    color: _kCalcColor,
+    keywords: const ['anc', 'aec', 'alc', 'absolute neutrophil', 'neutropenia', 'eosinophil', 'lymphocyte', 'cbc differential'],
+    navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const AbsoluteCountsCalculator())),
   ),
+  _SearchItem(
+    title: 'Mentzer Index',
+    subtitle: 'Iron deficiency vs β-thalassaemia trait',
+    category: 'Calculators & Tools',
+    icon: Icons.calculate_outlined,
+    color: _kCalcColor,
+    keywords: const ['mentzer', 'thalassaemia', 'thalassemia', 'microcytic', 'iron deficiency', 'mcv', 'rbc'],
+    navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const MentzerIndexCalculator())),
+  ),
+  _SearchItem(
+    title: 'Corrected QT (QTc)',
+    subtitle: 'Bazett heart-rate correction',
+    category: 'Calculators & Tools',
+    icon: Icons.calculate_outlined,
+    color: _kCalcColor,
+    keywords: const ['qtc', 'qt interval', 'bazett', 'long qt', 'torsades', 'ecg'],
+    navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const QtcCalculator())),
+  ),
+  _SearchItem(
+    title: 'Fractional Excretion of Na (FeNa)',
+    subtitle: 'Pre-renal vs intrinsic AKI',
+    category: 'Calculators & Tools',
+    icon: Icons.calculate_outlined,
+    color: _kCalcColor,
+    keywords: const ['fena', 'fractional excretion sodium', 'aki', 'pre-renal', 'atn', 'acute kidney injury'],
+    navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const FenaCalculator())),
+  ),
+  _SearchItem(
+    title: 'APRI (AST-to-Platelet Ratio)',
+    subtitle: 'Non-invasive liver fibrosis marker',
+    category: 'Calculators & Tools',
+    icon: Icons.calculate_outlined,
+    color: _kCalcColor,
+    keywords: const ['apri', 'liver fibrosis', 'cirrhosis', 'ast platelet'],
+    navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const ApriCalculator())),
+  ),
+  _SearchItem(
+    title: 'FIB-4 Index',
+    subtitle: 'Age, AST, ALT & platelet fibrosis index',
+    category: 'Calculators & Tools',
+    icon: Icons.calculate_outlined,
+    color: _kCalcColor,
+    keywords: const ['fib4', 'fib-4', 'liver fibrosis', 'cirrhosis'],
+    navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const Fib4Calculator())),
+  ),
+  _SearchItem(
+    title: 'PELD / MELD Score',
+    subtitle: 'Liver-disease severity for transplant',
+    category: 'Calculators & Tools',
+    icon: Icons.calculate_outlined,
+    color: _kCalcColor,
+    keywords: const ['peld', 'meld', 'liver transplant', 'cirrhosis', 'liver failure'],
+    navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const PeldMeldCalculator())),
+  ),
+  _SearchItem(
+    title: 'HbA1c → eAG',
+    subtitle: 'Estimated average glucose',
+    category: 'Calculators & Tools',
+    icon: Icons.calculate_outlined,
+    color: _kCalcColor,
+    keywords: const ['hba1c', 'a1c', 'eag', 'average glucose', 'diabetes'],
+    navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const HbA1cEagCalculator())),
+  ),
+  _SearchItem(
+    title: 'CSF WBC Correction',
+    subtitle: 'Traumatic-tap blood contamination',
+    category: 'Calculators & Tools',
+    icon: Icons.calculate_outlined,
+    color: _kCalcColor,
+    keywords: const ['csf', 'traumatic tap', 'lumbar puncture', 'meningitis', 'pleocytosis'],
+    navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const CsfWbcCorrectionCalculator())),
+  ),
+  _SearchItem(
+    title: 'Paracetamol Toxicity + NAC',
+    subtitle: 'Rumack-Matthew nomogram + NAC dosing',
+    category: 'Calculators & Tools',
+    icon: Icons.calculate_outlined,
+    color: _kCalcColor,
+    keywords: const ['paracetamol', 'acetaminophen', 'overdose', 'nac', 'n-acetylcysteine', 'rumack', 'poisoning'],
+    navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const ParacetamolCalculator())),
+  ),
+  _SearchItem(
+    title: 'Body Mass Index (BMI)',
+    subtitle: 'BMI — plot on BMI-for-age',
+    category: 'Calculators & Tools',
+    icon: Icons.calculate_outlined,
+    color: _kCalcColor,
+    keywords: const ['bmi', 'body mass index', 'obesity', 'overweight'],
+    navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const BmiCalculator())),
+  ),
+  _SearchItem(
+    title: 'A–a Gradient',
+    subtitle: 'Alveolar–arterial oxygen gradient',
+    category: 'Calculators & Tools',
+    icon: Icons.calculate_outlined,
+    color: _kCalcColor,
+    keywords: const ['a-a gradient', 'aa gradient', 'alveolar arterial', 'hypoxaemia', 'shunt'],
+    navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const AaGradientCalculator())),
+  ),
+  _SearchItem(
+    title: 'Cerebral Perfusion Pressure',
+    subtitle: 'CPP = MAP − ICP',
+    category: 'Calculators & Tools',
+    icon: Icons.calculate_outlined,
+    color: _kCalcColor,
+    keywords: const ['cpp', 'cerebral perfusion', 'icp', 'head injury', 'tbi'],
+    navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const CppCalculator())),
+  ),
+  _SearchItem(
+    title: 'Henderson-Hasselbalch',
+    subtitle: 'pH from HCO₃ and PaCO₂',
+    category: 'Calculators & Tools',
+    icon: Icons.calculate_outlined,
+    color: _kCalcColor,
+    keywords: const ['henderson', 'hasselbalch', 'ph', 'bicarbonate', 'blood gas'],
+    navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const HendersonHasselbalchCalculator())),
+  ),
+  _SearchItem(
+    title: 'Total Body Water',
+    subtitle: 'Age-based TBW estimate',
+    category: 'Calculators & Tools',
+    icon: Icons.calculate_outlined,
+    color: _kCalcColor,
+    keywords: const ['total body water', 'tbw', 'dehydration', 'free water'],
+    navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const TotalBodyWaterCalculator())),
+  ),
+  _SearchItem(
+    title: 'Urine Output & Fluid Balance',
+    subtitle: 'mL/kg/h with oliguria thresholds',
+    category: 'Calculators & Tools',
+    icon: Icons.calculate_outlined,
+    color: _kCalcColor,
+    keywords: const ['urine output', 'oliguria', 'anuria', 'fluid balance', 'prifle'],
+    navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const UrineOutputCalculator())),
+  ),
+  _SearchItem(
+    title: 'Predicted PEFR',
+    subtitle: 'Height-based peak flow',
+    category: 'Calculators & Tools',
+    icon: Icons.calculate_outlined,
+    color: _kCalcColor,
+    keywords: const ['pefr', 'peak flow', 'peak expiratory', 'asthma'],
+    navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const PefrPredictedCalculator())),
+  ),
+  _SearchItem(
+    title: 'Cardiac Output (Fick)',
+    subtitle: 'VO₂ and A–V O₂ difference',
+    category: 'Calculators & Tools',
+    icon: Icons.calculate_outlined,
+    color: _kCalcColor,
+    keywords: const ['cardiac output', 'fick', 'cardiac index', 'shock'],
+    navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const FickCardiacOutputCalculator())),
+  ),
+  _SearchItem(
+    title: 'Mean Arterial Pressure',
+    subtitle: 'MAP + pulse pressure',
+    category: 'Calculators & Tools',
+    icon: Icons.calculate_outlined,
+    color: _kCalcColor,
+    keywords: const ['map', 'mean arterial pressure', 'pulse pressure', 'shock'],
+    navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const MapCalculator())),
+  ),
+  _SearchItem(
+    title: 'Fractional Excretion of Mg',
+    subtitle: 'Renal vs extra-renal Mg loss',
+    category: 'Calculators & Tools',
+    icon: Icons.calculate_outlined,
+    color: _kCalcColor,
+    keywords: const ['femg', 'magnesium', 'hypomagnesaemia', 'renal wasting'],
+    navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const FeMgCalculator())),
+  ),
+  _SearchItem(
+    title: 'Reticulocyte Count / RPI',
+    subtitle: 'Absolute, corrected & production index',
+    category: 'Calculators & Tools',
+    icon: Icons.calculate_outlined,
+    color: _kCalcColor,
+    keywords: const ['reticulocyte', 'rpi', 'retic', 'anaemia', 'haemolysis'],
+    navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const ReticulocyteCalculator())),
+  ),
+  _SearchItem(
+    title: 'Cryoprecipitate Dosing',
+    subtitle: 'Fibrinogen replacement',
+    category: 'Calculators & Tools',
+    icon: Icons.calculate_outlined,
+    color: _kCalcColor,
+    keywords: const ['cryoprecipitate', 'cryo', 'fibrinogen', 'bleeding', 'transfusion'],
+    navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const CryoprecipitateCalculator())),
+  ),
+  _SearchItem(
+    title: 'Ideal Body Weight',
+    subtitle: 'Traub-Johnson IBW + adjusted weight',
+    category: 'Calculators & Tools',
+    icon: Icons.calculate_outlined,
+    color: _kCalcColor,
+    keywords: const ['ideal body weight', 'ibw', 'adjusted body weight', 'obesity dosing'],
+    navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const IdealBodyWeightCalculator())),
+  ),
+  _SearchItem(
+    title: 'BMR / Energy Requirement',
+    subtitle: 'Schofield equations',
+    category: 'Calculators & Tools',
+    icon: Icons.calculate_outlined,
+    color: _kCalcColor,
+    keywords: const ['bmr', 'basal metabolic rate', 'ree', 'energy requirement', 'calories', 'schofield'],
+    navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const BmrCalculator())),
+  ),
+  _SearchItem(
+    title: 'Total Iron Deficit',
+    subtitle: 'Ganzoni formula',
+    category: 'Calculators & Tools',
+    icon: Icons.calculate_outlined,
+    color: _kCalcColor,
+    keywords: const ['iron deficit', 'ganzoni', 'iron sucrose', 'ferric', 'anaemia'],
+    navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const IronDeficitCalculator())),
+  ),
+  _SearchItem(
+    title: 'IV Drip Rate',
+    subtitle: 'mL/hour and drops/minute',
+    category: 'Calculators & Tools',
+    icon: Icons.calculate_outlined,
+    color: _kCalcColor,
+    keywords: const ['drip rate', 'drops per minute', 'infusion rate', 'gtt'],
+    navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const InfusionRateCalculator())),
+  ),
+  _SearchItem(
+    title: 'Calcium Salt Equivalents',
+    subtitle: 'Gluconate ↔ chloride',
+    category: 'Calculators & Tools',
+    icon: Icons.calculate_outlined,
+    color: _kCalcColor,
+    keywords: const ['calcium gluconate', 'calcium chloride', 'elemental calcium', 'equivalents'],
+    navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const CalciumEquivalentCalculator())),
+  ),
+  _SearchItem(
+    title: 'Steroid Converter',
+    subtitle: 'Equivalent glucocorticoid doses',
+    category: 'Calculators & Tools',
+    icon: Icons.calculate_outlined,
+    color: _kCalcColor,
+    keywords: const ['steroid', 'prednisolone', 'dexamethasone', 'hydrocortisone', 'equivalent dose', 'conversion'],
+    navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const SteroidConverter())),
+  ),
+  _SearchItem(
+    title: 'Unit Converter',
+    subtitle: 'SI, mg/dL↔mmol/L, °C↔°F, kg↔lb',
+    category: 'Calculators & Tools',
+    icon: Icons.calculate_outlined,
+    color: _kCalcColor,
+    keywords: const ['unit converter', 'si units', 'conversion', 'mmol', 'mg/dl', 'celsius', 'fahrenheit', 'pounds'],
+    navigate: (ctx) => Navigator.push(ctx, MaterialPageRoute(builder: (_) => const UnitConverter())),
+  ),
+  // Drug Formulary 2.0 is hidden for now — its hub/detail screens and data
+  // stay in the app, just unreferenced. Drug search goes to the book pages.
 
   // ─── Emergency / acute clinical guides ─────────────────────────────────────
 
@@ -1169,8 +1428,23 @@ class AppSearchDelegate extends SearchDelegate<void> {
     // the first keystroke already has the indexes in memory. Both calls
     // are idempotent — repeat invocations are free.
     GuidelinesSearchService.instance.ensureLoaded();
+    // Warm the drug index so the first keystroke searches instantly.
     // ignore: unawaited_futures
-    FormularyV2Service().searchDrugs('');
+    FormularyService().getAllNeofax();
+    // ignore: unawaited_futures
+    FormularyService().getAllHarrietLane();
+  }
+
+  /// Drug search now reads the Neofax + Harriet Lane index (name → book page)
+  /// and opens the page in the book. Drug 2.0 is hidden — its data/screens
+  /// remain in the app, just unreferenced.
+  static Future<List<DrugEntry>> searchFormularyBooks(String query) async {
+    final svc = FormularyService();
+    final r = await Future.wait([
+      svc.searchNeofax(query),
+      svc.searchHarrietLane(query),
+    ]);
+    return [...r[0], ...r[1]];
   }
 
   late final List<_SearchItem> _allItems = _buildAllItems();
@@ -1275,6 +1549,10 @@ class AppSearchDelegate extends SearchDelegate<void> {
         // ── Drug formulary entries (Neofax + Harriet Lane v3, 676 drugs)
         // Async — searches by canonical name, alt-names and category.
         // Renders directly into the premium DrugDetailV2Screen on tap.
+        // ── Clinical scores (96 paediatric scores) ─────────────────────
+        if (query.trim().isNotEmpty)
+          _ScoreResultsSection(query: query.trim(), cs: cs),
+
         if (query.trim().isNotEmpty)
           _DrugResultsSection(query: query.trim(), cs: cs),
 
@@ -1307,6 +1585,83 @@ class AppSearchDelegate extends SearchDelegate<void> {
   }
 }
 
+// ── Score results section ────────────────────────────────────────────────────
+//
+// Makes every ScoreDef reachable from the universal search, so "croup",
+// "kawasaki", "PECARN" or "ADHD" finds the score itself, not just its hub.
+class _ScoreResultsSection extends StatelessWidget {
+  final String query;
+  final ColorScheme cs;
+  const _ScoreResultsSection({required this.query, required this.cs});
+
+  @override
+  Widget build(BuildContext context) {
+    final q = query.toLowerCase();
+    final hits = allPaediatricScores
+        .where((s) =>
+            s.title.toLowerCase().contains(q) ||
+            s.subtitle.toLowerCase().contains(q) ||
+            s.system.toLowerCase().contains(q))
+        .take(12)
+        .toList();
+    if (hits.isEmpty) return const SizedBox.shrink();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _CategoryHeader(label: 'Scores', cs: cs),
+        ...hits.map((s) => InkWell(
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => ScoreScaffold(def: s)),
+              ),
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: _kGuideColor.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Icon(Icons.fact_check_outlined,
+                          color: _kGuideColor, size: 20),
+                    ),
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(s.title,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: GoogleFonts.plusJakartaSans(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: cs.onSurface)),
+                          const SizedBox(height: 1),
+                          Text('${s.system} · ${s.subtitle}',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: GoogleFonts.plusJakartaSans(
+                                  fontSize: 11.5,
+                                  color:
+                                      cs.onSurface.withValues(alpha: 0.55))),
+                        ],
+                      ),
+                    ),
+                    Icon(Icons.chevron_right,
+                        size: 18, color: cs.onSurface.withValues(alpha: 0.3)),
+                  ],
+                ),
+              ),
+            )),
+      ],
+    );
+  }
+}
+
 // ── Drug results section ─────────────────────────────────────────────────────
 class _DrugResultsSection extends StatelessWidget {
   final String query;
@@ -1315,8 +1670,8 @@ class _DrugResultsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<DrugSearchHit>>(
-      future: FormularyV2Service().searchDrugs(query),
+    return FutureBuilder<List<DrugEntry>>(
+      future: AppSearchDelegate.searchFormularyBooks(query),
       builder: (context, snap) {
         if (snap.connectionState != ConnectionState.done) {
           return Padding(
@@ -1338,14 +1693,14 @@ class _DrugResultsSection extends StatelessWidget {
             ]),
           );
         }
-        final hits = snap.data ?? const <DrugSearchHit>[];
+        final hits = snap.data ?? const <DrugEntry>[];
         if (hits.isEmpty) return const SizedBox.shrink();
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             _CategoryHeader(label: 'Drugs', cs: cs),
-            ...hits.map((h) => _DrugResultTile(hit: h, query: query, cs: cs)),
+            ...hits.map((e) => _DrugResultTile(entry: e, cs: cs)),
           ],
         );
       },
@@ -1354,32 +1709,25 @@ class _DrugResultsSection extends StatelessWidget {
 }
 
 class _DrugResultTile extends StatelessWidget {
-  final DrugSearchHit hit;
-  final String query;
+  final DrugEntry entry;
   final ColorScheme cs;
   const _DrugResultTile({
-    required this.hit,
-    required this.query,
+    required this.entry,
     required this.cs,
   });
 
   @override
   Widget build(BuildContext context) {
-    final altMatched = _matchedAltName(hit.drug.altNames, query);
     final subtitleParts = <String>[
-      if (altMatched != null) '"$altMatched"',
-      if (hit.drug.category.isNotEmpty) hit.drug.category,
-      hit.source,
-      if (hit.page > 0) 'p${hit.page}',
+      entry.source,
+      if (entry.page > 0) 'p${entry.page}',
     ];
     return InkWell(
+      // Opens the drug at its exact page in the Neofax / Harriet Lane book —
+      // inline image on web, inline PDF on native.
       onTap: () => Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (_) => DrugDetailV2Screen(
-            name: hit.drug.drug,
-            source: hit.source,
-            pdfPage: hit.page > 0 ? hit.page : 1,
-          ),
+          builder: (_) => DrugPdfViewerScreen(entry: entry),
         ),
       ),
       child: Padding(
@@ -1402,7 +1750,7 @@ class _DrugResultTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    hit.drug.drug,
+                    entry.name,
                     style: GoogleFonts.plusJakartaSans(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
@@ -1431,17 +1779,6 @@ class _DrugResultTile extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  /// If the search hit landed via an alt-name (e.g. user typed "APAP" and
-  /// the drug is "Paracetamol (Acetaminophen)"), surface that alt-name in
-  /// the subtitle so the reader sees why the result matched.
-  static String? _matchedAltName(List<String> altNames, String query) {
-    final q = query.toLowerCase();
-    for (final alt in altNames) {
-      if (alt.toLowerCase().contains(q)) return alt;
-    }
-    return null;
   }
 }
 
@@ -1707,7 +2044,7 @@ class _NoResultsHint extends StatelessWidget {
     // Wait for BOTH guideline + drug indexes before deciding to show
     // the empty state — either could still produce a hit.
     final guidelineFuture = service.ensureLoaded();
-    final drugFuture = FormularyV2Service().searchDrugs(query);
+    final drugFuture = AppSearchDelegate.searchFormularyBooks(query);
     return FutureBuilder<List<dynamic>>(
       future: Future.wait([
         guidelineFuture.then<dynamic>((_) => null),
@@ -1717,7 +2054,7 @@ class _NoResultsHint extends StatelessWidget {
         if (snap.connectionState != ConnectionState.done) {
           return const SizedBox.shrink();
         }
-        final drugs = (snap.data?[1] as List<DrugSearchHit>?) ?? const [];
+        final drugs = (snap.data?[1] as List<DrugEntry>?) ?? const [];
         if (service.search(query).isNotEmpty || drugs.isNotEmpty) {
           return const SizedBox.shrink();
         }

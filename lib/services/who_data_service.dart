@@ -56,6 +56,14 @@ class WhoDataService {
   final Map<String, List<WhoPercentilePoint>> _percentileCache = {};
   final Map<String, List<WhoZScorePoint>> _zscoreCache = {};
 
+  /// Synchronous cache reads — non-null once the async loaders have run for
+  /// this chart+gender. Lets a screen that has pre-warmed the cache render a
+  /// chart with no loading spinner (and no async gap that could flash).
+  List<WhoPercentilePoint>? cachedPercentile(String chartType, String gender) =>
+      _percentileCache['$chartType-$gender'];
+  List<WhoZScorePoint>? cachedZScore(String chartType, String gender) =>
+      _zscoreCache['$chartType-$gender'];
+
   /// Load percentile data for [chartType] and [gender].
   /// File: assets/data/who/{chartType}-{gender}-percentiles-expanded-tables.xlsx
   /// Column indices: 0=Age, 1=L, 2=M, 3=S, 4=P01(skip), 5=P1(skip),

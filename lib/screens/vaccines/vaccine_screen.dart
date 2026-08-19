@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../../widgets/skeleton.dart';
 import '../../services/vaccine_service.dart';
 import 'catchup/catchup_screen.dart';
 
@@ -21,7 +23,17 @@ const Color _noteAmber   = Color(0xFFF57C00);
 class VaccineScreen extends StatefulWidget {
   /// 0 = IAP, 1 = NIS, 2 = Catch-up. Lets search open a specific tab.
   final int initialSched;
-  const VaccineScreen({super.key, this.initialSched = 0});
+
+  /// When false the IAP | NIS | Catch-up row is hidden and the screen shows
+  /// ONLY [initialSched]. The hub has already made that choice, so repeating
+  /// the picker inside would undo the separation.
+  final bool showPicker;
+
+  const VaccineScreen({
+    super.key,
+    this.initialSched = 0,
+    this.showPicker = true,
+  });
 
   @override
   State<VaccineScreen> createState() => _VaccineScreenState();
@@ -53,6 +65,18 @@ class _VaccineScreenState extends State<VaccineScreen> {
   }
 
   VaccineSchedule? get _current => _schedIdx == 0 ? _iap : _nis;
+
+  String get _screenTitle {
+    if (widget.showPicker) return 'Vaccination / Immunisation';
+    switch (_schedIdx) {
+      case 1:
+        return 'National Immunisation Schedule';
+      case 2:
+        return 'Catch-up Immunisation';
+      default:
+        return 'IAP Immunisation Schedule';
+    }
+  }
   Color get _accent => _schedIdx == 0
       ? _iapAccent
       : _schedIdx == 1
@@ -64,8 +88,9 @@ class _VaccineScreenState extends State<VaccineScreen> {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text('Vaccination / Immunisation',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+        title: Text(_screenTitle,
+            style:
+                const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
         elevation: 0,
       ),
       body: _loading
@@ -78,16 +103,34 @@ class _VaccineScreenState extends State<VaccineScreen> {
 
   // ── Loading / Error ───────────────────────────────────────────────────────
 
+  /// Skeleton shaped like the schedule table that is coming, so the layout
+  /// does not jump when the rows land.
   Widget _buildLoading() {
     final cs = Theme.of(context).colorScheme;
-    return Center(
-      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        CircularProgressIndicator(color: _accent),
-        const SizedBox(height: 16),
-        Text('Loading schedule…',
-            style: TextStyle(
-                color: cs.onSurface.withValues(alpha: 0.6), fontSize: 14)),
-      ]),
+    return ListView.separated(
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: 9,
+      separatorBuilder: (_, __) => const SizedBox(height: 10),
+      itemBuilder: (_, i) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardColor,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: cs.outline.withValues(alpha: 0.18)),
+        ),
+        child: Row(
+          children: [
+            const SkeletonBox(width: 62, height: 12),
+            const SizedBox(width: 16),
+            Expanded(
+              child: SkeletonBox(width: i.isEven ? 170 : 132, height: 12),
+            ),
+            const SizedBox(width: 16),
+            const SkeletonBox(width: 44, height: 12),
+          ],
+        ),
+      ),
     );
   }
 
@@ -129,25 +172,30 @@ class _VaccineScreenState extends State<VaccineScreen> {
 
   Widget _buildToggles() {
     final cs = Theme.of(context).colorScheme;
+    // Catch-up has no Table/Smart switch, so with the picker hidden there is
+    // nothing left to render.
+    if (!widget.showPicker && _schedIdx == 2) return const SizedBox.shrink();
     return Container(
       color: Theme.of(context).cardColor,
       padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
       child: Column(
         children: [
-          // Primary: IAP | NIS | Catch-up
-          Row(children: [
-            _toggleBtn('IAP 2022', 0, _schedIdx, _iapAccent,
-                () => setState(() => _schedIdx = 0)),
-            const SizedBox(width: 8),
-            _toggleBtn('NIS', 1, _schedIdx, _nisAccent,
-                () => setState(() => _schedIdx = 1)),
-            const SizedBox(width: 8),
-            _toggleBtn('Catch-up', 2, _schedIdx, _catchAccent,
-                () => setState(() => _schedIdx = 2)),
-          ]),
+          // Primary: IAP | NIS | Catch-up — only when this screen owns the
+          // choice. Opened from the hub, the schedule is already decided.
+          if (widget.showPicker)
+            Row(children: [
+              _toggleBtn('IAP 2022', 0, _schedIdx, _iapAccent,
+                  () => setState(() => _schedIdx = 0)),
+              const SizedBox(width: 8),
+              _toggleBtn('NIS', 1, _schedIdx, _nisAccent,
+                  () => setState(() => _schedIdx = 1)),
+              const SizedBox(width: 8),
+              _toggleBtn('Catch-up', 2, _schedIdx, _catchAccent,
+                  () => setState(() => _schedIdx = 2)),
+            ]),
           // Secondary Table | Smart only applies to the schedule views.
           if (_schedIdx != 2) ...[
-            const SizedBox(height: 8),
+            if (widget.showPicker) const SizedBox(height: 8),
             Row(children: [
               _toggleBtn('Table View', 0, _viewIdx, cs.primary,
                   () => setState(() => _viewIdx = 0)),

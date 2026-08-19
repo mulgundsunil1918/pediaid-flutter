@@ -8,6 +8,7 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import '../../services/who_data_service.dart';
 import '../../widgets/download_original_chart_button.dart';
+import '../../widgets/pediaid_loader.dart';
 
 const Color _boyBlue  = Color(0xFF1565C0);
 const Color _girlPink = Color(0xFFAD1457);
@@ -33,16 +34,55 @@ enum AgeInputMode { yearsMonths, decimal }
 
 // ─────────────────────────────────────────────────────────────────────────────
 
+/// A child's measurements, entered once on the input screen and then plotted
+/// across every applicable WHO chart. Nulls simply mean "not measured" — that
+/// chart still renders its reference curves, just without a plotted point.
+class WhoChildInput {
+  final double ageMonths;
+  final double? weightKg;
+  final double? heightCm; // length (<2y) or standing height; also X for wfl/wfh
+  final double? hcCm; // head circumference
+  final double? muacCm; // mid-upper-arm circumference
+  final double? tricepsMm; // triceps skinfold
+  final double? subscapularMm; // subscapular skinfold
+
+  const WhoChildInput({
+    required this.ageMonths,
+    this.weightKg,
+    this.heightCm,
+    this.hcCm,
+    this.muacCm,
+    this.tricepsMm,
+    this.subscapularMm,
+  });
+}
+
 class WhoChartScreen extends StatefulWidget {
   final String chartType;
   final String gender;
   final String title;
+
+  /// Embedded mode renders ONLY the chart card (no Scaffold, AppBar, inputs,
+  /// mode toggle or export bar) so several charts can be stacked on one results
+  /// page. When embedded, [forcedMode] fixes centile-vs-SD and [child] supplies
+  /// the values to plot automatically.
+  final bool embedded;
+  final ChartMode? forcedMode;
+  final WhoChildInput? child;
+
+  /// When set, the chart's RepaintBoundary uses this key so a parent can
+  /// capture it for a combined PDF.
+  final GlobalKey? captureKey;
 
   const WhoChartScreen({
     super.key,
     required this.chartType,
     required this.gender,
     required this.title,
+    this.embedded = false,
+    this.forcedMode,
+    this.child,
+    this.captureKey,
   });
 
   @override
@@ -76,14 +116,31 @@ class _WhoChartScreenState extends State<WhoChartScreen> {
   String _resultInterpretation = '';
   String _bmiDisplay           = '';
 
-  final GlobalKey _chartKey = GlobalKey();
+  late final GlobalKey _chartKey = widget.captureKey ?? GlobalKey();
 
   // ── Lifecycle ──────────────────────────────────────────────────────────────
 
   @override
   void initState() {
     super.initState();
-    _loadData();
+    if (widget.forcedMode != null) _mode = widget.forcedMode!;
+    // Fast path: when the results screen has pre-warmed the cache, hydrate
+    // synchronously so the chart paints immediately with no spinner, and plot
+    // the point on the next frame (setState isn't allowed during initState).
+    final cp =
+        WhoDataService.instance.cachedPercentile(widget.chartType, widget.gender);
+    final cz =
+        WhoDataService.instance.cachedZScore(widget.chartType, widget.gender);
+    if (cp != null && cz != null) {
+      _pData = cp;
+      _zData = cz;
+      _isLoading = false;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _prefillFromChild();
+      });
+    } else {
+      _loadData();
+    }
     if (_isBfa) {
       _weightCtrl.addListener(_updateBmi);
       _heightCtrl.addListener(_updateBmi);
@@ -176,12 +233,67 @@ class _WhoChartScreenState extends State<WhoChartScreen> {
         _zData = zData;
         _isLoading = false;
       });
+      _prefillFromChild();
     } catch (e) {
       setState(() {
         _error = e.toString();
         _isLoading = false;
       });
     }
+  }
+
+  /// Embedded mode: map the shared [WhoChildInput] onto this chart's own inputs
+  /// and plot the point right away. Each chart type reads only what it needs;
+  /// a missing measurement just leaves the chart as reference curves.
+  void _prefillFromChild() {
+    final c = widget.child;
+    if (c == null) return;
+
+    if (_isAgeBased) {
+      _selectedYears = c.ageMonths ~/ 12;
+      _selectedMonths = (c.ageMonths % 12).round();
+      _ageInputMode = AgeInputMode.yearsMonths;
+    }
+
+    String fmt(double v) =>
+        v == v.roundToDouble() ? v.toStringAsFixed(0) : v.toString();
+
+    double? measure; // Y value for age-based non-BMI charts
+    switch (widget.chartType) {
+      case 'wfa':
+        measure = c.weightKg;
+        break;
+      case 'lhfa':
+        measure = c.heightCm;
+        break;
+      case 'hcfa':
+        measure = c.hcCm;
+        break;
+      case 'acfa':
+        measure = c.muacCm;
+        break;
+      case 'tsfa':
+        measure = c.tricepsMm;
+        break;
+      case 'ssfa':
+        measure = c.subscapularMm;
+        break;
+      case 'bfa':
+        if (c.weightKg != null) _weightCtrl.text = fmt(c.weightKg!);
+        if (c.heightCm != null) _heightCtrl.text = fmt(c.heightCm!);
+        break;
+      case 'wfl':
+      case 'wfh':
+        // X = length/height (held in _measureCtrl), Y = weight (_weightCtrl).
+        if (c.heightCm != null) _measureCtrl.text = fmt(c.heightCm!);
+        if (c.weightKg != null) _weightCtrl.text = fmt(c.weightKg!);
+        break;
+    }
+    if (_isAgeBased && !_isBfa && measure != null) {
+      _measureCtrl.text = fmt(measure);
+    }
+
+    _calculate();
   }
 
   // ── Helpers ────────────────────────────────────────────────────────────────
@@ -646,6 +758,8 @@ class _WhoChartScreenState extends State<WhoChartScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.embedded) return _buildEmbedded();
+
     // Clamp text scaling to max 1.2 for layout safety
     final media = MediaQuery.of(context);
     final clampedTextScaler =
@@ -662,7 +776,7 @@ class _WhoChartScreenState extends State<WhoChartScreen> {
           elevation: 0,
         ),
         body: _isLoading
-            ? const Center(child: CircularProgressIndicator())
+            ? const PediAidLoader(message: 'Preparing WHO growth charts')
             : _error != null
                 ? _buildError()
                 : Column(
@@ -683,6 +797,31 @@ class _WhoChartScreenState extends State<WhoChartScreen> {
                     ],
                   ),
       ),
+    );
+  }
+
+  // Embedded card: chart + result + legend only, for the combined results page.
+  Widget _buildEmbedded() {
+    if (_isLoading) {
+      return const SizedBox(
+        height: 240,
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
+    if (_error != null) {
+      return SizedBox(height: 140, child: _buildError());
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _buildChart(chartHeight: 240),
+        if (_hasResult) ...[
+          const SizedBox(height: 10),
+          _buildResultCard(),
+        ],
+        const SizedBox(height: 10),
+        _buildLegend(),
+      ],
     );
   }
 

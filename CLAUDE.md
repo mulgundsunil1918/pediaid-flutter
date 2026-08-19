@@ -75,7 +75,13 @@ assets/        — iap_growth_chart_2015_edited.html (embedded IAP chart)
 - Dart SDK: `^3.11.1`
 - Flutter stable channel
 - Android NDK: `27.0.12077973`, Java target: `VERSION_17`
-- Bundle ID / Package name: `com.pediaid.pediaid` (Android + iOS, locked — never change)
+- Package name (Android): `com.pediaid.pediaid` — locked, never change
+- Bundle ID (iOS): `app.pediaid.pediaid` — locked, never change. NOTE: this
+  deliberately differs from Android. It matches the live App Store listing
+  (id 6777623709); "correcting" it to `com.pediaid.pediaid` would break the
+  listing and signing.
+- App Store ID: `6777623709`. The old `6748139585` seen in some links is dead —
+  Apple's lookup API returns nothing for it.
 - iOS minimum deployment target: 15.0 (raised from 13.0 — Firebase pods require it)
 - iOS signing: automatic (simulator unsigned, device requires Apple Developer account)
 - pod install fix: requires `LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8` prefix on Ruby 4.x (already in ~/.zshrc)

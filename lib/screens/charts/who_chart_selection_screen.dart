@@ -1,11 +1,39 @@
 import 'package:flutter/material.dart';
+
+import '../../widgets/list_search_field.dart';
 import 'who_chart_screen.dart';
 
 const Color _boyBlue  = Color(0xFF1565C0);
 const Color _girlPink = Color(0xFFAD1457);
 
-class WhoChartSelectionScreen extends StatelessWidget {
+class WhoChartSelectionScreen extends StatefulWidget {
   const WhoChartSelectionScreen({super.key});
+
+  @override
+  State<WhoChartSelectionScreen> createState() =>
+      _WhoChartSelectionScreenState();
+}
+
+class _WhoChartSelectionScreenState extends State<WhoChartSelectionScreen> {
+  final TextEditingController _searchCtl = TextEditingController();
+  String _query = '';
+
+  @override
+  void dispose() {
+    _searchCtl.dispose();
+    super.dispose();
+  }
+
+  List<_ChartOption> _match(List<_ChartOption> opts) {
+    final q = _query.trim().toLowerCase();
+    if (q.isEmpty) return opts;
+    return opts
+        .where((o) =>
+            o.title.toLowerCase().contains(q) ||
+            o.range.toLowerCase().contains(q) ||
+            o.chartType.toLowerCase().contains(q))
+        .toList();
+  }
 
   static const List<_ChartOption> _boysOptions = [
     _ChartOption(
@@ -100,6 +128,10 @@ class WhoChartSelectionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
+    final boys = _match(_boysOptions);
+    final girls = _match(_girlsOptions);
+    final total = _boysOptions.length + _girlsOptions.length;
+    final searching = _query.trim().isNotEmpty;
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
@@ -122,9 +154,19 @@ class WhoChartSelectionScreen extends StatelessWidget {
                 color: cs.primary,
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 8),
+            ListSearchField(
+              controller: _searchCtl,
+              hintText: 'Search $total WHO charts…',
+              onChanged: (v) => setState(() => _query = v),
+              padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+            ),
+
+            if (searching && boys.isEmpty && girls.isEmpty)
+              ListSearchEmptyState(query: _searchCtl.text, noun: 'charts'),
 
             // ── Boys section ───────────────────────────────────────────────
+            if (boys.isNotEmpty) ...[
             _SectionHeader(
               icon: Icons.boy,
               label: 'Boys',
@@ -132,7 +174,7 @@ class WhoChartSelectionScreen extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             _ChartGrid(
-              options: _boysOptions,
+              options: boys,
               accentColor: _boyBlue,
               onTap: (opt) => Navigator.push(
                 context,
@@ -146,8 +188,10 @@ class WhoChartSelectionScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
+            ],
 
             // ── Girls section ──────────────────────────────────────────────
+            if (girls.isNotEmpty) ...[
             _SectionHeader(
               icon: Icons.girl,
               label: 'Girls',
@@ -155,7 +199,7 @@ class WhoChartSelectionScreen extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             _ChartGrid(
-              options: _girlsOptions,
+              options: girls,
               accentColor: _girlPink,
               onTap: (opt) => Navigator.push(
                 context,
@@ -169,6 +213,7 @@ class WhoChartSelectionScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 24),
+            ],
 
             // ── Disclaimer ─────────────────────────────────────────────────
             Text(
