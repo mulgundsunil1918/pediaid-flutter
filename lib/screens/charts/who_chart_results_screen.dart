@@ -33,7 +33,12 @@ class _MetricDef {
   final String needs; // which measurement plots the point
   final IconData icon;
   const _MetricDef(
-      this.chartType, this.title, this.short, this.needs, this.icon);
+    this.chartType,
+    this.title,
+    this.short,
+    this.needs,
+    this.icon,
+  );
 }
 
 class WhoChartResultsScreen extends StatefulWidget {
@@ -79,28 +84,73 @@ class _WhoChartResultsScreenState extends State<WhoChartResultsScreen>
     final under2 = c.ageMonths < 24;
     return [
       const _MetricDef(
-          'wfa', 'Weight for Age', 'Weight', 'weight', Icons.monitor_weight),
+        'wfa',
+        'Weight for Age',
+        'Weight',
+        'weight',
+        Icons.monitor_weight,
+      ),
       const _MetricDef(
-          'lhfa', 'Length / Height for Age', 'Height', 'height', Icons.height),
+        'lhfa',
+        'Length / Height for Age',
+        'Height',
+        'height',
+        Icons.height,
+      ),
       const _MetricDef(
-          'bfa', 'BMI for Age', 'BMI', 'weight + height', Icons.calculate),
+        'bfa',
+        'BMI for Age',
+        'BMI',
+        'weight + height',
+        Icons.calculate,
+      ),
       under2
-          ? const _MetricDef('wfl', 'Weight for Length', 'Wt / Length',
-              'length + weight', Icons.straighten)
-          : const _MetricDef('wfh', 'Weight for Height', 'Wt / Height',
-              'height + weight', Icons.swap_vert),
-      const _MetricDef('hcfa', 'Head Circumference for Age', 'Head Circ',
-          'head circumference', Icons.circle_outlined),
+          ? const _MetricDef(
+              'wfl',
+              'Weight for Length',
+              'Wt / Length',
+              'length + weight',
+              Icons.straighten,
+            )
+          : const _MetricDef(
+              'wfh',
+              'Weight for Height',
+              'Wt / Height',
+              'height + weight',
+              Icons.swap_vert,
+            ),
+      const _MetricDef(
+        'hcfa',
+        'Head Circumference for Age',
+        'Head Circ',
+        'head circumference',
+        Icons.circle_outlined,
+      ),
       // Additional anthropometry — only when its measurement was entered.
       if (c.muacCm != null)
-        const _MetricDef('acfa', 'Arm Circumference for Age', 'Arm (MUAC)',
-            'arm circumference', Icons.fitness_center),
+        const _MetricDef(
+          'acfa',
+          'Arm Circumference for Age',
+          'Arm (MUAC)',
+          'arm circumference',
+          Icons.fitness_center,
+        ),
       if (c.tricepsMm != null)
-        const _MetricDef('tsfa', 'Triceps Skinfold for Age', 'Triceps',
-            'triceps skinfold', Icons.compress),
+        const _MetricDef(
+          'tsfa',
+          'Triceps Skinfold for Age',
+          'Triceps',
+          'triceps skinfold',
+          Icons.compress,
+        ),
       if (c.subscapularMm != null)
-        const _MetricDef('ssfa', 'Subscapular Skinfold for Age', 'Subscap',
-            'subscapular skinfold', Icons.compress),
+        const _MetricDef(
+          'ssfa',
+          'Subscapular Skinfold for Age',
+          'Subscap',
+          'subscapular skinfold',
+          Icons.compress,
+        ),
     ];
   }
 
@@ -111,9 +161,14 @@ class _WhoChartResultsScreenState extends State<WhoChartResultsScreen>
     for (final m in _metrics) {
       if (!mounted) return;
       try {
-        await WhoDataService.instance
-            .loadPercentileData(m.chartType, widget.gender);
-        await WhoDataService.instance.loadZScoreData(m.chartType, widget.gender);
+        await WhoDataService.instance.loadPercentileData(
+          m.chartType,
+          widget.gender,
+        );
+        await WhoDataService.instance.loadZScoreData(
+          m.chartType,
+          widget.gender,
+        );
       } catch (_) {}
       await Future<void>.delayed(Duration.zero); // yield so the loader animates
     }
@@ -139,8 +194,10 @@ class _WhoChartResultsScreenState extends State<WhoChartResultsScreen>
       appBar: AppBar(
         backgroundColor: _accent,
         foregroundColor: Colors.white,
-        title: const Text('WHO Growth Charts',
-            style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text(
+          'WHO Growth Charts',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         actions: [
           IconButton(
             tooltip: 'Save all as PDF',
@@ -149,7 +206,10 @@ class _WhoChartResultsScreenState extends State<WhoChartResultsScreen>
                     width: 18,
                     height: 18,
                     child: CircularProgressIndicator(
-                        strokeWidth: 2, color: Colors.white))
+                      strokeWidth: 2,
+                      color: Colors.white,
+                    ),
+                  )
                 : const Icon(Icons.picture_as_pdf_outlined),
             onPressed: _exporting ? null : _exportAllPdf,
           ),
@@ -223,18 +283,23 @@ class _WhoChartResultsScreenState extends State<WhoChartResultsScreen>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(m.title,
-                        style: TextStyle(
-                            fontSize: 15.5,
-                            fontWeight: FontWeight.bold,
-                            color: _accent)),
-                    Text('Plots ${m.needs}',
-                        style: TextStyle(
-                            fontSize: 11.5,
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onSurface
-                                .withValues(alpha: 0.55))),
+                    Text(
+                      m.title,
+                      style: TextStyle(
+                        fontSize: 15.5,
+                        fontWeight: FontWeight.bold,
+                        color: _accent,
+                      ),
+                    ),
+                    Text(
+                      'Plots ${m.needs}',
+                      style: TextStyle(
+                        fontSize: 11.5,
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.onSurface.withValues(alpha: 0.55),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -273,13 +338,14 @@ class _WhoChartResultsScreenState extends State<WhoChartResultsScreen>
               color: active ? _accent : Colors.transparent,
               borderRadius: BorderRadius.circular(9),
             ),
-            child: Text(label,
-                style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w700,
-                    color: active
-                        ? Colors.white
-                        : _accent.withValues(alpha: 0.9))),
+            child: Text(
+              label,
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w700,
+                color: active ? Colors.white : _accent.withValues(alpha: 0.9),
+              ),
+            ),
           ),
         ),
       );
@@ -291,11 +357,13 @@ class _WhoChartResultsScreenState extends State<WhoChartResultsScreen>
         color: _accent.withValues(alpha: 0.10),
         borderRadius: BorderRadius.circular(11),
       ),
-      child: Row(children: [
-        btn('Centile', ChartMode.percentile),
-        const SizedBox(width: 4),
-        btn('SD (Z-score)', ChartMode.zscore),
-      ]),
+      child: Row(
+        children: [
+          btn('Centile', ChartMode.percentile),
+          const SizedBox(width: 4),
+          btn('SD (Z-score)', ChartMode.zscore),
+        ],
+      ),
     );
   }
 
@@ -332,8 +400,10 @@ class _WhoChartResultsScreenState extends State<WhoChartResultsScreen>
         ),
         child: Row(
           children: [
-            Text(widget.gender == 'boys' ? '👦' : '👧',
-                style: const TextStyle(fontSize: 22)),
+            Text(
+              widget.gender == 'boys' ? '👦' : '👧',
+              style: const TextStyle(fontSize: 22),
+            ),
             const SizedBox(width: 8),
             Expanded(
               child: Wrap(
@@ -341,24 +411,34 @@ class _WhoChartResultsScreenState extends State<WhoChartResultsScreen>
                 runSpacing: 7,
                 crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
-                  Text('$_genderLabel · 0–5y',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 13,
-                          color: _accent)),
+                  Text(
+                    '$_genderLabel · 0–5y',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13,
+                      color: _accent,
+                    ),
+                  ),
                   for (final ch in chips)
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 9, vertical: 4),
+                        horizontal: 9,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         color: Theme.of(context).cardColor,
                         borderRadius: BorderRadius.circular(20),
-                        border:
-                            Border.all(color: _accent.withValues(alpha: 0.3)),
+                        border: Border.all(
+                          color: _accent.withValues(alpha: 0.3),
+                        ),
                       ),
-                      child: Text(ch,
-                          style: const TextStyle(
-                              fontSize: 11.5, fontWeight: FontWeight.w600)),
+                      child: Text(
+                        ch,
+                        style: const TextStyle(
+                          fontSize: 11.5,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ),
                 ],
               ),
@@ -393,12 +473,15 @@ class _WhoChartResultsScreenState extends State<WhoChartResultsScreen>
       final bytes = await _buildPdf(shots);
       if (mounted) {
         await Printing.layoutPdf(
-            name: 'WHO Growth Charts — $_genderLabel', onLayout: (_) => bytes);
+          name: 'WHO Growth Charts — $_genderLabel',
+          onLayout: (_) => bytes,
+        );
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Export failed: $e')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Export failed: $e')));
       }
     } finally {
       if (mounted) setState(() => _exporting = false);
@@ -406,7 +489,10 @@ class _WhoChartResultsScreenState extends State<WhoChartResultsScreen>
   }
 
   Future<Uint8List?> _showAndCapture(
-      int i, ChartMode mode, String chartType) async {
+    int i,
+    ChartMode mode,
+    String chartType,
+  ) async {
     if (!mounted) return null;
     setState(() => _mode[i] = mode);
     // Let the chart mount, load (cached) and plot before capturing.
@@ -427,62 +513,96 @@ class _WhoChartResultsScreenState extends State<WhoChartResultsScreen>
   Future<Uint8List> _buildPdf(List<_MetricShots> shots) async {
     final doc = pw.Document();
     const navy = PdfColor(0.10, 0.14, 0.49);
-    for (final s in shots) {
-      doc.addPage(
-        pw.Page(
-          pageFormat: PdfPageFormat.a4,
-          margin: const pw.EdgeInsets.all(28),
-          build: (ctx) => pw.Column(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-              pw.Text('PediAid — WHO Growth Charts',
-                  style: pw.TextStyle(
-                      fontSize: 15,
-                      fontWeight: pw.FontWeight.bold,
-                      color: navy)),
-              pw.Divider(color: navy),
-              pw.SizedBox(height: 6),
-              pw.Text('$_genderLabel — ${s.title}',
-                  style: pw.TextStyle(
-                      fontSize: 14,
-                      fontWeight: pw.FontWeight.bold,
-                      color: navy)),
-              pw.SizedBox(height: 10),
-              _pdfChart('Centile chart', s.percentile),
-              pw.SizedBox(height: 12),
-              _pdfChart('SD (Z-score) chart', s.zscore),
-              pw.Spacer(),
-              pw.Text('WHO Child Growth Standards 2006 — For clinical use only',
-                  style: pw.TextStyle(fontSize: 9, color: PdfColors.grey600)),
-            ],
-          ),
+
+    // ASCII only in PDF text. The package's built-in Helvetica has no glyph
+    // for an em dash, so "PediAid — WHO Growth Charts" rendered as a tofu box
+    // on every heading. Embedding a Unicode font would mean a runtime download,
+    // which this app must work without.
+    //
+    // MultiPage rather than one Page per metric: charts now flow continuously
+    // and pack two metrics to a page instead of leaving half of each page to a
+    // Spacer.
+    doc.addPage(
+      pw.MultiPage(
+        pageFormat: PdfPageFormat.a4,
+        margin: const pw.EdgeInsets.all(28),
+        header: (ctx) => pw.Column(
+          crossAxisAlignment: pw.CrossAxisAlignment.start,
+          children: [
+            pw.Text(
+              'PediAid | WHO Growth Charts',
+              style: pw.TextStyle(
+                fontSize: 15,
+                fontWeight: pw.FontWeight.bold,
+                color: navy,
+              ),
+            ),
+            pw.Divider(color: navy),
+            pw.SizedBox(height: 4),
+          ],
         ),
-      );
-    }
+        footer: (ctx) => pw.Row(
+          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+          children: [
+            pw.Text(
+              'WHO Child Growth Standards 2006 - For clinical use only',
+              style: pw.TextStyle(fontSize: 9, color: PdfColors.grey600),
+            ),
+            pw.Text(
+              'Page ${ctx.pageNumber} of ${ctx.pagesCount}',
+              style: pw.TextStyle(fontSize: 9, color: PdfColors.grey600),
+            ),
+          ],
+        ),
+        build: (ctx) => [
+          for (final s in shots) ...[
+            pw.SizedBox(height: 6),
+            pw.Text(
+              '$_genderLabel - ${s.title}',
+              style: pw.TextStyle(
+                fontSize: 13,
+                fontWeight: pw.FontWeight.bold,
+                color: navy,
+              ),
+            ),
+            pw.SizedBox(height: 8),
+            _pdfChart('Centile chart', s.percentile),
+            pw.SizedBox(height: 10),
+            _pdfChart('SD (Z-score) chart', s.zscore),
+            pw.SizedBox(height: 16),
+          ],
+        ],
+      ),
+    );
     return doc.save();
   }
 
   pw.Widget _pdfChart(String label, Uint8List? bytes) => pw.Column(
-        crossAxisAlignment: pw.CrossAxisAlignment.start,
-        children: [
-          pw.Text(label,
-              style: pw.TextStyle(
-                  fontSize: 10,
-                  fontWeight: pw.FontWeight.bold,
-                  color: PdfColors.grey700)),
-          pw.SizedBox(height: 4),
-          if (bytes != null)
-            pw.Image(pw.MemoryImage(bytes), height: 300, fit: pw.BoxFit.contain)
-          else
-            pw.Container(
-              height: 120,
-              alignment: pw.Alignment.center,
-              color: PdfColors.grey200,
-              child: pw.Text('Chart unavailable',
-                  style: pw.TextStyle(fontSize: 10, color: PdfColors.grey600)),
-            ),
-        ],
-      );
+    crossAxisAlignment: pw.CrossAxisAlignment.start,
+    children: [
+      pw.Text(
+        label,
+        style: pw.TextStyle(
+          fontSize: 10,
+          fontWeight: pw.FontWeight.bold,
+          color: PdfColors.grey700,
+        ),
+      ),
+      pw.SizedBox(height: 4),
+      if (bytes != null)
+        pw.Image(pw.MemoryImage(bytes), height: 250, fit: pw.BoxFit.contain)
+      else
+        pw.Container(
+          height: 120,
+          alignment: pw.Alignment.center,
+          color: PdfColors.grey200,
+          child: pw.Text(
+            'Chart unavailable',
+            style: pw.TextStyle(fontSize: 10, color: PdfColors.grey600),
+          ),
+        ),
+    ],
+  );
 
   static String _n(double v) =>
       v == v.roundToDouble() ? v.toStringAsFixed(0) : v.toString();
