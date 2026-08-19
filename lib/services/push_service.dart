@@ -107,6 +107,22 @@ class PushService {
         }
       }
 
+      // ── Tap handlers FIRST ────────────────────────────────────────────
+      // These must be registered before any network work. They used to sit
+      // after an AWAITED POST to the backend, which runs on a plan that spins
+      // down — so a cold start could spend 30-60 s in that await while
+      // onMessageOpenedApp (a plain stream, no replay) dropped the tap event
+      // entirely. The symptom was a notification tap opening the app on the
+      // home screen instead of the linked trial.
+      FirebaseMessaging.onMessageOpenedApp.listen(_openFromMessage);
+      final initialMessage = await messaging.getInitialMessage();
+      if (initialMessage != null) {
+        // At cold start the navigator isn't mounted yet — wait for first frame.
+        WidgetsBinding.instance.addPostFrameCallback(
+          (_) => _openFromMessage(initialMessage),
+        );
+      }
+
       // Every platform needs its token registered, not just web.
       //
       // Android previously only subscribed to the broadcast topic here. Topics
@@ -121,7 +137,10 @@ class PushService {
       );
       if (token != null) {
         _token = token;
-        await _registerTokenWithBackend(token);
+        // Deliberately NOT awaited: nothing below depends on it, and the
+        // backend can be cold. Blocking here delayed everything after it.
+        // ignore: unawaited_futures
+        _registerTokenWithBackend(token);
       }
       messaging.onTokenRefresh.listen((t) {
         _token = t;
@@ -142,24 +161,14 @@ class PushService {
         messengerKey?.currentState?.showSnackBar(
           SnackBar(
             content: Text(
-              n.body == null || n.body!.isEmpty ? n.title ?? '' : '${n.title} — ${n.body}',
+              n.body == null || n.body!.isEmpty
+                  ? n.title ?? ''
+                  : '${n.title} — ${n.body}',
             ),
             duration: const Duration(seconds: 6),
           ),
         );
       });
-
-      // A tap on the notification must open the linked item, not just the app.
-      // The backend puts the deep-link path in the message data; without these
-      // handlers a tap only ever landed on the home screen.
-      FirebaseMessaging.onMessageOpenedApp.listen(_openFromMessage);
-      final initialMessage = await messaging.getInitialMessage();
-      if (initialMessage != null) {
-        // At cold start the navigator isn't mounted yet — wait for first frame.
-        WidgetsBinding.instance.addPostFrameCallback(
-          (_) => _openFromMessage(initialMessage),
-        );
-      }
 
       _initialized = true;
     } catch (e) {
@@ -168,15 +177,27 @@ class PushService {
   }
 
   /// Open the Academics WebView at the notification's deep-link path.
-  static void _openFromMessage(RemoteMessage message) {
+  ///
+  /// [attempt] exists because the navigator may not be mounted the instant a
+  /// cold start delivers the tap. Returning silently there lost the deep link
+  /// and left the user on the home screen, so this retries briefly instead.
+  static void _openFromMessage(RemoteMessage message, {int attempt = 0}) {
     final link = message.data['linkPath'];
     if (link == null || link.isEmpty) return;
     final nav = navigatorKey?.currentState;
-    if (nav == null) return;
+    if (nav == null) {
+      if (attempt >= 10) return; // ~5 s, then give up rather than loop
+      Future<void>.delayed(const Duration(milliseconds: 500), () {
+        _openFromMessage(message, attempt: attempt + 1);
+      });
+      return;
+    }
     // linkPath is an absolute web path (e.g. /academics/trials/x/y), but
     // AcademicsWebScreen's base URL already ends in /academics — strip that
     // prefix so the URL is not doubled to /academics/academics.
-    var rel = link.startsWith('/academics') ? link.substring('/academics'.length) : link;
+    var rel = link.startsWith('/academics')
+        ? link.substring('/academics'.length)
+        : link;
     if (rel.isEmpty) rel = '/';
     nav.push(MaterialPageRoute(builder: (_) => AcademicsWebScreen(path: rel)));
   }
