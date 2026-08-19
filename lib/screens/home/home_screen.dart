@@ -683,7 +683,9 @@ class _HomeScreenState extends State<HomeScreen> {
               child: TextButton(
                 onPressed: openStore,
                 child: Text(
-                  Platform.isIOS ? 'Rate on the App Store' : 'Rate on Play Store',
+                  Platform.isIOS
+                      ? 'Rate on the App Store'
+                      : 'Rate on Play Store',
                   style: GoogleFonts.plusJakartaSans(
                     fontSize: 12.5,
                     fontWeight: FontWeight.w700,
@@ -916,11 +918,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
-                        _greetingIcon,
-                        color: Colors.white,
-                        size: 12,
-                      ),
+                      Icon(_greetingIcon, color: Colors.white, size: 12),
                       const SizedBox(width: 5),
                       Flexible(
                         child: Text(
@@ -1061,10 +1059,11 @@ class _HomeScreenState extends State<HomeScreen> {
     final cards = [
       _FeatureDef(
         'Calculators & Tools',
-        'Neonatal & paediatric · 80+ tools',
+        'Neonatal & paediatric · 60+ tools',
         Icons.calculate_rounded,
         const Color(0xFF1565C0),
-        () => open('allcalc', 'Calculators', () => const CalculatorsHubScreen()),
+        () =>
+            open('allcalc', 'Calculators', () => const CalculatorsHubScreen()),
       ),
       _FeatureDef(
         'Charts',
@@ -1083,11 +1082,8 @@ class _HomeScreenState extends State<HomeScreen> {
         '500+ drugs',
         Icons.medication_rounded,
         const Color(0xFF00695C),
-        () => open(
-          'formulary',
-          'Drug Formulary',
-          () => const FormularyScreen(),
-        ),
+        () =>
+            open('formulary', 'Drug Formulary', () => const FormularyScreen()),
       ),
       _FeatureDef(
         'Guides & Scores',
@@ -1123,8 +1119,11 @@ class _HomeScreenState extends State<HomeScreen> {
         'IAP · National (NIS) · Catch-up',
         Icons.vaccines_rounded,
         const Color(0xFF00897B),
-        () => open('immunisation', 'Immunisation',
-            () => const ImmunisationHubScreen()),
+        () => open(
+          'immunisation',
+          'Immunisation',
+          () => const ImmunisationHubScreen(),
+        ),
       ),
       _FeatureDef(
         'Lab Reference',
@@ -1152,10 +1151,11 @@ class _HomeScreenState extends State<HomeScreen> {
         crossAxisCount: 2,
         crossAxisSpacing: 12,
         mainAxisSpacing: 12,
-        // Shorter cards on a phone: 10 tiles at 136pt pushed Resources three
-        // scrolls down. 116 fits two more rows in the same first screen while
-        // still clearing the icon + two-line subtitle.
-        mainAxisExtent: isPhone ? 116 : 136,
+        // Shorter cards on a phone so 10 tiles do not push Resources three
+        // scrolls down, but tall enough for a TWO-line subtitle: padding 28 +
+        // icon 40 + title 19 + gap 2 + two lines ~28 = 117, so 130 leaves
+        // headroom without returning to the original 136.
+        mainAxisExtent: isPhone ? 130 : 140,
       ),
       itemCount: cards.length,
       itemBuilder: (_, i) {
@@ -1265,8 +1265,7 @@ class _HomeScreenState extends State<HomeScreen> {
     // Driven by _selectedKeys (not _allChips) so pinned tools appear in the
     // order the user added them, and unknown keys drop out silently.
     // Formulary chip shows on iOS too — see the Drug Formulary card comment.
-    final visible =
-        _selectedKeys.map(_chipFor).whereType<_ChipDef>().toList();
+    final visible = _selectedKeys.map(_chipFor).whereType<_ChipDef>().toList();
 
     if (visible.isEmpty) {
       return Padding(
@@ -1331,8 +1330,7 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     }
 
-    final bool truncated =
-        !_chipsExpanded && visible.length > _kCollapsedChips;
+    final bool truncated = !_chipsExpanded && visible.length > _kCollapsedChips;
     final shown = truncated ? visible.take(_kCollapsedChips) : visible;
 
     return Wrap(
@@ -1366,221 +1364,256 @@ class _HomeScreenState extends State<HomeScreen> {
   // ── Edit quick access bottom sheet ─────────────────────────────────────────
 
   void _showEditQuickAccess(BuildContext context) {
+    // Declared OUTSIDE showModalBottomSheet's builder on purpose. The builder
+    // is re-invoked whenever the route rebuilds — opening the keyboard changes
+    // MediaQuery and does exactly that — so state declared inside it was being
+    // recreated on the first keystroke: a fresh controller and an empty query.
+    // That is why search looked broken and a searched-for tool vanished before
+    // it could be ticked.
+    final sheetSearch = TextEditingController();
+    var sheetQuery = '';
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Theme.of(context).cardColor,
+      // Let the sheet grow past the default half-height once the keyboard is up.
+      useSafeArea: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       builder: (ctx) {
-        final sheetSearch = TextEditingController();
-        var sheetQuery = '';
         return StatefulBuilder(
           builder: (ctx, setLocal) {
             final cs = Theme.of(ctx).colorScheme;
-            final maxH = MediaQuery.of(ctx).size.height * 0.85;
+            final media = MediaQuery.of(ctx);
+            final keyboard = media.viewInsets.bottom;
+            // Height budget must exclude the keyboard, or the Done button is
+            // pushed underneath it.
+            final maxH = (media.size.height - keyboard) * 0.88;
             final q = sheetQuery.trim().toLowerCase();
             final matchingModules = q.isEmpty
                 ? _allChips
                 : _allChips
-                    .where((c) => c.label.toLowerCase().contains(q))
-                    .toList();
-            // Unsearched, the full 163-tool list would bury the modules, so
-            // only already-pinned tools show until the doctor types.
+                      .where((c) => c.label.toLowerCase().contains(q))
+                      .toList();
+            // Show EVERY tool when nothing is typed, pinned ones first.
+            // Previously only already-pinned tools were listed, which made
+            // an app with ~200 tools look like it had about 27.
+            final reg = ToolRegistry.instance;
             final matchingTools = q.isEmpty
-                ? ToolRegistry.instance.all
-                    .where((t) => _selectedKeys.contains(t.key))
-                    .toList()
-                : ToolRegistry.instance.search(q);
-            return ConstrainedBox(
-              constraints: BoxConstraints(maxHeight: maxH),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // Handle bar
-                    Center(
-                      child: Container(
-                        width: 36,
-                        height: 4,
-                        decoration: BoxDecoration(
-                          color: cs.outline,
-                          borderRadius: BorderRadius.circular(2),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Row(
-                      children: [
-                        Icon(Icons.tune_rounded, color: cs.primary, size: 20),
-                        const SizedBox(width: 8),
-                        Text(
-                          'Customise Quick Access',
-                          style: GoogleFonts.plusJakartaSans(
-                            fontSize: 17,
-                            fontWeight: FontWeight.w700,
-                            color: cs.onSurface,
+                ? [
+                    ...reg.all.where((t) => _selectedKeys.contains(t.key)),
+                    ...reg.all.where((t) => !_selectedKeys.contains(t.key)),
+                  ]
+                : reg.search(q);
+            return AnimatedPadding(
+              duration: const Duration(milliseconds: 150),
+              curve: Curves.easeOut,
+              padding: EdgeInsets.only(bottom: keyboard),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxHeight: maxH),
+                child: Padding(
+                  // Bottom padding clears the Android gesture bar; without it the
+                  // Done button sat on top of the system navigation.
+                  padding: EdgeInsets.fromLTRB(
+                    20,
+                    16,
+                    20,
+                    16 + media.viewPadding.bottom,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Handle bar
+                      Center(
+                        child: Container(
+                          width: 36,
+                          height: 4,
+                          decoration: BoxDecoration(
+                            color: cs.outline,
+                            borderRadius: BorderRadius.circular(2),
                           ),
                         ),
-                      ],
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'Pin any module, calculator or score to your home '
-                      'screen.',
-                      style: GoogleFonts.plusJakartaSans(
-                        fontSize: 12,
-                        color: cs.onSurface.withValues(alpha: 0.5),
                       ),
-                    ),
-                    const SizedBox(height: 10),
-                    ListSearchField(
-                      controller: sheetSearch,
-                      hintText:
-                          'Search ${_allChips.length + ToolRegistry.instance.all.length} shortcuts…',
-                      onChanged: (v) => setLocal(() => sheetQuery = v),
-                      padding: const EdgeInsets.only(bottom: 8),
-                    ),
-                    const SizedBox(height: 2),
-                    Flexible(
-                      child: ListView(
-                        shrinkWrap: true,
-                        padding: const EdgeInsets.only(bottom: 8),
+                      const SizedBox(height: 16),
+                      Row(
                         children: [
-                          if (matchingModules.isNotEmpty)
-                            _SheetSectionLabel('Modules', cs),
-                          for (final chip in matchingModules)
-                            Builder(
-                              builder: (_) {
-                                final selected = _selectedKeys.contains(
-                                  chip.key,
-                                );
-                                return CheckboxListTile(
-                                  value: selected,
-                                  onChanged: (v) {
-                                    setLocal(() {
-                                      if (v == true) {
-                                        _selectedKeys.add(chip.key);
-                                      } else {
-                                        _selectedKeys.remove(chip.key);
-                                      }
-                                    });
-                                    setState(() {});
-                                    _savePrefs();
-                                  },
-                                  secondary: Container(
-                                    width: 36,
-                                    height: 36,
-                                    decoration: BoxDecoration(
-                                      color: cs.primary.withValues(alpha: 0.1),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: Icon(
-                                      chip.icon,
-                                      color: cs.primary,
-                                      size: 18,
-                                    ),
-                                  ),
-                                  title: Text(
-                                    chip.label,
-                                    style: GoogleFonts.plusJakartaSans(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 14,
-                                      color: cs.onSurface,
-                                    ),
-                                  ),
-                                  activeColor: cs.primary,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  dense: true,
-                                  contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 4,
-                                  ),
-                                );
-                              },
+                          Icon(Icons.tune_rounded, color: cs.primary, size: 20),
+                          const SizedBox(width: 8),
+                          Text(
+                            'Customise Quick Access',
+                            style: GoogleFonts.plusJakartaSans(
+                              fontSize: 17,
+                              fontWeight: FontWeight.w700,
+                              color: cs.onSurface,
                             ),
-                          if (matchingTools.isNotEmpty) ...[
-                            const SizedBox(height: 6),
-                            _SheetSectionLabel(
-                                'Calculators & Scores', cs),
-                          ],
-                          for (final tool in matchingTools)
-                            CheckboxListTile(
-                              value: _selectedKeys.contains(tool.key),
-                              onChanged: (v) {
-                                setLocal(() {
-                                  if (v == true) {
-                                    _selectedKeys.add(tool.key);
-                                  } else {
-                                    _selectedKeys.remove(tool.key);
-                                  }
-                                });
-                                setState(() {});
-                                _savePrefs();
-                              },
-                              secondary: Container(
-                                width: 36,
-                                height: 36,
-                                decoration: BoxDecoration(
-                                  color: cs.primary.withValues(alpha: 0.10),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Icon(tool.icon,
-                                    size: 19, color: cs.primary),
-                              ),
-                              title: Text(
-                                tool.label,
-                                style: GoogleFonts.plusJakartaSans(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  color: cs.onSurface,
-                                ),
-                              ),
-                              subtitle: Text(
-                                tool.subtitle,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: GoogleFonts.plusJakartaSans(
-                                  fontSize: 11.5,
-                                  color:
-                                      cs.onSurface.withValues(alpha: 0.55),
-                                ),
-                              ),
-                              controlAffinity:
-                                  ListTileControlAffinity.trailing,
-                              contentPadding: EdgeInsets.zero,
-                            ),
-                          if (matchingModules.isEmpty &&
-                              matchingTools.isEmpty)
-                            ListSearchEmptyState(
-                                query: sheetSearch.text, noun: 'shortcuts'),
+                          ),
                         ],
                       ),
-                    ),
-                    const SizedBox(height: 8),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () => Navigator.pop(ctx),
-                        child: Text(
-                          'Done',
-                          style: GoogleFonts.plusJakartaSans(
-                            fontWeight: FontWeight.w700,
+                      const SizedBox(height: 4),
+                      Text(
+                        'Pin any module, calculator or score to your home '
+                        'screen.',
+                        style: GoogleFonts.plusJakartaSans(
+                          fontSize: 12,
+                          color: cs.onSurface.withValues(alpha: 0.5),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      ListSearchField(
+                        controller: sheetSearch,
+                        hintText:
+                            'Search ${_allChips.length + reg.all.length} shortcuts…',
+                        onChanged: (v) => setLocal(() => sheetQuery = v),
+                        padding: const EdgeInsets.only(bottom: 8),
+                      ),
+                      const SizedBox(height: 2),
+                      Flexible(
+                        child: ListView(
+                          shrinkWrap: true,
+                          padding: const EdgeInsets.only(bottom: 8),
+                          children: [
+                            if (matchingModules.isNotEmpty)
+                              _SheetSectionLabel('Modules', cs),
+                            for (final chip in matchingModules)
+                              Builder(
+                                builder: (_) {
+                                  final selected = _selectedKeys.contains(
+                                    chip.key,
+                                  );
+                                  return CheckboxListTile(
+                                    value: selected,
+                                    onChanged: (v) {
+                                      setLocal(() {
+                                        if (v == true) {
+                                          _selectedKeys.add(chip.key);
+                                        } else {
+                                          _selectedKeys.remove(chip.key);
+                                        }
+                                      });
+                                      setState(() {});
+                                      _savePrefs();
+                                    },
+                                    secondary: Container(
+                                      width: 36,
+                                      height: 36,
+                                      decoration: BoxDecoration(
+                                        color: cs.primary.withValues(
+                                          alpha: 0.1,
+                                        ),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: Icon(
+                                        chip.icon,
+                                        color: cs.primary,
+                                        size: 18,
+                                      ),
+                                    ),
+                                    title: Text(
+                                      chip.label,
+                                      style: GoogleFonts.plusJakartaSans(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14,
+                                        color: cs.onSurface,
+                                      ),
+                                    ),
+                                    activeColor: cs.primary,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    dense: true,
+                                    contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 4,
+                                    ),
+                                  );
+                                },
+                              ),
+                            if (matchingTools.isNotEmpty) ...[
+                              const SizedBox(height: 6),
+                              _SheetSectionLabel(
+                                'Calculators, scores & guides (${matchingTools.length})',
+                                cs,
+                              ),
+                            ],
+                            for (final tool in matchingTools)
+                              CheckboxListTile(
+                                value: _selectedKeys.contains(tool.key),
+                                onChanged: (v) {
+                                  setLocal(() {
+                                    if (v == true) {
+                                      _selectedKeys.add(tool.key);
+                                    } else {
+                                      _selectedKeys.remove(tool.key);
+                                    }
+                                  });
+                                  setState(() {});
+                                  _savePrefs();
+                                },
+                                secondary: Container(
+                                  width: 36,
+                                  height: 36,
+                                  decoration: BoxDecoration(
+                                    color: cs.primary.withValues(alpha: 0.10),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Icon(
+                                    tool.icon,
+                                    size: 19,
+                                    color: cs.primary,
+                                  ),
+                                ),
+                                title: Text(
+                                  tool.label,
+                                  style: GoogleFonts.plusJakartaSans(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                    color: cs.onSurface,
+                                  ),
+                                ),
+                                subtitle: Text(
+                                  tool.subtitle,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.plusJakartaSans(
+                                    fontSize: 11.5,
+                                    color: cs.onSurface.withValues(alpha: 0.55),
+                                  ),
+                                ),
+                                controlAffinity:
+                                    ListTileControlAffinity.trailing,
+                                contentPadding: EdgeInsets.zero,
+                              ),
+                            if (matchingModules.isEmpty &&
+                                matchingTools.isEmpty)
+                              ListSearchEmptyState(
+                                query: sheetSearch.text,
+                                noun: 'shortcuts',
+                              ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () => Navigator.pop(ctx),
+                          child: Text(
+                            'Done',
+                            style: GoogleFonts.plusJakartaSans(
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             );
           },
         );
       },
-    );
+    ).whenComplete(sheetSearch.dispose);
   }
 
   void _navigateChip(BuildContext context, String key) {
@@ -2081,7 +2114,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         Platform.isIOS
                             ? 'https://apps.apple.com/app/id6777623709?action=write-review'
                             : 'https://play.google.com/store/apps/details'
-                                '?id=com.pediaid.pediaid',
+                                  '?id=com.pediaid.pediaid',
                       ),
                       mode: LaunchMode.externalApplication,
                     );
@@ -2191,17 +2224,17 @@ class _SheetSectionLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.fromLTRB(2, 6, 0, 2),
-        child: Text(
-          text.toUpperCase(),
-          style: GoogleFonts.plusJakartaSans(
-            fontSize: 11,
-            fontWeight: FontWeight.w800,
-            letterSpacing: 1.1,
-            color: cs.primary,
-          ),
-        ),
-      );
+    padding: const EdgeInsets.fromLTRB(2, 6, 0, 2),
+    child: Text(
+      text.toUpperCase(),
+      style: GoogleFonts.plusJakartaSans(
+        fontSize: 11,
+        fontWeight: FontWeight.w800,
+        letterSpacing: 1.1,
+        color: cs.primary,
+      ),
+    ),
+  );
 }
 
 class _ChipDef {
@@ -2240,10 +2273,7 @@ class _FeatureCardWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: cardBg,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: border,
-          width: card.highlight ? 1.6 : 1.0,
-        ),
+        border: Border.all(color: border, width: card.highlight ? 1.6 : 1.0),
       ),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
@@ -2284,8 +2314,14 @@ class _FeatureCardWidget extends StatelessWidget {
                       color: cs.onSurface.withValues(alpha: 0.55),
                       fontSize: 11,
                       fontWeight: FontWeight.w500,
+                      height: 1.25,
                     ),
-                    maxLines: 1,
+                    // Two lines: at 360dp the card is ~160pt wide, and a
+                    // single line clipped "80+ tools" to "8" and "Fenton" to
+                    // "Fe". Text width cannot be measured in a headless test
+                    // (the test font is monospaced), so this is solved by
+                    // giving the text room rather than by tuning strings.
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ],

@@ -37,6 +37,7 @@ import '../screens/guides/neonatal_scores/lus_score_screen.dart';
 import '../screens/guides/modified_ballard_screen.dart';
 import '../screens/guides/pofras_screen.dart';
 import '../screens/guides/can_score_screen.dart';
+import '../screens/guides/neonatal_scores/neonatal_score_by_name.dart';
 
 /// Which part of the app a tool belongs to. Used to group the picker.
 enum ToolKind { calculator, score, guide }
@@ -123,10 +124,39 @@ class ToolRegistry {
     RecentsService.instance.record(key, label);
   }
 
+  /// Ranked search.
+  ///
+  /// A plain `contains` put "SILC Score" above anything bilirubin for the
+  /// query "bili", because "irritability" contains it mid-word. Matches are
+  /// scored so that a label prefix beats a word start, which beats a mid-word
+  /// hit, which beats a keyword-only hit.
   List<ToolEntry> search(String query) {
     final q = query.trim().toLowerCase();
     if (q.isEmpty) return all;
-    return all.where((t) => t.matches(q)).toList();
+
+    int score(ToolEntry t) {
+      final label = t.label.toLowerCase();
+      if (label.startsWith(q)) return 0;
+      if (RegExp('\\b' + RegExp.escape(q)).hasMatch(label)) return 1;
+      if (label.contains(q)) return 2;
+      final sub = t.subtitle.toLowerCase();
+      if (RegExp('\\b' + RegExp.escape(q)).hasMatch(sub)) return 3;
+      final kw = t.keywords.toLowerCase();
+      if (RegExp('\\b' + RegExp.escape(q)).hasMatch(kw)) return 4;
+      if (sub.contains(q) || kw.contains(q)) return 5;
+      return 99;
+    }
+
+    final hits =
+        all
+            .map((t) => MapEntry(t, score(t)))
+            .where((e) => e.value < 99)
+            .toList()
+          ..sort((a, b) {
+            final c = a.value.compareTo(b.value);
+            return c != 0 ? c : a.key.label.compareTo(b.key.label);
+          });
+    return hits.map((e) => e.key).toList();
   }
 
   List<ToolEntry> _build() {
@@ -249,6 +279,38 @@ class ToolRegistry {
       'oral feeding readiness assessment scale breastfeeding',
       () => const PofrasScreen(),
     );
+    // The nine JSON-driven neonatal scores. Registered by NAME through a
+    // loader wrapper, because nicu_scores.json is read asynchronously and the
+    // registry resolves screens synchronously. Without these, searching
+    // "apgar" returned only the Neonatal Scores hub.
+    const jsonNeonatal = <String, String>{
+      'Apgar Score': 'apgar 1 minute 5 minute newborn resuscitation',
+      'Combined Apgar Score': 'combined apgar specified expanded',
+      'Downes Score': 'downes respiratory distress newborn',
+      'Silverman Anderson Score':
+          'silverman anderson retractions grunting preterm',
+      'Levene Staging (HIE)': 'levene hypoxic ischaemic encephalopathy staging',
+      'IVH Grading (Papile & Volpe)':
+          'intraventricular haemorrhage papile volpe grading',
+      'Modified Sarnat Staging (HIE)':
+          'sarnat hypoxic ischaemic encephalopathy staging',
+      'Thompson Score (HIE)': 'thompson hypoxic ischaemic encephalopathy',
+      'LATCH Score (Breastfeeding)': 'latch breastfeeding assessment',
+    };
+    jsonNeonatal.forEach((name, kw) {
+      add(
+        ToolEntry(
+          key: 'score:${_slug(name)}',
+          label: name,
+          subtitle: 'Neonatal score',
+          icon: Icons.child_care_rounded,
+          kind: ToolKind.score,
+          keywords: 'neonatal nicu $kw',
+          build: () => NeonatalScoreByName(scoreName: name),
+        ),
+      );
+    });
+
     neo(
       'CAN Score',
       'Clinical assessment of nutrition at birth',

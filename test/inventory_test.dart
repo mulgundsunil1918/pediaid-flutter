@@ -130,10 +130,35 @@ void main() {
     test('the registry still covers calculators, scores and guides', () {
       final reg = ToolRegistry.instance;
       expect(reg.calculators.length, greaterThanOrEqualTo(62));
-      expect(reg.scores.length, greaterThanOrEqualTo(96));
+      // 96 paediatric + 14 neonatal. The 9 JSON-driven neonatal scores were
+      // missing until 2026-08-19, so searching "apgar" found only the hub.
+      expect(reg.scores.length, greaterThanOrEqualTo(110));
       expect(reg.guides.length, greaterThanOrEqualTo(15));
-      expect(reg.all.length, greaterThanOrEqualTo(180),
+      expect(reg.all.length, greaterThanOrEqualTo(195),
           reason: 'a whole category dropped out of the registry');
+    });
+
+    test('the scores a doctor actually types are findable', () {
+      // Each of these returned only the "Neonatal Scores" hub before the
+      // JSON-driven scores were registered.
+      const expected = {
+        'apgar': 'Apgar Score',
+        'downes': 'Downes Score',
+        'silverman': 'Silverman Anderson Score',
+        'sarnat': 'Modified Sarnat Staging (HIE)',
+        'thompson': 'Thompson Score (HIE)',
+        'latch': 'LATCH Score (Breastfeeding)',
+        'croup': 'Westley Croup Score',
+        'kawasaki': 'Kawasaki Disease Criteria',
+        'pews': 'PEWS — Paediatric Early Warning Score',
+      };
+      expected.forEach((query, label) {
+        final hits = ToolRegistry.instance.search(query);
+        expect(hits, isNotEmpty, reason: '"$query" found nothing');
+        expect(hits.first.label, label,
+            reason: '"$query" should rank $label first, '
+                'got ${hits.first.label}');
+      });
     });
   });
 }
