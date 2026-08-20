@@ -6,6 +6,7 @@ import 'package:showcaseview/showcaseview.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../services/recents_service.dart';
 import '../../services/tool_registry.dart';
+import '../../services/push_permission_primer.dart';
 import '../../utils/share_message.dart';
 import '../../widgets/list_search_field.dart';
 import '../../providers/auth_provider.dart';
@@ -198,6 +199,23 @@ class _HomeScreenState extends State<HomeScreen> {
     _scrollController.addListener(_onScroll);
     if (kIsWeb) _fetchVisitorCount();
     _maybeAskForReview();
+    _maybeAskForNotifications();
+  }
+
+  /// Notification opt-in, on the second launch.
+  ///
+  /// Deliberately here rather than in PushService.init(): that runs during app
+  /// start, and iOS grants exactly one system dialog — spending it before the
+  /// user has seen anything is how a "no" becomes permanent. The primer shows
+  /// our own explainer first and only reaches the OS dialog on "Turn on".
+  ///
+  /// Delayed a little so it never collides with the review prompt or lands
+  /// while the home screen is still settling.
+  void _maybeAskForNotifications() {
+    Future<void>.delayed(const Duration(seconds: 2), () {
+      if (!mounted) return;
+      PushPermissionPrimer.maybeAskOnLaunch(context);
+    });
   }
 
   /// Offers the review prompt a few seconds after the home screen settles.

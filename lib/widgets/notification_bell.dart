@@ -11,9 +11,12 @@
 
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_app_badge/flutter_app_badge.dart';
+import 'package:flutter/foundation.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../academics/academics_web_screen.dart';
 import '../services/auth_service.dart';
+import '../services/push_service.dart';
 import '../services/notifications_service.dart';
 
 class NotificationBell extends StatefulWidget {
@@ -23,27 +26,78 @@ class NotificationBell extends StatefulWidget {
   State<NotificationBell> createState() => _NotificationBellState();
 }
 
-class _NotificationBellState extends State<NotificationBell> {
+class _NotificationBellState extends State<NotificationBell>
+    with WidgetsBindingObserver {
   Timer? _pollTimer;
   int _unreadCount = 0;
   List<PediaidNotification> _notifications = const [];
   bool _loading = false;
 
+  /// Was 60 seconds, and it ran while the app was backgrounded.
+  ///
+  /// Every open app kept the Neon compute awake around the clock, so the
+  /// database never auto-suspended and cost scaled with idle users rather
+  /// than with use. This is a safety net only: the badge is really kept
+  /// current by app resume and by incoming push, both of which are faster
+  /// than any poll. Nothing here is time-critical.
+  static const Duration _kPollInterval = Duration(hours: 12);
+
   @override
   void initState() {
     super.initState();
-    // Kick off first load, then start the 60-second polling tick.
+    WidgetsBinding.instance.addObserver(this);
     _refresh();
-    _pollTimer = Timer.periodic(const Duration(seconds: 60), (_) => _refresh());
-    // Also refresh when the auth state changes (e.g. fresh login).
+    _startPolling();
+    // Refresh when the auth state changes (e.g. fresh login).
     AuthService.instance.addListener(_refresh);
+    // Refresh the moment a push arrives, which is what actually keeps the
+    // badge live. Far more responsive than the old 60-second tick.
+    PushService.messageReceived.addListener(_refresh);
+  }
+
+  void _startPolling() {
+    _pollTimer?.cancel();
+    _pollTimer = Timer.periodic(_kPollInterval, (_) => _refresh());
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.resumed) {
+      // Coming back to the app is the moment the badge must be right.
+      _refresh();
+      _startPolling();
+    } else if (state == AppLifecycleState.paused) {
+      // Nothing may touch the database while the app is in the background.
+      _pollTimer?.cancel();
+      _pollTimer = null;
+    }
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _pollTimer?.cancel();
     AuthService.instance.removeListener(_refresh);
+    PushService.messageReceived.removeListener(_refresh);
     super.dispose();
+  }
+
+  /// Sets, or clears, the launcher icon badge.
+  ///
+  /// Best-effort by design: Android badge support varies by launcher and iOS
+  /// requires granted permission, so a failure here must never surface.
+  static Future<void> _syncAppBadge(int count) async {
+    if (kIsWeb) return;
+    try {
+      if (count > 0) {
+        await FlutterAppBadge.count(count);
+      } else {
+        await FlutterAppBadge.count(0);
+      }
+    } catch (_) {
+      /* unsupported launcher or permission not granted */
+    }
   }
 
   Future<void> _refresh() async {
@@ -58,6 +112,10 @@ class _NotificationBellState extends State<NotificationBell> {
     }
     try {
       final result = await NotificationsService.instance.list();
+      // Mirror the count onto the app icon. iOS only permits this when
+      // notification permission was granted, so it is a no-op for users who
+      // declined — hence the silent catch rather than a guard.
+      unawaited(_syncAppBadge(result.unreadCount));
       if (!mounted) return;
       setState(() {
         _unreadCount = result.unreadCount;
@@ -212,15 +270,17 @@ class _NotificationSheetState extends State<_NotificationSheet> {
       await NotificationsService.instance.markAllRead();
       setState(() {
         _items = _items
-            .map((n) => PediaidNotification(
-                  id: n.id,
-                  title: n.title,
-                  message: n.message,
-                  type: n.type,
-                  linkPath: n.linkPath,
-                  isRead: true,
-                  createdAt: n.createdAt,
-                ))
+            .map(
+              (n) => PediaidNotification(
+                id: n.id,
+                title: n.title,
+                message: n.message,
+                type: n.type,
+                linkPath: n.linkPath,
+                isRead: true,
+                createdAt: n.createdAt,
+              ),
+            )
             .toList();
         _unread = 0;
       });
@@ -244,17 +304,19 @@ class _NotificationSheetState extends State<_NotificationSheet> {
           .catchError((_) {});
       setState(() {
         _items = _items
-            .map((x) => x.id == n.id
-                ? PediaidNotification(
-                    id: x.id,
-                    title: x.title,
-                    message: x.message,
-                    type: x.type,
-                    linkPath: x.linkPath,
-                    isRead: true,
-                    createdAt: x.createdAt,
-                  )
-                : x)
+            .map(
+              (x) => x.id == n.id
+                  ? PediaidNotification(
+                      id: x.id,
+                      title: x.title,
+                      message: x.message,
+                      type: x.type,
+                      linkPath: x.linkPath,
+                      isRead: true,
+                      createdAt: x.createdAt,
+                    )
+                  : x,
+            )
             .toList();
         _unread = (_unread - 1).clamp(0, _unread);
       });
@@ -273,7 +335,9 @@ class _NotificationSheetState extends State<_NotificationSheet> {
         ? link.substring('/academics'.length)
         : link;
     if (rel.isEmpty) rel = '/';
-    rootNav.push(MaterialPageRoute(builder: (_) => AcademicsWebScreen(path: rel)));
+    rootNav.push(
+      MaterialPageRoute(builder: (_) => AcademicsWebScreen(path: rel)),
+    );
   }
 
   @override
@@ -337,9 +401,11 @@ class _NotificationSheetState extends State<_NotificationSheet> {
                   if (_items.isNotEmpty)
                     TextButton.icon(
                       onPressed: _busy ? null : _deleteAll,
-                      icon: Icon(Icons.delete_outline_rounded,
-                          size: 16,
-                          color: _confirmClear ? cs.error : null),
+                      icon: Icon(
+                        Icons.delete_outline_rounded,
+                        size: 16,
+                        color: _confirmClear ? cs.error : null,
+                      ),
                       label: Text(
                         _confirmClear ? 'Delete all?' : 'Delete all',
                         style: GoogleFonts.plusJakartaSans(
@@ -454,7 +520,9 @@ class _NotificationRow extends StatelessWidget {
                     notification.title,
                     style: GoogleFonts.plusJakartaSans(
                       fontSize: 14,
-                      fontWeight: notification.isRead ? FontWeight.w600 : FontWeight.w800,
+                      fontWeight: notification.isRead
+                          ? FontWeight.w600
+                          : FontWeight.w800,
                       color: cs.onSurface,
                     ),
                   ),

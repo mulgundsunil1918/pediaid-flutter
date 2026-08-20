@@ -43,6 +43,19 @@ class PushService {
   /// The app's root navigator, so a notification tap can push a screen.
   static GlobalKey<NavigatorState>? navigatorKey;
 
+  /// Ticks whenever a push arrives while the app is open. The notification
+  /// bell listens to this instead of polling: an incoming message is the only
+  /// event that can change the unread count, so refreshing on it is both
+  /// cheaper and faster than a timer.
+  static final ValueNotifier<int> messageReceived = ValueNotifier<int>(0);
+
+  /// True when init() stopped short because permission had not been granted.
+  /// requestPermissionAndRegister() picks up from there. Exposed so a
+  /// settings screen can show "notifications are off" without re-querying
+  /// the OS.
+  bool _pendingRegistration = false;
+  bool get awaitingPermission => _pendingRegistration;
+
   bool _initialized = false;
 
   /// The device's current FCM token, kept so it can be re-sent once the user
@@ -91,8 +104,24 @@ class PushService {
       );
 
       final messaging = FirebaseMessaging.instance;
-      final settings = await messaging.requestPermission();
-      if (settings.authorizationStatus == AuthorizationStatus.denied) return;
+
+      // Do NOT prompt here. This runs during app start, and on iOS Apple
+      // allows exactly one system dialog: spending it before the user has
+      // seen a screen is how a "no" becomes permanent, leaving the device
+      // with no token and no subscription while every server-side check
+      // still looks healthy. PushPermissionPrimer asks on second launch,
+      // behind our own explainer, and calls
+      // requestPermissionAndRegister() only if the user opts in.
+      //
+      // Already-granted installs (and Android below 13, where the
+      // permission is granted at install) fall straight through and
+      // register as before.
+      final current = await messaging.getNotificationSettings();
+      if (current.authorizationStatus != AuthorizationStatus.authorized &&
+          current.authorizationStatus != AuthorizationStatus.provisional) {
+        _pendingRegistration = true;
+        return;
+      }
 
       // iOS only hands out an FCM token once the APNS token is set. On a cold
       // first launch getToken() would otherwise return null, leaving the device
@@ -156,6 +185,8 @@ class PushService {
       // In the foreground the OS doesn't show a system notification —
       // surface the message in-app instead.
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+        // Tell the bell to refresh even for a data-only message.
+        messageReceived.value++;
         final n = message.notification;
         if (n == null) return;
         messengerKey?.currentState?.showSnackBar(
@@ -182,6 +213,7 @@ class PushService {
   /// cold start delivers the tap. Returning silently there lost the deep link
   /// and left the user on the home screen, so this retries briefly instead.
   static void _openFromMessage(RemoteMessage message, {int attempt = 0}) {
+    messageReceived.value++;
     final link = message.data['linkPath'];
     if (link == null || link.isEmpty) return;
     final nav = navigatorKey?.currentState;
@@ -200,6 +232,33 @@ class PushService {
         : link;
     if (rel.isEmpty) rel = '/';
     nav.push(MaterialPageRoute(builder: (_) => AcademicsWebScreen(path: rel)));
+  }
+
+  /// Called by [PushPermissionPrimer] once the user has opted in.
+  ///
+  /// Shows the real OS dialog and, if granted, completes the registration
+  /// init() deferred: APNs token wait, FCM token, backend registration and
+  /// the broadcast topic subscription.
+  Future<bool> requestPermissionAndRegister() async {
+    if (!_supported) return false;
+    try {
+      final messaging = FirebaseMessaging.instance;
+      final settings = await messaging.requestPermission();
+      final ok =
+          settings.authorizationStatus == AuthorizationStatus.authorized ||
+          settings.authorizationStatus == AuthorizationStatus.provisional;
+      if (!ok) return false;
+
+      _pendingRegistration = false;
+      // init() has already run its non-permission setup, so re-running it
+      // now completes the parts that were skipped.
+      _initialized = false;
+      await init();
+      return true;
+    } catch (e) {
+      debugPrint('[push] requestPermissionAndRegister failed: $e');
+      return false;
+    }
   }
 
   Future<void> _registerTokenWithBackend(String token) async {
