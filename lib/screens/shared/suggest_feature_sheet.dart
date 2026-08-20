@@ -1,14 +1,21 @@
+import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
+import 'package:package_info_plus/package_info_plus.dart';
+
+import '../../services/auth_service.dart';
 
 // ── Suggest a Feature — shared bottom sheet ───────────────────────────────────
 
 const List<_Category> _kCategories = [
-  _Category('Calculator',  Icons.calculate_rounded,    Color(0xFF1565C0)),
-  _Category('Guide',       Icons.menu_book_outlined,   Color(0xFF6D4C41)),
-  _Category('Chart/Graph', Icons.show_chart_rounded,   Color(0xFF6A1B9A)),
-  _Category('Feature',     Icons.stars_rounded,        Color(0xFF00695C)),
-  _Category('Other',       Icons.more_horiz_rounded,   Color(0xFF546E7A)),
+  _Category('Calculator', Icons.calculate_rounded, Color(0xFF1565C0)),
+  _Category('Guide', Icons.menu_book_outlined, Color(0xFF6D4C41)),
+  _Category('Chart/Graph', Icons.show_chart_rounded, Color(0xFF6A1B9A)),
+  _Category('Feature', Icons.stars_rounded, Color(0xFF00695C)),
+  _Category('Other', Icons.more_horiz_rounded, Color(0xFF546E7A)),
 ];
 
 class _Category {
@@ -25,7 +32,8 @@ void showSuggestSheet(BuildContext context) {
     isScrollControlled: true,
     backgroundColor: Theme.of(context).cardColor,
     shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+      borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+    ),
     builder: (_) => const _SuggestSheet(),
   );
 }
@@ -40,6 +48,9 @@ class _SuggestSheet extends StatefulWidget {
 class _SuggestSheetState extends State<_SuggestSheet> {
   int _selectedCategory = 0;
   final _ctrl = TextEditingController();
+  // Optional. Without it a suggestion arrives anonymously and cannot be
+  // answered.
+  final _emailCtrl = TextEditingController();
   bool _submitted = false;
   bool _submitting = false;
   String? _error;
@@ -47,6 +58,7 @@ class _SuggestSheetState extends State<_SuggestSheet> {
   @override
   void dispose() {
     _ctrl.dispose();
+    _emailCtrl.dispose();
     super.dispose();
   }
 
@@ -56,10 +68,47 @@ class _SuggestSheetState extends State<_SuggestSheet> {
       setState(() => _error = 'Please describe your suggestion.');
       return;
     }
-    setState(() { _submitting = true; _error = null; });
-    await Future.delayed(const Duration(milliseconds: 600));
+    setState(() {
+      _submitting = true;
+      _error = null;
+    });
+
+    // This used to be `await Future.delayed(600ms)` followed by a success
+    // screen — the suggestion was never sent anywhere. It now posts to the
+    // same endpoint the issue reporter uses, tagged as a suggestion.
+    var appVersion = 'unknown';
+    try {
+      final info = await PackageInfo.fromPlatform();
+      appVersion = '${info.version}+${info.buildNumber}';
+    } catch (_) {}
+
+    var ok = false;
+    try {
+      final res = await http
+          .post(
+            Uri.parse('${AuthService.apiBase}/api/feedback/report'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({
+              'screen': 'Suggestion — ${_kCategories[_selectedCategory].label}',
+              'message': text,
+              'platform': kIsWeb ? 'web' : defaultTargetPlatform.name,
+              'appVersion': appVersion,
+              'email': _emailCtrl.text.trim(),
+              'kind': 'suggestion',
+            }),
+          )
+          .timeout(const Duration(seconds: 10));
+      ok = res.statusCode >= 200 && res.statusCode < 300;
+    } catch (_) {
+      ok = false;
+    }
+
     if (!mounted) return;
-    setState(() { _submitting = false; _submitted = true; });
+    setState(() {
+      _submitting = false;
+      _submitted = ok;
+      _error = ok ? null : 'Could not send. Check your connection and retry.';
+    });
   }
 
   @override
@@ -83,45 +132,68 @@ class _SuggestSheetState extends State<_SuggestSheet> {
         // Handle bar
         Center(
           child: Container(
-            width: 36, height: 4,
+            width: 36,
+            height: 4,
             decoration: BoxDecoration(
-                color: cs.outline, borderRadius: BorderRadius.circular(2)),
+              color: cs.outline,
+              borderRadius: BorderRadius.circular(2),
+            ),
           ),
         ),
         const SizedBox(height: 16),
 
         // Header
-        Row(children: [
-          Container(
-            width: 38, height: 38,
-            decoration: BoxDecoration(
-              color: const Color(0xFF1565C0).withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(10),
+        Row(
+          children: [
+            Container(
+              width: 38,
+              height: 38,
+              decoration: BoxDecoration(
+                color: const Color(0xFF1565C0).withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: const Icon(
+                Icons.lightbulb_outline_rounded,
+                color: Color(0xFF1565C0),
+                size: 20,
+              ),
             ),
-            child: const Icon(Icons.lightbulb_outline_rounded,
-                color: Color(0xFF1565C0), size: 20),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text('Suggest a Feature',
-                  style: GoogleFonts.plusJakartaSans(
-                      fontSize: 17, fontWeight: FontWeight.w800,
-                      color: cs.onSurface)),
-              Text('Help us build a better PediAid',
-                  style: GoogleFonts.plusJakartaSans(
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Suggest a Feature',
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w800,
+                      color: cs.onSurface,
+                    ),
+                  ),
+                  Text(
+                    'Help us build a better PediAid',
+                    style: GoogleFonts.plusJakartaSans(
                       fontSize: 12,
-                      color: cs.onSurface.withValues(alpha: 0.5))),
-            ]),
-          ),
-        ]),
+                      color: cs.onSurface.withValues(alpha: 0.5),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
         const SizedBox(height: 20),
 
         // Category label
-        Text('What would you like us to add?',
-            style: GoogleFonts.plusJakartaSans(
-                fontSize: 13, fontWeight: FontWeight.w600,
-                color: cs.onSurface.withValues(alpha: 0.75))),
+        Text(
+          'What would you like us to add?',
+          style: GoogleFonts.plusJakartaSans(
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+            color: cs.onSurface.withValues(alpha: 0.75),
+          ),
+        ),
         const SizedBox(height: 10),
 
         // Category chips
@@ -136,7 +208,9 @@ class _SuggestSheetState extends State<_SuggestSheet> {
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 180),
                 padding: const EdgeInsets.symmetric(
-                    horizontal: 12, vertical: 7),
+                  horizontal: 12,
+                  vertical: 7,
+                ),
                 decoration: BoxDecoration(
                   color: selected
                       ? c.color.withValues(alpha: 0.15)
@@ -149,14 +223,19 @@ class _SuggestSheetState extends State<_SuggestSheet> {
                     width: selected ? 1.5 : 1,
                   ),
                 ),
-                child: Row(mainAxisSize: MainAxisSize.min, children: [
-                  Icon(c.icon,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      c.icon,
                       size: 14,
                       color: selected
                           ? c.color
-                          : cs.onSurface.withValues(alpha: 0.45)),
-                  const SizedBox(width: 5),
-                  Text(c.label,
+                          : cs.onSurface.withValues(alpha: 0.45),
+                    ),
+                    const SizedBox(width: 5),
+                    Text(
+                      c.label,
                       style: GoogleFonts.plusJakartaSans(
                         fontSize: 12,
                         fontWeight: selected
@@ -165,8 +244,10 @@ class _SuggestSheetState extends State<_SuggestSheet> {
                         color: selected
                             ? c.color
                             : cs.onSurface.withValues(alpha: 0.6),
-                      )),
-                ]),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             );
           }),
@@ -175,10 +256,14 @@ class _SuggestSheetState extends State<_SuggestSheet> {
         const SizedBox(height: 18),
 
         // Text field
-        Text('Describe your suggestion',
-            style: GoogleFonts.plusJakartaSans(
-                fontSize: 13, fontWeight: FontWeight.w600,
-                color: cs.onSurface.withValues(alpha: 0.75))),
+        Text(
+          'Describe your suggestion',
+          style: GoogleFonts.plusJakartaSans(
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+            color: cs.onSurface.withValues(alpha: 0.75),
+          ),
+        ),
         const SizedBox(height: 8),
         TextField(
           controller: _ctrl,
@@ -191,21 +276,20 @@ class _SuggestSheetState extends State<_SuggestSheet> {
             hintText:
                 'E.g. "Add a Ballard score calculator for gestational age assessment…"',
             hintStyle: GoogleFonts.plusJakartaSans(
-                fontSize: 13,
-                color: cs.onSurface.withValues(alpha: 0.35)),
+              fontSize: 13,
+              color: cs.onSurface.withValues(alpha: 0.35),
+            ),
             filled: true,
             fillColor: cs.surface,
             errorText: _error,
             contentPadding: const EdgeInsets.all(14),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide:
-                  BorderSide(color: cs.outline.withValues(alpha: 0.3)),
+              borderSide: BorderSide(color: cs.outline.withValues(alpha: 0.3)),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide:
-                  BorderSide(color: cs.outline.withValues(alpha: 0.25)),
+              borderSide: BorderSide(color: cs.outline.withValues(alpha: 0.25)),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
@@ -215,6 +299,24 @@ class _SuggestSheetState extends State<_SuggestSheet> {
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(color: cs.error),
             ),
+          ),
+        ),
+        const SizedBox(height: 10),
+        // Optional: without it a suggestion arrives anonymously and there is
+        // no way to reply to whoever sent it.
+        TextField(
+          controller: _emailCtrl,
+          keyboardType: TextInputType.emailAddress,
+          autocorrect: false,
+          style: GoogleFonts.plusJakartaSans(fontSize: 13),
+          decoration: InputDecoration(
+            labelText: 'Your email (optional)',
+            helperText: 'Only so we can reply. Leave blank to stay anonymous.',
+            helperStyle: GoogleFonts.plusJakartaSans(fontSize: 11),
+            isDense: true,
+            filled: true,
+            fillColor: cs.surface,
+            border: const OutlineInputBorder(),
           ),
         ),
 
@@ -230,21 +332,33 @@ class _SuggestSheetState extends State<_SuggestSheet> {
               backgroundColor: cat.color,
               foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
+                borderRadius: BorderRadius.circular(12),
+              ),
               elevation: 0,
             ),
             child: _submitting
                 ? const SizedBox(
-                    width: 20, height: 20,
+                    width: 20,
+                    height: 20,
                     child: CircularProgressIndicator(
-                        color: Colors.white, strokeWidth: 2))
-                : Row(mainAxisSize: MainAxisSize.min, children: [
-                    const Icon(Icons.send_rounded, size: 16),
-                    const SizedBox(width: 8),
-                    Text('Submit Suggestion',
+                      color: Colors.white,
+                      strokeWidth: 2,
+                    ),
+                  )
+                : Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.send_rounded, size: 16),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Submit Suggestion',
                         style: GoogleFonts.plusJakartaSans(
-                            fontWeight: FontWeight.w700, fontSize: 14)),
-                  ]),
+                          fontWeight: FontWeight.w700,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
           ),
         ),
       ],
@@ -259,14 +373,18 @@ class _SuggestSheetState extends State<_SuggestSheet> {
         // Handle bar
         Center(
           child: Container(
-            width: 36, height: 4,
+            width: 36,
+            height: 4,
             decoration: BoxDecoration(
-                color: cs.outline, borderRadius: BorderRadius.circular(2)),
+              color: cs.outline,
+              borderRadius: BorderRadius.circular(2),
+            ),
           ),
         ),
         const SizedBox(height: 36),
         Container(
-          width: 72, height: 72,
+          width: 72,
+          height: 72,
           decoration: BoxDecoration(
             color: green.withValues(alpha: 0.1),
             shape: BoxShape.circle,
@@ -275,17 +393,23 @@ class _SuggestSheetState extends State<_SuggestSheet> {
           child: const Icon(Icons.check_rounded, color: green, size: 36),
         ),
         const SizedBox(height: 18),
-        Text('Thank you!',
-            style: GoogleFonts.plusJakartaSans(
-                fontSize: 20, fontWeight: FontWeight.w800, color: cs.onSurface)),
+        Text(
+          'Thank you!',
+          style: GoogleFonts.plusJakartaSans(
+            fontSize: 20,
+            fontWeight: FontWeight.w800,
+            color: cs.onSurface,
+          ),
+        ),
         const SizedBox(height: 8),
         Text(
           'Your suggestion has been received.\nWe review all feedback to improve PediAid.',
           textAlign: TextAlign.center,
           style: GoogleFonts.plusJakartaSans(
-              fontSize: 13,
-              color: cs.onSurface.withValues(alpha: 0.6),
-              height: 1.5),
+            fontSize: 13,
+            color: cs.onSurface.withValues(alpha: 0.6),
+            height: 1.5,
+          ),
         ),
         const SizedBox(height: 28),
         SizedBox(
@@ -296,12 +420,17 @@ class _SuggestSheetState extends State<_SuggestSheet> {
               backgroundColor: green,
               foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
+                borderRadius: BorderRadius.circular(12),
+              ),
               padding: const EdgeInsets.symmetric(vertical: 14),
             ),
-            child: Text('Done',
-                style: GoogleFonts.plusJakartaSans(
-                    fontWeight: FontWeight.w700, fontSize: 14)),
+            child: Text(
+              'Done',
+              style: GoogleFonts.plusJakartaSans(
+                fontWeight: FontWeight.w700,
+                fontSize: 14,
+              ),
+            ),
           ),
         ),
         const SizedBox(height: 8),

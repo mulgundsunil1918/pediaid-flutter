@@ -9,7 +9,8 @@ import '../services/auth_service.dart';
 /// The overlay lives ABOVE the Navigator (MaterialApp.builder wraps it),
 /// so its own BuildContext cannot reach a Navigator; the sheet must be
 /// pushed through this key instead.
-final GlobalKey<NavigatorState> reportNavigatorKey = GlobalKey<NavigatorState>();
+final GlobalKey<NavigatorState> reportNavigatorKey =
+    GlobalKey<NavigatorState>();
 
 /// Screens that should NOT show the floating Report button.
 ///
@@ -74,9 +75,7 @@ class ReportIssueOverlay extends StatelessWidget {
         Positioned(
           right: 8,
           bottom: 90,
-          child: SafeArea(
-            child: _ReportFab(hostContext: context),
-          ),
+          child: SafeArea(child: _ReportFab(hostContext: context)),
         ),
       ],
     );
@@ -150,10 +149,12 @@ class _ReportFab extends StatelessWidget {
     final nav = reportNavigatorKey.currentState;
     if (nav == null) return;
     final screenGuess = _guessScreenTitle();
-    nav.push(ModalBottomSheetRoute(
-      isScrollControlled: true,
-      builder: (_) => _ReportSheet(initialScreen: screenGuess),
-    ));
+    nav.push(
+      ModalBottomSheetRoute(
+        isScrollControlled: true,
+        builder: (_) => _ReportSheet(initialScreen: screenGuess),
+      ),
+    );
   }
 }
 
@@ -166,15 +167,20 @@ class _ReportSheet extends StatefulWidget {
 }
 
 class _ReportSheetState extends State<_ReportSheet> {
-  late final TextEditingController _screenCtrl =
-      TextEditingController(text: widget.initialScreen);
+  late final TextEditingController _screenCtrl = TextEditingController(
+    text: widget.initialScreen,
+  );
   final _messageCtrl = TextEditingController();
+  // Optional. Without it a report arrives anonymously and cannot be answered,
+  // which is why every reply so far has been impossible.
+  final _emailCtrl = TextEditingController();
   bool _sending = false;
 
   @override
   void dispose() {
     _screenCtrl.dispose();
     _messageCtrl.dispose();
+    _emailCtrl.dispose();
     super.dispose();
   }
 
@@ -200,6 +206,8 @@ class _ReportSheetState extends State<_ReportSheet> {
               'message': message,
               'platform': kIsWeb ? 'web' : defaultTargetPlatform.name,
               'appVersion': appVersion,
+              'email': _emailCtrl.text.trim(),
+              'kind': 'report',
             }),
           )
           .timeout(const Duration(seconds: 10));
@@ -216,9 +224,11 @@ class _ReportSheetState extends State<_ReportSheet> {
     Navigator.of(context).pop();
     messenger.showSnackBar(
       SnackBar(
-        content: Text(ok
-            ? 'Thanks — your report was sent.'
-            : "Couldn't send right now — please try again later."),
+        content: Text(
+          ok
+              ? 'Thanks — your report was sent.'
+              : "Couldn't send right now — please try again later.",
+        ),
       ),
     );
   }
@@ -237,8 +247,14 @@ class _ReportSheetState extends State<_ReportSheet> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Report an issue or suggestion',
-              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700, color: cs.onSurface)),
+          Text(
+            'Report an issue or suggestion',
+            style: TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.w700,
+              color: cs.onSurface,
+            ),
+          ),
           const SizedBox(height: 12),
           TextField(
             controller: _screenCtrl,
@@ -259,6 +275,19 @@ class _ReportSheetState extends State<_ReportSheet> {
               border: OutlineInputBorder(),
             ),
           ),
+          const SizedBox(height: 10),
+          TextField(
+            controller: _emailCtrl,
+            keyboardType: TextInputType.emailAddress,
+            autocorrect: false,
+            decoration: const InputDecoration(
+              labelText: 'Your email (optional)',
+              helperText:
+                  'Only so we can reply. Leave blank to stay anonymous.',
+              isDense: true,
+              border: OutlineInputBorder(),
+            ),
+          ),
           const SizedBox(height: 14),
           SizedBox(
             width: double.infinity,
@@ -266,7 +295,8 @@ class _ReportSheetState extends State<_ReportSheet> {
               onPressed: _sending ? null : _submit,
               child: _sending
                   ? const SizedBox(
-                      width: 18, height: 18,
+                      width: 18,
+                      height: 18,
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
                   : const Text('Send'),
