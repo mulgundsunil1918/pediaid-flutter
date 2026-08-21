@@ -1,8 +1,0 @@
-import{c as t,j as e}from"./index-C9D_5avp.js";/**
- * @license lucide-react v0.395.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */const c=t("Lightbulb",[["path",{d:"M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5",key:"1gvzjb"}],["path",{d:"M9 18h6",key:"x1upvd"}],["path",{d:"M10 22h4",key:"ceow96"}]]),i={blue:{bg:"#EFF6FF",border:"#BFDBFE",heading:"#1D4ED8",dot:"#3B82F6"},green:{bg:"#F0FDF4",border:"#BBF7D0",heading:"#15803D",dot:"#22C55E"},amber:{bg:"#FFFBEB",border:"#FDE68A",heading:"#B45309",dot:"#F59E0B"},violet:{bg:"#F5F3FF",border:"#DDD6FE",heading:"#6D28D9",dot:"#8B5CF6"},slate:{bg:"#F8FAFC",border:"#E2E8F0",heading:"#334155",dot:"#64748B"}};function b({tone:r,icon:d,title:n,items:s}){return s.length?e.jsxs("section",{className:"mb-4 rounded-2xl border p-4 sm:p-5",style:{backgroundColor:r.bg,borderColor:r.border},children:[e.jsxs("h2",{className:`flex items-center gap-2 text-[13px] font-bold uppercase
-                   tracking-wide mb-3`,style:{color:r.heading},children:[e.jsx("span",{className:`w-6 h-6 rounded-lg flex items-center justify-center
-                     flex-shrink-0 bg-white/70`,children:e.jsx(d,{size:14})}),n]}),e.jsx("ul",{className:"space-y-2",children:s.map((a,l)=>e.jsxs("li",{className:"flex gap-2.5 text-sm text-ink leading-relaxed",children:[e.jsx("span",{className:"mt-[7px] w-1.5 h-1.5 rounded-full flex-shrink-0",style:{backgroundColor:r.dot}}),e.jsx("span",{children:a})]},l))})]}):null}export{b as I,c as L,i as T};

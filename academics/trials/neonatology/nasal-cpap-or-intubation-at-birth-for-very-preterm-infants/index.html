@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script>
+      // Academics moved to pediaid.bridgr.co.in/academics so it shares one
+      // browser session with the app. Anyone still on the old subdomain —
+      // a bookmark, a shared link — is sent across, path and query intact.
+      //
+      // This must be the first thing in <head>: the build now points its
+      // asset URLs at /academics/, which do not exist on the old host, so
+      // that page can never finish loading. Redirect before it tries.
+      (function () {
+        try {
+          if (location.hostname === 'academics.pediaid.bridgr.co.in') {
+            var p = location.pathname;
+            // Paths already start with /academics on this app, so do not
+            // double it up when moving to the /academics base.
+            var rest = p.indexOf('/academics') === 0 ? p.slice('/academics'.length) : p;
+            location.replace(
+              'https://pediaid.bridgr.co.in/academics' + rest + location.search + location.hash
+            );
+          }
+        } catch (e) {}
+      })();
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Indexable, deliberately.
+         Academics used to carry noindex/nofollow here because it was shared by
+         direct link only. The public library — landmark trial reviews,
+         guideline notes, CME events — is now meant to be found: someone
+         searching "FEAST trial review" or "AAP 2022 jaundice guideline"
+         should land on it.
+         Signed-in surfaces (admin, dashboard, editor, moderation) are not
+         listed in any sitemap and sit behind auth, so nothing private becomes
+         reachable by removing this. The prerender step below writes per-page
+         titles and descriptions; this default covers routes it does not
+         cover. Expect Google to take a few weeks to re-crawl. -->
+    <meta name="robots" content="index, follow" />
+
+    <!-- Always revalidate this document.
+
+         Each deploy emits a new hashed bundle and deletes the previous one.
+         A browser holding a cached index.html therefore requests a script
+         that no longer exists, gets a 404, and renders a blank page. The
+         hashed assets are safe to cache forever precisely because their
+         names change; the HTML that points at them must not be. -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <link rel="icon" type="image/png" href="/academics/pediaid-logo.png" />
+    <link rel="apple-touch-icon" href="/academics/pediaid-logo.png" />
+    
+
+    <!-- Warm the TLS connection to the backend so the very first API call
+         doesn't pay a full handshake. Combined with the wake-up fetch
+         below, this hides most of Render's cold-start latency behind the
+         splash screen. -->
+    <link rel="preconnect" href="https://pediaid-backend.onrender.com" crossorigin />
+
+    <script>
+      // Restore the path that 404.html encoded into ?p=
+      //
+      // Rebuilt against the app's base, not the domain root. This app used to
+      // live at the root of its own subdomain, so '/' + p was correct. It now
+      // sits under /academics, and dropping that prefix turned every shared
+      // deep link into a 404: /academics/trials/x redirected to
+      // /academics/?p=trials/x and was restored as /trials/x, which matches no
+      // route. The base is read from where this page actually is, so it stays
+      // right if the app is ever moved again.
+      (function() {
+        var m = window.location.search.match(/p=([^&]*)/);
+        if (!m) return;
+        var base = window.location.pathname.replace(/\/[^/]*$/, '');
+        var rest = decodeURIComponent(m[1]).replace(/^\/+/, '');
+        window.history.replaceState(
+          null, null, base + '/' + rest + window.location.hash
+        );
+      })();
+
+      // Kick the backend awake while the splash is on screen. Render's free
+      // tier sleeps after 15 min of inactivity, so the first request from a
+      // cold visitor would otherwise block on a ~30s spin-up. Firing this
+      // ping during the splash hides that latency. Fire-and-forget — we
+      // don't care about the response, only about triggering the boot.
+      //
+      // Uses /api/ping rather than /health because /api/ping is the
+      // lightweight keep-alive route that skips rate limiting and DB
+      // checks — it's the fastest possible wake-up signal.
+      try {
+        fetch('https://pediaid-backend.onrender.com/api/ping', {
+          method: 'GET',
+          mode: 'cors',
+          cache: 'no-store',
+          credentials: 'omit',
+        }).catch(function() { /* offline or cors blocked — ignore */ });
+      } catch (e) { /* ancient browser — ignore */ }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* Splash screen — shown immediately while the JS bundle parses and
+         React hydrates. Removed via a MutationObserver in src/main.tsx
+         the moment the app mounts its first child into #root, then the
+         app fades in over 0.3s.
+
+         The splash is inlined here so it shows with zero additional
+         network requests on a cold visit. */
+      html, body {
+        margin: 0;
+        padding: 0;
+        background: #1e3a5f;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      }
+      #acad-splash {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        background: #1e3a5f;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        opacity: 1;
+        transition: opacity 0.35s ease-out;
+      }
+      #acad-splash.fading { opacity: 0; pointer-events: none; }
+      #acad-splash .acad-title {
+        color: #ffffff;
+        font-size: 38px;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+        opacity: 0;
+        animation:
+          acad-fade-in 0.5s ease-out 0.05s forwards,
+          acad-pulse 2.2s ease-in-out 0.6s infinite;
+        transform-origin: center;
+      }
+      #acad-splash .acad-dot {
+        width: 64px;
+        height: 64px;
+        border-radius: 14px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        animation: acad-fade-in 0.5s ease-out forwards;
+        box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.45);
+      }
+      #acad-splash .acad-dot img { width: 100%; height: 100%; display: block; -o-object-fit: cover; object-fit: cover; }
+      #acad-splash .acad-sub {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 12px;
+        font-weight: 500;
+        letter-spacing: 0.3px;
+        opacity: 0;
+        animation: acad-fade-in 0.6s ease-out 0.25s forwards;
+      }
+      @keyframes acad-fade-in {
+        from { opacity: 0; transform: translateY(4px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+      @keyframes acad-pulse {
+        0%, 100% { transform: scale(1);    opacity: 1;   }
+        50%      { transform: scale(1.05); opacity: 0.9; }
+      }
+      /* App fade-in. #root starts hidden and fades in once React renders
+         its first child, coordinated by src/main.tsx. */
+      #root {
+        opacity: 0;
+        transition: opacity 0.3s ease-out;
+      }
+      #root.ready { opacity: 1; }
+    </style>
+    <script type="module" crossorigin src="/academics/assets/index-BRp3LHA3.js"></script>
+    <link rel="stylesheet" crossorigin href="/academics/assets/index-BAiyKbWp.css">
+  
+    <title>COIN Trial trial — Nasal CPAP or Intubation at Birth for Very Preterm  Infants | PediAid</title>
+    <meta name="description" content="The COIN Trial (Continuous Positive Airway Pressure or Intubation at Birth, Morley et al., *N Engl J Med* 2008) investigated whether early nasal continuous po…" />
+    <link rel="canonical" href="https://pediaid.bridgr.co.in/academics/trials/neonatology/nasal-cpap-or-intubation-at-birth-for-very-preterm-infants/" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="COIN Trial trial — Nasal CPAP or Intubation at Birth for Very Preterm  Infants | PediAid" />
+    <meta property="og:description" content="The COIN Trial (Continuous Positive Airway Pressure or Intubation at Birth, Morley et al., *N Engl J Med* 2008) investigated whether early nasal continuous po…" />
+    <meta property="og:url" content="https://pediaid.bridgr.co.in/academics/trials/neonatology/nasal-cpap-or-intubation-at-birth-for-very-preterm-infants/" />
+    <meta name="twitter:card" content="summary_large_image" />
+  </head>
+  <body>
+    <!-- Splash screen — removed by main.tsx once React mounts. -->
+    <div id="acad-splash">
+      <div class="acad-dot">
+        <img src="/academics/pediaid-logo.png" alt="PediAid" />
+      </div>
+      <div class="acad-title">PediAid</div>
+      <div class="acad-sub">loading academics…</div>
+    </div>
+    <div id="root"><article>
+        <h1>Nasal CPAP or Intubation at Birth for Very Preterm  Infants</h1>
+        <p>COIN Trial · NEJM · 2008</p>
+        <p>The COIN Trial (Continuous Positive Airway Pressure or Intubation at Birth, Morley et al., *N Engl J Med* 2008) investigated whether early nasal continuous positive airway pressure (CPAP) applied in the delivery room could reduce death or bronchopulmonary dysplasia (BPD) in extremely preterm infants compared to routine early intubation and mechanical ventilation.
+**The Studied Regimen (The &quot;COIN Protocol&quot;)**
+Infants breathing spontaneously at 5 minutes of age were randomized to:
+ * **Nasal CPAP:** Initial delivery-room CPAP at 8 cm H₂O via nasal prongs, titrated between 5–8 cm H₂O in the NICU. Intubation and surfactant administration were reserved for predefined failure criteria (FiO₂ &gt; 0.60, severe apnea, or persistent respiratory acidosis).
+ * **Early Intubation:** Endotracheal intubation within 15 minutes of birth, early surfactant therapy, and ongoing conventional mechanical ventilation.</p>
+        <p>Primary Composite Outcome (Death or BPD):** No statistically significant difference between the CPAP and intubation groups at 36 weeks PMA (33.9% vs. 38.9%; OR: 0.80, 95% CI: 0.58–1.12; p = 0.19).</p>
+        <p>* **Mortality at 36 Weeks PMA:** Similar between groups (6.5% vs. 5.9%; OR: 1.11, 95% CI: 0.57–2.17; p = 0.75).</p>
+        <p>* **BPD at 36 Weeks PMA (Survivors):** Lower in the CPAP group, though not reaching statistical significance (33.9% vs. 39.1%; OR: 0.80, 95% CI: 0.57–1.12; p = 0.19). At 28 days of life, significantly fewer infants in the CPAP group required oxygen (53.9% vs. 64.8%; OR: 0.63, 95% CI: 0.46–0.88; p = 0.006).</p>
+        <p>* **Duration of Mechanical Ventilation:** Significantly reduced in the CPAP arm (median: 3 days vs. 4 days; p = 0.04), with fewer total days of assisted ventilation.</p>
+        <p>* **Avoidance of Intubation:** 46% of infants in the CPAP group never required endotracheal intubation or surfactant throughout their hospital stay.</p>
+        <p>* **Adverse Event (Pneumothorax):** Significantly higher incidence of pneumothorax in the CPAP group (9.1% vs. 3.0%; OR: 3.16, 95% CI: 1.41–7.07; p = 0.003).</p>
+        <p>* **Other Complications:** No significant differences in severe intraventricular hemorrhage (grade III/IV: 12.1% vs. 10.5%), cystic periventricular leukomalacia, patent ductus arteriosus, or necrotizing enterocolitis.</p>
+        <p>1. **High Initial Pressure Setting:** The protocol used a fixed starting CPAP level of 8 cm H₂O without early surfactant, which contributed significantly to the threefold increase in air leaks/pneumothoraces (particularly in the 25–26 week subgroup).</p>
+        <p>2. **Exclusion of the Sickest Infants:** Neonates who were apneic, severely depressed, or unable to sustain spontaneous respiration at 5 minutes were excluded, introducing potential selection bias toward more vigorous infants.</p>
+        <p>3. **Surfactant Delay:** Surfactant was not administered non-invasively (e.g., LISA/MIST); infants had to formally fail CPAP criteria before receiving salvage surfactant via standard intubation.</p>
+        <p>Early nasal CPAP started immediately in the delivery room is a viable, lung-protective alternative to routine prophylactic intubation in spontaneously breathing preterm infants (25–28 weeks), successfully avoiding mechanical ventilation in nearly half of the babies.</p>
+        <p>However, starting at a rigid 8 cm H₂O without early surfactant incurs a distinct risk of pneumothorax, reinforcing modern practices of initiating CPAP at 5–7 cm H₂O and adopting early non-invasive surfactant delivery strategies (e.g., LISA/MIST).</p>
+      </article></div>
+  </body>
+</html>
