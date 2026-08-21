@@ -285,28 +285,11 @@ class _TpnCalculatorState extends State<TpnCalculator> {
     final nitrogenG = proteinGday / 6.25;
     final npcnRatio = nitrogenG > 0 ? npcCalories / nitrogenG : 0.0;
 
-    // NPC:N status
-    final String npcnStatus;
-    if (npcnRatio < 70) {
-      npcnStatus = 'alert';
-    } else if (npcnRatio <= 100) {
-      npcnStatus = 'ideal';
-    } else if (npcnRatio <= 150) {
-      npcnStatus = 'acceptable';
-    } else {
-      npcnStatus = 'warning';
-    }
+    final npcnStatus = _npcnStatusFor(npcnRatio);
 
     // kcal per gram amino acid
     final kcalPerGAA = proteinGday > 0 ? npcCalories / proteinGday : 0.0;
-    final String kcalAAStatus;
-    if (kcalPerGAA < 30) {
-      kcalAAStatus = 'insufficient';
-    } else if (kcalPerGAA <= 40) {
-      kcalAAStatus = 'recommended';
-    } else {
-      kcalAAStatus = 'adequate';
-    }
+    final kcalAAStatus = _kcalAAStatusFor(kcalPerGAA);
 
     setState(() {
       _result = _TpnResult(
@@ -339,6 +322,7 @@ class _TpnCalculatorState extends State<TpnCalculator> {
           npcnStatus: npcnStatus,
           kcalPerGAA: kcalPerGAA,
           kcalAAStatus: kcalAAStatus,
+          lipidKcalPerDay: lipidKcalPerDay,
         ),
       );
     });
@@ -836,13 +820,23 @@ class _TpnCalculatorState extends State<TpnCalculator> {
           ],
         ),
         const SizedBox(height: 12),
-        _nutritionCard(
-          proteinGkg: s.proteinGkg,
-          fatGkg: s.fatGkg,
-          carbsGkg: s.carbsGkg,
-          calKcalKg: s.calKcalKg,
-          gir: s.girActual,
-        ),
+        Builder(builder: (_) {
+          final d = _deliveredNutrition(
+            mix: s.dextroseMix,
+            weight: _result?.weight ?? 0,
+            carbsGkgTarget: s.carbsGkg,
+            calKcalKgTarget: s.calKcalKg,
+            girTarget: s.girActual,
+          );
+          return _nutritionCard(
+            proteinGkg: s.proteinGkg,
+            fatGkg: s.fatGkg,
+            carbsGkg: d.carbsGkg,
+            calKcalKg: d.calKcalKg,
+            gir: d.gir,
+            girTarget: d.shortfall ? s.girActual : null,
+          );
+        }),
       ],
     );
   }
@@ -909,17 +903,36 @@ class _TpnCalculatorState extends State<TpnCalculator> {
           ],
         ),
         const SizedBox(height: 12),
-        _nutritionCard(
-          proteinGkg: m.proteinGkg,
-          fatGkg: m.fatGkg,
-          carbsGkg: m.carbsGkg,
-          calKcalKg: m.calKcalKg,
-          gir: m.girActual,
-          npcnRatio: m.npcnRatio,
-          npcnStatus: m.npcnStatus,
-          kcalPerGAA: m.kcalPerGAA,
-          kcalAAStatus: m.kcalAAStatus,
-        ),
+        Builder(builder: (_) {
+          final w = _result?.weight ?? 0;
+          final d = _deliveredNutrition(
+            mix: m.dextroseMix,
+            weight: w,
+            carbsGkgTarget: m.carbsGkg,
+            calKcalKgTarget: m.calKcalKg,
+            girTarget: m.girActual,
+          );
+          // NPC:N and kcal/g amino acid both count carbohydrate calories, so
+          // they move with the delivered dextrose too. Recomputed rather than
+          // left showing the figure the target would have produced.
+          final proteinGday = m.proteinGkg * w;
+          final npcCalories = m.lipidKcalPerDay + d.carbsGkg * w * 3.4;
+          final nitrogenG = proteinGday / 6.25;
+          final npcn = nitrogenG > 0 ? npcCalories / nitrogenG : 0.0;
+          final kcalAA = proteinGday > 0 ? npcCalories / proteinGday : 0.0;
+          return _nutritionCard(
+            proteinGkg: m.proteinGkg,
+            fatGkg: m.fatGkg,
+            carbsGkg: d.carbsGkg,
+            calKcalKg: d.calKcalKg,
+            gir: d.gir,
+            girTarget: d.shortfall ? m.girActual : null,
+            npcnRatio: npcn,
+            npcnStatus: _npcnStatusFor(npcn),
+            kcalPerGAA: kcalAA,
+            kcalAAStatus: _kcalAAStatusFor(kcalAA),
+          );
+        }),
       ],
     );
   }
@@ -1040,12 +1053,48 @@ class _TpnCalculatorState extends State<TpnCalculator> {
     );
   }
 
+  /// Nutrition as actually delivered by [mix], not as requested.
+  ///
+  /// The per-kg protein and fat figures are unaffected by the dextrose mix, so
+  /// they pass straight through; only carbohydrate, calories and GIR are
+  /// re-derived. `shortfall` is set when the delivered GIR misses the
+  /// prescribed one by enough to matter clinically.
+  /// Shared so the calculation and the display cannot disagree.
+  static String _npcnStatusFor(double r) {
+    if (r < 70) return 'alert';
+    if (r <= 100) return 'ideal';
+    if (r <= 150) return 'acceptable';
+    return 'warning';
+  }
+
+  static String _kcalAAStatusFor(double k) {
+    if (k < 30) return 'insufficient';
+    if (k <= 40) return 'recommended';
+    return 'adequate';
+  }
+
+  TpnDelivered _deliveredNutrition({
+    required _DextroseMix? mix,
+    required double weight,
+    required double carbsGkgTarget,
+    required double calKcalKgTarget,
+    required double girTarget,
+  }) =>
+      tpnDeliveredNutrition(
+        deliveredGrams: mix?.deliveredGrams,
+        weight: weight,
+        carbsGkgTarget: carbsGkgTarget,
+        calKcalKgTarget: calKcalKgTarget,
+        girTarget: girTarget,
+      );
+
   Widget _nutritionCard({
     required double proteinGkg,
     required double fatGkg,
     required double carbsGkg,
     required double calKcalKg,
     required double gir,
+    double? girTarget,
     double? npcnRatio,
     String? npcnStatus,
     double? kcalPerGAA,
@@ -1061,7 +1110,33 @@ class _TpnCalculatorState extends State<TpnCalculator> {
         _resultRow('Carbohydrates', '${carbsGkg.toStringAsFixed(2)} g/kg/day'),
         _resultRow('Total Calories', '${calKcalKg.toStringAsFixed(1)} kcal/kg/day',
             bold: true),
-        _resultRow('GIR', '${gir.toStringAsFixed(1)} mg/kg/min'),
+        _resultRow('GIR', '${gir.toStringAsFixed(1)} mg/kg/min',
+            bold: girTarget != null),
+        if (girTarget != null) ...[
+          const SizedBox(height: 8),
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: Colors.red.shade50,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.red.shade200),
+            ),
+            child: Text(
+              'These figures are what the prescribed volumes actually deliver, '
+              'not what was requested. The selected dextrose stocks cannot '
+              'reach the target concentration, so the bag would give '
+              '${gir.toStringAsFixed(1)} mg/kg/min instead of '
+              '${girTarget.toStringAsFixed(1)}. Change the stock strengths '
+              'above, or adjust the volume, before using this.',
+              style: TextStyle(
+                fontSize: 12.5,
+                height: 1.45,
+                color: Colors.red.shade900,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
         if (npcnRatio != null) ...[
           _resultRow('NPC : N Ratio', '${npcnRatio.toStringAsFixed(0)} : 1'),
           const SizedBox(height: 12),
@@ -1407,6 +1482,53 @@ class _InterpRow {
 }
 
 // ── Data models ───────────────────────────────────────────────────────────────
+/// Grams of dextrose that the two prescribed stock volumes actually contain.
+double tpnDeliveredGrams(
+        double volA, double concA, double volB, double concB) =>
+    (volA * concA + volB * concB) / 100.0;
+
+/// Nutrition as the bag will actually deliver it, not as it was requested.
+///
+/// The nutrition card used to show target-derived carbohydrate, calories and
+/// GIR no matter what the dextrose mix worked out to. When the chosen stock
+/// pair cannot bracket the target concentration the mix is clamped — and in
+/// the out-of-range case to zero volume, meaning no dextrose at all — so a bag
+/// that would deliver nothing still displayed the GIR that had been asked for.
+///
+/// Protein and fat are untouched by the dextrose mix and pass through.
+TpnDelivered tpnDeliveredNutrition({
+  required double? deliveredGrams,
+  required double weight,
+  required double carbsGkgTarget,
+  required double calKcalKgTarget,
+  required double girTarget,
+}) {
+  if (deliveredGrams == null || weight <= 0) {
+    return TpnDelivered(carbsGkgTarget, calKcalKgTarget, girTarget, false);
+  }
+  final carbsGkg = deliveredGrams / weight;
+  final nonCarbKcalKg = calKcalKgTarget - carbsGkgTarget * 3.4;
+  final calKcalKg = nonCarbKcalKg + carbsGkg * 3.4;
+  // GIR (mg/kg/min) from g/kg/day: g/kg/day x 1000 / 1440 = / 1.44
+  final gir = carbsGkg / 1.44;
+  // 0.1 mg/kg/min is finer than anyone prescribes at; anything larger is a
+  // real difference between the label and the bag.
+  final shortfall = (gir - girTarget).abs() > 0.1;
+  return TpnDelivered(carbsGkg, calKcalKg, gir, shortfall);
+}
+
+/// What a bag actually delivers, once the dextrose mix is taken into account.
+class TpnDelivered {
+  final double carbsGkg;
+  final double calKcalKg;
+  final double gir;
+
+  /// True when the delivered GIR differs materially from the prescription.
+  final bool shortfall;
+
+  const TpnDelivered(this.carbsGkg, this.calKcalKg, this.gir, this.shortfall);
+}
+
 class _DextroseMix {
   final double concA;
   final double concB;
@@ -1417,6 +1539,20 @@ class _DextroseMix {
 
   _DextroseMix(this.concA, this.concB, this.volA, this.volB, this.totalVol,
       {this.error});
+
+  /// Grams of dextrose the prescribed volumes ACTUALLY contain.
+  ///
+  /// This is not always the target. When the chosen stock pair cannot bracket
+  /// the target concentration the mix is clamped — and in the out-of-range
+  /// case both volumes are zero, i.e. no dextrose at all. The nutrition card
+  /// used to report the target-derived GIR and carbohydrate regardless, so a
+  /// bag that would deliver nothing still displayed the GIR that was asked
+  /// for. Everything downstream now derives from this.
+  double get deliveredGrams => (volA * concA + volB * concB) / 100.0;
+
+  /// Concentration those volumes work out to, 0 when nothing is prescribed.
+  double get deliveredConc =>
+      totalVol > 0 ? (deliveredGrams / totalVol) * 100.0 : 0.0;
 }
 
 class _StockResult {
@@ -1478,6 +1614,8 @@ class _MultilineResult {
   final String npcnStatus;
   final double kcalPerGAA;
   final String kcalAAStatus;
+  /// Needed to recompute NPC:N against the dextrose actually delivered.
+  final double lipidKcalPerDay;
 
   _MultilineResult({
     required this.line1Vol,
@@ -1504,6 +1642,7 @@ class _MultilineResult {
     required this.npcnStatus,
     required this.kcalPerGAA,
     required this.kcalAAStatus,
+    required this.lipidKcalPerDay,
   });
 }
 
