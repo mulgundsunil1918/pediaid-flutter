@@ -26,23 +26,36 @@ class AdminDashboardScreen extends StatefulWidget {
   State<AdminDashboardScreen> createState() => _AdminDashboardScreenState();
 }
 
-class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
+// The 60-second `Timer.periodic` that used to live here was the same defect as
+// NotificationBell's: a bare timer with no lifecycle observer, so it kept
+// querying Neon while the app sat in the background. Neon bills compute-hours
+// and auto-suspends when idle, so a dashboard left open behind another app was
+// a standing cost for counts nobody was looking at.
+//
+// Refreshed on open and on resume instead. Pull-to-refresh is still there for
+// a deliberate check.
+class _AdminDashboardScreenState extends State<AdminDashboardScreen>
+    with WidgetsBindingObserver {
   Future<AdminSummaryCounts>? _future;
-  Timer? _pollTimer;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _refresh();
-    // Auto-refresh every 60s while the dashboard is visible so new
-    // submissions light up without a manual pull-to-refresh.
-    _pollTimer = Timer.periodic(const Duration(seconds: 60), (_) => _refresh());
   }
 
   @override
   void dispose() {
-    _pollTimer?.cancel();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    // Coming back to the app is the moment these counts must be right.
+    if (state == AppLifecycleState.resumed) _refresh();
   }
 
   void _refresh() {
