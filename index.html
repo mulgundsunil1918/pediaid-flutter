@@ -18,7 +18,68 @@
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="PediAid — Paediatric & Neonatal Clinical Reference">
+  <meta name="description" content="Free paediatric and neonatal calculators, 110 clinical scores, WHO/IAP/Fenton growth charts, drug formulary and immunisation catch-up. iOS, Android and web.">
+  <link rel="canonical" href="https://pediaid.bridgr.co.in/">
+
+  <!--
+    Share card. This domain is the link in the in-app share message and in both
+    store listings, and it carried no Open Graph tags at all -- so every time a
+    doctor forwarded it, WhatsApp and LinkedIn rendered a bare URL. The image is
+    the same 1200x630 card the info site uses; it lives here too so the app
+    domain does not depend on another host to render its own preview.
+  -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="PediAid">
+  <meta property="og:title" content="PediAid — Paediatric &amp; Neonatal Clinical Reference">
+  <meta property="og:description" content="60+ calculators, 110 clinical scores, WHO/IAP/Fenton growth charts, drug formulary and immunisation catch-up. Free, offline-friendly, on iOS, Android and web.">
+  <meta property="og:url" content="https://pediaid.bridgr.co.in/">
+  <meta property="og:image" content="https://pediaid.bridgr.co.in/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="PediAid — paediatric and neonatal calculators, clinical scores and growth charts">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="PediAid — Paediatric &amp; Neonatal Clinical Reference">
+  <meta name="twitter:description" content="60+ calculators, 110 clinical scores, WHO/IAP/Fenton growth charts, drug formulary and immunisation catch-up. Free on iOS, Android and web.">
+  <meta name="twitter:image" content="https://pediaid.bridgr.co.in/og-image.jpg">
+
+  <!--
+    Crawlers do not run the Flutter engine, so this <head> is the only thing
+    they ever see on this domain. sameAs matches the info site's Organization
+    node so both resolve to one entity rather than two unrelated PediAids.
+  -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://info.pediaid.bridgr.co.in/#organization",
+        "name": "PediAid",
+        "url": "https://info.pediaid.bridgr.co.in/",
+        "logo": "https://pediaid.bridgr.co.in/icons/Icon-192.png",
+        "sameAs": [
+          "https://pediaid.bridgr.co.in",
+          "https://apps.apple.com/us/app/pediaid-pediatrics-neonatology/id6777623709",
+          "https://play.google.com/store/apps/details?id=com.pediaid.pediaid",
+          "https://www.youtube.com/@dr.sunilmulgund9406",
+          "https://www.linkedin.com/in/sunil-mulgund-b782b690"
+        ]
+      },
+      {
+        "@type": "WebApplication",
+        "name": "PediAid",
+        "url": "https://pediaid.bridgr.co.in/",
+        "applicationCategory": "MedicalApplication",
+        "operatingSystem": "Web, iOS, Android",
+        "browserRequirements": "Requires JavaScript",
+        "description": "Paediatric and neonatal clinical reference: calculators, clinical scores, growth charts, drug formulary, lab reference values and immunisation schedules with catch-up planning.",
+        "publisher": { "@id": "https://info.pediaid.bridgr.co.in/#organization" },
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+      }
+    ]
+  }
+  </script>
 
   <!-- Cache busting on deploy. The Flutter service worker still does the
        smart asset diff via a build hash, but browsers can hold onto the
