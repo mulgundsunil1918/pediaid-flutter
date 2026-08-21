@@ -57,6 +57,139 @@ class WhoChildInput {
   });
 }
 
+// ─── WHO chart interpretation ────────────────────────────────────────────────
+//
+// Top-level and pure so they can be unit-tested. They were private methods on
+// the State class, which is why a metric-agnostic centile interpretation --
+// calling a large head "Overnutrition likely" -- shipped and had to be
+// reported by a user rather than caught by a test.
+// See test/who_chart_interpretation_test.dart.
+
+/// Centile interpretation for THIS chart's metric.
+///
+/// This used to be one metric-agnostic block that called anything below the
+/// 3rd centile "Undernutrition likely" and anything above the 97th
+/// "Overnutrition likely" — on every chart. So a large head plotted on
+/// head-circumference-for-age was reported as overnutrition rather than
+/// macrocephaly, and a tall child on length-for-age got the same. Reported
+/// by a user, 2026-08-21.
+///
+/// The Z-score path was already metric-aware ([_sdInterpretation]); only the
+/// centile path was not. The two now agree, and the wording follows the same
+/// WHO categories: wasting/stunting/underweight, micro- and macrocephaly.
+///
+/// Deliberately NOT called "overnutrition" on weight-for-age: WHO treats a
+/// high weight-for-age as uninterpretable on its own, because a tall child
+/// is heavy for age without being overweight. It points at weight-for-length
+/// or BMI instead, which is what the text says.
+String whoCentileInterpretation(String chartType, String zone) {
+  switch (chartType) {
+    case 'wfa':
+      switch (zone) {
+        case 'below3':
+          return 'Underweight for age. Clinical evaluation recommended.';
+        case 'low':
+          return 'Low normal weight for age. Monitor closely.';
+        case 'high':
+          return 'High normal weight for age. Monitor.';
+        default:
+          return 'High weight for age. Assess with weight-for-length or '
+              'BMI-for-age before calling it overweight — a tall child is '
+              'heavy for age without being overnourished.';
+      }
+    case 'lhfa':
+      switch (zone) {
+        case 'below3':
+          return 'Stunted / short stature. Clinical evaluation recommended.';
+        case 'low':
+          return 'Low normal stature. Monitor closely.';
+        case 'high':
+          return 'High normal stature. Monitor.';
+        default:
+          return 'Tall stature. Usually a normal variant; consider endocrine '
+              'or syndromic causes if disproportionate or accelerating.';
+      }
+    case 'wfl':
+    case 'wfh':
+      switch (zone) {
+        case 'below3':
+          return 'Wasted. Clinical evaluation recommended.';
+        case 'low':
+          return 'Low normal weight for length/height. Monitor closely.';
+        case 'high':
+          return 'High normal weight for length/height. Monitor.';
+        default:
+          return 'Overweight for length/height. Clinical evaluation '
+              'recommended.';
+      }
+    case 'bfa':
+      switch (zone) {
+        case 'below3':
+          return 'Thinness / low BMI for age. Clinical evaluation '
+              'recommended.';
+        case 'low':
+          return 'Low normal BMI for age. Monitor closely.';
+        case 'high':
+          return 'High normal BMI for age. Monitor.';
+        default:
+          return 'Overweight / obesity by BMI for age. Clinical evaluation '
+              'recommended.';
+      }
+    case 'hcfa':
+      switch (zone) {
+        case 'below3':
+          return 'Microcephaly. Clinical evaluation recommended.';
+        case 'low':
+          return 'Small head circumference for age. Monitor closely.';
+        case 'high':
+          return 'Large head circumference for age. Monitor.';
+        default:
+          return 'Macrocephaly. Clinical evaluation recommended.';
+      }
+    default:
+      switch (zone) {
+        case 'below3':
+          return 'Below the 3rd centile. Clinical evaluation recommended.';
+        case 'low':
+          return 'Low normal. Monitor closely.';
+        case 'high':
+          return 'High normal. Monitor.';
+        default:
+          return 'Above the 97th centile. Clinical evaluation recommended.';
+      }
+  }
+}
+
+String whoSdInterpretation(String chartType, String zone) {
+  switch (chartType) {
+    case 'wfa':
+      if (zone == 'below3') return 'Severely underweight';
+      if (zone == 'neg2to3') return 'Underweight';
+      if (zone == 'above3') return 'Overweight';
+      return 'Normal weight';
+    case 'lhfa':
+      if (zone == 'below3') return 'Severely stunted';
+      if (zone == 'neg2to3') return 'Stunted';
+      if (zone == 'above3') return 'Tall stature';
+      return 'Normal stature';
+    case 'wfl':
+    case 'wfh':
+    case 'bfa':
+      if (zone == 'below3') return 'Severely wasted';
+      if (zone == 'neg2to3') return 'Wasted';
+      if (zone == '2to3') return 'Overweight';
+      if (zone == 'above3') return 'Obese';
+      return 'Normal';
+    case 'hcfa':
+      if (zone == 'below3') return 'Severe microcephaly';
+      if (zone == 'neg2to3') return 'Microcephaly';
+      if (zone == 'above3') return 'Macrocephaly';
+      return 'Normal head circumference';
+    default:
+      return '';
+  }
+}
+
 class WhoChartScreen extends StatefulWidget {
   final String chartType;
   final String gender;
@@ -624,25 +757,23 @@ class _WhoChartScreenState extends State<WhoChartScreen> {
     if (y < nearest.p3) {
       band = 'Below 3rd centile';
       color = const Color(0xFFB71C1C);
-      interpretation =
-          'Below 3rd centile — Undernutrition likely. Clinical evaluation recommended.';
+      interpretation = '$band — ${whoCentileInterpretation(widget.chartType, 'below3')}';
     } else if (y < nearest.p10) {
       band = '3rd–10th centile';
       color = const Color(0xFFF57C00);
-      interpretation = '3rd–10th centile — Low normal. Monitor closely.';
+      interpretation = '$band — ${whoCentileInterpretation(widget.chartType, 'low')}';
     } else if (y < nearest.p90) {
       band = 'Normal range (10th–90th centile)';
       color = const Color(0xFF2E7D32);
-      interpretation = 'Normal range (10th–90th centile)';
+      interpretation = band;
     } else if (y < nearest.p97) {
       band = '90th–97th centile';
       color = const Color(0xFFF57C00);
-      interpretation = '90th–97th centile — High normal. Monitor.';
+      interpretation = '$band — ${whoCentileInterpretation(widget.chartType, 'high')}';
     } else {
       band = 'Above 97th centile';
       color = const Color(0xFFB71C1C);
-      interpretation =
-          'Above 97th centile — Overnutrition likely. Clinical evaluation recommended.';
+      interpretation = '$band — ${whoCentileInterpretation(widget.chartType, 'above97')}';
     }
 
     setState(() {
@@ -702,40 +833,11 @@ class _WhoChartScreenState extends State<WhoChartScreen> {
       _userY = y;
       _resultBand = band;
       _resultColor = color;
-      _resultInterpretation = _sdInterpretation(zone);
+      _resultInterpretation = whoSdInterpretation(widget.chartType, zone);
       _hasResult = true;
     });
   }
 
-  String _sdInterpretation(String zone) {
-    switch (widget.chartType) {
-      case 'wfa':
-        if (zone == 'below3') return 'Severely underweight';
-        if (zone == 'neg2to3') return 'Underweight';
-        if (zone == 'above3') return 'Overweight';
-        return 'Normal weight';
-      case 'lhfa':
-        if (zone == 'below3') return 'Severely stunted';
-        if (zone == 'neg2to3') return 'Stunted';
-        if (zone == 'above3') return 'Tall stature';
-        return 'Normal stature';
-      case 'wfl':
-      case 'wfh':
-      case 'bfa':
-        if (zone == 'below3') return 'Severely wasted';
-        if (zone == 'neg2to3') return 'Wasted';
-        if (zone == '2to3') return 'Overweight';
-        if (zone == 'above3') return 'Obese';
-        return 'Normal';
-      case 'hcfa':
-        if (zone == 'below3') return 'Severe microcephaly';
-        if (zone == 'neg2to3') return 'Microcephaly';
-        if (zone == 'above3') return 'Macrocephaly';
-        return 'Normal head circumference';
-      default:
-        return '';
-    }
-  }
 
   void _clear() {
     setState(() {

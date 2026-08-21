@@ -40,7 +40,15 @@ class _NotificationBellState extends State<NotificationBell>
   /// than with use. This is a safety net only: the badge is really kept
   /// current by app resume and by incoming push, both of which are faster
   /// than any poll. Nothing here is time-critical.
-  static const Duration _kPollInterval = Duration(hours: 12);
+  ///
+  /// 8 h rather than 12 (Sunil, 2026-08-21). Note what this interval does and
+  /// does not control: it is NOT how quickly a notification reaches the user.
+  /// A push updates the badge the instant it arrives, and reopening the app
+  /// refreshes immediately. This timer only bounds how long a *foregrounded*
+  /// app can sit with a stale badge after a push was missed entirely. Cost is
+  /// unaffected in practice — 3 polls a day instead of 2, against the 1,440
+  /// the 60-second version fired.
+  static const Duration _kPollInterval = Duration(hours: 8);
 
   @override
   void initState() {
