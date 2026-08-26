@@ -296,6 +296,10 @@ class ToolRegistry {
           'sarnat hypoxic ischaemic encephalopathy staging',
       'Thompson Score (HIE)': 'thompson hypoxic ischaemic encephalopathy',
       'LATCH Score (Breastfeeding)': 'latch breastfeeding assessment',
+      'BIND Score (Bilirubin-Induced Neurologic Dysfunction)':
+          'bind bilirubin encephalopathy kernicterus acute abe jaundice',
+      'CRIES Pain Score (Neonatal)':
+          'cries neonatal pain postoperative analgesia',
     };
     jsonNeonatal.forEach((name, kw) {
       add(

@@ -150,4 +150,130 @@ final modifiedFinneganScore = ScoreDef(
   ],
 );
 
-final List<ScoreDef> neonatalScores = [modifiedFinneganScore];
+// -----------------------------------------------------------------------------
+// SNAPPE-II
+//
+// SNAP-II (six physiology items from the first 12 hours) plus the perinatal
+// extension (birth weight, SGA, 5-minute Apgar). Maximum 162.
+//
+// Point weights were verified rather than recalled: the six SNAP-II items came
+// from a published scoring table, the perinatal three from a second source, and
+// the nine maxima sum to exactly 162 — the documented ceiling — which is the
+// arithmetic check that the set is complete and correctly weighted.
+//
+// This is a MORTALITY RISK and illness-severity score for populations and
+// benchmarking. It is not a bedside treatment tool, and the bands say so: a
+// high score describes a cohort's risk, not a prediction about the baby in
+// front of you. Written that way deliberately, because a number this precise
+// invites being read as a prognosis.
+// -----------------------------------------------------------------------------
+final snappeIIScore = ScoreDef(
+  title: 'SNAPPE-II',
+  subtitle:
+      'Illness severity and mortality risk for newborn intensive care. Uses the '
+      'WORST value of each parameter in the first 12 hours after admission.',
+  system: 'Neonatal',
+  accent: _neo,
+  totalLabel: 'points',
+  questions: [
+    // ── SNAP-II: physiology, worst value in the first 12 hours ────────────
+    ScoreQ('Mean blood pressure (lowest)', [
+      ScoreChoice('≥ 30 mmHg', 0),
+      ScoreChoice('20–29 mmHg', 9),
+      ScoreChoice('< 20 mmHg', 19),
+    ]),
+    ScoreQ('Lowest temperature', [
+      ScoreChoice('≥ 35.6 °C', 0),
+      ScoreChoice('35.0–35.5 °C', 8),
+      ScoreChoice('< 35.0 °C', 15),
+    ]),
+    ScoreQ('PO₂ / FiO₂ ratio (lowest)', [
+      ScoreChoice('≥ 2.5', 0),
+      ScoreChoice('1.0 – 2.49', 5),
+      ScoreChoice('0.3 – 0.99', 16),
+      ScoreChoice('< 0.3', 28),
+    ]),
+    ScoreQ('Lowest serum pH', [
+      ScoreChoice('≥ 7.20', 0),
+      ScoreChoice('7.10 – 7.19', 7),
+      ScoreChoice('< 7.10', 16),
+    ]),
+    ScoreQ.yesNo('Multiple seizures', pts: 19),
+    ScoreQ('Urine output', [
+      ScoreChoice('≥ 1.0 mL/kg/h', 0),
+      ScoreChoice('0.1 – 0.9 mL/kg/h', 5),
+      ScoreChoice('< 0.1 mL/kg/h', 18),
+    ]),
+
+    // ── Perinatal extension ───────────────────────────────────────────────
+    ScoreQ('Birth weight', [
+      ScoreChoice('≥ 1000 g', 0),
+      ScoreChoice('750 – 999 g', 10),
+      ScoreChoice('< 750 g', 17),
+    ]),
+    ScoreQ.yesNo('Small for gestational age (< 3rd centile)', pts: 12),
+    ScoreQ('Apgar at 5 minutes', [
+      ScoreChoice('≥ 7', 0),
+      ScoreChoice('< 7', 18),
+    ]),
+  ],
+  bands: const [
+    ScoreBand(
+      0,
+      'Low risk band',
+      Color(0xFF2E7D32),
+      'Mortality risk in this band is low. The score describes severity of '
+          'illness in the first 12 hours; it does not replace the clinical '
+          'picture or the trend.',
+    ),
+    ScoreBand(
+      20,
+      'Moderate risk band',
+      Color(0xFFF9A825),
+      'Mortality risk rises steadily through this band. Useful for triage '
+          'discussions, transfer decisions and counselling context — not as a '
+          'prediction for an individual infant.',
+    ),
+    ScoreBand(
+      40,
+      'High risk band',
+      Color(0xFFF57C00),
+      'A score of 40 or more is the cutoff most often used in the literature '
+          'to define high mortality risk. Treat it as a prompt to review the '
+          'whole picture, not as a prognosis.',
+    ),
+    ScoreBand(
+      60,
+      'Very high risk band',
+      Color(0xFFB71C1C),
+      'Substantially elevated mortality risk at population level. Individual '
+          'outcomes vary widely, and infants with very high scores do survive '
+          'intact — the score is a severity measure, not a ceiling.',
+    ),
+  ],
+  notes: const [
+    'Richardson DK, Corcoran JD, Escobar GJ, Lee SK. SNAP-II and SNAPPE-II: '
+        'simplified newborn illness severity and mortality risk scores. '
+        'J Pediatr. 2001;138(1):92-100. PMID: 11148519.',
+    'Use the WORST value of each physiological parameter recorded in the first '
+        '12 hours after admission. Scoring a later or a better value '
+        'systematically understates severity and breaks comparability.',
+    'Maximum 162: SNAP-II contributes up to 115 and the perinatal extension '
+        'up to 47.',
+    'PO₂ / FiO₂ uses PO₂ in mmHg over FiO₂ as a DECIMAL (0.21–1.0), so a PO₂ '
+        'of 60 on 40 % oxygen gives 60 / 0.40 = 150 — not the ratio this score '
+        'wants. SNAP-II uses the value divided by 100, i.e. 1.5 here.',
+    'Designed and validated for illness severity and mortality risk across '
+        'populations, for benchmarking and research. It is not a bedside '
+        'treatment tool and should not be quoted to parents as an individual '
+        'prognosis.',
+    'Some implementations use the lowest Apgar in the first hour rather than '
+        'the 5-minute Apgar. This tool uses the 5-minute value, as in the '
+        'original description.',
+  ],
+);
+
+final List<ScoreDef> neonatalScores = [
+  modifiedFinneganScore,
+  snappeIIScore,
+];

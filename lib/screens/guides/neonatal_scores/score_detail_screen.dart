@@ -1,15 +1,30 @@
 import 'package:flutter/material.dart';
 import '../../../data/scores_data_loader.dart';
+import 'score_smart_view.dart';
 
-class ScoreDetailScreen extends StatelessWidget {
+class ScoreDetailScreen extends StatefulWidget {
   final NeonatalScore score;
 
   const ScoreDetailScreen({super.key, required this.score});
 
   @override
+  State<ScoreDetailScreen> createState() => _ScoreDetailScreenState();
+}
+
+class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
+  bool _tableView = false;
+
+  @override
   Widget build(BuildContext context) {
+    final score  = widget.score;
     final cs     = Theme.of(context).colorScheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    // Only additive scores get the interactive view. Levene, Sarnat and IVH
+    // grading describe mutually exclusive STAGES, and summing a stage would
+    // produce an authoritative-looking number that means nothing.
+    final canScore = score.subsections.isEmpty &&
+        isAdditiveScore(score.parameters);
 
     return Scaffold(
       appBar: AppBar(
@@ -27,10 +42,42 @@ class ScoreDetailScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               // ── Parameters / Subsections ────────────────────────────────
-              _SectionHeader('Parameters', cs),
+              Row(
+                children: [
+                  Expanded(child: _SectionHeader('Parameters', cs)),
+                  if (canScore)
+                    SegmentedButton<bool>(
+                      style: const ButtonStyle(
+                        visualDensity: VisualDensity.compact,
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                      segments: const [
+                        ButtonSegment(
+                          value: false,
+                          icon: Icon(Icons.touch_app_outlined, size: 16),
+                          label: Text('Score'),
+                        ),
+                        ButtonSegment(
+                          value: true,
+                          icon: Icon(Icons.table_chart_outlined, size: 16),
+                          label: Text('Table'),
+                        ),
+                      ],
+                      selected: {_tableView},
+                      showSelectedIcon: false,
+                      onSelectionChanged: (v) =>
+                          setState(() => _tableView = v.first),
+                    ),
+                ],
+              ),
               const SizedBox(height: 10),
 
-              if (score.subsections.isNotEmpty) ...[
+              if (canScore && !_tableView) ...[
+                ScoreSmartView(
+                  parameters: score.parameters,
+                  interpretation: score.interpretation,
+                ),
+              ] else if (score.subsections.isNotEmpty) ...[
                 // Combined-style: multiple named subsections
                 ...score.subsections.map((sub) => _SubsectionBlock(
                       sub: sub,
@@ -183,7 +230,14 @@ class _ParameterTable extends StatelessWidget {
     final altRowBg    = cs.onSurface.withValues(alpha: isDark ? 0.06 : 0.03);
     final borderColor = cs.outline.withValues(alpha: isDark ? 0.3 : 0.2);
 
-    return ClipRRect(
+    // The table has always scrolled sideways, but with no visual cue — which is
+    // why the grade-2 column on Silverman and Downes read as simply absent. A
+    // fade on the right edge plus a hint line makes the hidden columns
+    // discoverable, and only appears when the table really is wider than the
+    // viewport.
+    final overflows = totalWidth > MediaQuery.sizeOf(context).width - 32;
+
+    final table = ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: Container(
         decoration: BoxDecoration(
@@ -222,6 +276,58 @@ class _ParameterTable extends StatelessWidget {
           ),
         ),
       ),
+    );
+
+    if (!overflows) return table;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Stack(
+          children: [
+            table,
+            Positioned(
+              top: 0,
+              bottom: 0,
+              right: 0,
+              width: 26,
+              child: IgnorePointer(
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.horizontal(
+                        right: Radius.circular(10)),
+                    gradient: LinearGradient(
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                      colors: [
+                        cs.surface.withValues(alpha: 0),
+                        cs.surface.withValues(alpha: 0.85),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 6),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Text(
+              'Scroll for all columns',
+              style: TextStyle(
+                fontSize: 11.5,
+                fontWeight: FontWeight.w600,
+                color: cs.onSurface.withValues(alpha: 0.5),
+              ),
+            ),
+            const SizedBox(width: 3),
+            Icon(Icons.arrow_forward_rounded,
+                size: 13, color: cs.onSurface.withValues(alpha: 0.5)),
+          ],
+        ),
+      ],
     );
   }
 
