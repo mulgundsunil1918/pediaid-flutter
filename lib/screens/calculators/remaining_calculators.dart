@@ -48,26 +48,41 @@ class AaGradientCalculator extends StatelessWidget {
           final grad = pAO2 - pao2;
           final age = v['age'];
           final expected = age != null ? (age / 4) + 4 : null;
-          final high = expected != null && grad > expected;
+          // Without an age the result used to read "Enter age for expected"
+          // and give no interpretation at all — unhelpful at the cot side,
+          // where the age is known but nobody wants to type it to find out
+          // whether 40 mmHg is bad. (Age/4)+4 is adult-derived anyway and
+          // overstates the normal range in a young child, so a plain
+          // paediatric ceiling of 15 mmHg on room air is used instead.
+          final ceiling = expected ?? 15.0;
+          final high = grad > ceiling;
+          // a/A ratio: unlike the raw gradient it stays comparatively stable
+          // as FiO₂ changes, which makes it the number to trend on a
+          // ventilated child.
+          final aToA = pAO2 > 0 ? pao2 / pAO2 : 0.0;
           return CalcResult(
             value: '${grad.toStringAsFixed(1)} mmHg',
-            band: expected == null
-                ? 'Enter age for expected'
-                : (high ? 'Elevated' : 'Normal'),
-            color: expected == null ? _amber : (high ? _orange : _green),
+            band: high ? 'Elevated' : 'Normal',
+            color: high ? _orange : _green,
             detail: high
-                ? 'Gradient exceeds the age-expected value — suggests V/Q mismatch, right-to-left shunt or a diffusion defect rather than pure hypoventilation.'
-                : 'A NORMAL gradient with hypoxaemia points to hypoventilation or a low inspired oxygen tension (e.g. altitude).',
+                ? 'Gradient exceeds the expected value — suggests V/Q mismatch, right-to-left shunt or a diffusion defect rather than pure hypoventilation.'
+                : 'A NORMAL gradient with hypoxaemia points to hypoventilation or a low inspired oxygen tension (e.g. altitude). Check the PaCO₂: a high value with a normal gradient is hypoventilation.',
             extra: [
               ('Alveolar PAO₂', '${pAO2.toStringAsFixed(1)} mmHg'),
+              ('a/A ratio', aToA.toStringAsFixed(2) + (aToA < 0.75 ? '  (low)' : '')),
               if (expected != null)
-                ('Expected for age', '${expected.toStringAsFixed(1)} mmHg'),
+                ('Expected for age', '≤ ${expected.toStringAsFixed(1)} mmHg')
+              else
+                ('Reference used', '≤ 15 mmHg (paediatric, room air)'),
             ],
           );
         },
         notes: const [
           'PAO₂ = FiO₂ × (Patm − 47) − PaCO₂ ÷ 0.8;  A–a gradient = PAO₂ − PaO₂.',
           'Expected gradient on room air ≈ (age ÷ 4) + 4 mmHg. The gradient rises with supplemental oxygen, so interpret with care above FiO₂ 0.21.',
+          'That (age ÷ 4) + 4 rule is derived in adults. In children on room air a gradient above roughly 15 mmHg is the more useful ceiling, and that is what is applied when no age is entered.',
+          'a/A ratio = PaO₂ ÷ PAO₂; below 0.75 is abnormal. It holds up better than the raw gradient when FiO₂ changes, so trend it rather than the gradient on a ventilated child.',
+          'Atmospheric pressure defaults to 760 mmHg (sea level). Enter the local value at altitude — using 760 well above sea level inflates PAO₂ and manufactures a gradient that is not there.',
         ],
       );
 }

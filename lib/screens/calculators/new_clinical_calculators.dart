@@ -499,6 +499,130 @@ class ParacetamolCalculator extends StatelessWidget {
 
 // ── Growth ───────────────────────────────────────────────────────────────────
 
+// -----------------------------------------------------------------------------
+// Weight velocity (neonatal)
+//
+// Two weights and two dates in; g/day, g/kg/day and percentage change out.
+//
+// Two g/kg/day methods are reported because they disagree, sometimes by 2-3
+// g/kg/day over a long interval, and units quote whichever their protocol
+// specifies. The exponential (Patel) method is the one to prefer over intervals
+// longer than about a week — the arithmetic method uses a fixed starting weight
+// as the denominator, so it progressively understates velocity as the baby
+// grows.
+// -----------------------------------------------------------------------------
+class WeightVelocityCalculator extends StatelessWidget {
+  const WeightVelocityCalculator({super.key});
+  @override
+  Widget build(BuildContext context) => SimpleCalcScaffold(
+        title: 'Weight Velocity',
+        subtitle:
+            'Weight gain or loss between two points, as g/day, g/kg/day and a '
+            'percentage — for growth monitoring in the NICU and at follow-up.',
+        accent: _growth,
+        fields: const [
+          CalcField('w1', 'Starting weight', unit: 'g', hint: 'e.g. 1450'),
+          CalcField.date('d1', 'Starting date'),
+          CalcField('w2', 'Current weight', unit: 'g', hint: 'e.g. 1720'),
+          CalcField.date('d2', 'Current date'),
+        ],
+        compute: (v) {
+          final w1 = v['w1'], w2 = v['w2'];
+          final d1 = v['d1'], d2 = v['d2'];
+          if (w1 == null || w2 == null || d1 == null || d2 == null) return null;
+          if (w1 <= 0 || w2 <= 0) return null;
+
+          final days = (d2 - d1).round();
+          if (days <= 0) return null; // same day or reversed — nothing to report
+
+          final deltaG = w2 - w1;
+          final gPerDay = deltaG / days;
+          final pct = (deltaG / w1) * 100;
+
+          // Arithmetic ("2-point") method: change per day per STARTING kg.
+          final arithmetic = deltaG / (w1 / 1000) / days;
+          // Exponential (Patel) method: 1000 x ln(W2/W1) / days. Accounts for
+          // the denominator growing with the baby.
+          final exponential = 1000 * (math.log(w2 / w1)) / days;
+
+          final losing = deltaG < 0;
+          final String band;
+          final Color color;
+          final String detail;
+
+          if (losing) {
+            band = 'Weight loss';
+            color = const Color(0xFFB71C1C);
+            detail =
+                'Losing ${deltaG.abs().toStringAsFixed(0)} g over $days day'
+                '${days == 1 ? '' : 's'} (${pct.toStringAsFixed(1)} %). In the '
+                'first week this may be physiological — up to about 7–10 % in a '
+                'term baby and 10–15 % in a preterm, with birth weight regained '
+                'by day 10–14. Outside that window, or beyond those limits, look '
+                'for intake, losses or illness.';
+          } else if (exponential < 10) {
+            band = 'Below target';
+            color = const Color(0xFFF57C00);
+            detail =
+                'Gaining, but below the 15–20 g/kg/day usually targeted in a '
+                'growing preterm infant. Review intake, fortification and '
+                'ongoing losses before assuming a growth failure.';
+          } else if (exponential <= 20) {
+            band = 'On target';
+            color = const Color(0xFF2E7D32);
+            detail =
+                'Within the 15–20 g/kg/day range that approximates intrauterine '
+                'growth, which is the usual aim for a growing preterm infant.';
+          } else {
+            band = 'Above target';
+            color = const Color(0xFF1565C0);
+            detail =
+                'Above the usual 15–20 g/kg/day. Confirm it is lean growth '
+                'rather than oedema or fluid retention, particularly if the '
+                'gain appeared suddenly.';
+          }
+
+          return CalcResult(
+            value: '${exponential.toStringAsFixed(1)} g/kg/day',
+            band: band,
+            color: color,
+            detail: detail,
+            extra: [
+              (
+                'Total change',
+                '${deltaG >= 0 ? '+' : ''}${deltaG.toStringAsFixed(0)} g '
+                    'over $days day${days == 1 ? '' : 's'}'
+              ),
+              ('Per day', '${gPerDay >= 0 ? '+' : ''}${gPerDay.toStringAsFixed(1)} g/day'),
+              ('Percentage change', '${pct >= 0 ? '+' : ''}${pct.toStringAsFixed(1)} %'),
+              ('Exponential (Patel)', '${exponential.toStringAsFixed(1)} g/kg/day'),
+              ('Arithmetic (2-point)', '${arithmetic.toStringAsFixed(1)} g/kg/day'),
+              ('Weights', '${w1.toStringAsFixed(0)} g → ${w2.toStringAsFixed(0)} g'),
+            ],
+          );
+        },
+        notes: const [
+          'Exponential (Patel) method: 1000 × ln(W₂ / W₁) ÷ days. Preferred for '
+              'intervals longer than about a week, and the headline figure here.',
+          'Arithmetic (2-point) method: (W₂ − W₁) ÷ starting weight in kg ÷ days. '
+              'Simple to do at the cot side, but it holds the denominator fixed at '
+              'the starting weight, so it progressively understates velocity as '
+              'the baby grows.',
+          'Target in a growing preterm infant is about 15–20 g/kg/day, '
+              'approximating intrauterine growth. Term infants are usually '
+              'described in g/day instead — roughly 25–30 g/day in the early '
+              'months.',
+          'Early weight loss is expected: up to about 7–10 % in a term infant and '
+              '10–15 % in a preterm, with birth weight regained by day 10–14. '
+              'A negative velocity in the first week is not automatically a '
+              'problem; one in the third week is.',
+          'Patel AL, Engstrom JL, Meier PP, Kimura RE. Accuracy of methods for '
+              'calculating postnatal growth velocity for extremely low birth '
+              'weight infants. Pediatrics. 2005;116(6):1466-73.',
+        ],
+      );
+}
+
 class BmiCalculator extends StatelessWidget {
   const BmiCalculator({super.key});
   @override

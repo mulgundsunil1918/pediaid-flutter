@@ -21,13 +21,23 @@ class CalcField {
   final String hint;
   final bool toggle; // renders a switch instead of a number field (value 0/1)
 
+  /// Renders a date picker. The value handed to [compute] is DAYS SINCE EPOCH,
+  /// so subtracting two date fields gives the interval in whole days directly —
+  /// which is what every clinical use of a date pair here actually wants.
+  final bool isDate;
+
   const CalcField(
     this.key,
     this.label, {
     this.unit = '',
     this.hint = '',
     this.toggle = false,
-  });
+  }) : isDate = false;
+
+  const CalcField.date(this.key, this.label, {this.hint = ''})
+      : unit = '',
+        toggle = false,
+        isDate = true;
 }
 
 /// The computed answer. [value] is the headline (e.g. "1.8 %"); [band] +
@@ -78,6 +88,7 @@ class SimpleCalcScaffold extends StatefulWidget {
 class _SimpleCalcScaffoldState extends State<SimpleCalcScaffold> {
   final Map<String, TextEditingController> _ctrls = {};
   final Map<String, bool> _toggles = {};
+  final Map<String, DateTime> _dates = {};
 
   @override
   void initState() {
@@ -102,7 +113,16 @@ class _SimpleCalcScaffoldState extends State<SimpleCalcScaffold> {
   Map<String, double> get _values {
     final m = <String, double>{};
     for (final f in widget.fields) {
-      if (f.toggle) {
+      if (f.isDate) {
+        final d = _dates[f.key];
+        if (d != null) {
+          // Whole days since epoch, computed from a date-only value so a
+          // pick made at 23:00 and one made at 01:00 are still one day apart.
+          m[f.key] = DateTime(d.year, d.month, d.day)
+                  .millisecondsSinceEpoch /
+              86400000.0;
+        }
+      } else if (f.toggle) {
         m[f.key] = (_toggles[f.key] ?? false) ? 1 : 0;
       } else {
         final v = double.tryParse(_ctrls[f.key]!.text.trim());
@@ -159,6 +179,57 @@ class _SimpleCalcScaffoldState extends State<SimpleCalcScaffold> {
   }
 
   Widget _field(CalcField f, ColorScheme cs) {
+    if (f.isDate) {
+      final picked = _dates[f.key];
+      return InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: () async {
+          final now = DateTime.now();
+          final d = await showDatePicker(
+            context: context,
+            initialDate: picked ?? now,
+            // Wide enough for a birth date and any follow-up, narrow enough
+            // that a mis-tap cannot land decades away.
+            firstDate: DateTime(now.year - 20),
+            lastDate: DateTime(now.year + 1),
+          );
+          if (d != null) setState(() => _dates[f.key] = d);
+        },
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+          decoration: BoxDecoration(
+            color: Theme.of(context).cardColor,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: widget.accent.withValues(alpha: 0.3)),
+          ),
+          child: Row(
+            children: [
+              Icon(Icons.calendar_today_rounded, size: 18, color: widget.accent),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(f.label,
+                    style: const TextStyle(
+                        fontSize: 14, fontWeight: FontWeight.w600)),
+              ),
+              Text(
+                picked == null
+                    ? (f.hint.isEmpty ? 'Select' : f.hint)
+                    : '${picked.day.toString().padLeft(2, '0')}/'
+                        '${picked.month.toString().padLeft(2, '0')}/'
+                        '${picked.year}',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: picked == null ? FontWeight.w400 : FontWeight.w700,
+                  color: picked == null
+                      ? cs.onSurface.withValues(alpha: 0.45)
+                      : widget.accent,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
     if (f.toggle) {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),

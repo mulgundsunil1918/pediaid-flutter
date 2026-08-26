@@ -230,7 +230,11 @@ void main() {
     // Expected for an 8-year-old = (8/4)+4 = 6 mmHg, so 9.7 is correctly
     // flagged as elevated. The expected value is shown alongside.
     expect(find.text('Elevated'), findsOneWidget);
-    expect(find.text('6.0 mmHg'), findsOneWidget);
+    // Rendered as an upper limit ("≤ 6.0") rather than a bare number, so it
+    // reads as a threshold rather than as the patient's own value.
+    expect(find.text('≤ 6.0 mmHg'), findsOneWidget);
+    // a/A ratio = 90 / 99.73 = 0.90 — normal, so no "(low)" suffix.
+    expect(find.text('0.90'), findsOneWidget);
   });
 
   testWidgets('CPP: MAP 70 − ICP 15 = 55, at/above target for a 6-year-old',

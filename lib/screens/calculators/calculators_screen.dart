@@ -394,6 +394,12 @@ class _CalculatorsScreenState extends State<CalculatorsScreen> {
     ),
     // ── New clinical calculators (2026-08) ───────────────────────────
     _CalculatorItem(
+      title: 'Weight Velocity',
+      subtitle: 'g/kg/day gain or loss between two weights',
+      icon: Icons.trending_up_rounded,
+      categories: [_kNICU, _kGrowth],
+    ),
+    _CalculatorItem(
       title: 'Absolute Counts (ANC / AEC / ALC)',
       subtitle: 'Neutrophil · eosinophil · lymphocyte counts',
       icon: Icons.science_outlined,
@@ -1189,6 +1195,8 @@ Widget? calculatorScreenFor(String title) {
       return const UmbilicalCatheterCalculator();
     case 'ETT Size + Depth':
       return ToolGate(toolId: 'ett', child: const EttCalculator());
+    case 'Weight Velocity':
+      return const WeightVelocityCalculator();
     case 'Absolute Counts (ANC / AEC / ALC)':
       return const AbsoluteCountsCalculator();
     case 'Mentzer Index':

@@ -17,6 +17,7 @@ import 'gi_liver_scores.dart';
 import 'oncology_scores.dart';
 import 'rheumatology_scores.dart';
 import 'misc_system_scores.dart';
+import 'neonatal_scores.dart';
 
 /// Every paediatric score in the app, in registration order.
 final List<ScoreDef> allPaediatricScores = [
@@ -36,6 +37,7 @@ final List<ScoreDef> allPaediatricScores = [
   ...radiologyScores,
   ...sleepScores,
   ...giLiverScores2,
+  ...neonatalScores,
 ];
 
 class PaediatricScoresHub extends StatefulWidget {
