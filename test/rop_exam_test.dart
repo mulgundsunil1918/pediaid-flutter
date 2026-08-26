@@ -224,7 +224,7 @@ void main() {
 
   group('Clinical governance', () {
     test('the treatment rule set names its source', () {
-      expect(etropRules.source.toLowerCase(), contains('etrop'));
+      expect(etropRules.source.toLowerCase(), contains('early treatment'));
       expect(etropRules.type1, isNotEmpty);
       expect(etropRules.type2, isNotEmpty);
     });

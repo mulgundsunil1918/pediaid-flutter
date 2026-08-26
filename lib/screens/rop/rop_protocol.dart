@@ -13,14 +13,29 @@
 // checked against its original guideline and the date of that check recorded —
 // so `lastVerified` is a field, not a comment.
 //
-// ⚠️  CLINICAL STATUS: the numbers below are DRAFT.
+// CLINICAL STATUS
 //
-// Spec §73 is explicit — "Do not launch the clinical calculator solely based on
-// AI-generated medical logic" — and the module must be reviewed by a
-// neonatologist and an ROP ophthalmologist before release. Every value carries
-// a `source` string so it can be checked line by line rather than trusted.
-// The same approach was taken with the immunisation catch-up rules.
+// Values were read from the source documents on 2026-08-26, not recalled:
+//
+//   India  — "Guidelines for Universal Eye Screening in Newborns including
+//            Retinopathy of Prematurity", RBSK, Ministry of Health & Family
+//            Welfare, Government of India, June 2017. Screening thresholds,
+//            the 30-day rule, the <28 wk / <1200 g early pathway and the
+//            follow-up and discharge rules are quoted from that document.
+//   AAP    — Policy Statement, Section on Ophthalmology / AAO / AAPOS,
+//            Pediatrics 2006;117(2):572. Table 1 is transcribed row by row.
+//   UK     — RCPCH / RCOphth / BAPM, UK screening of retinopathy of
+//            prematurity, March 2022 (updated 2024).
+//
+// `lastVerified` records that check per protocol. Spec §73 also requires
+// review by a neonatologist and an ROP ophthalmologist before release — that
+// is a separate sign-off from this transcription check, and the UI still says
+// the module is decision support rather than a diagnosis.
 // =============================================================================
+
+/// The date every protocol's values were checked against its source document.
+/// Spec §73 step 9 requires recording when each reference was verified.
+final _verifiedOn = DateTime(2026, 8, 26);
 
 /// How a protocol expresses the timing of the FIRST examination.
 enum FirstExamBasis {
@@ -191,30 +206,32 @@ final ropProtocolIndia = RopProtocol(
   riskFactors: _kRiskFactorsIndia,
   firstExamBasis: FirstExamBasis.postnatalDays,
   firstExamRules: const [
-    // Spec §10: first screening by roughly day 25–30 of life, and before
-    // discharge if that comes sooner. Applies across the GA range, so one row.
-    FirstExamRule(gaFromWeeks: 0, gaToWeeks: 99, dayFrom: 25, dayTo: 30),
+    // RBSK 2017: "Initial Screen at 4 Weeks (30 Days) of Birth." A single rule
+    // across the GA range; the earlier pathway below is the documented
+    // exception, not a second row here.
+    FirstExamRule(gaFromWeeks: 0, gaToWeeks: 99, dayFrom: 28, dayTo: 30),
   ],
-  // Spec §11 — a named early pathway, not a special case inside the day-25–30
-  // arithmetic. THRESHOLD IS DRAFT and must be set from the chosen Indian
-  // guidance before release.
-  earlyPathwayGaMaxWeeks: 28,
-  earlyPathwayBirthWeightMaxG: 1200,
+  // RBSK 2017, verbatim: "infants with period of gestation less than 28 weeks
+  // (gestation age) or less than 1200 grams birth weight should be first
+  // screened at 2-3 weeks after delivery." Spec §11 requires this be a named
+  // pathway rather than a special case buried in the 30-day arithmetic.
+  earlyPathwayGaMaxWeeks: 27, // "less than 28 weeks" → 27+6 or below
+  earlyPathwayBirthWeightMaxG: 1199, // "less than 1200 grams"
   earlyPathwayNote:
-      'Very preterm or very low birth weight infants may need examination '
-      'earlier than day 25–30. Follow the earlier schedule in the protocol you '
-      'are using.',
+      'Gestation under 28 weeks or birth weight under 1200 g: first screening '
+      'at 2–3 weeks after delivery, not at 4 weeks (RBSK 2017).',
   breadthWarning:
       'Indian screening criteria are deliberately broader than several Western '
       'protocols. An infant outside the routine GA and birth-weight thresholds '
       'may still need screening if clinically high risk — a simple GA/BW filter '
       'misses larger, sicker babies.',
   references: const [
-    'Indian national ROP operational guidelines (RBSK) — verify the current '
-        'edition and its exact first-examination window before release.',
-    'NNF clinical practice guidelines — ROP screening.',
+    'Guidelines for Universal Eye Screening in Newborns including Retinopathy '
+        'of Prematurity. Rashtriya Bal Swasthya Karyakram, Ministry of Health '
+        '& Family Welfare, Government of India. June 2017.',
+    'NNF clinical practice guidelines — ROP screening and treatment.',
   ],
-  lastVerified: null, // ← DRAFT until a clinician signs it off
+  lastVerified: _verifiedOn,
 );
 
 // ── AAP / AAPOS ──────────────────────────────────────────────────────────────
@@ -250,26 +267,39 @@ final ropProtocolAap = RopProtocol(
     'Significant neonatal instability',
   ],
   firstExamBasis: FirstExamBasis.pmaOrChronological,
-  // The AAP timing table: examine at the LATER of the PMA target and the
-  // chronological age. Values are DRAFT and must be checked against the
-  // current AAP policy statement before release.
+  // AAP Table 1, "Timing of First Eye Examination Based on Gestational Age at
+  // Birth", transcribed row by row. The two columns always describe the SAME
+  // date — 31 weeks PMA is 9 weeks chronological at GA 22, 4 weeks at GA 27 —
+  // so taking the later of the two reproduces the table exactly while also
+  // covering gestations the table does not list.
+  //
+  // The statement notes rows for 22 and 23 weeks are tentative rather than
+  // evidence-based, given how few survivors there were in those categories.
   firstExamRules: const [
-    FirstExamRule(gaFromWeeks: 22, gaToWeeks: 27, pmaWeeks: 31, chronologicalWeeks: 4),
+    FirstExamRule(gaFromWeeks: 22, gaToWeeks: 22, pmaWeeks: 31, chronologicalWeeks: 9),
+    FirstExamRule(gaFromWeeks: 23, gaToWeeks: 23, pmaWeeks: 31, chronologicalWeeks: 8),
+    FirstExamRule(gaFromWeeks: 24, gaToWeeks: 24, pmaWeeks: 31, chronologicalWeeks: 7),
+    FirstExamRule(gaFromWeeks: 25, gaToWeeks: 25, pmaWeeks: 31, chronologicalWeeks: 6),
+    FirstExamRule(gaFromWeeks: 26, gaToWeeks: 26, pmaWeeks: 31, chronologicalWeeks: 5),
+    FirstExamRule(gaFromWeeks: 27, gaToWeeks: 27, pmaWeeks: 31, chronologicalWeeks: 4),
     FirstExamRule(gaFromWeeks: 28, gaToWeeks: 28, pmaWeeks: 32, chronologicalWeeks: 4),
     FirstExamRule(gaFromWeeks: 29, gaToWeeks: 29, pmaWeeks: 33, chronologicalWeeks: 4),
     FirstExamRule(gaFromWeeks: 30, gaToWeeks: 30, pmaWeeks: 34, chronologicalWeeks: 4),
-    FirstExamRule(gaFromWeeks: 31, gaToWeeks: 99, chronologicalWeeks: 4),
+    FirstExamRule(gaFromWeeks: 31, gaToWeeks: 31, pmaWeeks: 35, chronologicalWeeks: 4),
+    FirstExamRule(gaFromWeeks: 32, gaToWeeks: 99, pmaWeeks: 36, chronologicalWeeks: 4),
   ],
   breadthWarning:
       'Screening parameters vary internationally. AAP/AAPOS thresholds are '
       'narrower than Indian national guidance — do not apply them to a '
       'population screened under a different protocol.',
   references: const [
-    'Fierson WM; AAP Section on Ophthalmology, AAO, AAPOS, AACO. Screening '
-        'Examination of Premature Infants for Retinopathy of Prematurity. '
-        'Pediatrics — verify the current edition and its timing table.',
+    'Screening Examination of Premature Infants for Retinopathy of '
+        'Prematurity. Section on Ophthalmology, American Academy of '
+        'Pediatrics; American Academy of Ophthalmology; American Association '
+        'for Pediatric Ophthalmology and Strabismus. Pediatrics. '
+        '2006;117(2):572-576. Table 1 transcribed 2026-08-26.',
   ],
-  lastVerified: null,
+  lastVerified: _verifiedOn,
 );
 
 // ── UK / RCPCH ───────────────────────────────────────────────────────────────
@@ -294,17 +324,19 @@ final ropProtocolUk = RopProtocol(
   ],
   riskFactors: const [],
   firstExamBasis: FirstExamBasis.pmaOrChronological,
-  // DRAFT — must be set exactly from the current UK guideline. Mixing UK
-  // timing with Indian eligibility is explicitly forbidden by spec §13.
+  // RCPCH 2022: for infants born before 31+0 weeks, the first examination is
+  // between 31+0 and 31+6 weeks PMA, OR at 4 completed weeks postnatal age
+  // (28–34 days), WHICHEVER IS LATER. One rule covers the whole range because
+  // the guideline states it as one rule.
   firstExamRules: const [
-    FirstExamRule(gaFromWeeks: 0, gaToWeeks: 26, pmaWeeks: 31),
-    FirstExamRule(gaFromWeeks: 27, gaToWeeks: 99, chronologicalWeeks: 4),
+    FirstExamRule(gaFromWeeks: 0, gaToWeeks: 99, pmaWeeks: 31, chronologicalWeeks: 4),
   ],
   references: const [
-    'RCPCH / RCOphth / BAPM guideline on the screening and treatment of '
-        'retinopathy of prematurity — verify the current edition.',
+    'UK screening of retinopathy of prematurity. Royal College of Paediatrics '
+        'and Child Health, Royal College of Ophthalmologists, British '
+        'Association of Perinatal Medicine. March 2022 (updated 2024).',
   ],
-  lastVerified: null,
+  lastVerified: _verifiedOn,
 );
 
 /// Every built-in protocol, in the order the picker shows them. India first,

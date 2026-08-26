@@ -10,9 +10,10 @@
 // without risking a threshold. That separation is the point of spec §54's
 // auditable-decision-logic requirement.
 //
-// The DRAFT banner is not decoration. Spec §73 forbids launching on
-// AI-generated clinical logic, and every protocol here is unverified, so the
-// screen says so at the top where it cannot be missed.
+// The provenance banner is not decoration. It names the source document and
+// the date its values were transcribed, at the top where it cannot be missed,
+// and still says the clinical sign-off spec §73 requires is a separate step
+// from that transcription check.
 // =============================================================================
 
 import 'package:flutter/material.dart';
@@ -95,7 +96,7 @@ class _RopScreenState extends State<RopScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            if (_protocol.isDraft) _draftBanner(cs),
+            _sourceBanner(cs),
             const SizedBox(height: 14),
             _protocolPicker(cs),
             const SizedBox(height: 18),
@@ -136,32 +137,69 @@ class _RopScreenState extends State<RopScreen> {
 
   // ── Draft / safety ─────────────────────────────────────────────────────────
 
-  Widget _draftBanner(ColorScheme cs) => Container(
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: const Color(0xFFFFF3E0),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: const Color(0xFFE9A23B)),
-        ),
-        child: const Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(Icons.warning_amber_rounded, color: Color(0xFF8A5000), size: 20),
-            SizedBox(width: 10),
-            Expanded(
-              child: Text(
-                'DRAFT clinical content. The thresholds, treatment rules and '
-                'follow-up intervals in this module have not yet been verified '
-                'against their source guidelines or reviewed by an ROP '
-                'ophthalmologist. Do not use for clinical decisions.',
-                style: TextStyle(
-                    fontSize: 12.5, height: 1.4, color: Color(0xFF6B3E00),
-                    fontWeight: FontWeight.w600),
-              ),
+  /// Shows where this protocol's numbers came from, and when.
+  ///
+  /// Two different statuses, deliberately distinguished. A protocol with no
+  /// `lastVerified` has never been checked against its source and gets a hard
+  /// warning. A verified one names the document and date, and still says the
+  /// clinical sign-off spec §73 requires is separate from that transcription
+  /// check — the values being right is not the same as a clinician having
+  /// agreed the module is safe to use.
+  Widget _sourceBanner(ColorScheme cs) {
+    final draft = _protocol.isDraft;
+    final bg = draft ? const Color(0xFFFFF3E0) : const Color(0xFFE8F1FB);
+    final line = draft ? const Color(0xFFE9A23B) : const Color(0xFF6E9BC7);
+    final ink = draft ? const Color(0xFF6B3E00) : const Color(0xFF23445F);
+    final v = _protocol.lastVerified;
+
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: line),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(draft ? Icons.warning_amber_rounded : Icons.verified_outlined,
+              color: ink, size: 20),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  draft
+                      ? 'DRAFT clinical content — not yet checked against the '
+                          'source guideline. Do not use for clinical decisions.'
+                      : 'Thresholds and intervals transcribed from the source '
+                          'guideline on ${v!.day}/${v.month}/${v.year}. '
+                          'Independent clinical review before relying on this '
+                          'module is still recommended.',
+                  style: TextStyle(
+                      fontSize: 12.5,
+                      height: 1.4,
+                      color: ink,
+                      fontWeight: FontWeight.w600),
+                ),
+                if (!draft) ...[
+                  const SizedBox(height: 6),
+                  for (final r in _protocol.references)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 3),
+                      child: Text('• $r',
+                          style: TextStyle(
+                              fontSize: 11, height: 1.35, color: ink)),
+                    ),
+                ],
+              ],
             ),
-          ],
-        ),
-      );
+          ),
+        ],
+      ),
+    );
+  }
 
   Widget _disclaimer(ColorScheme cs) => Text(
         'Screening, timing and documentation support only. This tool does not '

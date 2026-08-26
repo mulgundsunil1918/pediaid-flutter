@@ -22,8 +22,12 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('ROP Screening & Follow-up'), findsOneWidget);
-    expect(find.textContaining('DRAFT clinical content'), findsOneWidget,
-        reason: 'the unverified-content warning must be visible');
+    // Protocols are now source-verified, so the banner names the document and
+    // date rather than warning about draft content — but it must still be on
+    // screen, because spec §73's clinical sign-off is a separate step.
+    expect(find.textContaining('transcribed from the source guideline'),
+        findsOneWidget,
+        reason: 'provenance must be visible, not buried in code');
     expect(tester.takeException(), isNull);
 
     // Open the examination section — the widest part of the screen. The

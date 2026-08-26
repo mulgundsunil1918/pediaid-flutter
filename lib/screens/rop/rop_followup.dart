@@ -101,15 +101,30 @@ class FollowUpRule {
   }
 }
 
-/// Follow-up schedule for one protocol.
+/// Follow-up schedule.
 ///
-/// ⚠️ DRAFT until clinically verified (spec §73). Ordered most-urgent first;
-/// the first match wins, so a rule added out of order changes behaviour.
+/// Transcribed from the AAP policy statement's suggested schedule (Pediatrics
+/// 2006;117(2):572), checked 2026-08-26:
+///
+///   1 week or less — Zone I stage 1 or 2; Zone II stage 3
+///   1 to 2 weeks   — Zone I immature, no ROP; Zone II stage 2; Zone I regressing
+///   2 weeks        — Zone II stage 1; Zone II regressing
+///   2 to 3 weeks   — Zone II immature, no ROP; Zone III stage 1 or 2;
+///                    Zone III regressing
+///
+/// The RBSK 2017 guidance is compatible: an immature eye with no ROP is
+/// examined "at least every other week until vessels reach zone III".
+///
+/// Ordered most-urgent first; the first match wins, so a rule inserted out of
+/// order changes behaviour.
 const ropFollowUpRules = <FollowUpRule>[
   FollowUpRule(
     id: 'z1-any',
-    description: 'Zone I, any ROP',
+    description: 'Zone I, stage 1 or 2 ROP',
     zone: RopZone.zoneI,
+    // Stage 3 in Zone I is Type 1 disease and never reaches this table — the
+    // urgency branch takes it first — but it is listed so the rule still
+    // matches if the treatment rules are ever narrowed.
     stages: [RopStage.stage1, RopStage.stage2, RopStage.stage3],
     interval: FollowUpInterval.withinOneWeek,
   ),
@@ -143,10 +158,12 @@ const ropFollowUpRules = <FollowUpRule>[
   ),
   FollowUpRule(
     id: 'z2-none',
-    description: 'Zone II, no ROP',
+    description: 'Zone II, immature vascularisation, no ROP',
     zone: RopZone.zoneII,
     stages: [RopStage.none],
-    interval: FollowUpInterval.twoWeeks,
+    // 2–3 weeks, not 2. The draft had this a week too short; AAP lists
+    // "immature vascularization: zone II—no ROP" under 2- to 3-week follow-up.
+    interval: FollowUpInterval.twoToThreeWeeks,
   ),
   FollowUpRule(
     id: 'z3-any',

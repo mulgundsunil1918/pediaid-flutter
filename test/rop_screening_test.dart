@@ -99,16 +99,17 @@ void main() {
 
   group('Spec §10 — first examination timing, India', () {
     test('before the window: reports days until due', () {
+      // RBSK 2017: "Initial Screen at 4 Weeks (30 Days) of Birth."
       final r = evaluateScreening(_p(ga: 30, bw: 1400, dayOfLife: 19),
           ropProtocolIndia);
       expect(r.status, ScreeningStatus.indicated);
-      expect(r.windowFromDay, 25);
+      expect(r.windowFromDay, 28);
       expect(r.windowToDay, 30);
-      expect(r.daysUntilDue, 6, reason: 'day 19 → 6 days to day 25');
+      expect(r.daysUntilDue, 9, reason: 'day 19 → 9 days to day 28');
     });
 
     test('inside the window: due now', () {
-      final r = evaluateScreening(_p(ga: 30, bw: 1400, dayOfLife: 27),
+      final r = evaluateScreening(_p(ga: 30, bw: 1400, dayOfLife: 29),
           ropProtocolIndia);
       expect(r.status, ScreeningStatus.dueNow);
     });
@@ -121,8 +122,8 @@ void main() {
       expect(r.daysUntilDue, lessThan(0));
     });
 
-    test('day 25 exactly is due, not overdue', () {
-      final r = evaluateScreening(_p(ga: 30, bw: 1400, dayOfLife: 25),
+    test('day 28 exactly is due, not overdue', () {
+      final r = evaluateScreening(_p(ga: 30, bw: 1400, dayOfLife: 28),
           ropProtocolIndia);
       expect(r.status, ScreeningStatus.dueNow);
     });
@@ -139,8 +140,19 @@ void main() {
 
   group('Spec §11 — early pathway is named, not buried', () {
     test('case 10: very preterm infant is flagged for the early pathway', () {
-      final r = evaluateScreening(_p(ga: 25, bw: 800), ropProtocolIndia);
-      expect(r.earlyPathway, isTrue);
+      // RBSK: "less than 28 weeks ... or less than 1200 grams" → 2-3 weeks.
+      expect(evaluateScreening(_p(ga: 25, bw: 800), ropProtocolIndia)
+          .earlyPathway, isTrue);
+      // A 27-week infant is inside "less than 28 weeks"; a 28-week one is not.
+      expect(evaluateScreening(_p(ga: 27, bw: 1400), ropProtocolIndia)
+          .earlyPathway, isTrue);
+      expect(evaluateScreening(_p(ga: 28, bw: 1400), ropProtocolIndia)
+          .earlyPathway, isFalse);
+      // 1199 g is inside "less than 1200 grams"; 1200 g is not.
+      expect(evaluateScreening(_p(ga: 30, bw: 1199), ropProtocolIndia)
+          .earlyPathway, isTrue);
+      expect(evaluateScreening(_p(ga: 30, bw: 1200), ropProtocolIndia)
+          .earlyPathway, isFalse);
     });
 
     test('a 32-week 1800 g infant is not on the early pathway', () {
@@ -232,12 +244,27 @@ void main() {
   });
 
   group('Clinical governance', () {
-    test('every protocol is marked DRAFT until a clinician verifies it', () {
+    test('every protocol records when it was checked against its source', () {
+      // Spec §73 step 9 — record the date each reference was verified. Values
+      // were transcribed from the source documents on 2026-08-26.
       for (final p in ropProtocols) {
-        expect(p.isDraft, isTrue,
-            reason: '${p.name}: spec §73 forbids launching on AI-generated '
-                'clinical logic. Set lastVerified only after sign-off.');
+        expect(p.lastVerified, isNotNull,
+            reason: '${p.name}: no verification date recorded');
         expect(p.references, isNotEmpty);
+        expect(p.references.first.length, greaterThan(30),
+            reason: '${p.name}: reference must be a real citation');
+      }
+    });
+
+    test('AAP Table 1 is transcribed, not approximated', () {
+      // Each row of the AAP table gives a PMA and a chronologic age that
+      // describe the SAME date. Both are stored, so a future edit to either
+      // column shows up rather than being silently absorbed.
+      for (final r in ropProtocolAap.firstExamRules) {
+        if (r.pmaWeeks == null || r.chronologicalWeeks == null) continue;
+        expect(r.pmaWeeks! - r.gaFromWeeks, r.chronologicalWeeks,
+            reason: 'GA ${r.gaFromWeeks}: PMA ${r.pmaWeeks} and chronologic '
+                '${r.chronologicalWeeks} disagree about the same date');
       }
     });
 

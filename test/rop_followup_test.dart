@@ -33,6 +33,18 @@ void main() {
       expect(f.interval, FollowUpInterval.withinOneWeek);
     });
 
+    test('Zone II with no ROP is 2-3 weeks, not 2', () {
+      // The draft had this a week short. AAP lists "immature vascularization:
+      // zone II—no ROP" under 2- to 3-week follow-up.
+      expect(
+        recommendFollowUp(
+          assessment: _assess(_e(RopZone.zoneII, RopStage.none, PlusStatus.none)),
+          examDate: _exam,
+        ).interval,
+        FollowUpInterval.twoToThreeWeeks,
+      );
+    });
+
     test('Zone II Stage 1 gets 2 weeks; Zone III gets 2-3', () {
       expect(
         recommendFollowUp(

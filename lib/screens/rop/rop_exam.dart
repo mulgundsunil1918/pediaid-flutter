@@ -216,10 +216,14 @@ class TreatmentRuleSet {
 
 /// ETROP Type 1 / Type 2, the basis most protocols reference.
 ///
-/// ⚠️ DRAFT until clinically verified (spec §73).
+/// Checked against the published definitions on 2026-08-26:
+///   Type 1 — Zone I any stage WITH plus; Zone I stage 3 WITHOUT plus;
+///            Zone II stage 2 or 3 WITH plus.
+///   Type 2 — Zone I stage 1 or 2 WITHOUT plus; Zone II stage 3 WITHOUT plus.
 const etropRules = TreatmentRuleSet(
-  source: 'ETROP — Early Treatment for Retinopathy of Prematurity Cooperative '
-      'Group. Arch Ophthalmol 2003. Verify against the protocol in use.',
+  source: 'Early Treatment for Retinopathy of Prematurity Cooperative Group. '
+      'Revised indications for the treatment of retinopathy of prematurity. '
+      'Arch Ophthalmol 2003. Definitions checked 2026-08-26.',
   type1: [
     TreatmentRule(
       id: 'z1-plus',
