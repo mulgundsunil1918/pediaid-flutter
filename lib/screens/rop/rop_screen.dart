@@ -700,6 +700,18 @@ class _RopScreenState extends State<RopScreen> {
                   fontSize: 12.5,
                   fontWeight: FontWeight.w600,
                   color: cs.onSurface.withValues(alpha: 0.75))),
+          const SizedBox(height: 10),
+          // Spec §51 requires the reference to be visible. It also has to be
+          // RENDERED to exist: the source string was tree-shaken out of the
+          // release bundle entirely while nothing displayed it, so a citation
+          // that lives only in a const is not a citation.
+          Text(
+            'Classification basis: ${etropRules.source}',
+            style: TextStyle(
+                fontSize: 10.5,
+                height: 1.35,
+                color: cs.onSurface.withValues(alpha: 0.55)),
+          ),
         ],
       ),
     );

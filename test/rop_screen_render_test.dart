@@ -42,6 +42,13 @@ void main() {
     // Card titles render uppercased by _card().
     expect(find.text('RIGHT EYE'), findsOneWidget);
     expect(find.text('LEFT EYE'), findsOneWidget);
+
+    // Spec §51: the classification reference must be rendered, not merely
+    // declared. A const that nothing displays is tree-shaken out of the
+    // release bundle, which is how this was missed the first time.
+    expect(find.textContaining('Early Treatment for Retinopathy'),
+        findsOneWidget,
+        reason: 'the ETROP citation must be on screen');
   });
 
   testWidgets('dark mode renders too', (tester) async {
