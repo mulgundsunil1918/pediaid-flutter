@@ -24,6 +24,7 @@ import 'rop_exam.dart';
 import 'rop_followup.dart';
 import 'rop_note.dart';
 import 'rop_protocol.dart';
+import 'rop_record.dart';
 
 const _accent = Color(0xFF6A1B9A); // purple — unused by other modules
 
@@ -52,11 +53,33 @@ class _RopScreenState extends State<RopScreen> {
   TreatmentRecord _treatment = const TreatmentRecord();
   bool _vascularisationComplete = false;
 
+  // ── Longitudinal state (§61, §62, §63) ──────────────────────────────────
+  final _refCtrl = TextEditingController();
+  final _noteCtrl = TextEditingController();
+  String? _overrideReason;
+  List<RopRecord> _history = const [];
+  /// Set while editing an existing record, so saving corrects it rather than
+  /// adding a duplicate.
+  String? _editingId;
+
+  @override
+  void initState() {
+    super.initState();
+    _reloadHistory();
+  }
+
+  Future<void> _reloadHistory() async {
+    final all = await RopStore.instance.load();
+    if (mounted) setState(() => _history = all);
+  }
+
   @override
   void dispose() {
     _gaWeeksCtrl.dispose();
     _gaDaysCtrl.dispose();
     _bwCtrl.dispose();
+    _refCtrl.dispose();
+    _noteCtrl.dispose();
     super.dispose();
   }
 
@@ -126,6 +149,14 @@ class _RopScreenState extends State<RopScreen> {
               _summaryCard(screening, assessment, followUp, cs),
               const SizedBox(height: 16),
               _noteCard(screening, assessment, followUp!, cs),
+              const SizedBox(height: 16),
+              _clinicianNoteCard(cs),
+              const SizedBox(height: 16),
+              _saveCard(screening, assessment, followUp, cs),
+            ],
+            if (_history.isNotEmpty) ...[
+              const SizedBox(height: 20),
+              _timelineCard(cs),
             ],
             const SizedBox(height: 22),
             _disclaimer(cs),
@@ -458,6 +489,42 @@ class _RopScreenState extends State<RopScreen> {
                       fontSize: 12.5,
                       fontWeight: FontWeight.w700,
                       color: colour)),
+          ],
+          // §61 — the algorithm's answer is not the last word. Screening
+          // criteria differ between units, and a clinician who wants to screen
+          // anyway must be able to say so and have it recorded.
+          if (r.status == ScreeningStatus.notIndicated) ...[
+            const SizedBox(height: 12),
+            if (_overrideReason == null)
+              OutlinedButton.icon(
+                onPressed: _askOverride,
+                icon: const Icon(Icons.flag_outlined, size: 17),
+                label: const Text('Clinician recommends screening anyway'),
+              )
+            else
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFEF6C00).withValues(alpha: 0.10),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        'Clinician override: screening recommended — '
+                        '$_overrideReason',
+                        style: const TextStyle(
+                            fontSize: 12.5, fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.close_rounded, size: 18),
+                      onPressed: () => setState(() => _overrideReason = null),
+                    ),
+                  ],
+                ),
+              ),
           ],
           if (r.earlyPathway) ...[
             const SizedBox(height: 10),
@@ -844,6 +911,268 @@ class _RopScreenState extends State<RopScreen> {
         ],
       ),
     );
+  }
+
+  // ── Override, notes, saving, timeline ──────────────────────────────────────
+
+  Future<void> _askOverride() async {
+    // Spec §61 lists these reasons. "Other" is last and free of a text field
+    // on purpose: the clinician note below is where prose belongs.
+    const reasons = [
+      'High-risk clinical course',
+      'Institutional protocol',
+      'Outside standard criteria',
+      'Specialist recommendation',
+      'Other',
+    ];
+    final picked = await showDialog<String>(
+      context: context,
+      builder: (ctx) => SimpleDialog(
+        title: const Text('Reason for screening anyway',
+            style: TextStyle(fontSize: 16)),
+        children: [
+          for (final r in reasons)
+            SimpleDialogOption(
+              onPressed: () => Navigator.pop(ctx, r),
+              child: Text(r, style: const TextStyle(fontSize: 14)),
+            ),
+        ],
+      ),
+    );
+    if (picked != null) setState(() => _overrideReason = picked);
+  }
+
+  Widget _clinicianNoteCard(ColorScheme cs) => _card(
+        cs,
+        'Clinician notes',
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            TextField(
+              controller: _refCtrl,
+              decoration: const InputDecoration(
+                labelText: 'Reference (optional)',
+                hintText: 'Cot number, hospital number — your choice',
+                isDense: true,
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              'No name, phone or address is needed or stored. Records stay on '
+              'this device.',
+              style: TextStyle(
+                  fontSize: 11, color: cs.onSurface.withValues(alpha: 0.55)),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: _noteCtrl,
+              minLines: 2,
+              maxLines: 5,
+              decoration: const InputDecoration(
+                labelText: 'Additional clinical notes',
+                isDense: true,
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ],
+        ),
+      );
+
+  Widget _saveCard(ScreeningResult s, ExamAssessment a, FollowUpResult? f,
+          ColorScheme cs) =>
+      Row(
+        children: [
+          Expanded(
+            child: FilledButton.icon(
+              style: FilledButton.styleFrom(backgroundColor: _accent),
+              onPressed: () => _saveExam(s, a, f),
+              icon: Icon(_editingId == null
+                  ? Icons.save_outlined
+                  : Icons.edit_outlined),
+              label: Text(_editingId == null
+                  ? 'Save examination'
+                  : 'Update this examination'),
+            ),
+          ),
+          if (_editingId != null) ...[
+            const SizedBox(width: 10),
+            OutlinedButton(
+              onPressed: () => setState(() {
+                _editingId = null;
+                _right = const EyeFindings();
+                _left = const EyeFindings();
+                _noteCtrl.clear();
+              }),
+              child: const Text('New'),
+            ),
+          ],
+        ],
+      );
+
+  Future<void> _saveExam(
+      ScreeningResult s, ExamAssessment a, FollowUpResult? f) async {
+    // A new id per save unless an existing record is open — §63 forbids
+    // overwriting a previous examination, so the default is always to append.
+    final id = _editingId ??
+        'rop_${DateTime.now().microsecondsSinceEpoch}';
+    await RopStore.instance.save(RopRecord(
+      id: id,
+      patientRef: _refCtrl.text.trim(),
+      examDate: _assessDate,
+      protocolId: _protocol.id,
+      pma: s.pma?.toString(),
+      right: _right,
+      left: _left,
+      treatment: _treatment,
+      classification: a.reason ?? '',
+      followUp: f?.interval.label ?? '',
+      clinicianNote: _noteCtrl.text.trim(),
+      overrideReason: _overrideReason,
+    ));
+    await _reloadHistory();
+    if (!mounted) return;
+    setState(() => _editingId = id);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(_editingId == id && _history.length > 1
+          ? 'Examination saved — ${_history.length} in this record'
+          : 'Examination saved')),
+    );
+  }
+
+  Widget _timelineCard(ColorScheme cs) => _card(
+        cs,
+        'ROP timeline · ${_history.length} examination'
+            '${_history.length == 1 ? '' : 's'}',
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            for (var i = 0; i < _history.length; i++) ...[
+              _timelineEntry(_history[i], i == 0 ? null : _history[i - 1], cs),
+              if (i != _history.length - 1)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: Icon(Icons.arrow_downward_rounded,
+                      size: 16, color: cs.onSurface.withValues(alpha: 0.3)),
+                ),
+            ],
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: () {
+                      final t = exportTimeline(_history);
+                      Clipboard.setData(ClipboardData(text: t));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Timeline copied')),
+                      );
+                    },
+                    icon: const Icon(Icons.copy_all_rounded, size: 17),
+                    label: const Text('Copy timeline'),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+
+  Widget _timelineEntry(RopRecord r, RopRecord? previous, ColorScheme cs) {
+    final changes = previous == null ? const <RopChange>[] : detectChanges(previous, r);
+    return InkWell(
+      borderRadius: BorderRadius.circular(10),
+      onTap: () => _openRecord(r),
+      child: Container(
+        padding: const EdgeInsets.all(11),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: _editingId == r.id
+                ? _accent.withValues(alpha: 0.6)
+                : cs.outline.withValues(alpha: 0.22),
+            width: _editingId == r.id ? 1.5 : 1,
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Text(
+                  '${r.examDate.day}/${r.examDate.month}/${r.examDate.year}',
+                  style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w800),
+                ),
+                if (r.pma != null) ...[
+                  const SizedBox(width: 8),
+                  Text('PMA ${r.pma}',
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: cs.onSurface.withValues(alpha: 0.6))),
+                ],
+                const Spacer(),
+                Icon(Icons.edit_outlined,
+                    size: 15, color: cs.onSurface.withValues(alpha: 0.4)),
+              ],
+            ),
+            const SizedBox(height: 5),
+            Text('R: ${r.right.describe()}', style: const TextStyle(fontSize: 12)),
+            Text('L: ${r.left.describe()}', style: const TextStyle(fontSize: 12)),
+            if (r.followUp.isNotEmpty)
+              Text('Follow-up: ${r.followUp}',
+                  style: TextStyle(
+                      fontSize: 12,
+                      color: cs.onSurface.withValues(alpha: 0.7))),
+            if (r.clinicianNote.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: 3),
+                child: Text(r.clinicianNote,
+                    style: TextStyle(
+                        fontSize: 11.5,
+                        fontStyle: FontStyle.italic,
+                        color: cs.onSurface.withValues(alpha: 0.65))),
+              ),
+            // §43 — descriptive comparison against the previous examination.
+            for (final c in changes.where((x) => x.severity != ChangeSeverity.neutral))
+              Padding(
+                padding: const EdgeInsets.only(top: 4),
+                child: Text(
+                  '→ ${c.description}',
+                  style: TextStyle(
+                    fontSize: 11.5,
+                    fontWeight: c.severity == ChangeSeverity.urgent
+                        ? FontWeight.w800
+                        : FontWeight.w600,
+                    color: switch (c.severity) {
+                      ChangeSeverity.urgent => const Color(0xFFB71C1C),
+                      ChangeSeverity.progression => const Color(0xFFEF6C00),
+                      ChangeSeverity.improvement => const Color(0xFF2E7D32),
+                      ChangeSeverity.neutral => cs.onSurface,
+                    },
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Loads a saved examination back into the form for editing (§42 —
+  /// "each examination should be editable").
+  void _openRecord(RopRecord r) {
+    setState(() {
+      _editingId = r.id;
+      _examMode = true;
+      _assessDate = r.examDate;
+      _right = r.right;
+      _left = r.left;
+      _treatment = r.treatment;
+      _protocol = ropProtocolById(r.protocolId);
+      _refCtrl.text = r.patientRef;
+      _noteCtrl.text = r.clinicianNote;
+      _overrideReason = r.overrideReason;
+    });
   }
 
   Widget _card(ColorScheme cs, String title, Widget child) => Container(

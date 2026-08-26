@@ -9,9 +9,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pediaid_app/screens/rop/rop_screen.dart';
 
 void main() {
+  // The screen loads its history on init, so the store has to exist.
+  TestWidgetsFlutterBinding.ensureInitialized();
+  setUp(() => SharedPreferences.setMockInitialValues({}));
   testWidgets('ROP screen renders on a 375px phone without overflow',
       (tester) async {
     tester.view.physicalSize = const Size(375, 812);
@@ -49,6 +53,12 @@ void main() {
     expect(find.textContaining('Early Treatment for Retinopathy'),
         findsOneWidget,
         reason: 'the ETROP citation must be on screen');
+
+    // §62/§63 — the clinician note and the save control are part of the exam.
+    expect(find.text('CLINICIAN NOTES'), findsOneWidget);
+    expect(find.text('Save examination'), findsOneWidget);
+    // §65 — the privacy promise is stated where the reference field is.
+    expect(find.textContaining('No name, phone or address'), findsOneWidget);
   });
 
   testWidgets('dark mode renders too', (tester) async {
