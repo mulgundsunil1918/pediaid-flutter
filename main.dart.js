@@ -182631,7 +182631,10 @@ k.push(A.c("Right eye: "+a.a.a.rD(),l,l,l,l,B.ix,l,l,l))
 k.push(A.c("Left eye: "+a.b.a.rD(),l,l,l,l,B.ix,l,l,l))
 k.push(B.W)
 n=a.c
-k.push(A.c("Most severe eye: "+n.a+" \u2014 "+n.b,l,l,l,l,A.f(l,l,b.k3.i(0.75),l,l,l,l,l,l,l,l,12.5,l,l,B.F,l,l,!0,l,l,l,l,l,l,l,l),l,l,l))
+m=b.k3
+k.push(A.c("Most severe eye: "+n.a+" \u2014 "+n.b,l,l,l,l,A.f(l,l,m.i(0.75),l,l,l,l,l,l,l,l,12.5,l,l,B.F,l,l,!0,l,l,l,l,l,l,l,l),l,l,l))
+k.push(B.K)
+k.push(A.c("Classification basis: Early Treatment for Retinopathy of Prematurity Cooperative Group. Revised indications for the treatment of retinopathy of prematurity. Arch Ophthalmol 2003. Definitions checked 2026-08-26.",l,l,l,l,A.f(l,l,m.i(0.55),l,l,l,l,l,l,l,l,10.5,l,l,l,l,1.35,!0,l,l,l,l,l,l,l,l),l,l,l))
 return A.i(l,A.l(k,B.x,B.e,B.f,0,B.t),B.k,l,l,new A.j(q,l,o,p,l,l,B.q),l,l,l,l,B.ak,l,l,l)},
 b60(a,b){var s=null,r=this.ax,q=A.cQa(a,this.ay,r)
 switch(q.a.a){case 0:r="Screening can be terminated according to protocol"
