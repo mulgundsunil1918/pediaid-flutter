@@ -40,6 +40,7 @@ import 'emergency_icu_drugs_screen.dart';
 import 'sedation_paralytics_screen.dart';
 import 'seizure_meds_screen.dart';
 import 'developmental_milestones/dev_milestones_hub.dart';
+import '../rop/rop_screen.dart';
 
 // ── Category catalogue ──────────────────────────────────────────────────────
 
@@ -66,6 +67,19 @@ const List<String> _kCategories = [
 final List<_GuideItem> _kGuideItems = [
   // Neonatal Scores — surfaced first and highlighted; bundles all the
   // neonatal scoring tools (incl. LATCH, POFRAS, Modified Ballard).
+  _GuideItem(
+    title: 'ROP Screening & Follow-up',
+    // "Retinopathy" belongs in the subtitle because the registry derives a
+    // guide's search keywords from it — without the full name, searching
+    // "retinopathy of prematurity" found nothing.
+    subtitle:
+        'Retinopathy of prematurity — eligibility, PMA timing, ICROP-3 '
+        'classification, Type 1/2 and follow-up',
+    icon: Icons.remove_red_eye_outlined,
+    categories: const [_kNeonatal],
+    badge: 'DRAFT',
+    build: (_) => const RopScreen(),
+  ),
   _GuideItem(
     title: 'Neonatal Scores',
     subtitle: 'Apgar, Downes, Sarnat, Thompson, LATCH, POFRAS, Ballard & more',
