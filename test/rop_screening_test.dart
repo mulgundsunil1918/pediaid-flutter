@@ -41,9 +41,12 @@ RopPatient _p({
 void main() {
   group('Spec §72 — Indian protocol eligibility', () {
     // Cases 1–6: every one of these is under BOTH the GA and BW thresholds.
+    // GA 34 is deliberately NOT in this list — RBSK says "less than 34 weeks",
+    // so 34+0 fails the GA criterion and qualifies on weight alone. It gets its
+    // own boundary test below.
     test('cases 1-6: preterm infants all qualify, and say why', () {
       const cases = [
-        (24, 650), (25, 800), (28, 1100), (30, 1400), (32, 1800), (34, 1900),
+        (24, 650), (25, 800), (28, 1100), (30, 1400), (32, 1800), (33, 1900),
       ];
       for (final (ga, bw) in cases) {
         final r = evaluateScreening(_p(ga: ga, bw: bw), ropProtocolIndia);
@@ -53,6 +56,43 @@ void main() {
         expect(r.reasons.join(), contains('$ga'),
             reason: 'the reason should quote the infant\'s own value');
       }
+    });
+
+    // ── The boundary week. RBSK 2017 says "less than 34 weeks" and "less than
+    // 2000 gm"; an earlier draft of this module read both as "or less", which
+    // enrolled a whole extra week and a whole extra 1 g band under the wrong
+    // stated authority. These four cases are the ones that catch that.
+    test('RBSK "less than" is strict, not "or less"', () {
+      // GA: 33+6 qualifies on gestation, 34+0 does not.
+      expect(
+        evaluateScreening(_p(ga: 33, bw: 2400), ropProtocolIndia).isIndicated,
+        isTrue,
+        reason: 'GA 33 is less than 34',
+      );
+      expect(
+        evaluateScreening(_p(ga: 34, bw: 2400), ropProtocolIndia).isIndicated,
+        isFalse,
+        reason: 'GA 34+0 is NOT "less than 34 weeks"',
+      );
+      // Weight: 1999 g qualifies, 2000 g does not.
+      expect(
+        evaluateScreening(_p(ga: 36, bw: 1999), ropProtocolIndia).isIndicated,
+        isTrue,
+        reason: '1999 g is less than 2000 g',
+      );
+      expect(
+        evaluateScreening(_p(ga: 36, bw: 2000), ropProtocolIndia).isIndicated,
+        isFalse,
+        reason: '2000 g is NOT "less than 2000 gm"',
+      );
+    });
+
+    test('GA 34 with 1900 g still qualifies — on weight, not gestation', () {
+      final r = evaluateScreening(_p(ga: 34, bw: 1900), ropProtocolIndia);
+      expect(r.isIndicated, isTrue);
+      expect(r.reasons.join(), contains('1900'));
+      expect(r.reasons.join(), isNot(contains('Gestational age < 34')),
+          reason: 'quoting the GA rule here would misstate why it qualified');
     });
 
     // Case 7: GA 35, BW 2100 — above the GA threshold, above BW, qualifies
@@ -195,11 +235,36 @@ void main() {
     test('case 36/37: GA 32, BW 1800 differs by protocol', () {
       final p = _p(ga: 32, bw: 1800);
       expect(evaluateScreening(p, ropProtocolIndia).isIndicated, isTrue,
-          reason: 'India: BW ≤2000 g');
-      expect(evaluateScreening(p, ropProtocolAap).isIndicated, isFalse,
-          reason: 'AAP: BW >1500 g and GA >30 weeks');
+          reason: 'India: BW 1800 g is less than 2000 g');
+      expect(evaluateScreening(p, ropProtocolAap).isIndicated, isTrue,
+          reason: 'AAP 2006: "gestational age of 32 weeks or less" — inclusive');
       expect(evaluateScreening(p, ropProtocolUk).isIndicated, isFalse,
           reason: 'UK: BW ≥1501 g and GA ≥31 weeks');
+    });
+
+    // AAP 2006 states its two bounds differently in the SAME sentence: "birth
+    // weight of less than 1500 g OR gestational age of 32 weeks or less".
+    // Reading both the same way is the error this pins.
+    test('AAP 2006 weight is strict but gestation is inclusive', () {
+      expect(evaluateScreening(_p(ga: 36, bw: 1499), ropProtocolAap).isIndicated,
+          isTrue, reason: '1499 g is less than 1500 g');
+      expect(evaluateScreening(_p(ga: 36, bw: 1500), ropProtocolAap).isIndicated,
+          isFalse, reason: '1500 g is NOT "less than 1500 g"');
+      expect(evaluateScreening(_p(ga: 32, bw: 2400), ropProtocolAap).isIndicated,
+          isTrue, reason: '32 weeks IS "32 weeks or less"');
+      expect(evaluateScreening(_p(ga: 33, bw: 2400), ropProtocolAap).isIndicated,
+          isFalse, reason: '33 weeks is not');
+    });
+
+    test('UK bounds: GA < 31+0 and BW < 1501 g', () {
+      expect(evaluateScreening(_p(ga: 30, bw: 2400), ropProtocolUk).isIndicated,
+          isTrue, reason: '30+6 is under 31+0');
+      expect(evaluateScreening(_p(ga: 31, bw: 2400), ropProtocolUk).isIndicated,
+          isFalse, reason: '31+0 is not — 2024 revision only says CONSIDER');
+      expect(evaluateScreening(_p(ga: 36, bw: 1500), ropProtocolUk).isIndicated,
+          isTrue, reason: '1500 g is under 1501 g');
+      expect(evaluateScreening(_p(ga: 36, bw: 1501), ropProtocolUk).isIndicated,
+          isFalse);
     });
 
     test('AAP timing uses the later of PMA and chronological age', () {

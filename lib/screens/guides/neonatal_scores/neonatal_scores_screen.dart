@@ -8,6 +8,8 @@ import 'lus_score_screen.dart';
 import '../modified_ballard_screen.dart';
 import '../pofras_screen.dart';
 import '../can_score_screen.dart';
+import '../../scores/score_scaffold.dart';
+import '../../scores/neonatal_scores.dart';
 
 class NeonatalScoresScreen extends StatefulWidget {
   const NeonatalScoresScreen({super.key});
@@ -101,12 +103,43 @@ class _NeonatalScoresScreenState extends State<NeonatalScoresScreen> {
               ctx, MaterialPageRoute(builder: (_) => const CanScoreScreen())),
         ),
       ),
+      // Finnegan and SNAPPE-II are ScoreDefs rather than JSON, so they render
+      // through ScoreScaffold. They belong in THIS hub — a reader looking for a
+      // neonatal score does not go hunting in the paediatric list.
+      _Entry(
+        modifiedFinneganScore.title,
+        'neonatal abstinence syndrome NAS withdrawal opioid finnegan',
+        (ctx) => _ExtraScoreCard(
+          title: modifiedFinneganScore.title,
+          subtitle: 'Neonatal abstinence / opioid withdrawal severity',
+          number: 6,
+          onTap: () => Navigator.push(ctx,
+              MaterialPageRoute(
+                  builder: (_) => ScoreScaffold(def: modifiedFinneganScore))),
+        ),
+      ),
+      _Entry(
+        snappeIIScore.title,
+        'illness severity mortality risk neonatal SNAP perinatal extension richardson',
+        (ctx) => _ExtraScoreCard(
+          title: snappeIIScore.title,
+          subtitle: 'Illness severity & mortality risk (SNAP-II + perinatal)',
+          number: 7,
+          onTap: () => Navigator.push(ctx,
+              MaterialPageRoute(
+                  builder: (_) => ScoreScaffold(def: snappeIIScore))),
+        ),
+      ),
     ];
 
     final scores = _data!.scores;
+    // Snapshot the count BEFORE the loop. Reading list.length inside it counts
+    // twice — the list grows by one each pass — which numbered the JSON scores
+    // 6, 8, 10, 12 ... instead of 6, 7, 8, 9.
+    final fixedCount = list.length;
     for (var i = 0; i < scores.length; i++) {
       final score = scores[i];
-      final number = list.length + i + 1;
+      final number = fixedCount + i + 1;
       list.add(_Entry(
         score.name,
         [

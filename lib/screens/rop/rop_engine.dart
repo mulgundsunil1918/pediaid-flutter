@@ -182,10 +182,17 @@ ScreeningResult evaluateScreening(RopPatient p, RopProtocol protocol) {
   // ── Which criteria fired ──────────────────────────────────────────────────
   final reasons = <String>[];
   for (final c in protocol.criteria) {
-    if (c.gaMaxWeeks != null && p.gaWeeks! <= c.gaMaxWeeks!) {
+    // "less than 34 weeks" excludes 34+0; "32 weeks or less" includes 32+6.
+    // Completed weeks, so strictBelow drops the whole boundary week.
+    if (c.gaMaxWeeks != null &&
+        (c.strictBelow
+            ? p.gaWeeks! < c.gaMaxWeeks!
+            : p.gaWeeks! <= c.gaMaxWeeks!)) {
       reasons.add('${c.label} — this infant ${p.gaWeeks}+${p.gaDays ?? 0}');
     } else if (c.birthWeightMaxG != null &&
-        p.birthWeightG! <= c.birthWeightMaxG!) {
+        (c.strictBelow
+            ? p.birthWeightG! < c.birthWeightMaxG!
+            : p.birthWeightG! <= c.birthWeightMaxG!)) {
       reasons.add('${c.label} — this infant ${p.birthWeightG} g');
     } else if (c.riskFactorBased) {
       if (c.id == 'discretion') {

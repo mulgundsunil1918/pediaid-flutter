@@ -93,12 +93,21 @@ class EligibilityCriterion {
   /// rather than by a number.
   final bool riskFactorBased;
 
+  /// True when the source guideline says "less than X" rather than "X or less".
+  /// RBSK says "birth weight less than 2000 gm" and "gestational age less than
+  /// 34 weeks"; AAP 2006 says "less than 1500 g" but "32 weeks or less". Those
+  /// are different rules and the difference is one baby-week wide, so the
+  /// bound and its strictness are stored together rather than left to whoever
+  /// writes the number.
+  final bool strictBelow;
+
   const EligibilityCriterion({
     required this.id,
     required this.label,
     this.gaMaxWeeks,
     this.birthWeightMaxG,
     this.riskFactorBased = false,
+    this.strictBelow = false,
   });
 }
 
@@ -166,6 +175,7 @@ const _kRiskFactorsIndia = <String>[
   'Prolonged oxygen requirement',
   'Respiratory distress syndrome',
   'Chronic lung disease',
+  'Fetal haemorrhage',
   'Blood transfusion',
   'Exchange transfusion',
   'Sepsis',
@@ -182,19 +192,24 @@ final ropProtocolIndia = RopProtocol(
   organisation: 'National guidance / RBSK–NNF',
   version: 'draft',
   criteria: const [
+    // RBSK 2017, verbatim: "1. birth weight less than 2000 gm 2. Gestational
+    // age less than 34 weeks 3. Gestational age between 34 to 36 weeks but with
+    // risk factors ... 4. infants with an unstable clinical course".
     EligibilityCriterion(
       id: 'ga',
-      label: 'Gestational age ≤ 34 weeks',
+      label: 'Gestational age < 34 weeks',
       gaMaxWeeks: 34,
+      strictBelow: true,
     ),
     EligibilityCriterion(
       id: 'bw',
-      label: 'Birth weight ≤ 2000 g',
+      label: 'Birth weight < 2000 g',
       birthWeightMaxG: 2000,
+      strictBelow: true,
     ),
     EligibilityCriterion(
       id: 'risk',
-      label: 'Gestational age > 34 weeks with significant risk factors',
+      label: 'Gestational age 34–36 weeks with risk factors',
       riskFactorBased: true,
     ),
     EligibilityCriterion(
@@ -244,19 +259,26 @@ final ropProtocolAap = RopProtocol(
   organisation: 'AAP, AAPOS, AAO',
   version: 'draft',
   criteria: const [
+    // AAP 2006, verbatim: "Infants with a birth weight of less than 1500 g or
+    // gestational age of 32 weeks or less ... and selected infants with a birth
+    // weight between 1500 and 2000 g or gestational age of more than 32 weeks
+    // with an unstable clinical course". Note the two bounds are NOT the same
+    // kind: weight is strict, gestation is inclusive.
     EligibilityCriterion(
       id: 'bw',
-      label: 'Birth weight ≤ 1500 g',
+      label: 'Birth weight < 1500 g',
       birthWeightMaxG: 1500,
+      strictBelow: true,
     ),
     EligibilityCriterion(
       id: 'ga',
-      label: 'Gestational age ≤ 30 weeks',
-      gaMaxWeeks: 30,
+      label: 'Gestational age ≤ 32 weeks',
+      gaMaxWeeks: 32,
     ),
     EligibilityCriterion(
       id: 'risk',
-      label: 'Selected larger or more mature infant with an unstable course',
+      label: 'Birth weight 1500–2000 g, or GA > 32 weeks, with an unstable '
+          'clinical course',
       riskFactorBased: true,
     ),
   ],
@@ -289,9 +311,12 @@ final ropProtocolAap = RopProtocol(
     FirstExamRule(gaFromWeeks: 32, gaToWeeks: 99, pmaWeeks: 36, chronologicalWeeks: 4),
   ],
   breadthWarning:
-      'Screening parameters vary internationally. AAP/AAPOS thresholds are '
-      'narrower than Indian national guidance — do not apply them to a '
-      'population screened under a different protocol.',
+      'These are the 2006 AAP/AAPOS/AAO criteria, matching the timing table '
+      'below. A later AAP revision (Fierson, Pediatrics 2018) narrows entry to '
+      'birth weight ≤1500 g or GA ≤30 weeks — check local policy before '
+      'applying either. Screening parameters also vary internationally: these '
+      'thresholds are narrower than Indian national guidance, so do not apply '
+      'them to a population screened under a different protocol.',
   references: const [
     'Screening Examination of Premature Infants for Retinopathy of '
         'Prematurity. Section on Ophthalmology, American Academy of '
@@ -321,8 +346,23 @@ final ropProtocolUk = RopProtocol(
       label: 'Birth weight < 1501 g',
       birthWeightMaxG: 1500,
     ),
+    // October 2024 revision: "An additional recommendation on screening
+    // criteria is added with the consideration to screen those infants born
+    // between 31+0 and 31+6 weeks' gestational age." Discretionary, so it is a
+    // clinician-judgement criterion rather than an automatic threshold.
+    EligibilityCriterion(
+      id: 'discretion',
+      label: 'Consider screening if born 31+0 to 31+6 weeks (2024 revision)',
+      riskFactorBased: true,
+    ),
   ],
   riskFactors: const [],
+  breadthWarning:
+      'The 2022 guideline narrowed the gestational-age threshold from 32 to 31 '
+      'weeks; the birth-weight threshold was unchanged. The October 2024 '
+      'revision adds a recommendation to CONSIDER screening infants born 31+0 '
+      'to 31+6 weeks. This tool does not enrol that band automatically — that '
+      'decision stays with the neonatal team.',
   firstExamBasis: FirstExamBasis.pmaOrChronological,
   // RCPCH 2022: for infants born before 31+0 weeks, the first examination is
   // between 31+0 and 31+6 weeks PMA, OR at 4 completed weeks postnatal age
