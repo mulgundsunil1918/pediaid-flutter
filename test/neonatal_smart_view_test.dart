@@ -27,6 +27,11 @@ const _kAdditive = {
   'LATCH Score (Breastfeeding)',
   'BIND Score (Bilirubin-Induced Neurologic Dysfunction)',
   'CRIES Pain Score (Neonatal)',
+  'NIPS — Neonatal Infant Pain Scale',
+  'PIPP — Premature Infant Pain Profile',
+  'Neonatal Skin Condition Score (NSCS)',
+  'nSOFA — Neonatal Sequential Organ Failure Assessment',
+  'Modified Sick Neonatal Score (MSNS)',
 };
 
 void main() {
@@ -75,13 +80,36 @@ void main() {
     final data = await ScoresDataLoader().load();
     for (final s in data.scores.where((x) => _kAdditive.contains(x.name))) {
       final label = labelKeyOf(s.parameters.first)!;
-      final grades = s.parameters.first.keys
-          .where((k) => k != label)
-          .map((k) => int.parse(k.trim()))
-          .toList()
-        ..sort();
-      final max = grades.last * s.parameters.length;
-      for (var total = 0; total <= max; total++) {
+
+      // Per row, and only the options a row actually has.
+      //
+      // This test used to take the FIRST row's columns and multiply by the row
+      // count — the same mistake the widget made. It survived because every
+      // score was uniform. NIPS is not (cry 0-2, the rest 0-1) and nSOFA is
+      // not (0/2/4/6/8, 0-4, 0-3), so the range has to be built row by row.
+      var min = 0;
+      var max = 0;
+      for (final row in s.parameters) {
+        final grades = <int>[];
+        for (final k in row.keys) {
+          if (k == label) continue;
+          final n = int.tryParse(k.trim());
+          if (n == null) continue;
+          final text = (row[k] ?? '').trim();
+          // An em-dash pads a grid where a row has no option worth that many
+          // points. It is not a choice.
+          if (text.isEmpty || text == '—' || text == '-') continue;
+          grades.add(n);
+        }
+        if (grades.isEmpty) continue;
+        grades.sort();
+        min += grades.first;
+        max += grades.last;
+      }
+
+      // From the score's OWN minimum, not from zero. NSCS items are scored
+      // 1-3, so its lowest possible total is 3 and totals 0-2 do not exist.
+      for (var total = min; total <= max; total++) {
         expect(meaningForTotal(s.interpretation, total), isNotNull,
             reason: '${s.name}: total $total falls in no interpretation band');
       }

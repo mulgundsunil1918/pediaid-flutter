@@ -123,27 +123,51 @@ class _ScoreSmartViewState extends State<ScoreSmartView> {
 
   String get _labelKey => labelKeyOf(widget.parameters.first) ?? 'parameter';
 
-  List<int> get _grades {
-    final keys = widget.parameters.first.keys
-        .where((k) => k != _labelKey)
-        .map((k) => int.parse(k.trim()))
-        .toList()
-      ..sort();
-    return keys;
+  /// The point values offered for ONE row.
+  ///
+  /// Per row, not from the first row, because rows are not always alike. NIPS
+  /// scores cry 0-2 and everything else 0-1; nSOFA scores respiration
+  /// 0/2/4/6/8, cardiovascular 0-4 and platelets 0-3. Reading the first row's
+  /// columns and applying them to every row offers points a row does not have
+  /// and hides points it does.
+  ///
+  /// A blank or em-dash cell means "this row has no option worth this many
+  /// points" and is skipped, so a padded grid still presents only real choices.
+  List<int> _gradesFor(int i) {
+    final row = widget.parameters[i];
+    final out = <int>[];
+    for (final k in row.keys) {
+      if (k == _labelKey) continue;
+      final n = int.tryParse(k.trim());
+      if (n == null) continue;
+      final text = (row[k] ?? '').trim();
+      if (text.isEmpty || text == '—' || text == '-') continue;
+      out.add(n);
+    }
+    out.sort();
+    return out;
   }
 
   int get _total => _picked.values.fold(0, (a, b) => a + b);
   bool get _complete => _picked.length == widget.parameters.length;
 
+  /// The worst attainable total: each row's own maximum, added up.
+  ///
+  /// Was the first row's top value times the row count, which gave NIPS a
+  /// maximum of 12 against a real maximum of 7, and nSOFA 24 against 15. A
+  /// wrong denominator makes every score read as less severe than it is.
   int get _maxTotal {
-    final top = _grades.last;
-    return top * widget.parameters.length;
+    var sum = 0;
+    for (var i = 0; i < widget.parameters.length; i++) {
+      final g = _gradesFor(i);
+      if (g.isNotEmpty) sum += g.last;
+    }
+    return sum;
   }
 
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
-    final grades = _grades;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -151,9 +175,9 @@ class _ScoreSmartViewState extends State<ScoreSmartView> {
         for (var i = 0; i < widget.parameters.length; i++) ...[
           _ParameterPicker(
             label: widget.parameters[i][_labelKey] ?? '',
-            grades: grades,
+            grades: _gradesFor(i),
             optionLabels: {
-              for (final g in grades)
+              for (final g in _gradesFor(i))
                 g: widget.parameters[i]['$g'] ?? widget.parameters[i]['$g '] ?? '',
             },
             selected: _picked[i],

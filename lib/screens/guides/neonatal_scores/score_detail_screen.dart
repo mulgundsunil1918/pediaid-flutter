@@ -218,7 +218,39 @@ class _ParameterTable extends StatelessWidget {
   Widget build(BuildContext context) {
     if (rows.isEmpty) return const SizedBox.shrink();
 
-    final headers  = rows.first.keys.toList();
+    // The UNION of every row's columns, not just the first row's.
+    //
+    // Rows are not always alike. nSOFA scores respiration 0/2/4/6/8,
+    // cardiovascular 0-4 and platelets 0-3; taking columns from the first row
+    // would silently drop the cardiovascular row's 1 and 3 — points present in
+    // the data and absent from the screen, with nothing to show anything was
+    // missing. Same family of defect as the grade-2 column that used to sit
+    // off the right edge.
+    //
+    // The label column keeps its position; numeric columns sort ascending so
+    // the points read left to right.
+    final labelKey = rows.first.keys.firstWhere(
+        (k) => int.tryParse(k.trim()) == null,
+        orElse: () => rows.first.keys.first);
+    final numeric = <int>{};
+    final extras = <String>[];
+    for (final row in rows) {
+      for (final k in row.keys) {
+        if (k == labelKey) continue;
+        final n = int.tryParse(k.trim());
+        if (n != null) {
+          numeric.add(n);
+        } else if (!extras.contains(k)) {
+          extras.add(k);
+        }
+      }
+    }
+    final sortedNumeric = numeric.toList()..sort();
+    final headers = <String>[
+      labelKey,
+      ...sortedNumeric.map((n) => '$n'),
+      ...extras,
+    ];
     final colCount = headers.length;
 
     // Column widths: first col wider for names, rest narrower

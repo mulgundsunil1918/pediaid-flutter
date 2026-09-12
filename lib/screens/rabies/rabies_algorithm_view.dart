@@ -26,6 +26,7 @@
 
 import 'package:flutter/material.dart';
 
+import 'rabies_poster.dart';
 import 'rabies_protocol.dart';
 import 'rabies_rig.dart';
 import 'rabies_widgets.dart';
@@ -58,7 +59,6 @@ class RabiesAlgorithmView extends StatefulWidget {
 }
 
 class _RabiesAlgorithmViewState extends State<RabiesAlgorithmView> {
-  final _controller = TransformationController();
   final _weightCtl = TextEditingController();
   double? _weight;
   String? _selected;
@@ -71,12 +71,9 @@ class _RabiesAlgorithmViewState extends State<RabiesAlgorithmView> {
 
   @override
   void dispose() {
-    _controller.dispose();
     _weightCtl.dispose();
     super.dispose();
   }
-
-  void _reset() => setState(() => _controller.value = Matrix4.identity());
 
   @override
   Widget build(BuildContext context) {
@@ -85,6 +82,8 @@ class _RabiesAlgorithmViewState extends State<RabiesAlgorithmView> {
     return ListView(
       padding: const EdgeInsets.fromLTRB(14, 14, 14, 20),
       children: [
+        const PosterHeader(),
+        const DecisionToTreat(),
         Row(
           children: [
             Expanded(
@@ -97,11 +96,6 @@ class _RabiesAlgorithmViewState extends State<RabiesAlgorithmView> {
               ),
             ),
             IconButton(
-              tooltip: 'Reset view',
-              onPressed: _reset,
-              icon: const Icon(Icons.center_focus_strong_outlined, size: 20),
-            ),
-            IconButton(
               tooltip: 'Expand diagram',
               onPressed: () => _openFullScreen(context),
               icon: const Icon(Icons.open_in_full, size: 19),
@@ -111,30 +105,134 @@ class _RabiesAlgorithmViewState extends State<RabiesAlgorithmView> {
         Padding(
           padding: const EdgeInsets.only(bottom: 8),
           child: Text(
-            'Pinch or double-tap to zoom, drag to pan. Tap any box to read what '
-            'it means.',
+            'Tap any box to read what it means. The expand button opens a '
+            'full-screen diagram you can pinch and zoom.',
             style: TextStyle(
                 fontSize: 11.5,
                 height: 1.4,
                 color: cs.onSurface.withValues(alpha: 0.6)),
           ),
         ),
-        // A bordered, fixed-height box: the tree pans and zooms inside it, and
-        // the page scrolls around it. Without the border the two gestures are
-        // indistinguishable to the user.
-        Container(
-          height: 460,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: cs.outlineVariant),
-          ),
-          clipBehavior: Clip.antiAlias,
-          child: _viewer(
-          cs),
-        ),
+        // Rendered at its NATURAL height, straight into the page.
+        //
+        // It used to sit in a fixed 460 px box with its own InteractiveViewer,
+        // which stacked two scrollable things: a drag inside the box panned the
+        // tree, a drag outside scrolled the page, and the tree was clipped at
+        // both ends with no way to tell which gesture you were making. One
+        // scroll surface, one gesture.
+        //
+        // Zoom is not lost — it moved behind the expand button, where an
+        // InteractiveViewer owns the whole screen and has nothing to fight.
+        _tree(cs),
         if (_selected != null) _detailPanel(cs),
-        const SizedBox(height: 14),
+        const SizedBox(height: 20),
+
+        // ── The poster's three regimen boxes, verbatim ─────────────────
+        const PosterBanner('POST EXPOSURE PROPHYLAXIS PROTOCOL', emoji: '💉'),
+        const RegimenBox(
+          heading: 'CATEGORY II  ·  PREVIOUSLY NOT IMMUNISED',
+          headingNote: 'RIG IS NOT INDICATED',
+          headingEmoji: '🟡',
+          color: kCatIIAmber,
+          idDoses: 'Give 04 doses OF RABIES VACCINE',
+          idDetail: '(0.1 ml 2 sites)',
+          idDays: '0 – 3 – 7 – 28',
+          imDoses: 'Give 05 doses OF RABIES VACCINE',
+          imDetail: '(1 vial, 1 site)',
+          imDays: '0 – 3 – 7 – 14 – 28',
+        ),
+        const RegimenBox(
+          heading: 'CATEGORY II & III  ·  PREVIOUSLY IMMUNISED*',
+          headingNote: 'RIG IS NOT INDICATED**',
+          headingEmoji: '🟠',
+          color: Color(0xFF00695C),
+          idDoses: 'Give 02 doses OF RABIES VACCINE',
+          idDetail: '(0.1 ml 1 site)',
+          idDays: '0 – 3',
+          imDoses: 'Give 02 doses OF RABIES VACCINE',
+          imDetail: '(1 vial, 1 site)',
+          imDays: '0 – 3',
+        ),
+        const RegimenBox(
+          heading: 'CATEGORY III  ·  PREVIOUSLY NOT IMMUNISED',
+          headingNote: 'INFILTRATE WOUNDS WITH RIG AS SOON AS POSSIBLE',
+          headingEmoji: '🔴',
+          color: kCatIIIRed,
+          idDoses: 'Give 04 doses OF RABIES VACCINE',
+          idDetail: '(0.1 ml 2 sites)',
+          idDays: '0 – 3 – 7 – 28',
+          imDoses: 'Give 05 doses OF RABIES VACCINE',
+          imDetail: '(1 vial, 1 site)',
+          imDays: '0 – 3 – 7 – 14 – 28',
+        ),
+        const PosterNote(
+          title: 'WHERE TO INJECT THE VACCINE',
+          emoji: '📍',
+          color: kCatIIIRed,
+          bulleted: false,
+          lines: [
+            'Rabies vaccine should be administered in DELTOID MUSCLES for '
+                'adult and children, and in the ANTEROLATERAL THIGH for '
+                'infants and small children.',
+            'Rabies vaccine SHOULD NOT BE injected in the gluteal region.',
+          ],
+        ),
+        const PosterNote(
+          title: 'FOR IMMUNE COMPROMISED PERSON',
+          emoji: '🛡️',
+          color: Color(0xFF6A1B9A),
+          lines: [
+            'Proper wound management followed by local infiltration of RIG in '
+                'both category II and III exposures',
+            'After this, complete course of Rabies vaccine via Intramuscular '
+                'route in both category II and III exposures should be '
+                'undertaken',
+          ],
+        ),
+        const PosterNote(
+          title: '*Previously Immunised Case',
+          emoji: '📋',
+          bulleted: false,
+          lines: [
+            'Animal bite patient who can document previous history of complete '
+                'post exposure or pre exposure prophylaxis by modern vaccines.',
+          ],
+        ),
+        const PosterNote(
+          title: 'REPEAT EXPOSURE',
+          emoji: '🔁',
+          bulleted: false,
+          lines: [
+            'FOR CATEGORY II & III, IF REPEAT EXPOSURES IN THE FUTURE, TREAT '
+                'AS PREVIOUSLY IMMUNIZED AND FOLLOW THE ALGORITHM AS ABOVE',
+          ],
+        ),
+
+        const SizedBox(height: 6),
+        const PosterBanner('RABIES IMMUNOGLOBULIN — RIG DOSAGE', emoji: '🧪'),
+        const PosterNote(
+          title: 'The four rules the poster prints',
+          emoji: '📌',
+          color: kCatIIIRed,
+          lines: [
+            'The maximum dosage for HRIG is 20 IU/Kg of the body weight and '
+                'that of ERIG is 40 IU/Kg of bodyweight.',
+            'The entire imunoglobulin dose or as much as anatomically feasible '
+                'but possibly avoiding compartment syndrome, should be '
+                'carefully infiltrated into or as close as possible to the '
+                'wound(s) or exposure site.',
+            'Do not give RIG beyond the 7th day after the 1st vaccine dose on '
+                'day 0.',
+            '**In previously vaccinated individual/s where direct nerve '
+                'exposure is suspected treating physician may consider RIG '
+                'infiltration',
+          ],
+        ),
         _rigDosage(cs),
+
+        const PosterFooter(),
+        const SizedBox(height: 14),
+
         _paediatric(cs),
         _special(cs),
         _warnings(cs),
@@ -144,37 +242,16 @@ class _RabiesAlgorithmViewState extends State<RabiesAlgorithmView> {
     );
   }
 
-  /// The zoomable tree.
+  /// Opens the zoomable tree on its own.
   ///
-  /// constrained: false so it keeps its natural HEIGHT and is panned to rather
-  /// than squeezed into the box and clipped — it runs about 450 px taller than
-  /// a phone screen. Width is still pinned so the diagram never needs
-  /// horizontal panning just to be read at 1x.
-  Widget _viewer(ColorScheme cs) => LayoutBuilder(
-        builder: (context, constraints) {
-          final treeWidth = (constraints.maxWidth - 32).clamp(280.0, 720.0);
-          return InteractiveViewer(
-            transformationController: _controller,
-            minScale: 0.4,
-            maxScale: 3.5,
-            constrained: false,
-            boundaryMargin: const EdgeInsets.all(120),
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: SizedBox(width: treeWidth, child: _tree(cs)),
-            ),
-          );
-        },
-      );
-
+  /// Deliberately NOT another RabiesAlgorithmView: pushing the whole page again
+  /// put a pannable tree back inside a scrolling list, which is exactly what
+  /// this button exists to escape.
   void _openFullScreen(BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute<void>(
-        builder: (_) => Scaffold(
-          appBar: AppBar(title: const Text('Rabies PEP Decision Algorithm')),
-          body: RabiesAlgorithmView(highlightId: _selected),
-        ),
+        builder: (_) => const _FullScreenTree(),
       ),
     );
   }
@@ -571,6 +648,150 @@ class _RabiesAlgorithmViewState extends State<RabiesAlgorithmView> {
     );
   }
 }
+
+/// The diagram on its own screen, where pinch and pan have nothing to fight.
+///
+/// The in-tab view renders the tree at natural height inside the page scroll,
+/// which is right for reading. This is for when someone wants to zoom into a
+/// branch — so the InteractiveViewer owns the entire body and there is no
+/// second scrollable underneath it.
+class _FullScreenTree extends StatefulWidget {
+  const _FullScreenTree();
+
+  @override
+  State<_FullScreenTree> createState() => _FullScreenTreeState();
+}
+
+class _FullScreenTreeState extends State<_FullScreenTree> {
+  final _controller = TransformationController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Rabies PEP Decision Algorithm'),
+        actions: [
+          IconButton(
+            tooltip: 'Reset view',
+            onPressed: () =>
+                setState(() => _controller.value = Matrix4.identity()),
+            icon: const Icon(Icons.center_focus_strong_outlined),
+          ),
+        ],
+      ),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          // constrained: false keeps the tree's natural height so it can be
+          // panned to rather than squashed. Width is pinned to the screen so
+          // the diagram is readable at 1x without sideways dragging.
+          final treeWidth = (constraints.maxWidth - 32).clamp(280.0, 720.0);
+          return InteractiveViewer(
+            transformationController: _controller,
+            minScale: 0.4,
+            maxScale: 4,
+            constrained: false,
+            boundaryMargin: const EdgeInsets.all(140),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: SizedBox(
+                width: treeWidth,
+                child: _StaticTree(cs: cs),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+/// The same boxes, read-only — a zoom view does not need tap-to-open panels
+/// competing with the pinch gesture.
+class _StaticTree extends StatelessWidget {
+  const _StaticTree({required this.cs});
+  final ColorScheme cs;
+
+  @override
+  Widget build(BuildContext context) => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          for (final entry in _kTreeLayout)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: entry.length == 1
+                  ? _StaticNode(node: entry.first, cs: cs, wide: true)
+                  : Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        for (var i = 0; i < entry.length; i++) ...[
+                          if (i > 0) const SizedBox(width: 8),
+                          Expanded(child: _StaticNode(node: entry[i], cs: cs)),
+                        ],
+                      ],
+                    ),
+            ),
+        ],
+      );
+}
+
+class _StaticNode extends StatelessWidget {
+  const _StaticNode({required this.node, required this.cs, this.wide = false});
+  final AlgoNode node;
+  final ColorScheme cs;
+  final bool wide;
+
+  @override
+  Widget build(BuildContext context) => Container(
+        width: wide ? double.infinity : null,
+        constraints: const BoxConstraints(minHeight: 56),
+        padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 10),
+        decoration: BoxDecoration(
+          color: node.color.withValues(alpha: 0.09),
+          borderRadius: BorderRadius.circular(11),
+          border: Border.all(color: node.color.withValues(alpha: 0.5), width: 1.2),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(node.title,
+                style: TextStyle(
+                    fontSize: wide ? 13 : 12,
+                    height: 1.25,
+                    fontWeight: FontWeight.w800,
+                    color: node.color)),
+            if (node.subtitle != null) ...[
+              const SizedBox(height: 3),
+              Text(node.subtitle!,
+                  style: TextStyle(
+                      fontSize: 10.5,
+                      height: 1.35,
+                      color: cs.onSurface.withValues(alpha: 0.7))),
+            ],
+          ],
+        ),
+      );
+}
+
+/// The tree's shape, shared by the tappable and zoom views so they can never
+/// drift into showing different algorithms.
+const List<List<AlgoNode>> _kTreeLayout = [
+  [_kExposure],
+  [_kWash],
+  [_kCatI, _kCatII, _kCatIII],
+  [_kPrevImm],
+  [_kNaive, _kBoost],
+  [_kImmuno],
+  [_kRig],
+  [_kFollowUp],
+];
 
 // ── Node definitions ─────────────────────────────────────────────────────────
 
