@@ -22,6 +22,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import '../firebase_options.dart';
 import '../academics/academics_web_screen.dart';
 import 'auth_service.dart';
@@ -69,9 +70,13 @@ class PushService {
   /// only fires onTokenRefresh when the token itself changes — signing in is
   /// not such an event — so without this call the binding never happens for
   /// anyone who logs in after launch, which is nearly everyone.
+  /// Forced past the unchanged-registration check below: signing in is rare,
+  /// and if `currentUser` is not yet populated when this runs the fingerprint
+  /// would match the signed-out one and skip the very call that binds the
+  /// device to the account. One redundant write beats a silent delivery gap.
   Future<void> onSignedIn() async {
     final t = _token;
-    if (t != null) await _registerTokenWithBackend(t);
+    if (t != null) await _registerTokenWithBackend(t, force: true);
   }
 
   static bool get _supported =>
@@ -261,7 +266,92 @@ class PushService {
     }
   }
 
-  Future<void> _registerTokenWithBackend(String token) async {
+  /// SharedPreferences keys recording the last registration that the backend
+  /// actually accepted.
+  static const _kLastRegKey = 'push_last_registration';
+  static const _kLastRegAtKey = 'push_last_registration_at';
+
+  /// How long a registration is trusted before being refreshed anyway.
+  ///
+  /// Nothing server-side reads `updated_at` today and dead tokens are pruned
+  /// from FCM's own send response, so this is not required for correctness —
+  /// it is insurance. If a token row ever disappears server-side without the
+  /// token itself changing, the device re-registers within a week instead of
+  /// silently losing push forever, which is a failure mode this app has had
+  /// before.
+  static const Duration _kReRegisterAfter = Duration(days: 7);
+
+  /// Whether a registration POST is worth making.
+  ///
+  /// Pure and public so the rule can be tested directly — the real path is
+  /// wrapped in Firebase, HTTP and SharedPreferences, none of which belong in
+  /// a test of "should we write this row again".
+  ///
+  /// Every uncertain case answers TRUE. Registering unnecessarily costs one
+  /// row write; failing to register costs a user their notifications silently,
+  /// and that asymmetry decides every branch here.
+  @visibleForTesting
+  static bool shouldRegister({
+    required String fingerprint,
+    required String? lastFingerprint,
+    required int? lastAtMillis,
+    required int nowMillis,
+    bool force = false,
+  }) {
+    if (force) return true;
+    // Never registered, or the record was lost.
+    if (lastFingerprint == null || lastAtMillis == null) return true;
+    // Token changed, or it is now bound to a different account.
+    if (lastFingerprint != fingerprint) return true;
+    // A clock moved backwards gives a negative age; treat that as unknown
+    // rather than as "recent", which would skip indefinitely.
+    final age = nowMillis - lastAtMillis;
+    if (age < 0) return true;
+    return age >= _kReRegisterAfter.inMilliseconds;
+  }
+
+  /// POSTs the token to the backend, unless an identical registration is
+  /// already on record.
+  ///
+  /// WHY THE CHECK EXISTS
+  /// --------------------
+  /// init() runs on every launch and used to call this unconditionally. The
+  /// backend's handler is an upsert, so every launch by every signed-in user
+  /// wrote a row to Postgres. Neon bills compute-hours and suspends after five
+  /// minutes idle; a continuous trickle of WRITES is the most effective way to
+  /// ensure that never happens, because each one has to be flushed to the
+  /// pageserver. The Neon console showed inserts and updates moving in lockstep
+  /// around the clock with the CPU essentially at zero — work that changed
+  /// nothing, since the row being written was already identical.
+  ///
+  /// The fingerprint is token + bound user, because those are exactly the two
+  /// things the backend stores. If either differs the row is genuinely stale
+  /// and the write is real work.
+  Future<void> _registerTokenWithBackend(
+    String token, {
+    bool force = false,
+  }) async {
+    final uid = AuthService.instance.currentUser?.id ?? '';
+    final fingerprint = '$token|$uid';
+
+    SharedPreferences? prefs;
+    try {
+      prefs = await SharedPreferences.getInstance();
+      if (!shouldRegister(
+        fingerprint: fingerprint,
+        lastFingerprint: prefs.getString(_kLastRegKey),
+        lastAtMillis: prefs.getInt(_kLastRegAtKey),
+        nowMillis: DateTime.now().millisecondsSinceEpoch,
+        force: force,
+      )) {
+        return;
+      }
+    } catch (e) {
+      // Preferences being unavailable must never cost a registration — fall
+      // through and register as before.
+      debugPrint('[push] registration cache unavailable: $e');
+    }
+
     try {
       // Send the session token when there is one. Without it the backend can
       // only add this device to the broadcast topic; with it, the device is
@@ -269,7 +359,7 @@ class PushService {
       // ("your submission was approved"). Signed-out registration still works
       // and still gets announcements — that is why the header is optional.
       final auth = AuthService.instance.accessToken;
-      await http
+      final res = await http
           .post(
             Uri.parse('${AuthService.apiBase}/api/push/register'),
             headers: {
@@ -282,6 +372,19 @@ class PushService {
             }),
           )
           .timeout(const Duration(seconds: 10));
+
+      // Recorded only on success. A failed POST must be retried next launch —
+      // caching a failure as though it were a registration would reproduce the
+      // silent no-push bug this whole path exists to avoid.
+      if (res.statusCode >= 200 && res.statusCode < 300) {
+        await prefs?.setString(_kLastRegKey, fingerprint);
+        await prefs?.setInt(
+          _kLastRegAtKey,
+          DateTime.now().millisecondsSinceEpoch,
+        );
+      } else {
+        debugPrint('[push] register returned ${res.statusCode}; will retry');
+      }
     } catch (e) {
       debugPrint('[push] token registration failed (non-fatal): $e');
     }
