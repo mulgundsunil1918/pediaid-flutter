@@ -75,7 +75,6 @@ final List<_GuideItem> _kGuideItems = [
         'children — dog bite, exposure category, vaccine schedule, RIG/RMAb',
     icon: Icons.pets_outlined,
     categories: const [_kEmergency, _kReference],
-    highlight: true,
     badge: 'NEW',
     build: (_) => const RabiesScreen(),
   ),
@@ -91,7 +90,6 @@ final List<_GuideItem> _kGuideItems = [
         'classification, Type 1/2 and follow-up',
     icon: Icons.remove_red_eye_outlined,
     categories: const [_kNeonatal],
-    badge: 'DRAFT',
     build: (_) => const RopScreen(),
   ),
   _GuideItem(

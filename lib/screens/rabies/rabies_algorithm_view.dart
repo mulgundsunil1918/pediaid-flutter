@@ -1,5 +1,10 @@
 // =============================================================================
-// screens/rabies/rabies_algorithm_view.dart — the interactive decision tree
+// screens/rabies/rabies_algorithm_view.dart — the FLOW CHART view
+//
+// The NRCP poster, in the poster's own order: DECISION TO TREAT, then the
+// POST EXPOSURE PROPHYLAXIS PROTOCOL, then RIG DOSAGE, then the references.
+// Everything here is the national protocol. IAP lines appear only where they
+// explain something the poster states without elaboration, and stay labelled.
 //
 // The NRCP poster as something you can use rather than squint at.
 //
@@ -22,6 +27,7 @@
 import 'package:flutter/material.dart';
 
 import 'rabies_protocol.dart';
+import 'rabies_rig.dart';
 import 'rabies_widgets.dart';
 
 /// One node, and the detail panel it opens.
@@ -53,6 +59,8 @@ class RabiesAlgorithmView extends StatefulWidget {
 
 class _RabiesAlgorithmViewState extends State<RabiesAlgorithmView> {
   final _controller = TransformationController();
+  final _weightCtl = TextEditingController();
+  double? _weight;
   String? _selected;
 
   @override
@@ -64,6 +72,7 @@ class _RabiesAlgorithmViewState extends State<RabiesAlgorithmView> {
   @override
   void dispose() {
     _controller.dispose();
+    _weightCtl.dispose();
     super.dispose();
   }
 
@@ -73,36 +82,34 @@ class _RabiesAlgorithmViewState extends State<RabiesAlgorithmView> {
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
 
-    return Column(
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(14, 14, 14, 20),
       children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(14, 12, 14, 6),
-          child: Row(
-            children: [
-              Expanded(
-                child: Text(
-                  'Rabies PEP Decision Algorithm',
-                  style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w900,
-                      color: cs.onSurface),
-                ),
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                'Rabies PEP Decision Algorithm',
+                style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w900,
+                    color: cs.onSurface),
               ),
-              IconButton(
-                tooltip: 'Reset view',
-                onPressed: _reset,
-                icon: const Icon(Icons.center_focus_strong_outlined, size: 20),
-              ),
-              IconButton(
-                tooltip: 'Expand diagram',
-                onPressed: () => _openFullScreen(context),
-                icon: const Icon(Icons.open_in_full, size: 19),
-              ),
-            ],
-          ),
+            ),
+            IconButton(
+              tooltip: 'Reset view',
+              onPressed: _reset,
+              icon: const Icon(Icons.center_focus_strong_outlined, size: 20),
+            ),
+            IconButton(
+              tooltip: 'Expand diagram',
+              onPressed: () => _openFullScreen(context),
+              icon: const Icon(Icons.open_in_full, size: 19),
+            ),
+          ],
         ),
         Padding(
-          padding: const EdgeInsets.fromLTRB(14, 0, 14, 8),
+          padding: const EdgeInsets.only(bottom: 8),
           child: Text(
             'Pinch or double-tap to zoom, drag to pan. Tap any box to read what '
             'it means.',
@@ -112,36 +119,53 @@ class _RabiesAlgorithmViewState extends State<RabiesAlgorithmView> {
                 color: cs.onSurface.withValues(alpha: 0.6)),
           ),
         ),
-        Expanded(
-          // constrained: false so the tree keeps its natural HEIGHT and is
-          // panned to, rather than being squeezed into the viewport and
-          // clipped — it is about 450 px taller than a phone screen.
-          //
-          // The width is still pinned to the screen so the diagram never needs
-          // horizontal panning just to be read at 1x; only the vertical run
-          // requires a drag.
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              final treeWidth =
-                  (constraints.maxWidth - 32).clamp(280.0, 720.0);
-              return InteractiveViewer(
-                transformationController: _controller,
-                minScale: 0.4,
-                maxScale: 3.5,
-                constrained: false,
-                boundaryMargin: const EdgeInsets.all(120),
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: SizedBox(width: treeWidth, child: _tree(cs)),
-                ),
-              );
-            },
+        // A bordered, fixed-height box: the tree pans and zooms inside it, and
+        // the page scrolls around it. Without the border the two gestures are
+        // indistinguishable to the user.
+        Container(
+          height: 460,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: cs.outlineVariant),
           ),
+          clipBehavior: Clip.antiAlias,
+          child: _viewer(
+          cs),
         ),
         if (_selected != null) _detailPanel(cs),
+        const SizedBox(height: 14),
+        _rigDosage(cs),
+        _paediatric(cs),
+        _special(cs),
+        _warnings(cs),
+        _references(cs),
+        const RabiesDisclaimer(),
       ],
     );
   }
+
+  /// The zoomable tree.
+  ///
+  /// constrained: false so it keeps its natural HEIGHT and is panned to rather
+  /// than squeezed into the box and clipped — it runs about 450 px taller than
+  /// a phone screen. Width is still pinned so the diagram never needs
+  /// horizontal panning just to be read at 1x.
+  Widget _viewer(ColorScheme cs) => LayoutBuilder(
+        builder: (context, constraints) {
+          final treeWidth = (constraints.maxWidth - 32).clamp(280.0, 720.0);
+          return InteractiveViewer(
+            transformationController: _controller,
+            minScale: 0.4,
+            maxScale: 3.5,
+            constrained: false,
+            boundaryMargin: const EdgeInsets.all(120),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: SizedBox(width: treeWidth, child: _tree(cs)),
+            ),
+          );
+        },
+      );
 
   void _openFullScreen(BuildContext context) {
     Navigator.push(
@@ -198,6 +222,230 @@ class _RabiesAlgorithmViewState extends State<RabiesAlgorithmView> {
             _node(_kFollowUp, wide: true),
           ],
         );
+
+  // ── RIG DOSAGE — the poster's third block ───────────────────────────────
+  //
+  // The weight field lives here rather than on its own screen because this is
+  // where a clinician arrives already knowing RIG is indicated and wanting the
+  // number. All four agents are shown at once: the choice is usually decided
+  // by what is in the fridge, and the fifteen-fold potency gap between the two
+  // monoclonals is safer seen than remembered.
+  Widget _rigDosage(ColorScheme cs) => RabiesCard(
+        title: 'Rabies immunoglobulin — RIG dosage',
+        icon: Icons.vaccines_outlined,
+        accent: kCatIIIRed,
+        subtitle: 'HRIG 20 IU/kg  ·  ERIG 40 IU/kg',
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TextField(
+              controller: _weightCtl,
+              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              decoration: const InputDecoration(
+                labelText: 'Weight',
+                suffixText: 'kg',
+                border: OutlineInputBorder(),
+                isDense: true,
+              ),
+              onChanged: (v) => setState(() => _weight = double.tryParse(v.trim())),
+            ),
+            const SizedBox(height: 12),
+            ScrollableTable(
+              child: DataTable(
+                columnSpacing: 18,
+                headingRowHeight: 38,
+                dataRowMinHeight: 40,
+                dataRowMaxHeight: 58,
+                columns: const [
+                  DataColumn(label: Text('Agent', style: _th)),
+                  DataColumn(label: Text('IU/kg', style: _th)),
+                  DataColumn(label: Text('Dose', style: _th)),
+                  DataColumn(label: Text('Volume', style: _th)),
+                ],
+                rows: [
+                  for (final d in calculateAllRig(weightKg: _weight))
+                    DataRow(cells: [
+                      DataCell(SizedBox(
+                          width: 130, child: Text(d.agent.label, style: _td))),
+                      DataCell(Text('${d.agent.iuPerKg}', style: _td)),
+                      DataCell(Text(d.iuLabel, style: _tdBold)),
+                      DataCell(Text(d.volumeLabel, style: _td)),
+                    ]),
+                ],
+              ),
+            ),
+            const SizedBox(height: 10),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(11),
+              decoration: BoxDecoration(
+                color: kCatIIIRed.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(9),
+                border: Border.all(color: kCatIIIRed.withValues(alpha: 0.5)),
+              ),
+              child: const Text(
+                'RIG IS FOR LOCAL WOUND INFILTRATION — NOT ROUTINE IM '
+                'INJECTION AT A DISTANT SITE.',
+                style: TextStyle(
+                    fontSize: 12.5,
+                    height: 1.4,
+                    fontWeight: FontWeight.w900,
+                    color: kCatIIIRed),
+              ),
+            ),
+            const SizedBox(height: 12),
+            for (final s in kRigAdministrationSteps) SourcedLine(s),
+            const SizedBox(height: 2),
+            Text(
+              'Volume is shown only where a product potency is known. Confirm '
+              'it against the vial in hand — a wrong concentration is a wrong '
+              'dose.',
+              style: TextStyle(
+                  fontSize: 11.5,
+                  height: 1.45,
+                  fontStyle: FontStyle.italic,
+                  color: cs.onSurface.withValues(alpha: 0.7)),
+            ),
+          ],
+        ),
+      );
+
+  /// What is different in children.
+  ///
+  /// Kept because the commonest paediatric error here is assuming a child gets
+  /// a reduced vaccine dose. They do not — only the injection site changes.
+  Widget _paediatric(ColorScheme cs) => RabiesCard(
+        title: 'Children: what is different',
+        icon: Icons.child_care_outlined,
+        collapsible: true,
+        subtitle: 'Less than most people assume',
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [for (final p in kPaediatricPoints) SourcedLine(p)],
+        ),
+      );
+
+  /// The branches the flow chart cannot show without becoming unreadable.
+  ///
+  /// IAP lines here are explanatory — they say WHY the national protocol
+  /// requires something — and stay labelled so the distinction survives.
+  Widget _special(ColorScheme cs) => RabiesCard(
+        title: 'Special situations',
+        icon: Icons.alt_route_outlined,
+        collapsible: true,
+        initiallyExpanded: false,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (final sit in kSpecialSituations)
+              Container(
+                margin: const EdgeInsets.only(bottom: 10),
+                padding: const EdgeInsets.all(11),
+                decoration: BoxDecoration(
+                  color: warningColor(sit.level).withValues(alpha: 0.06),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                      color: warningColor(sit.level).withValues(alpha: 0.3)),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(sit.title,
+                              style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w800,
+                                  color: warningColor(sit.level))),
+                        ),
+                        SourceChip(sit.source, dense: true),
+                      ],
+                    ),
+                    const SizedBox(height: 6),
+                    Text(sit.body,
+                        style: TextStyle(
+                            fontSize: 12.5,
+                            height: 1.5,
+                            color: cs.onSurface.withValues(alpha: 0.85))),
+                  ],
+                ),
+              ),
+          ],
+        ),
+      );
+
+  Widget _warnings(ColorScheme cs) => RabiesCard(
+        title: 'Clinical warnings',
+        icon: Icons.report_problem_outlined,
+        accent: kCatIIIRed,
+        collapsible: true,
+        child: Column(
+          children: [for (final w in kStandingWarnings) WarningBox(w)],
+        ),
+      );
+
+  Widget _references(ColorScheme cs) => RabiesCard(
+        title: 'References',
+        icon: Icons.menu_book_outlined,
+        subtitle: 'Checked '
+            '${rabiesVerifiedOn.day}/${rabiesVerifiedOn.month}/${rabiesVerifiedOn.year}',
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'The algorithm, categories, schedules and RIG rules in this '
+              'module are the NCDC / NRCP national protocol. IAP 2022 is cited '
+              'only where it explains something the national protocol states '
+              'without elaboration.',
+              style: TextStyle(
+                  fontSize: 12,
+                  height: 1.5,
+                  color: cs.onSurface.withValues(alpha: 0.8)),
+            ),
+            const SizedBox(height: 14),
+            for (final src in GuidelineSource.values)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(children: [
+                      SourceChip(src),
+                      if (src == GuidelineSource.ncdcNrcp) ...[
+                        const SizedBox(width: 8),
+                        Flexible(
+                          child: Text('PRIMARY SOURCE',
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w900,
+                                  letterSpacing: 0.4,
+                                  color: sourceColor(src))),
+                        ),
+                      ],
+                    ]),
+                    const SizedBox(height: 6),
+                    Text(src.fullName,
+                        style: TextStyle(
+                            fontSize: 12.5,
+                            height: 1.5,
+                            color: cs.onSurface.withValues(alpha: 0.85))),
+                    if (src.url != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 3),
+                        child: Text(src.url!,
+                            style: TextStyle(
+                                fontSize: 11,
+                                height: 1.4,
+                                color: sourceColor(src))),
+                      ),
+                  ],
+                ),
+              ),
+          ],
+        ),
+      );
 
   Widget _label(ColorScheme cs, String text) => Text(
         text,
@@ -597,3 +845,8 @@ const List<AlgoNode> _kAllNodes = [
   _kRig,
   _kFollowUp,
 ];
+
+const _th = TextStyle(fontSize: 12, fontWeight: FontWeight.w800);
+const _td = TextStyle(fontSize: 12, height: 1.3);
+const _tdBold =
+    TextStyle(fontSize: 12.5, height: 1.3, fontWeight: FontWeight.w900);

@@ -26,13 +26,7 @@ import 'rabies_tracker.dart';
 import 'rabies_widgets.dart';
 
 class RabiesAssessView extends StatefulWidget {
-  final GuidelineSource source;
-  final ValueChanged<GuidelineSource> onSourceChanged;
-  const RabiesAssessView({
-    super.key,
-    required this.source,
-    required this.onSourceChanged,
-  });
+  const RabiesAssessView({super.key});
 
   @override
   State<RabiesAssessView> createState() => _RabiesAssessViewState();
@@ -55,7 +49,7 @@ class _RabiesAssessViewState extends State<RabiesAssessView> {
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
-    final a = _a.copyWith(source: widget.source);
+    final a = _a.copyWith(source: GuidelineSource.ncdcNrcp);
     final r = evaluateRabies(a);
 
     // Desktop gets the assessment on the left and a live result on the right;
@@ -306,9 +300,9 @@ class _RabiesAssessViewState extends State<RabiesAssessView> {
               // This is the one place the two Indian sources give different
               // ACTIONS, so it is called out where it is entered.
               Text(
-                'Under 3 months matters: IAP 2022 requires wound treatment '
-                'only, while NRCP treats any repeat exposure as previously '
-                'immunised. Switch the guideline above to compare.',
+                'NRCP: for Category II and III, a repeat exposure is treated '
+                'as previously immunised — 2 doses on days 0 and 3 — whenever '
+                'it occurs.',
                 style: TextStyle(
                     fontSize: 11.5,
                     height: 1.4,
@@ -423,7 +417,7 @@ class _RabiesAssessViewState extends State<RabiesAssessView> {
                         letterSpacing: 0.5,
                         color: accent)),
               ),
-              SourceChip(a.source),
+              const SourceChip(GuidelineSource.ncdcNrcp),
             ],
           ),
           const SizedBox(height: 13),

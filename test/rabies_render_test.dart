@@ -1,27 +1,26 @@
 // =============================================================================
 // test/rabies_render_test.dart
 //
-// That the module actually renders, fits a phone, and shows the things the
-// engine tests prove it computes.
+// That the module renders, fits a phone, and shows what the engine computes.
 //
-// The engine tests are the ones that matter clinically, but a correct engine
-// behind a screen that overflows, or behind a recommendation the layout clips,
-// helps nobody. Two specific defects are pinned here because both have
-// happened in this app before: content that only fits on a wide screen, and a
-// citation that exists in source but is never rendered, so it gets tree-shaken
-// out of the release bundle and silently stops being in the product at all.
+// Rewritten when the module dropped from four tabs to two. Three of these
+// pin defects that actually shipped: tab labels the theme rendered dark on a
+// dark app bar (invisible, and reported from a real screenshot), a two-line
+// title that clipped the module name off the top, and a citation that existed
+// in source but was never rendered — which tree-shakes out of the release
+// bundle and silently stops being in the product.
 // =============================================================================
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:pediaid_app/screens/rabies/rabies_algorithm_view.dart';
-import 'package:pediaid_app/screens/rabies/rabies_reference_view.dart';
-import 'package:pediaid_app/screens/rabies/rabies_rig_calculator.dart';
+import 'package:pediaid_app/screens/rabies/rabies_assess_view.dart';
 import 'package:pediaid_app/screens/rabies/rabies_screen.dart';
 
-Future<void> _phone(WidgetTester tester, Widget child) async {
-  tester.view.physicalSize = const Size(375, 812);
+Future<void> _phone(WidgetTester tester, Widget child,
+    {double h = 812}) async {
+  tester.view.physicalSize = Size(375, h);
   tester.view.devicePixelRatio = 1.0;
   addTearDown(tester.view.reset);
   await tester.pumpWidget(MaterialApp(home: child));
@@ -29,52 +28,55 @@ Future<void> _phone(WidgetTester tester, Widget child) async {
 }
 
 void main() {
-  testWidgets('the module opens on a 375px phone with its four tabs',
+  testWidgets('the module opens on a phone with exactly two tabs',
       (tester) async {
     await _phone(tester, const RabiesScreen());
 
-    expect(find.text('Rabies & Animal Bite'), findsOneWidget);
-    for (final tab in ['Assess', 'Reference', 'Algorithm', 'RIG']) {
-      expect(find.text(tab), findsOneWidget, reason: 'tab $tab');
-    }
-    // Both guideline sources must be selectable from the top, not buried.
-    expect(find.text('NCDC / NRCP'), findsWidgets);
-    expect(find.text('IAP 2022'), findsWidgets);
+    expect(find.text('Rabies & Animal Bite'), findsOneWidget,
+        reason: 'the title was being clipped off the top');
+    expect(find.text('Flow chart'), findsOneWidget);
+    expect(find.text('Assess'), findsOneWidget);
+    // The four-tab version is gone, along with the guideline switcher.
+    expect(find.text('Reference'), findsNothing);
+    expect(find.text('RIG'), findsNothing);
+    // IAP chips DO still appear, as attribution on explanatory lines — that
+    // is the point of keeping the source layer. What must be gone is the
+    // SWITCHER, which let a clinician toggle the algorithm mid-assessment.
+    expect(find.text('Guideline'), findsNothing,
+        reason: 'the guideline switcher is gone; NCDC is the only algorithm');
+  });
+
+  testWidgets('tab labels are readable against the app bar', (tester) async {
+    // They were inheriting a dark colour on a dark bar and were invisible.
+    await _phone(tester, const RabiesScreen());
+    final tabBar = tester.widget<TabBar>(find.byType(TabBar));
+    final scheme = ThemeData().colorScheme;
+    expect(tabBar.labelColor, isNotNull);
+    expect(tabBar.labelColor, isNot(scheme.onSurface),
+        reason: 'must be an on-primary colour, not the body text colour');
+    expect(tabBar.unselectedLabelColor, isNotNull);
   });
 
   testWidgets('wound washing is shown BEFORE the assessment questions',
       (tester) async {
-    await _phone(tester, const RabiesScreen());
-    // Not a styling preference: washing reduces rabies risk by ~50%, costs
-    // nothing, and must not appear to depend on the category being settled.
+    await _phone(tester, const Scaffold(body: RabiesAssessView()));
+    // Washing reduces rabies risk by ~50%, costs nothing, and must not look
+    // like it waits for the category to be settled.
     expect(find.text('FIRST: WASH THE WOUND'), findsOneWidget);
-
-    final washY = tester.getTopLeft(find.text('FIRST: WASH THE WOUND')).dy;
-    final exposureY = tester.getTopLeft(find.text('Exposure')).dy;
-    expect(washY, lessThan(exposureY),
-        reason: 'washing must sit above the questions, not after them');
+    expect(tester.getTopLeft(find.text('FIRST: WASH THE WOUND')).dy,
+        lessThan(tester.getTopLeft(find.text('Exposure')).dy));
   });
 
-  testWidgets('the reference view renders every section without overflow',
+  testWidgets('the flow chart carries the poster\'s own sections',
       (tester) async {
-    tester.view.physicalSize = const Size(375, 4000);
-    tester.view.devicePixelRatio = 1.0;
-    addTearDown(tester.view.reset);
-    await tester.pumpWidget(const MaterialApp(home: Scaffold(
-      body: RabiesReferenceView(),
-    )));
-    await tester.pumpAndSettle();
+    await _phone(tester, const Scaffold(body: RabiesAlgorithmView()), h: 4000);
 
-    // The list virtualises, so each section is scrolled to rather than
-    // assumed present — which also proves the page scrolls cleanly to the end.
     for (final title in [
-      'Exposure categories',
-      'Immediate wound management',
-      'At a glance',
-      'Vaccine schedules',
-      'RIG & RMAb',
+      'Rabies PEP Decision Algorithm',
+      'Rabies immunoglobulin — RIG dosage',
       'Children: what is different',
-      'IAP 2022 vs NCDC / NRCP',
+      'Special situations',
+      'Clinical warnings',
       'References',
     ]) {
       await tester.scrollUntilVisible(find.text(title), 300,
@@ -84,79 +86,50 @@ void main() {
     }
   });
 
-  testWidgets('module search filters the reference view', (tester) async {
-    tester.view.physicalSize = const Size(375, 4000);
-    tester.view.devicePixelRatio = 1.0;
-    addTearDown(tester.view.reset);
-
-    await tester.pumpWidget(const MaterialApp(
-        home: Scaffold(body: RabiesReferenceView(query: 'hrig'))));
+  testWidgets('NCDC is named as the primary source', (tester) async {
+    await _phone(tester, const Scaffold(body: RabiesAlgorithmView()), h: 4000);
+    await tester.scrollUntilVisible(find.text('References'), 300,
+        scrollable: find.byType(Scrollable).first);
     await tester.pumpAndSettle();
-
-    expect(find.text('RIG & RMAb'), findsOneWidget);
-    expect(find.text('Exposure categories'), findsNothing,
-        reason: 'a search for HRIG should not return the category table');
+    expect(find.text('PRIMARY SOURCE'), findsOneWidget);
   });
 
-  testWidgets('the algorithm renders and its nodes open a detail panel',
-      (tester) async {
+  testWidgets('tapping a flow-chart node opens its detail', (tester) async {
     await _phone(tester, const Scaffold(body: RabiesAlgorithmView()));
-
-    expect(find.text('Rabies PEP Decision Algorithm'), findsOneWidget);
     expect(find.text('CATEGORY III'), findsOneWidget);
-
-    // Spec: tapping Category III opens its definition and management.
     await tester.tap(find.text('CATEGORY III'));
     await tester.pumpAndSettle();
     expect(find.textContaining('Infiltrate wounds with RIG'), findsOneWidget);
   });
 
-  testWidgets('the RIG calculator computes 300 IU for a 15 kg child on HRIG',
-      (tester) async {
-    tester.view.physicalSize = const Size(375, 2400);
-    tester.view.devicePixelRatio = 1.0;
-    addTearDown(tester.view.reset);
-    await tester.pumpWidget(
-        const MaterialApp(home: Scaffold(body: RabiesRigCalculator())));
+  testWidgets('RIG dosage computes 300 IU for a 15 kg child', (tester) async {
+    await _phone(tester, const Scaffold(body: RabiesAlgorithmView()), h: 4000);
+    await tester.scrollUntilVisible(
+        find.text('Rabies immunoglobulin — RIG dosage'), 300,
+        scrollable: find.byType(Scrollable).first);
     await tester.pumpAndSettle();
-
-    // Before a weight is entered there must be no number pretending to be one.
-    expect(find.text('—'), findsWidgets);
 
     await tester.enterText(find.byType(TextField).first, '15');
     await tester.pumpAndSettle();
 
-    expect(find.text('300 IU'), findsWidgets,
-        reason: 'HRIG at 20 IU/kg for 15 kg');
-    // ERIG at 40 IU/kg appears in the all-agents table.
-    expect(find.text('600 IU'), findsWidgets);
+    expect(find.text('300 IU'), findsWidgets, reason: 'HRIG 20 IU/kg x 15 kg');
+    expect(find.text('600 IU'), findsWidgets, reason: 'ERIG 40 IU/kg x 15 kg');
   });
 
-  testWidgets('the day-7 RIG cut-off is rendered, not merely in the source',
+  testWidgets('the day-7 cut-off and the disclaimer are actually rendered',
       (tester) async {
-    // A const string nothing renders is tree-shaken out of the release bundle.
-    // This app has shipped that exact defect before, with the ETROP citation.
-    tester.view.physicalSize = const Size(375, 4000);
-    tester.view.devicePixelRatio = 1.0;
-    addTearDown(tester.view.reset);
-    await tester.pumpWidget(const MaterialApp(
-        home: Scaffold(body: RabiesReferenceView(query: 'rig'))));
+    await _phone(tester, const Scaffold(body: RabiesAlgorithmView()), h: 4000);
+    await tester.scrollUntilVisible(find.text('Clinical warnings'), 300,
+        scrollable: find.byType(Scrollable).first);
     await tester.pumpAndSettle();
-
     expect(find.textContaining('Do not give RIG beyond the 7th day'),
         findsWidgets);
-    expect(find.text('THE RIG WINDOW'), findsOneWidget);
-  });
 
-  testWidgets('the disclaimer travels with the module', (tester) async {
-    tester.view.physicalSize = const Size(375, 6000);
-    tester.view.devicePixelRatio = 1.0;
-    addTearDown(tester.view.reset);
-    await tester.pumpWidget(const MaterialApp(
-        home: Scaffold(body: RabiesReferenceView(query: 'reference'))));
+    await tester.scrollUntilVisible(
+        find.textContaining('intended to support, not replace'), 300,
+        scrollable: find.byType(Scrollable).first);
     await tester.pumpAndSettle();
-
-    expect(find.textContaining('intended to support, not replace, clinical judgment'),
+    expect(find.textContaining('intended to support, not replace'),
         findsOneWidget);
   });
 }
