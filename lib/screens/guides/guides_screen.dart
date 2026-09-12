@@ -41,6 +41,7 @@ import 'sedation_paralytics_screen.dart';
 import 'seizure_meds_screen.dart';
 import 'developmental_milestones/dev_milestones_hub.dart';
 import '../rop/rop_screen.dart';
+import '../rabies/rabies_screen.dart';
 
 // ── Category catalogue ──────────────────────────────────────────────────────
 
@@ -65,6 +66,19 @@ const List<String> _kCategories = [
 // Top-level (not a field on the State) so ToolRegistry can read it without
 // building the screen — that is what makes a guide pinnable to Quick Access.
 final List<_GuideItem> _kGuideItems = [
+  _GuideItem(
+    title: 'Rabies & Animal Bite',
+    // The subtitle feeds the registry's search keywords, so every word a
+    // clinician might type for this is here: dog bite, PEP, RIG, category.
+    subtitle:
+        'Assessment, wound management and post-exposure prophylaxis in '
+        'children — dog bite, exposure category, vaccine schedule, RIG/RMAb',
+    icon: Icons.pets_outlined,
+    categories: const [_kEmergency, _kReference],
+    highlight: true,
+    badge: 'NEW',
+    build: (_) => const RabiesScreen(),
+  ),
   // Neonatal Scores — surfaced first and highlighted; bundles all the
   // neonatal scoring tools (incl. LATCH, POFRAS, Modified Ballard).
   _GuideItem(
