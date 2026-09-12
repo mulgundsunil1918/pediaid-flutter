@@ -26,9 +26,9 @@ import 'package:url_launcher/url_launcher.dart';
 import 'rabies_protocol.dart';
 import 'rabies_widgets.dart';
 
-/// Where the poster lives once it is bundled.
-const String kRabiesPosterAsset =
-    'assets/images/rabies/nrcp_pep_protocol.png';
+/// The bundled poster. 2381 x 3368, which is what makes the dose boxes
+/// readable when someone zooms into them.
+const String kRabiesPosterAsset = 'assets/images/rabies/rabies.png';
 
 class RabiesProtocolImage extends StatefulWidget {
   const RabiesProtocolImage({super.key});

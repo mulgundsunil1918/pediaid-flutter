@@ -16,6 +16,7 @@
 // =============================================================================
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:pediaid_app/screens/rabies/rabies_assess_view.dart';
@@ -69,20 +70,24 @@ void main() {
           findsWidgets);
     });
 
-    testWidgets('explains a missing poster instead of showing a broken image',
-        (tester) async {
-      // The poster IS the page here. A silent grey box would leave a clinician
-      // with nothing and no idea why, so absence is stated and the source
-      // document offered.
+    testWidgets('the poster is actually bundled and rendered', (tester) async {
+      // Asserted, not branched on. The poster IS this page — a build that
+      // silently shipped without the asset would leave the tab explaining its
+      // own absence, and nothing else would fail.
       await _phone(tester, const Scaffold(body: RabiesProtocolImage()),
           h: 2400);
-      final bundled = find.byType(Image).evaluate().isNotEmpty;
-      if (!bundled) {
-        expect(find.text('Poster not bundled in this build'), findsOneWidget);
-        expect(find.text('Open the NRCP protocol'), findsOneWidget);
-      } else {
-        expect(find.textContaining('Tap the poster'), findsOneWidget);
-      }
+      expect(find.byType(Image), findsOneWidget,
+          reason: 'assets/images/rabies/rabies.png must be in the bundle');
+      expect(find.text('Poster not bundled in this build'), findsNothing);
+      expect(find.textContaining('Tap the poster'), findsOneWidget);
+    });
+
+    testWidgets('the asset path in code matches the file on disk',
+        (tester) async {
+      // Catches a rename on either side, which would otherwise only show up as
+      // an empty tab on a real device.
+      await expectLater(
+          rootBundle.load(kRabiesPosterAsset), completes);
     });
 
     testWidgets('carries the references and the disclaimer', (tester) async {
