@@ -104,6 +104,7 @@ flutter:
     - assets/data/vaccines/
     - assets/data/fenton_data.json
     - assets/data/nicu_scores.json
+    - assets/images/rabies/
     - assets/pals/
     - assets/nice/nicecharts.json
     - assets/icon/

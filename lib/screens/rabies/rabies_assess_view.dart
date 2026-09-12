@@ -65,6 +65,11 @@ class _RabiesAssessViewState extends State<RabiesAssessView> {
         _weightRouteCard(cs, a),
         if (!wide) const SizedBox(height: 8),
         if (!wide) _resultPanel(cs, a, r),
+        const SizedBox(height: 6),
+        // Not on the poster, and worth keeping: the branches a one-page
+        // algorithm cannot show without becoming unreadable.
+        _paediatricCard(cs),
+        _specialCard(cs),
         const RabiesDisclaimer(),
       ],
     );
@@ -384,6 +389,64 @@ class _RabiesAssessViewState extends State<RabiesAssessView> {
                 ],
               ],
             ),
+          ],
+        ),
+      );
+
+  Widget _paediatricCard(ColorScheme cs) => RabiesCard(
+        title: 'Children: what is different',
+        icon: Icons.child_care_outlined,
+        collapsible: true,
+        initiallyExpanded: false,
+        subtitle: 'Less than most people assume',
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [for (final p in kPaediatricPoints) SourcedLine(p)],
+        ),
+      );
+
+  Widget _specialCard(ColorScheme cs) => RabiesCard(
+        title: 'Special situations',
+        icon: Icons.alt_route_outlined,
+        collapsible: true,
+        initiallyExpanded: false,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (final sit in kSpecialSituations)
+              Container(
+                margin: const EdgeInsets.only(bottom: 10),
+                padding: const EdgeInsets.all(11),
+                decoration: BoxDecoration(
+                  color: warningColor(sit.level).withValues(alpha: 0.06),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                      color: warningColor(sit.level).withValues(alpha: 0.3)),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(sit.title,
+                              style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w800,
+                                  color: warningColor(sit.level))),
+                        ),
+                        SourceChip(sit.source, dense: true),
+                      ],
+                    ),
+                    const SizedBox(height: 6),
+                    Text(sit.body,
+                        style: TextStyle(
+                            fontSize: 12.5,
+                            height: 1.5,
+                            color: cs.onSurface.withValues(alpha: 0.85))),
+                  ],
+                ),
+              ),
           ],
         ),
       );

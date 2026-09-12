@@ -3,10 +3,13 @@
 //
 // TWO views, and only two:
 //
-//   Flow chart — the NRCP national algorithm, interactive, plus RIG dosage and
-//                the references. This is the poster, made usable.
-//   Assess     — the same algorithm as a tappable assessment that ends in one
-//                recommendation.
+//   Protocol — the published NRCP poster, as issued, zoomable. An earlier
+//              version rebuilt it out of widgets; that overflowed sideways and
+//              clipped "Category III" mid-sentence, and a clinician who knows
+//              the poster could not navigate a layout that was not the
+//              poster's. The artwork already solves the layout problem.
+//   Assess   — the same algorithm as a tappable assessment ending in one
+//              recommendation. This is the half paper cannot do.
 //
 // ONE SOURCE OF TRUTH: NCDC / NRCP
 // --------------------------------
@@ -25,8 +28,8 @@
 
 import 'package:flutter/material.dart';
 
-import 'rabies_algorithm_view.dart';
 import 'rabies_assess_view.dart';
+import 'rabies_protocol_image.dart';
 import 'rabies_protocol.dart';
 
 class RabiesScreen extends StatefulWidget {
@@ -69,7 +72,7 @@ class _RabiesScreenState extends State<RabiesScreen>
           unselectedLabelStyle:
               const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w600),
           tabs: const [
-            Tab(text: 'Flow chart'),
+            Tab(text: 'Protocol'),
             Tab(text: 'Assess'),
           ],
         ),
@@ -77,7 +80,7 @@ class _RabiesScreenState extends State<RabiesScreen>
       body: TabBarView(
         controller: _tabs,
         children: const [
-          RabiesAlgorithmView(),
+          RabiesProtocolImage(),
           RabiesAssessView(),
         ],
       ),
