@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../services/recents_service.dart';
+import '../../main.dart' show appRouteObserver;
 import '../../services/tool_registry.dart';
 import '../../services/push_permission_primer.dart';
 import '../../utils/share_message.dart';
@@ -159,7 +160,7 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with RouteAware {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   List<String> _selectedKeys = List.from(_kDefaultKeys);
 
@@ -187,6 +188,10 @@ class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey _scFormularyKey = GlobalKey();
   final GlobalKey _scGuidesKey = GlobalKey();
   bool _tutorialAttempted = false;
+
+  /// The ShowCaseWidget's own context, captured so the deferred retry in
+  /// didPopNext can start the tour without waiting for another rebuild.
+  BuildContext? _showcaseCtx;
 
   // Web-only vanity counter — backed by Upstash Redis (not Postgres/Neon),
   // so unlike the old version this can't drain database compute hours.
@@ -258,6 +263,19 @@ class _HomeScreenState extends State<HomeScreen> {
   /// it off. Idempotent — guarded by [_tutorialAttempted].
   Future<void> _maybeStartTutorial(BuildContext showcaseCtx) async {
     if (_tutorialAttempted) return;
+
+    // On a first install, signing in pushes ProfileSetupScreen ("a few more
+    // details") ON TOP of HomeScreen — and HomeScreen's first frame renders
+    // underneath it, which is what fired this callback. Starting the tour here
+    // drew the coachmarks over the profile form, pointing at a drawer and a
+    // search bar that were not on screen.
+    //
+    // Deliberately does NOT set _tutorialAttempted in this branch: this is
+    // "not yet", not "done". didPopNext() below runs it again once the form
+    // is dismissed and HomeScreen is genuinely the visible route.
+    final route = ModalRoute.of(showcaseCtx);
+    if (route != null && !route.isCurrent) return;
+
     _tutorialAttempted = true;
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -277,6 +295,48 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     } catch (_) {
       /* never block boot for the tour */
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final route = ModalRoute.of(context);
+    if (route is PageRoute) appRouteObserver.subscribe(this, route);
+  }
+
+  /// Something has been pushed ON TOP of HomeScreen while the tour was running.
+  ///
+  /// The isCurrent check in _maybeStartTutorial only catches a cover that is
+  /// ALREADY there. The real sequence on a first install is the other way
+  /// round: HomeScreen renders, its first-frame callback starts the tour, and
+  /// ProfileSetupScreen is pushed a frame later — so the tour was already up
+  /// and drew over the form. This is the half that catches that.
+  ///
+  /// dismiss() only runs the package's internal cleanup; onFinish is invoked
+  /// separately on real completion, so this does NOT mark the tour as seen.
+  /// _attempted is reset so didPopNext below can run it properly.
+  @override
+  void didPushNext() {
+    final ctx = _showcaseCtx;
+    if (ctx == null || !ctx.mounted) return;
+    final show = ShowCaseWidget.of(ctx);
+    if (!show.isShowCaseCompleted) {
+      show.dismiss();
+      _tutorialAttempted = false;
+    }
+  }
+
+  /// A route that was covering HomeScreen has been popped — the profile-setup
+  /// step, on a first install. This is the first moment the tour can run
+  /// without drawing over something else.
+  @override
+  void didPopNext() {
+    final ctx = _showcaseCtx;
+    if (ctx != null && ctx.mounted) {
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => _maybeStartTutorial(ctx),
+      );
     }
   }
 
@@ -301,6 +361,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void dispose() {
+    appRouteObserver.unsubscribe(this);
     _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
     _scrollY.dispose();
@@ -403,6 +464,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildHomeScaffold(BuildContext showcaseCtx) {
+    _showcaseCtx = showcaseCtx;
     final cs = Theme.of(showcaseCtx).colorScheme;
     final isDark = Theme.of(showcaseCtx).brightness == Brightness.dark;
 
@@ -2127,15 +2189,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     // being silently skipped costs nothing. Someone who opened
                     // the drawer and chose "Rate PediAid" asked for this, and
                     // must always get somewhere they can actually leave one.
-                    await launchUrl(
-                      Uri.parse(
-                        Platform.isIOS
-                            ? 'https://apps.apple.com/app/id6777623709?action=write-review'
-                            : 'https://play.google.com/store/apps/details'
-                                  '?id=com.pediaid.pediaid',
-                      ),
-                      mode: LaunchMode.externalApplication,
-                    );
+                    // Same service as Settings and the automatic dialog, so
+                    // the three cannot drift apart on which store they open.
+                    await RatePromptService.instance.openStoreReview();
+                    await RatePromptService.instance.markDoneExternally();
                   },
                 ),
                 _DrawerItem(

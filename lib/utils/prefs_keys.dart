@@ -37,17 +37,9 @@ class PrefsKeys {
   static const String oemReliabilityWizardSeen = 'oem_reliability_wizard_seen_v1';
 
   // ── Rating loop ──────────────────────────────────────────────────────────
-  /// First-launch timestamp (millis since epoch). Used to gate the in-app
-  /// review prompt — never ask before the install is N days old.
-  static const String firstLaunchAt = 'first_launch_at_v1';
 
-  /// Last time we showed (or attempted to show) the in-app review dialog.
-  /// Used to throttle prompts to once per N days.
-  static const String lastReviewPromptAt = 'last_review_prompt_at_v1';
 
-  /// User-controllable toggle in Profile. When false, never auto-prompt
-  /// for a review.
-  static const String reviewPromptsEnabled = 'review_prompts_enabled_v1';
+
 
   // ── Theme + accessibility ────────────────────────────────────────────────
   /// Stored theme choice: 'system' | 'light' | 'dark'.

@@ -20,6 +20,7 @@ import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 
+import '../../services/rate_prompt_service.dart';
 import '../../utils/share_message.dart';
 import '../../utils/support_contact.dart';
 import 'package:provider/provider.dart';
@@ -27,7 +28,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:in_app_review/in_app_review.dart';
 
 import '../../theme/theme_provider.dart';
 import '../../services/auth_service.dart';
@@ -38,8 +38,6 @@ import '../references_screen.dart';
 
 const String _kPrivacyUrl =
     'https://pediaid.bridgr.co.in/privacy.html';
-const String _kPlayStoreUrl =
-    'https://play.google.com/store/apps/details?id=com.pediaid.pediaid';
 const String _kWebAppUrl = 'https://pediaid.bridgr.co.in/';
 
 class SettingsScreen extends StatefulWidget {
@@ -191,7 +189,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               icon: Icons.star_outline,
               title: 'Rate PediAid',
               subtitle: kIsWeb
-                  ? 'Open the Play Store listing'
+                  ? 'Open the ${storeNameForThisDevice()} listing'
                   : 'Opens the in-app rating prompt',
               onTap: _requestReview,
             ),
@@ -367,22 +365,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Future<void> _requestReview() async {
     if (kIsWeb) {
-      _openExternal(_kPlayStoreUrl);
+      // Was hardcoded to Google Play, which is useless to the iPhone and Mac
+      // visitors who make up a real share of the web audience.
+      _openExternal(reviewUrlForThisDevice());
       return;
     }
     try {
-      final review = InAppReview.instance;
-      if (await review.isAvailable()) {
-        await review.requestReview();
-      } else {
-        await review.openStoreListing();
-      }
-      // Stamp last-prompt time so the auto-prompt loop respects this.
-      try {
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setInt(PrefsKeys.lastReviewPromptAt,
-            DateTime.now().millisecondsSinceEpoch);
-      } catch (_) {}
+      // Delegated rather than reimplemented. This screen used to call
+      // requestReview() itself, which on iOS is silently suppressed by Apple
+      // most of the time — so the tile did nothing at all on iPhone. One
+      // service now owns the "where does this device leave a review" decision.
+      await RatePromptService.instance.openStoreReview();
+      // Someone who came here deliberately should not be asked again by the
+      // automatic dialog a fortnight later.
+      await RatePromptService.instance.markDoneExternally();
     } catch (e) {
       if (mounted) _toast(friendlyError(e));
     }

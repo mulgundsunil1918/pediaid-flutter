@@ -15,7 +15,6 @@ import 'widgets/app_config_gate.dart';
 import 'services/lab_reference_service.dart';
 import 'services/auth_service.dart';
 import 'services/profile_store.dart';
-import 'services/review_service.dart';
 import 'services/guidelines_search_service.dart';
 import 'services/recents_service.dart';
 import 'services/push_service.dart';
@@ -98,14 +97,6 @@ void main() async {
     debugPrint('[boot] ProfileStore load failed: $e');
   }
 
-  // Stamp the first-launch timestamp so the in-app review prompt has a
-  // valid install-age baseline. Idempotent — only writes if missing.
-  try {
-    await ReviewService.instance.markFirstLaunchIfMissing();
-  } catch (e) {
-    debugPrint('[boot] ReviewService init failed: $e');
-  }
-
   // Warm the guideline-chapter search index in the background so the
   // very first home-screen search hit (e.g. "UTI") returns immediately
   // instead of after a network round-trip. Hydrates from cache first
@@ -179,6 +170,10 @@ class PediAidApp extends StatelessWidget {
       // Lets the report-issue overlay (which lives above the Navigator via
       // `builder`) push its bottom sheet onto the root navigator.
       navigatorKey: reportNavigatorKey,
+      // Lets HomeScreen know when a route pushed above it (the profile-setup
+      // step, on a first install) has been popped, so the coachmark tour can
+      // wait its turn instead of drawing over whatever is on top.
+      navigatorObservers: [appRouteObserver],
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: themeProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light,
@@ -199,6 +194,13 @@ class PediAidApp extends StatelessWidget {
 /// version-bumped redesign), then the wrapped child. Uses
 /// [PrefsKeys.onboardingComplete] which is versioned ('_v1') by design —
 /// bumping the suffix re-shows the slides to existing users.
+/// Watches route pushes and pops so a screen can react to being covered or
+/// uncovered. Needed because the interactive tutorial starts from HomeScreen's
+/// first frame, which on a first install happens while the profile-setup step
+/// is still pushed on top of it.
+final RouteObserver<ModalRoute<void>> appRouteObserver =
+    RouteObserver<ModalRoute<void>>();
+
 class _OnboardingGate extends StatefulWidget {
   final Widget child;
   const _OnboardingGate({required this.child});

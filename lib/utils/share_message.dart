@@ -14,6 +14,13 @@
 // it is the app's public claim about itself.
 // =============================================================================
 
+import 'package:flutter/foundation.dart';
+
+/// Numeric App Store id. Needed as a bare string by `in_app_review`, whose
+/// `openStoreListing()` is a silent no-op on iOS and macOS without it — which
+/// is exactly how the "Rate PediAid" fallback failed on iPhone.
+const String kAppStoreId = '6777623709';
+
 const String kAppStoreUrl =
     'https://apps.apple.com/us/app/pediaid-pediatrics-neonatology/id6777623709';
 const String kPlayStoreUrl =
@@ -47,3 +54,32 @@ const String kShareMessage = '''
 ▶️ Demo: $kDemoUrl
 
 💚 Share PediAid with your colleagues — good knowledge deserves to be shared!''';
+
+// =============================================================================
+// Which store this device belongs to
+//
+// These used to be decided at each call site, and drifted: Settings sent every
+// web visitor to Google Play, including anyone reading on an iPhone or a Mac,
+// where that link is useless.
+//
+// `defaultTargetPlatform` is the right signal on web too — there it reports the
+// operating system the BROWSER is running on, which is what decides where the
+// person can actually install or review the app.
+// =============================================================================
+
+bool get _isAppleDevice =>
+    defaultTargetPlatform == TargetPlatform.iOS ||
+    defaultTargetPlatform == TargetPlatform.macOS;
+
+/// The store listing to send this device to.
+String storeUrlForThisDevice() => _isAppleDevice ? kAppStoreUrl : kPlayStoreUrl;
+
+/// The store page for LEAVING a review. On Apple this is a distinct URL that
+/// opens the write-review sheet directly; on Play the listing is the review
+/// page, so the two coincide.
+String reviewUrlForThisDevice() => _isAppleDevice
+    ? 'https://apps.apple.com/app/id$kAppStoreId?action=write-review'
+    : kPlayStoreUrl;
+
+/// "App Store" / "Play Store", for copy that names the destination.
+String storeNameForThisDevice() => _isAppleDevice ? 'App Store' : 'Play Store';

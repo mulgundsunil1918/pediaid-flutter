@@ -20,14 +20,15 @@
 // fifty-two a year.
 // =============================================================================
 
+import 'package:flutter/foundation.dart'
+    show defaultTargetPlatform, TargetPlatform;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-const _kPlayUrl =
-    'https://play.google.com/store/apps/details?id=com.pediaid.pediaid';
+import '../utils/share_message.dart';
 
 const _kLaunchCountKey = 'rate_launch_count';
 const _kLastAskedKey = 'rate_last_asked_epoch';
@@ -101,6 +102,9 @@ class RatePromptService {
     if (!await shouldAsk()) return;
     if (!context.mounted) return;
     await _recordAsked();
+    // _recordAsked awaits, so the earlier check no longer covers us — the
+    // screen can be gone by now.
+    if (!context.mounted) return;
 
     // A quiet question first, rather than firing Google's card immediately.
     // The API's quota is spent whether or not the person wanted to review, so
@@ -139,17 +143,54 @@ class RatePromptService {
     // review was actually submitted, and continuing to pester someone who
     // already agreed is worse than missing a review.
     await _markDone();
-
-    try {
-      final review = InAppReview.instance;
-      if (await review.isAvailable()) {
-        await review.requestReview();
-        return;
-      }
-    } catch (_) {/* fall through to the store listing */}
-
-    // requestReview does nothing on builds not installed from Play, so the
-    // listing is the only reliable path there.
-    await launchUrl(Uri.parse(_kPlayUrl), mode: LaunchMode.externalApplication);
+    await openStoreReview();
   }
+
+  /// Sends someone who said yes somewhere they can actually leave a review.
+  ///
+  /// APPLE IS NOT ANDROID HERE, AND TREATING IT AS SUCH WAS THE BUG
+  /// --------------------------------------------------------------
+  /// This used to call `isAvailable()` then `requestReview()` and return. On
+  /// iOS `isAvailable()` answers true on anything since 10.3, so that branch
+  /// always won — and Apple's prompt is shown entirely at Apple's discretion,
+  /// at most three times a year, with no callback and no way to know whether
+  /// anything appeared. The overwhelmingly common outcome on iPhone was: the
+  /// user taps "Rate PediAid", nothing happens, and `_markDone()` has already
+  /// fired, so they are never asked again. Silent, permanent, and invisible in
+  /// any log.
+  ///
+  /// The fallback made it worse: it opened the GOOGLE PLAY listing, which is
+  /// useless on an iPhone.
+  ///
+  /// So Apple devices skip the native call entirely and open the App Store
+  /// write-review page, which is deterministic. Android keeps the native
+  /// sheet, where it is reliable and keeps the person in the app.
+  Future<void> openStoreReview() async {
+    final isApple = defaultTargetPlatform == TargetPlatform.iOS ||
+        defaultTargetPlatform == TargetPlatform.macOS;
+
+    if (!isApple) {
+      try {
+        final review = InAppReview.instance;
+        if (await review.isAvailable()) {
+          await review.requestReview();
+          return;
+        }
+      } catch (_) {/* fall through to the listing */}
+    }
+
+    // Platform-aware: the App Store review page on Apple, Play on everything
+    // else. Never the wrong store.
+    await launchUrl(
+      Uri.parse(reviewUrlForThisDevice()),
+      mode: LaunchMode.externalApplication,
+    );
+  }
+
+  /// Marks the sequence finished.
+  ///
+  /// Public so the manual "Rate PediAid" entries in Settings and the drawer can
+  /// stop the automatic sequence — someone who went and rated deliberately
+  /// should not then be asked by a dialog a fortnight later.
+  Future<void> markDoneExternally() => _markDone();
 }
