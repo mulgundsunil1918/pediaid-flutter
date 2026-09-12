@@ -763,6 +763,290 @@
         }
       ],
       "reference": "Krechel SW, Bildner J. CRIES: a new neonatal postoperative pain measurement score. Paediatr Anaesth. 1995;5(1):53-61. Validated for neonates from 32 weeks gestation; measure vital signs LAST, as handling raises them."
+    },
+    {
+      "name": "NIPS — Neonatal Infant Pain Scale",
+      "parameters": [
+        {
+          "parameter": "Facial expression",
+          "0": "Relaxed muscles — restful face, neutral expression",
+          "1": "Grimace — tight facial muscles, furrowed brow, chin and jaw"
+        },
+        {
+          "parameter": "Cry",
+          "0": "No cry — quiet, not crying",
+          "1": "Whimper — mild moaning, intermittent",
+          "2": "Vigorous cry — loud scream, rising, shrill, continuous"
+        },
+        {
+          "parameter": "Breathing patterns",
+          "0": "Relaxed — usual pattern for this infant",
+          "1": "Change in breathing — indrawing, irregular, faster, gagging, breath-holding"
+        },
+        {
+          "parameter": "Arms",
+          "0": "Relaxed or restrained — no muscular rigidity, occasional random movement",
+          "1": "Flexed or extended — tense, straight arms, rigid or rapid extension and flexion"
+        },
+        {
+          "parameter": "Legs",
+          "0": "Relaxed or restrained — no muscular rigidity, occasional random movement",
+          "1": "Flexed or extended — tense, straight legs, rigid or rapid extension and flexion"
+        },
+        {
+          "parameter": "State of arousal",
+          "0": "Sleeping or awake — quiet, peaceful, sleeping, or alert and settled",
+          "1": "Fussy — alert, restless and thrashing"
+        }
+      ],
+      "interpretation": [
+        {
+          "score": "0-2",
+          "meaning": "No or minimal pain. Continue routine comfort measures."
+        },
+        {
+          "score": "3",
+          "meaning": "Borderline. Reassess after a non-pharmacological measure — swaddling, containment, sucrose, skin-to-skin."
+        },
+        {
+          "score": "4-7",
+          "meaning": "Pain present. A score above 3 indicates pain. Treat, then reassess after the intervention."
+        }
+      ],
+      "reference": "Lawrence J, Alcock D, McGrath P, Kay J, MacMurray SB, Dulberg C. The development of a tool to assess neonatal pain. Neonatal Netw. 1993;12(6):59-66. Six behavioural and physiological items; maximum 7. A score above 3 indicates pain. Note the items are NOT all scored alike — cry scores 0-2, every other item 0-1."
+    },
+    {
+      "name": "PIPP — Premature Infant Pain Profile",
+      "parameters": [
+        {
+          "parameter": "Gestational age",
+          "0": "36 weeks and above",
+          "1": "32 weeks to 35 weeks 6 days",
+          "2": "28 weeks to 31 weeks 6 days",
+          "3": "Less than 28 weeks"
+        },
+        {
+          "parameter": "Behavioural state (observe 15 s before the procedure)",
+          "0": "Active and awake — eyes open, facial movements",
+          "1": "Quiet and awake — eyes open, no facial movements",
+          "2": "Active and asleep — eyes closed, facial movements",
+          "3": "Quiet and asleep — eyes closed, no facial movements"
+        },
+        {
+          "parameter": "Heart rate, maximum (30 s after)",
+          "0": "0-4 bpm increase",
+          "1": "5-14 bpm increase",
+          "2": "15-24 bpm increase",
+          "3": "25 bpm increase or more"
+        },
+        {
+          "parameter": "Oxygen saturation, minimum (30 s after)",
+          "0": "0-2.4% decrease",
+          "1": "2.5-4.9% decrease",
+          "2": "5.0-7.4% decrease",
+          "3": "7.5% decrease or more"
+        },
+        {
+          "parameter": "Brow bulge",
+          "0": "None — 0-9% of the observation time",
+          "1": "Minimum — 10-39% of the time",
+          "2": "Moderate — 40-69% of the time",
+          "3": "Maximum — 70% or more of the time"
+        },
+        {
+          "parameter": "Eye squeeze",
+          "0": "None — 0-9% of the observation time",
+          "1": "Minimum — 10-39% of the time",
+          "2": "Moderate — 40-69% of the time",
+          "3": "Maximum — 70% or more of the time"
+        },
+        {
+          "parameter": "Nasolabial furrow",
+          "0": "None — 0-9% of the observation time",
+          "1": "Minimum — 10-39% of the time",
+          "2": "Moderate — 40-69% of the time",
+          "3": "Maximum — 70% or more of the time"
+        }
+      ],
+      "interpretation": [
+        {
+          "score": "0-6",
+          "meaning": "Minimal or no pain. Routine comfort measures."
+        },
+        {
+          "score": "7-12",
+          "meaning": "Mild to moderate pain. Non-pharmacological measures first; reassess."
+        },
+        {
+          "score": "13-21",
+          "meaning": "Moderate to severe pain. Treat and reassess after the intervention."
+        }
+      ],
+      "reference": "Stevens B, Johnston C, Petryshen P, Taddio A. Premature Infant Pain Profile: development and initial validation. Clin J Pain. 1996;12(1):13-22. Seven indicators, each 0-3; maximum 21. Gestational age and behavioural state are CONTEXTUAL — score them before the procedure. Heart rate and saturation are scored as the CHANGE from the infant’s own baseline over 30 seconds, not as absolute values. A revised version (PIPP-R) exists."
+    },
+    {
+      "name": "Neonatal Skin Condition Score (NSCS)",
+      "parameters": [
+        {
+          "parameter": "Dryness",
+          "1": "Normal — no sign of dry skin",
+          "2": "Dry skin — visible scaling",
+          "3": "Very dry skin — cracking or fissures"
+        },
+        {
+          "parameter": "Erythema",
+          "1": "No evidence of erythema",
+          "2": "Visible erythema over less than 50% of the body surface",
+          "3": "Visible erythema over 50% or more of the body surface"
+        },
+        {
+          "parameter": "Breakdown or excoriation",
+          "1": "None evident",
+          "2": "Small, localised areas",
+          "3": "Extensive"
+        }
+      ],
+      "interpretation": [
+        {
+          "score": "3",
+          "meaning": "Best possible skin condition. Continue routine skin care."
+        },
+        {
+          "score": "4-5",
+          "meaning": "Mild disruption. Review emollient use, humidity, adhesive removal technique and positioning."
+        },
+        {
+          "score": "6-7",
+          "meaning": "Moderate disruption. Active skin-care plan; reassess at least daily."
+        },
+        {
+          "score": "8-9",
+          "meaning": "Most disrupted skin condition. Minimise adhesives and handling, protect pressure areas, involve senior nursing review."
+        }
+      ],
+      "reference": "Lund CH, Osborne JW. Validity and reliability of the Neonatal Skin Condition Score. J Obstet Gynecol Neonatal Nurs. 2004;33(3):320-7. Developed for the AWHONN/NANN neonatal skin care evidence-based practice project. Three items scored 1-3 each, so the score runs 3 (best) to 9 (worst) — the minimum is 3, not 0."
+    },
+    {
+      "name": "nSOFA — Neonatal Sequential Organ Failure Assessment",
+      "parameters": [
+        {
+          "parameter": "Respiratory",
+          "0": "Not intubated, or intubated with SpO₂/FiO₂ ratio 300 or more",
+          "1": "—",
+          "2": "Intubated, SpO₂/FiO₂ less than 300",
+          "3": "—",
+          "4": "Intubated, SpO₂/FiO₂ less than 200",
+          "6": "Intubated, SpO₂/FiO₂ less than 150",
+          "8": "Intubated, SpO₂/FiO₂ less than 100"
+        },
+        {
+          "parameter": "Cardiovascular",
+          "0": "No inotropes and no systemic corticosteroid",
+          "1": "No inotropes, systemic corticosteroid given",
+          "2": "One inotrope, no systemic corticosteroid",
+          "3": "Two or more inotropes, OR one inotrope with a systemic corticosteroid",
+          "4": "Two or more inotropes with a systemic corticosteroid",
+          "6": "—",
+          "8": "—"
+        },
+        {
+          "parameter": "Haematological (platelet count)",
+          "0": "150 × 10⁹/L or more",
+          "1": "100–149 × 10⁹/L",
+          "2": "50–99 × 10⁹/L",
+          "3": "Less than 50 × 10⁹/L",
+          "4": "—",
+          "6": "—",
+          "8": "—"
+        }
+      ],
+      "interpretation": [
+        {
+          "score": "0",
+          "meaning": "No organ dysfunction scored on any of the three domains."
+        },
+        {
+          "score": "1-3",
+          "meaning": "Low organ-dysfunction burden."
+        },
+        {
+          "score": "4-7",
+          "meaning": "Moderate organ-dysfunction burden. Rising scores carry rising mortality risk."
+        },
+        {
+          "score": "8-15",
+          "meaning": "High organ-dysfunction burden. Escalate assessment and support."
+        }
+      ],
+      "reference": "Wynn JL, Polin RA. A neonatal sequential organ failure assessment score predicts mortality to late-onset sepsis in preterm very low birth weight infants. Pediatr Res. 2020;88(1):85-90. Three domains; maximum 15. IMPORTANT: nSOFA is validated as a CONTINUOUS predictor of mortality — the bands above describe the magnitude of the score, they are not validated treatment thresholds, and published cut-offs vary with population and timing. The respiratory domain scores only 0, 2, 4, 6 or 8; the cardiovascular domain 0-4; platelets 0-3."
+    },
+    {
+      "name": "Modified Sick Neonatal Score (MSNS)",
+      "parameters": [
+        {
+          "parameter": "Respiratory effort",
+          "0": "Apnoea or grunt",
+          "1": "Tachypnoea (respiratory rate above 60/min) with or without retractions",
+          "2": "Normal (respiratory rate 40–60/min)"
+        },
+        {
+          "parameter": "Heart rate",
+          "0": "Bradycardia or asystole",
+          "1": "Tachycardia (above 160/min)",
+          "2": "Normal (100–160/min)"
+        },
+        {
+          "parameter": "Axillary temperature",
+          "0": "Below 36 °C",
+          "1": "36–36.5 °C",
+          "2": "36.5–37.5 °C"
+        },
+        {
+          "parameter": "Capillary refill time",
+          "0": "More than 5 seconds",
+          "1": "3–5 seconds",
+          "2": "Less than 3 seconds"
+        },
+        {
+          "parameter": "Random blood sugar",
+          "0": "Below 40 mg/dL",
+          "1": "40–60 mg/dL",
+          "2": "Above 60 mg/dL"
+        },
+        {
+          "parameter": "SpO₂ in room air",
+          "0": "Below 85%",
+          "1": "85–92%",
+          "2": "Above 92%"
+        },
+        {
+          "parameter": "Gestational age",
+          "0": "Less than 32 weeks",
+          "1": "32 weeks to 36 weeks 6 days",
+          "2": "37 weeks and above"
+        },
+        {
+          "parameter": "Birth weight",
+          "0": "Less than 1.5 kg",
+          "1": "1.5–2.49 kg",
+          "2": "2.5 kg or above"
+        }
+      ],
+      "interpretation": [
+        {
+          "score": "0-10",
+          "meaning": "HIGH mortality risk. A score of 10 or below predicted mortality with 80% sensitivity and 88.8% specificity. Escalate care."
+        },
+        {
+          "score": "11-13",
+          "meaning": "Intermediate. Close monitoring and reassessment."
+        },
+        {
+          "score": "14-16",
+          "meaning": "Lower mortality risk. Discharged infants averaged around 14 in the derivation study."
+        }
+      ],
+      "reference": "Mansoor KP, Ravikiran SR, Kulkarni V, et al. Modified Sick Neonatal Score (MSNS): a novel neonatal disease severity scoring system for resource-limited settings. Crit Care Res Pract. 2019;2019:9059073. WARNING — THIS SCORE RUNS BACKWARDS: a HIGHER score is BETTER. Eight parameters scored 0–2 each, maximum 16, and it is a LOW score that predicts mortality (cut-off 10 or below). Do not read it like the pain or severity scores in this list, where a high number is the bad one."
     }
   ]
 }
