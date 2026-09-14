@@ -98,7 +98,9 @@ final List<_GuideItem> _kGuideItems = [
     icon: Icons.assessment,
     categories: const [_kNeonatal, _kScoring],
     highlight: true,
-    badge: '14 scores',
+    // No literal count here. It read "14 scores" while the hub offered 23,
+    // because a number typed into one file does not follow scores added in
+    // another. Supplied at render time by _badgeFor().
     build: (_) => const NeonatalScoresScreen(),
   ),
   // Paediatric Scores — the non-neonatal counterpart to the hub above,
@@ -109,7 +111,7 @@ final List<_GuideItem> _kGuideItems = [
     icon: Icons.fact_check_outlined,
     categories: const [_kScoring, _kEmergency],
     highlight: true,
-    badge: '96 scores',
+    // Likewise computed from allPaediatricScores, not typed.
     build: (_) => const PaediatricScoresHub(),
   ),
   _GuideItem(
@@ -304,12 +306,42 @@ class _GuidesScreenState extends State<GuidesScreen> {
   String _query = '';
 
   @override
+  void initState() {
+    super.initState();
+    // A failed asset read costs a badge, never the screen — so the badge
+    // simply stays absent rather than showing a number nobody can trust.
+    neonatalScoreCount().then((n) {
+      if (mounted) setState(() => _neonatalCount = n);
+    }).onError((_, __) {});
+  }
+
+  @override
   void dispose() {
     _searchCtl.dispose();
     super.dispose();
   }
 
   String _selected = _kAll;
+
+  /// Neonatal hub score count, once the JSON has loaded. Null until then.
+  int? _neonatalCount;
+
+  /// The badge a card should show.
+  ///
+  /// The two score hubs advertise how many scores they hold, and that number
+  /// has to come from the scores themselves. Typing it into the catalogue is
+  /// how the neonatal card came to claim 14 while offering 23.
+  String? _badgeFor(_GuideItem g) {
+    if (g.title == 'Neonatal Scores') {
+      // No badge rather than a stale one while the asset loads.
+      return _neonatalCount == null ? null : '$_neonatalCount scores';
+    }
+    if (g.title == 'Paediatric Scores') {
+      return '${allPaediatricScores.length} scores';
+    }
+    return g.badge;
+  }
+
 
   /// Guides available on this platform. See [_GuideItem.dosing].
   // All guides show on every platform, including the dose guides that were
@@ -409,7 +441,7 @@ class _GuidesScreenState extends State<GuidesScreen> {
                                   icon: g.icon,
                                   comingSoon: g.comingSoon,
                                   highlight: g.highlight,
-                                  badge: g.badge,
+                                  badge: _badgeFor(g),
                                   onTap: () {
                                     if (g.comingSoon || g.build == null) {
                                       _showComingSoon(context, g.title);

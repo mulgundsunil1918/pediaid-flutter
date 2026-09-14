@@ -11,6 +11,25 @@ import '../can_score_screen.dart';
 import '../../scores/score_scaffold.dart';
 import '../../scores/neonatal_scores.dart';
 
+/// Cards in this hub that are hand-written widgets rather than JSON rows.
+///
+/// NICHD, LUS, Modified Ballard, POFRAS, CAN, Modified Finnegan and SNAPPE-II.
+/// Kept as a named constant because the Guides card shows a score count, and a
+/// count typed into two files drifts the moment a score is added — which is
+/// exactly what happened: the badge still read "14 scores" after seven more
+/// had been added. A test pins this against the real list.
+const int kNeonatalFixedScoreCards = 7;
+
+/// How many scores this hub actually offers, fixed cards plus JSON rows.
+///
+/// Async because the JSON is an asset. The Guides screen shows no count until
+/// this resolves, which is a blank badge for a few milliseconds and is far
+/// better than a confidently wrong number.
+Future<int> neonatalScoreCount() async {
+  final data = await ScoresDataLoader().load();
+  return kNeonatalFixedScoreCards + data.scores.length;
+}
+
 class NeonatalScoresScreen extends StatefulWidget {
   const NeonatalScoresScreen({super.key});
 
@@ -131,6 +150,10 @@ class _NeonatalScoresScreenState extends State<NeonatalScoresScreen> {
         ),
       ),
     ];
+
+    assert(list.length == kNeonatalFixedScoreCards,
+        'kNeonatalFixedScoreCards is ${kNeonatalFixedScoreCards} but the hub '
+        'builds ${list.length} fixed cards — the Guides badge will be wrong.');
 
     final scores = _data!.scores;
     // Snapshot the count BEFORE the loop. Reading list.length inside it counts
