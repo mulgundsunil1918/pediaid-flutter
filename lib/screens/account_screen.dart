@@ -29,6 +29,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'auth/sign_out_flow.dart';
 import '../models/app_user.dart';
 import '../providers/auth_provider.dart';
 import '../services/profile_store.dart';
@@ -140,46 +141,12 @@ class _AccountScreenState extends State<AccountScreen> {
     }
   }
 
-  Future<void> _handleSignOut() async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Text(
-          'Sign out?',
-          style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700),
-        ),
-        content: Text(
-          "You'll need to sign in again to access calculators, charts, and academics.",
-          style: GoogleFonts.plusJakartaSans(fontSize: 14, height: 1.5),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(false),
-            child: Text(
-              'Cancel',
-              style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600),
-            ),
-          ),
-          FilledButton(
-            style: FilledButton.styleFrom(backgroundColor: Colors.red.shade600),
-            onPressed: () => Navigator.of(ctx).pop(true),
-            child: Text(
-              'Sign out',
-              style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700),
-            ),
-          ),
-        ],
-      ),
-    );
-    if (confirmed != true) return;
-    if (!mounted) return;
-
-    await context.read<AuthProvider>().signOut();
-    if (mounted) {
-      Navigator.of(context).popUntil((route) => route.isFirst);
-    }
-  }
+  /// One implementation, shared with Settings.
+  ///
+  /// This screen's version already did the right thing; Settings' did not. Two
+  /// buttons for one action is how that drift happened, so both now call the
+  /// same function.
+  Future<void> _handleSignOut() => confirmAndSignOut(context);
 
   Future<void> _handleDeleteAccount() async {
     final auth = context.read<AuthProvider>();

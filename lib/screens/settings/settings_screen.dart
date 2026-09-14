@@ -21,6 +21,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 
 import '../../services/rate_prompt_service.dart';
+import '../auth/sign_out_flow.dart';
 import '../../utils/share_message.dart';
 import '../../utils/support_contact.dart';
 import 'package:provider/provider.dart';
@@ -418,30 +419,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  Future<void> _confirmSignOut() async {
-    final ok = await showDialog<bool>(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: const Text('Sign out?'),
-        content: const Text(
-            'You\'ll need to sign back in to access your account.'),
-        actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: const Text('Cancel')),
-          ElevatedButton(
-              onPressed: () => Navigator.pop(context, true),
-              child: const Text('Sign out')),
-        ],
-      ),
-    );
-    if (ok != true || !mounted) return;
-    try {
-      await AuthService.instance.logout();
-    } catch (e) {
-      if (mounted) _toast(friendlyError(e));
-    }
-  }
+  /// Signs out for real.
+  ///
+  /// This used to call AuthService.instance.logout() and nothing else, which
+  /// cleared the legacy JWT but left the Firebase session signed in, left
+  /// AuthProvider._currentUser populated, and never told the gate — so the app
+  /// stayed on this screen, still logged in. The FAQ points people here, so it
+  /// was the sign-out most users pressed.
+  Future<void> _confirmSignOut() => confirmAndSignOut(context);
 
   Future<void> _confirmDeleteAccount() async {
     final controller = TextEditingController();
