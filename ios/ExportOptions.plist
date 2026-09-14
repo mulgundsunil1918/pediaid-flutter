@@ -2,22 +2,53 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<!--
+	  App Store export options for PediAid.
+
+	  WHY THIS FILE EXISTS
+	  `flutter build ipa` exports with AUTOMATIC signing, which asks Xcode to
+	  find or create a distribution profile on the fly. That fails here with
+	  "requires a provisioning profile with the Push Notifications and Sign In
+	  with Apple features", even though a perfectly good profile is installed —
+	  automatic selection simply does not pick it up from the command line.
+
+	  The 21 Aug 2026 export of build 37 succeeded because it used MANUAL
+	  signing with the profile named explicitly. This file pins that, so the
+	  export is reproducible instead of depending on what Xcode decides.
+
+	  The profile "PediAid App Store 2026" (team SR35PG294W) carries
+	  aps-environment=production and com.apple.developer.applesignin, which are
+	  the two capabilities the error complains about.
+	-->
 	<key>destination</key>
 	<string>export</string>
 	<key>method</key>
 	<string>app-store-connect</string>
+	<key>signingStyle</key>
+	<string>manual</string>
+	<key>teamID</key>
+	<string>SR35PG294W</string>
+	<key>signingCertificate</key>
+	<string>Apple Distribution</string>
 	<key>provisioningProfiles</key>
 	<dict>
 		<key>app.pediaid.pediaid</key>
 		<string>PediAid App Store 2026</string>
 	</dict>
-	<key>signingCertificate</key>
-	<string>Apple Distribution</string>
-	<key>signingStyle</key>
-	<string>manual</string>
-	<key>teamID</key>
-	<string>SR35PG294W</string>
+	<!--
+	  FALSE, unlike the 21 Aug run. With this true Xcode may rewrite the
+	  version and build number during export, which would silently ship
+	  something other than the 2.1.0+38 that was tested.
+	-->
+	<key>manageAppVersionAndBuildNumber</key>
+	<false/>
+	<key>stripSwiftSymbols</key>
+	<true/>
 	<key>uploadSymbols</key>
 	<true/>
+	<key>generateAppStoreInformation</key>
+	<false/>
+	<key>testFlightInternalTestingOnly</key>
+	<false/>
 </dict>
 </plist>
