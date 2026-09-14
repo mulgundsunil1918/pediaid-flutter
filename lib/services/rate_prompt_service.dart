@@ -35,6 +35,9 @@ const _kLastAskedKey = 'rate_last_asked_epoch';
 const _kAskCountKey = 'rate_ask_count';
 const _kDoneKey = 'rate_done';
 
+/// Marks that the one-time Apple reset below has already run.
+const _kApplePurgeKey = 'rate_ios_reset_v1';
+
 /// Launches before the first ask. Someone who has opened the app five times is
 /// using it; someone on their first run has no basis for an opinion yet, and
 /// being asked immediately reads as presumptuous.
@@ -56,6 +59,7 @@ class RatePromptService {
   Future<bool> shouldAsk() async {
     try {
       final prefs = await SharedPreferences.getInstance();
+      await _resetAppleStateOnce(prefs);
       if (prefs.getBool(_kDoneKey) ?? false) return false;
 
       final launches = (prefs.getInt(_kLaunchCountKey) ?? 0) + 1;
@@ -78,6 +82,42 @@ class RatePromptService {
       // Storage unavailable — never ask rather than risk asking every launch.
       return false;
     }
+  }
+
+  /// Undoes, once, the state the broken iOS path left behind.
+  ///
+  /// Up to and including 2.0.1, tapping "Rate PediAid" on an iPhone did this:
+  /// set `rate_done`, call `requestReview()`, and return. Apple shows that
+  /// prompt at its own discretion and usually showed nothing, and the code
+  /// returned before reaching the store URL. So the user saw the dialog, said
+  /// YES, nothing happened, and the flag was burned for good.
+  ///
+  /// Those people are the ones most willing to leave a review, and they are
+  /// precisely the ones the throttle now silences forever. The flags were set
+  /// on the strength of a prompt that could not have reached the store, so on
+  /// Apple devices they are cleared exactly once.
+  ///
+  /// Android is untouched: its native sheet worked, so `rate_done` there means
+  /// what it says.
+  ///
+  /// `rate_ask_count` is reset too, not just `rate_done`. Leaving it at 3 would
+  /// trip `asked > _kBackoffDays.length` and keep the same people silenced
+  /// through a different branch.
+  Future<void> _resetAppleStateOnce(SharedPreferences prefs) async {
+    final isApple = defaultTargetPlatform == TargetPlatform.iOS ||
+        defaultTargetPlatform == TargetPlatform.macOS;
+    if (!isApple) return;
+    if (prefs.getBool(_kApplePurgeKey) ?? false) return;
+
+    try {
+      await prefs.setBool(_kApplePurgeKey, true);
+      await prefs.remove(_kDoneKey);
+      await prefs.remove(_kAskCountKey);
+      await prefs.remove(_kLastAskedKey);
+      // Launch count is deliberately KEPT. It measures how much the app has
+      // been used, which is still true, and clearing it would make a long-time
+      // user wait five more launches to be asked.
+    } catch (_) {/* a failed reset costs a review, never the session */}
   }
 
   Future<void> _recordAsked() async {
