@@ -26,6 +26,7 @@
 
 import 'package:flutter/material.dart';
 
+import '../data/scores_data_loader.dart';
 import 'recents_service.dart';
 
 import '../screens/calculators/calculators_screen.dart';
@@ -37,6 +38,7 @@ import '../screens/guides/neonatal_scores/lus_score_screen.dart';
 import '../screens/guides/modified_ballard_screen.dart';
 import '../screens/guides/pofras_screen.dart';
 import '../screens/guides/can_score_screen.dart';
+import '../screens/guides/neonatal_scores/bell_nec_screen.dart';
 import '../screens/guides/neonatal_scores/neonatal_score_by_name.dart';
 
 /// Which part of the app a tool belongs to. Used to group the picker.
@@ -87,8 +89,53 @@ class ToolRegistry {
 
   List<ToolEntry>? _cache;
 
+  /// Scores found in nicu_scores.json that the static build did not name.
+  ///
+  /// Kept separately so `_build()` stays synchronous — `all` is read during
+  /// widget builds and cannot await an asset.
+  final List<ToolEntry> _fromAssets = [];
+  bool _assetsScanned = false;
+
   /// Every openable tool, calculators first then scores.
   List<ToolEntry> get all => _cache ??= _build();
+
+  /// Registers any neonatal score in nicu_scores.json the static list missed.
+  ///
+  /// The static list names scores so it can attach keywords a label does not
+  /// contain — "kernicterus" for BIND, "papile" for IVH. But a hand-typed list
+  /// stops following the data: five scores were added to the JSON and none of
+  /// them were searchable from the home screen, because nothing connected the
+  /// two. This closes that gap permanently — a score added to the asset is
+  /// searchable whether or not anyone remembers to name it here.
+  ///
+  /// Safe to call more than once; it does nothing after the first scan.
+  /// Failure costs the extra entries, never the registry.
+  Future<void> registerAssetScores() async {
+    if (_assetsScanned) return;
+    _assetsScanned = true;
+    try {
+      final data = await ScoresDataLoader().load();
+      final known = all.map((t) => t.label).toSet();
+      for (final score in data.scores) {
+        if (known.contains(score.name)) continue;
+        _fromAssets.add(
+          ToolEntry(
+            key: 'score:${_slug(score.name)}',
+            label: score.name,
+            subtitle: 'Neonatal score',
+            icon: Icons.child_care_rounded,
+            kind: ToolKind.score,
+            keywords: 'neonatal nicu ${score.name.toLowerCase()}',
+            build: () => NeonatalScoreByName(scoreName: score.name),
+          ),
+        );
+      }
+      // Force `all` to rebuild so the new entries are included.
+      if (_fromAssets.isNotEmpty) _cache = null;
+    } catch (_) {
+      // An unreadable asset costs these extras, not the whole registry.
+    }
+  }
 
   List<ToolEntry> get calculators =>
       all.where((t) => t.kind == ToolKind.calculator).toList();
@@ -130,18 +177,29 @@ class ToolRegistry {
   /// query "bili", because "irritability" contains it mid-word. Matches are
   /// scored so that a label prefix beats a word start, which beats a mid-word
   /// hit, which beats a keyword-only hit.
+  /// Folds the dashes apart that a keyboard cannot tell apart.
+  ///
+  /// Titles use typographic dashes — "A–a Gradient", "NIPS — Neonatal Infant
+  /// Pain Scale" — and nobody types an en dash into a search box. Without this,
+  /// "a-a gradient" matched nothing.
+  static String _fold(String s) => s
+      .toLowerCase()
+      .replaceAll(RegExp('[\u2010-\u2015\u2212]'), '-')
+      .replaceAll(RegExp(r'\s+'), ' ')
+      .trim();
+
   List<ToolEntry> search(String query) {
-    final q = query.trim().toLowerCase();
+    final q = _fold(query);
     if (q.isEmpty) return all;
 
     int score(ToolEntry t) {
-      final label = t.label.toLowerCase();
+      final label = _fold(t.label);
       if (label.startsWith(q)) return 0;
       if (RegExp('\\b' + RegExp.escape(q)).hasMatch(label)) return 1;
       if (label.contains(q)) return 2;
-      final sub = t.subtitle.toLowerCase();
+      final sub = _fold(t.subtitle);
       if (RegExp('\\b' + RegExp.escape(q)).hasMatch(sub)) return 3;
-      final kw = t.keywords.toLowerCase();
+      final kw = _fold(t.keywords);
       if (RegExp('\\b' + RegExp.escape(q)).hasMatch(kw)) return 4;
       if (sub.contains(q) || kw.contains(q)) return 5;
       return 99;
@@ -279,10 +337,16 @@ class ToolRegistry {
       'oral feeding readiness assessment scale breastfeeding',
       () => const PofrasScreen(),
     );
-    // The nine JSON-driven neonatal scores. Registered by NAME through a
-    // loader wrapper, because nicu_scores.json is read asynchronously and the
-    // registry resolves screens synchronously. Without these, searching
+    // Neonatal scores that live in nicu_scores.json. Registered by NAME
+    // through a loader wrapper, because the JSON is read asynchronously and
+    // the registry resolves screens synchronously. Without these, searching
     // "apgar" returned only the Neonatal Scores hub.
+    //
+    // This map supplies KEYWORDS ONLY — the eponyms and abbreviations a label
+    // does not contain. The list of scores itself comes from the asset via
+    // registerJsonScores() below, because a hand-typed list stops following
+    // the data: five scores were added to the JSON and none of them were
+    // searchable, which is how this was found.
     const jsonNeonatal = <String, String>{
       'Apgar Score': 'apgar 1 minute 5 minute newborn resuscitation',
       'Combined Apgar Score': 'combined apgar specified expanded',
@@ -300,6 +364,18 @@ class ToolRegistry {
           'bind bilirubin encephalopathy kernicterus acute abe jaundice',
       'CRIES Pain Score (Neonatal)':
           'cries neonatal pain postoperative analgesia',
+      'NIPS — Neonatal Infant Pain Scale':
+          'nips lawrence neonatal infant pain scale procedural',
+      'PIPP — Premature Infant Pain Profile':
+          'pipp stevens premature infant pain profile preterm procedural',
+      'Neonatal Skin Condition Score (NSCS)':
+          'nscs skin condition dryness erythema breakdown excoriation lund '
+              'osborne awhonn',
+      'nSOFA — Neonatal Sequential Organ Failure Assessment':
+          'nsofa sofa organ failure sepsis wynn polin mortality platelets '
+              'inotropes',
+      'Modified Sick Neonatal Score (MSNS)':
+          'msns sick neonate score mansoor severity mortality resource limited',
     };
     jsonNeonatal.forEach((name, kw) {
       add(
@@ -321,6 +397,20 @@ class ToolRegistry {
       'malnutrition metcoff nutrition',
       () => const CanScoreScreen(),
     );
+
+    // Bell's has its own screen rather than a JSON row, so the loop below
+    // cannot pick it up — it has to be named here or it is unsearchable.
+    neo(
+      "Modified Bell's Staging",
+      'Necrotising enterocolitis — stages IA to IIIB',
+      'necrotising necrotizing enterocolitis nec staging bell walsh kliegman '
+          'pneumatosis pneumoperitoneum perforation',
+      () => const BellNecScreen(),
+    );
+
+    for (final e in _fromAssets) {
+      add(e);
+    }
 
     return List.unmodifiable(out);
   }

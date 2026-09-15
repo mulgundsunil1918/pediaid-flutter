@@ -12,6 +12,7 @@ import 'screens/home/home_screen.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/onboarding/onboarding_screen.dart';
 import 'widgets/app_config_gate.dart';
+import 'services/tool_registry.dart';
 import 'services/lab_reference_service.dart';
 import 'services/auth_service.dart';
 import 'services/profile_store.dart';
@@ -112,6 +113,12 @@ void main() async {
   } catch (e) {
     debugPrint('[boot] RecentsService load failed: $e');
   }
+
+  // Pick up any neonatal score that lives only in nicu_scores.json, so home
+  // search finds it without anyone having to name it in the registry too.
+  // Fire-and-forget: search works without it, it just knows less.
+  // ignore: unawaited_futures
+  ToolRegistry.instance.registerAssetScores();
 
   // Push notifications (Android + web only for now — see push_service.dart).
   // Fire-and-forget: a slow Firebase handshake must never block app start.

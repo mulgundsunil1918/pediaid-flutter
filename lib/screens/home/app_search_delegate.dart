@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../services/tool_registry.dart';
 import '../../services/guidelines_search_service.dart';
 import '../../services/formulary_service.dart';
 import '../../utils/friendly_error.dart';
@@ -289,7 +290,56 @@ const _kResourceColor  = Color(0xFFAD1457);
 // Everything is searchable on every platform. Dose tools were previously
 // hidden from iOS search while remaining reachable elsewhere in the app —
 // findable now, matching the rest of the iOS build.
-List<_SearchItem> _buildAllItems() => _allItemsUnfiltered();
+/// The hand-written corpus, plus everything ToolRegistry knows.
+///
+/// There were two catalogues. This file lists every tool by hand, with keywords
+/// tuned by hand — genuinely valuable, and worth keeping. ToolRegistry derives
+/// its list from guideCatalogue, allPaediatricScores and nicu_scores.json, so
+/// it follows the app automatically.
+///
+/// Home-screen search read only the hand-written one, so an entire week of
+/// work — the ROP module, the rabies module, seven new neonatal scores, Bell's
+/// staging — was unreachable from the search bar people actually use. Anything
+/// the registry knows and this file does not is now appended, matched by title,
+/// so a tool added anywhere is findable from the home screen without a second
+/// entry being written for it.
+///
+/// The hand-written entry wins on a title clash: its keywords are richer.
+List<_SearchItem> _buildAllItems() {
+  final manual = _allItemsUnfiltered();
+  final seen = manual.map((i) => i.title.trim().toLowerCase()).toSet();
+
+  final derived = <_SearchItem>[];
+  for (final t in ToolRegistry.instance.all) {
+    if (!seen.add(t.label.trim().toLowerCase())) continue;
+    derived.add(
+      _SearchItem(
+        title: t.label,
+        subtitle: t.subtitle,
+        category: switch (t.kind) {
+          ToolKind.calculator => 'Calculators & Tools',
+          ToolKind.score => 'Scores',
+          ToolKind.guide => 'Guides & Protocols',
+        },
+        icon: t.icon,
+        color: switch (t.kind) {
+          ToolKind.calculator => _kCalcColor,
+          ToolKind.score => _kCalcColor,
+          ToolKind.guide => _kGuideColor,
+        },
+        keywords: t.keywords
+            .split(RegExp(r'\s+'))
+            .where((w) => w.length > 2)
+            .toList(),
+        navigate: (ctx) => Navigator.push(
+          ctx,
+          MaterialPageRoute(builder: (_) => t.build()),
+        ),
+      ),
+    );
+  }
+  return [...manual, ...derived];
+}
 
 List<_SearchItem> _allItemsUnfiltered() => [
 
