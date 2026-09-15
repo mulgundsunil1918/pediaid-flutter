@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../widgets/skeleton.dart';
 import '../../../data/scores_data_loader.dart';
+import 'bell_nec_screen.dart';
 import 'score_detail_screen.dart';
 import 'nichd_hie_screen.dart';
 import 'lus_score_screen.dart';
@@ -13,12 +14,13 @@ import '../../scores/neonatal_scores.dart';
 
 /// Cards in this hub that are hand-written widgets rather than JSON rows.
 ///
-/// NICHD, LUS, Modified Ballard, POFRAS, CAN, Modified Finnegan and SNAPPE-II.
+/// NICHD, LUS, Modified Ballard, POFRAS, CAN, Modified Finnegan,
+/// Modified Bell's staging and SNAPPE-II.
 /// Kept as a named constant because the Guides card shows a score count, and a
 /// count typed into two files drifts the moment a score is added — which is
 /// exactly what happened: the badge still read "14 scores" after seven more
 /// had been added. A test pins this against the real list.
-const int kNeonatalFixedScoreCards = 7;
+const int kNeonatalFixedScoreCards = 8;
 
 /// How many scores this hub actually offers, fixed cards plus JSON rows.
 ///
@@ -137,13 +139,28 @@ class _NeonatalScoresScreenState extends State<NeonatalScoresScreen> {
                   builder: (_) => ScoreScaffold(def: modifiedFinneganScore))),
         ),
       ),
+      // Bell's is a STAGING system, not a score, so it cannot use the shared
+      // JSON path — that view sums numeric columns and reports a total out of
+      // a maximum, and Bell's has neither. Its own screen carries both views.
+      _Entry(
+        "Modified Bell's Staging (NEC)",
+        'necrotising necrotizing enterocolitis NEC staging bell walsh kliegman '
+            'pneumatosis pneumoperitoneum',
+        (ctx) => _ExtraScoreCard(
+          title: "Modified Bell's Staging",
+          subtitle: 'Necrotising enterocolitis — stages IA to IIIB',
+          number: 7,
+          onTap: () => Navigator.push(
+              ctx, MaterialPageRoute(builder: (_) => const BellNecScreen())),
+        ),
+      ),
       _Entry(
         snappeIIScore.title,
         'illness severity mortality risk neonatal SNAP perinatal extension richardson',
         (ctx) => _ExtraScoreCard(
           title: snappeIIScore.title,
           subtitle: 'Illness severity & mortality risk (SNAP-II + perinatal)',
-          number: 7,
+          number: 8,
           onTap: () => Navigator.push(ctx,
               MaterialPageRoute(
                   builder: (_) => ScoreScaffold(def: snappeIIScore))),

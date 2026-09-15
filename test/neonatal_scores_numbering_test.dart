@@ -56,5 +56,8 @@ void main() {
     // reader looking for a neonatal score would never find them.
     expect(find.textContaining('Finnegan'), findsWidgets);
     expect(find.textContaining('SNAPPE'), findsWidgets);
+    // Bell's is a staging system with its own screen, so it is easy to add
+    // the screen and forget to surface it from the hub.
+    expect(find.textContaining("Bell's"), findsWidgets);
   });
 }
