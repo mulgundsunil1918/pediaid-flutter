@@ -149,8 +149,6 @@ class _AccountScreenState extends State<AccountScreen> {
   Future<void> _handleSignOut() => confirmAndSignOut(context);
 
   Future<void> _handleDeleteAccount() async {
-    final auth = context.read<AuthProvider>();
-
     // 1. Confirm intent
     final confirmed = await showDialog<bool>(
       context: context,
@@ -186,75 +184,13 @@ class _AccountScreenState extends State<AccountScreen> {
     );
     if (confirmed != true || !mounted) return;
 
-    // 2. For email/password accounts, ask for the password to re-authenticate.
-    //    Social accounts (Google / Apple) re-auth automatically inside deleteAccount().
-    String? password;
-    if (auth.isEmailUser) {
-      final ctl = TextEditingController();
-      password = await showDialog<String>(
-        context: context,
-        barrierDismissible: false,
-        builder: (ctx) => AlertDialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          title: Text(
-            'Confirm your password',
-            style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700),
-          ),
-          content: TextField(
-            controller: ctl,
-            obscureText: true,
-            autofocus: true,
-            decoration: const InputDecoration(
-              labelText: 'Current password',
-              prefixIcon: Icon(Icons.lock_outline_rounded),
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(ctx).pop(null),
-              child: Text(
-                'Cancel',
-                style:
-                    GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600),
-              ),
-            ),
-            FilledButton(
-              style:
-                  FilledButton.styleFrom(backgroundColor: Colors.red.shade700),
-              onPressed: () => Navigator.of(ctx).pop(ctl.text),
-              child: Text(
-                'Continue',
-                style:
-                    GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700),
-              ),
-            ),
-          ],
-        ),
-      );
-      ctl.dispose();
-      if (password == null || !mounted) return; // user cancelled
-    }
-
-    // 3. Delete — re-auth + Firestore delete + Firebase Auth delete
-    final ok = await auth.deleteAccount(password: password);
-    if (!mounted) return;
-    if (!ok) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            auth.error ?? 'Failed to delete account. Please try again.',
-            style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600),
-          ),
-          backgroundColor: Colors.red.shade700,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10)),
-        ),
-      );
-      return;
-    }
-    Navigator.of(context).popUntil((route) => route.isFirst);
+    // 2 & 3. Re-auth if needed, delete everywhere, navigate.
+    //
+    // Shared with Settings deliberately. This screen's version was the correct
+    // one and Settings' was not; leaving two implementations is precisely how
+    // that happened. The confirmation above stays local because the two
+    // screens confirm differently — only the action is shared.
+    await performAccountDeletion(context);
   }
 
   @override

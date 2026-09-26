@@ -169,6 +169,29 @@ class _AcademicsWebScreenState extends State<AcademicsWebScreen> {
         source: '(function(){try{${sets.join()}}catch(e){}})();',
         injectionTime: UserScriptInjectionTime.AT_DOCUMENT_START,
       ));
+    } else {
+      // Signed out — actively REMOVE the keys rather than merely not writing
+      // them.
+      //
+      // The web view is a separate origin with its own localStorage, and
+      // nothing in the app could reach it: signing out (or deleting the
+      // account) cleared the app's session and left the web view's copy
+      // exactly where it was. Opening Academics afterwards showed the user
+      // still signed in as the account they had just left, on Android and
+      // iOS both. On web there is no second origin, so clearSharedSession()
+      // already covered it — which is why this only ever broke on mobile.
+      //
+      // Done at document start on the next load rather than by reaching into
+      // a live controller, because at sign-out time this screen is usually
+      // not open and there is no controller to reach into.
+      scripts.add(UserScript(
+        source: '(function(){try{'
+            'localStorage.removeItem("acad_access_token");'
+            'localStorage.removeItem("acad_refresh_token");'
+            'localStorage.removeItem("acad_user");'
+            '}catch(e){}})();',
+        injectionTime: UserScriptInjectionTime.AT_DOCUMENT_START,
+      ));
     }
 
     scripts.add(UserScript(

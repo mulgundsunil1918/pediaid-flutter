@@ -506,12 +506,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
     );
 
+    // performAccountDeletion, NOT AuthService.instance.deleteAccount().
+    //
+    // The latter deletes the Academics backend row and clears the legacy
+    // tokens, and nothing else — it never touched Firebase Auth or the
+    // Firestore profile. This screen therefore said "Account deleted.
+    // Goodbye." while leaving the account and the profile completely intact
+    // and the user still signed in on the home screen, having destroyed only
+    // the half that makes CME and Academics work. See sign_out_flow.dart.
     try {
-      await AuthService.instance.deleteAccount();
-      if (mounted) Navigator.pop(context); // close progress
-      if (mounted) _toast('Account deleted. Goodbye.');
+      if (mounted) Navigator.pop(context); // close progress before dialogs
+      final ok = await performAccountDeletion(context);
+      if (mounted && ok) _toast('Account deleted. Goodbye.');
     } catch (e) {
-      if (mounted) Navigator.pop(context); // close progress
       if (mounted) _toast(friendlyError(e));
     }
   }
