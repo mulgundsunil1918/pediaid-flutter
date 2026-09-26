@@ -22,8 +22,18 @@ class _BilirubinCalculatorState extends State<BilirubinCalculator> {
 
   // ── Inputs ────────────────────────────────────────────────────────────────
   int _ga = 38;
-  bool _ageInHours = true;
+  _AgeMode _ageMode = _AgeMode.hours;
   int _ageHours = 24;
+
+  // Birth and measurement timestamps, for the date-and-time mode.
+  //
+  // Added because the alternative is arithmetic at the cot side: a baby born
+  // at 21:40 on Tuesday, sampled at 09:15 on Thursday, is 35.6 hours old and
+  // nobody should be working that out in their head while holding a chart
+  // that is steep in exactly that region. Hours remains the primary input —
+  // this is an additional way to arrive at the same number.
+  DateTime? _birthAt;
+  DateTime? _measuredAt;
   int _ageDays = 1;
   int _ageExtraHours = 0;
   double _tsb = 8.0;
@@ -64,8 +74,9 @@ class _BilirubinCalculatorState extends State<BilirubinCalculator> {
   }
 
   Future<void> _loadData() async {
-    final raw = await rootBundle
-        .loadString('assets/data/bilirubin/bilirubin_data.json');
+    final raw = await rootBundle.loadString(
+      'assets/data/bilirubin/bilirubin_data.json',
+    );
     setState(() {
       _data = jsonDecode(raw) as Map<String, dynamic>;
       _dataLoaded = true;
@@ -74,7 +85,10 @@ class _BilirubinCalculatorState extends State<BilirubinCalculator> {
 
   // ── Threshold lookup ──────────────────────────────────────────────────────
   double? _getThreshold(
-      Map<String, dynamic> table, String gaKey, int ageHours) {
+    Map<String, dynamic> table,
+    String gaKey,
+    int ageHours,
+  ) {
     final gaData = table[gaKey] as Map<String, dynamic>?;
     if (gaData == null) return null;
 
@@ -89,12 +103,10 @@ class _BilirubinCalculatorState extends State<BilirubinCalculator> {
     }
 
     // Plateau at last day's last non-null value
-    final int maxDay =
-        gaData.keys.map((k) => int.parse(k)).reduce(max);
+    final int maxDay = gaData.keys.map((k) => int.parse(k)).reduce(max);
     if (day > maxDay) {
       final lastRow = gaData[maxDay.toString()] as List<dynamic>;
-      final lastVal =
-          lastRow.lastWhere((v) => v != null, orElse: () => null);
+      final lastVal = lastRow.lastWhere((v) => v != null, orElse: () => null);
       return lastVal != null ? (lastVal as num).toDouble() : null;
     }
     return null;
@@ -110,8 +122,26 @@ class _BilirubinCalculatorState extends State<BilirubinCalculator> {
     return _ga.toString();
   }
 
-  int get _totalHours =>
-      _ageInHours ? _ageHours : (_ageDays * 24 + _ageExtraHours);
+  /// Hours between birth and the sample, when both timestamps are set.
+  ///
+  /// Null rather than 0 when either is missing or the sample precedes the
+  /// birth: zero is a real, plottable age and must not stand in for "not
+  /// known" on a chart whose thresholds move fastest in the first day.
+  int? get _hoursFromDates {
+    final b = _birthAt, m = _measuredAt;
+    if (b == null || m == null) return null;
+    final mins = m.difference(b).inMinutes;
+    if (mins < 0) return null;
+    // Rounded to the nearest hour rather than truncated — 35 minutes short of
+    // a threshold hour is nearer that hour than the one before it.
+    return ((mins + 30) ~/ 60);
+  }
+
+  int get _totalHours => switch (_ageMode) {
+    _AgeMode.hours => _ageHours,
+    _AgeMode.daysHours => _ageDays * 24 + _ageExtraHours,
+    _AgeMode.dateTime => _hoursFromDates ?? _ageHours,
+  };
 
   void _calculate() {
     if (_data == null) return;
@@ -142,8 +172,7 @@ class _BilirubinCalculatorState extends State<BilirubinCalculator> {
   String _classify() {
     if (_exchangeThreshold != null && _tsb >= _exchangeThreshold!) {
       return 'exchange';
-    } else if (_escalationThreshold != null &&
-        _tsb >= _escalationThreshold!) {
+    } else if (_escalationThreshold != null && _tsb >= _escalationThreshold!) {
       return 'escalation';
     } else if (_photoThreshold != null && _tsb >= _photoThreshold!) {
       return 'phototherapy';
@@ -219,25 +248,31 @@ class _BilirubinCalculatorState extends State<BilirubinCalculator> {
 
   // ── Helpers ───────────────────────────────────────────────────────────────
   Widget _sectionLabel(String text) => Padding(
-        padding: const EdgeInsets.only(bottom: 8),
-        child: Text(text,
-            style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w700,
-                color: Theme.of(context).colorScheme.primary)),
-      );
+    padding: const EdgeInsets.only(bottom: 8),
+    child: Text(
+      text,
+      style: TextStyle(
+        fontSize: 13,
+        fontWeight: FontWeight.w700,
+        color: Theme.of(context).colorScheme.primary,
+      ),
+    ),
+  );
 
   Widget _tagChip(String text) => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(6),
-        ),
-        child: Text(text,
-            style: TextStyle(
-                fontSize: 10,
-                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6))),
-      );
+    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+    decoration: BoxDecoration(
+      color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+      borderRadius: BorderRadius.circular(6),
+    ),
+    child: Text(
+      text,
+      style: TextStyle(
+        fontSize: 10,
+        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+      ),
+    ),
+  );
 
   // ── BUILD ──────────────────────────────────────────────────────────────────
   @override
@@ -254,54 +289,78 @@ class _BilirubinCalculatorState extends State<BilirubinCalculator> {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Bilirubin Assessment',
-                style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: cs.onPrimary)),
-            Text('AAP 2022 · ≥35 weeks gestation',
-                style: TextStyle(fontSize: 11, color: cs.onPrimary.withValues(alpha: 0.7))),
+            Text(
+              'Bilirubin Assessment',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: cs.onPrimary,
+              ),
+            ),
+            Text(
+              'AAP 2022 · ≥35 weeks gestation',
+              style: TextStyle(
+                fontSize: 11,
+                color: cs.onPrimary.withValues(alpha: 0.7),
+              ),
+            ),
           ],
         ),
       ),
       body: !_dataLoaded
-          ? Center(
-              child:
-                  CircularProgressIndicator(color: cs.primary))
+          ? Center(child: CircularProgressIndicator(color: cs.primary))
           : SingleChildScrollView(
               padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   // Header badge
-                  Row(children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFF5A623).withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(4),
-                        border:
-                            Border.all(color: const Color(0xFFF5A623).withValues(alpha: 0.5)),
-                      ),
-                      child: const Text('AAP 2022 GUIDELINE',
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color(
+                            0xFFF5A623,
+                          ).withValues(alpha: 0.12),
+                          borderRadius: BorderRadius.circular(4),
+                          border: Border.all(
+                            color: const Color(
+                              0xFFF5A623,
+                            ).withValues(alpha: 0.5),
+                          ),
+                        ),
+                        child: const Text(
+                          'AAP 2022 GUIDELINE',
                           style: TextStyle(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w700,
-                              letterSpacing: 0.15,
-                              color: Color(0xFFF5A623))),
-                    ),
-                  ]),
+                            fontSize: 10,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 0.15,
+                            color: Color(0xFFF5A623),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                   const SizedBox(height: 10),
-                  Text('Neonatal Jaundice',
-                      style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: cs.onSurface)),
                   Text(
-                      '≥35 weeks gestation · TSB threshold calculator',
-                      style: TextStyle(
-                          fontSize: 13, color: cs.onSurface.withValues(alpha: 0.6))),
+                    'Neonatal Jaundice',
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: cs.onSurface,
+                    ),
+                  ),
+                  Text(
+                    '≥35 weeks gestation · TSB threshold calculator',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: cs.onSurface.withValues(alpha: 0.6),
+                    ),
+                  ),
                   const SizedBox(height: 16),
                   _buildInputCard(),
                   const SizedBox(height: 12),
@@ -315,16 +374,19 @@ class _BilirubinCalculatorState extends State<BilirubinCalculator> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: cs.primary,
                         foregroundColor: cs.onPrimary,
-                        padding:
-                            const EdgeInsets.symmetric(vertical: 14),
+                        padding: const EdgeInsets.symmetric(vertical: 14),
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12)),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
                       onPressed: _calculate,
-                      child: const Text('Assess Bilirubin',
-                          style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold)),
+                      child: const Text(
+                        'Assess Bilirubin',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
                   if (_calculated) ...[
@@ -368,18 +430,20 @@ class _BilirubinCalculatorState extends State<BilirubinCalculator> {
     return Card(
       elevation: 2,
       color: Theme.of(context).cardColor,
-      shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       child: Padding(
         padding: const EdgeInsets.all(18),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Patient Data',
-                style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: cs.primary)),
+            Text(
+              'Patient Data',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: cs.primary,
+              ),
+            ),
             const SizedBox(height: 16),
 
             // GA chips
@@ -389,14 +453,15 @@ class _BilirubinCalculatorState extends State<BilirubinCalculator> {
               runSpacing: 8,
               children: [35, 36, 37, 38, 39, 40].map((ga) {
                 final label = ga == 40 ? '≥40' : '$ga';
-                final selected =
-                    ga == 40 ? _ga >= 40 : _ga == ga;
+                final selected = ga == 40 ? _ga >= 40 : _ga == ga;
                 return GestureDetector(
                   onTap: () => setState(() => _ga = ga),
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 150),
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 18, vertical: 10),
+                      horizontal: 18,
+                      vertical: 10,
+                    ),
                     decoration: BoxDecoration(
                       color: selected
                           ? cs.primary
@@ -408,13 +473,14 @@ class _BilirubinCalculatorState extends State<BilirubinCalculator> {
                             : cs.primary.withValues(alpha: 0.4),
                       ),
                     ),
-                    child: Text(label,
-                        style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color: selected
-                                ? cs.onPrimary
-                                : cs.primary)),
+                    child: Text(
+                      label,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: selected ? cs.onPrimary : cs.primary,
+                      ),
+                    ),
                   ),
                 );
               }).toList(),
@@ -429,14 +495,31 @@ class _BilirubinCalculatorState extends State<BilirubinCalculator> {
                 borderRadius: BorderRadius.circular(10),
               ),
               padding: const EdgeInsets.all(3),
-              child: Row(children: [
-                Expanded(child: _ageTabBtn('Hours', true)),
-                Expanded(child: _ageTabBtn('Days + Hours', false)),
-              ]),
+              child: Row(
+                children: [
+                  Expanded(child: _ageTabBtn('Hours', _AgeMode.hours)),
+                  Expanded(child: _ageTabBtn('Days + Hrs', _AgeMode.daysHours)),
+                  Expanded(child: _ageTabBtn('Date & time', _AgeMode.dateTime)),
+                ],
+              ),
             ),
             const SizedBox(height: 12),
 
-            if (_ageInHours) ...[
+            if (_ageMode == _AgeMode.dateTime) ...[
+              _TimestampField(
+                label: 'Born at',
+                value: _birthAt,
+                onChanged: (v) => setState(() => _birthAt = v),
+              ),
+              const SizedBox(height: 12),
+              _TimestampField(
+                label: 'Sample taken at',
+                value: _measuredAt,
+                onChanged: (v) => setState(() => _measuredAt = v),
+              ),
+              const SizedBox(height: 12),
+              _DerivedAgeBanner(hours: _hoursFromDates),
+            ] else if (_ageMode == _AgeMode.hours) ...[
               _IntStepperField(
                 label: 'Age (hours)',
                 value: _ageHours,
@@ -446,38 +529,39 @@ class _BilirubinCalculatorState extends State<BilirubinCalculator> {
                 onChanged: (v) => setState(() => _ageHours = v),
               ),
             ] else ...[
-              Row(children: [
-                Expanded(
-                  child: _IntStepperField(
-                    label: 'Days',
-                    value: _ageDays,
-                    min: 0,
-                    max: 14,
-                    hint: '0–14',
-                    onChanged: (v) =>
-                        setState(() => _ageDays = v),
+              Row(
+                children: [
+                  Expanded(
+                    child: _IntStepperField(
+                      label: 'Days',
+                      value: _ageDays,
+                      min: 0,
+                      max: 14,
+                      hint: '0–14',
+                      onChanged: (v) => setState(() => _ageDays = v),
+                    ),
                   ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: _IntStepperField(
-                    label: 'Hours',
-                    value: _ageExtraHours,
-                    min: 0,
-                    max: 23,
-                    hint: '0–23',
-                    onChanged: (v) =>
-                        setState(() => _ageExtraHours = v),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: _IntStepperField(
+                      label: 'Hours',
+                      value: _ageExtraHours,
+                      min: 0,
+                      max: 23,
+                      hint: '0–23',
+                      onChanged: (v) => setState(() => _ageExtraHours = v),
+                    ),
                   ),
-                ),
-              ]),
+                ],
+              ),
               const SizedBox(height: 6),
               Text(
                 '= $_totalHours total hours  (${_totalHours ~/ 24}d ${_totalHours % 24}h)',
                 style: TextStyle(
-                    fontSize: 11,
-                    color: cs.primary,
-                    fontWeight: FontWeight.w600),
+                  fontSize: 11,
+                  color: cs.primary,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ],
             const SizedBox(height: 20),
@@ -487,22 +571,24 @@ class _BilirubinCalculatorState extends State<BilirubinCalculator> {
             _tsbStepper(),
             const SizedBox(height: 4),
             Text(
-                'Use TSB — do NOT subtract direct/conjugated bilirubin',
-                style: TextStyle(
-                    fontSize: 11,
-                    color: cs.onSurface.withValues(alpha: 0.5),
-                    fontStyle: FontStyle.italic)),
+              'Use TSB — do NOT subtract direct/conjugated bilirubin',
+              style: TextStyle(
+                fontSize: 11,
+                color: cs.onSurface.withValues(alpha: 0.5),
+                fontStyle: FontStyle.italic,
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _ageTabBtn(String label, bool isHours) {
+  Widget _ageTabBtn(String label, _AgeMode mode) {
     final cs = Theme.of(context).colorScheme;
-    final active = _ageInHours == isHours;
+    final active = _ageMode == mode;
     return GestureDetector(
-      onTap: () => setState(() => _ageInHours = isHours),
+      onTap: () => setState(() => _ageMode = mode),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 150),
         padding: const EdgeInsets.symmetric(vertical: 8),
@@ -510,14 +596,15 @@ class _BilirubinCalculatorState extends State<BilirubinCalculator> {
           color: active ? cs.primary : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
         ),
-        child: Text(label,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: active
-                    ? cs.onPrimary
-                    : cs.onSurface.withValues(alpha: 0.6))),
+        child: Text(
+          label,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+            color: active ? cs.onPrimary : cs.onSurface.withValues(alpha: 0.6),
+          ),
+        ),
       ),
     );
   }
@@ -530,87 +617,108 @@ class _BilirubinCalculatorState extends State<BilirubinCalculator> {
         borderRadius: BorderRadius.circular(10),
         color: Theme.of(context).cardColor,
       ),
-      child: Row(children: [
-        IconButton(
-          icon: const Icon(Icons.remove, size: 18),
-          color: _tsb > 0
-              ? cs.primary
-              : cs.onSurface.withValues(alpha: 0.3),
-          onPressed: _tsb > 0
-              ? () {
-                  final v = double.parse((_tsb - 0.1).toStringAsFixed(1));
-                  setState(() => _tsb = v);
-                  _tsbInputCtrl.text = v.toStringAsFixed(1);
-                }
-              : null,
-          constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
-        ),
-        Expanded(
-          child: Column(children: [
-            SizedBox(
-              height: 44,
-              child: Center(
-                child: TextField(
-                  controller: _tsbInputCtrl,
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                  inputFormatters: [
-                    FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
-                  ],
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontSize: 26, fontWeight: FontWeight.bold, color: cs.primary),
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                    enabledBorder: InputBorder.none,
-                    focusedBorder: InputBorder.none,
-                    isDense: true,
-                    contentPadding: EdgeInsets.zero,
+      child: Row(
+        children: [
+          IconButton(
+            icon: const Icon(Icons.remove, size: 18),
+            color: _tsb > 0 ? cs.primary : cs.onSurface.withValues(alpha: 0.3),
+            onPressed: _tsb > 0
+                ? () {
+                    final v = double.parse((_tsb - 0.1).toStringAsFixed(1));
+                    setState(() => _tsb = v);
+                    _tsbInputCtrl.text = v.toStringAsFixed(1);
+                  }
+                : null,
+            constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+          ),
+          Expanded(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 44,
+                  child: Center(
+                    child: TextField(
+                      controller: _tsbInputCtrl,
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(
+                          RegExp(r'^\d*\.?\d*'),
+                        ),
+                      ],
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 26,
+                        fontWeight: FontWeight.bold,
+                        color: cs.primary,
+                      ),
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        isDense: true,
+                        contentPadding: EdgeInsets.zero,
+                      ),
+                      onChanged: (val) {
+                        final parsed = double.tryParse(val);
+                        if (parsed != null && parsed >= 0 && parsed <= 35) {
+                          setState(
+                            () =>
+                                _tsb = double.parse(parsed.toStringAsFixed(1)),
+                          );
+                        }
+                      },
+                      onSubmitted: (val) {
+                        final parsed = double.tryParse(val);
+                        if (parsed != null) {
+                          final clamped = parsed.clamp(0.0, 35.0);
+                          setState(
+                            () =>
+                                _tsb = double.parse(clamped.toStringAsFixed(1)),
+                          );
+                          _tsbInputCtrl.text = _tsb.toStringAsFixed(1);
+                        } else {
+                          _tsbInputCtrl.text = _tsb.toStringAsFixed(1);
+                        }
+                      },
+                    ),
                   ),
-                  onChanged: (val) {
-                    final parsed = double.tryParse(val);
-                    if (parsed != null && parsed >= 0 && parsed <= 35) {
-                      setState(() => _tsb = double.parse(parsed.toStringAsFixed(1)));
-                    }
-                  },
-                  onSubmitted: (val) {
-                    final parsed = double.tryParse(val);
-                    if (parsed != null) {
-                      final clamped = parsed.clamp(0.0, 35.0);
-                      setState(() => _tsb = double.parse(clamped.toStringAsFixed(1)));
-                      _tsbInputCtrl.text = _tsb.toStringAsFixed(1);
-                    } else {
-                      _tsbInputCtrl.text = _tsb.toStringAsFixed(1);
-                    }
-                  },
                 ),
-              ),
+                Text(
+                  'mg/dL',
+                  style: TextStyle(
+                    fontSize: 10,
+                    color: cs.onSurface.withValues(alpha: 0.5),
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                Text(
+                  'tap to type · use − + to step',
+                  style: TextStyle(
+                    fontSize: 9,
+                    color: cs.onSurface.withValues(alpha: 0.35),
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 4),
+              ],
             ),
-            Text('mg/dL',
-                style: TextStyle(
-                    fontSize: 10, color: cs.onSurface.withValues(alpha: 0.5)),
-                textAlign: TextAlign.center),
-            Text('tap to type · use − + to step',
-                style: TextStyle(
-                    fontSize: 9, color: cs.onSurface.withValues(alpha: 0.35)),
-                textAlign: TextAlign.center),
-            const SizedBox(height: 4),
-          ]),
-        ),
-        IconButton(
-          icon: const Icon(Icons.add, size: 18),
-          color: _tsb < 35
-              ? cs.primary
-              : cs.onSurface.withValues(alpha: 0.3),
-          onPressed: _tsb < 35
-              ? () {
-                  final v = double.parse((_tsb + 0.1).toStringAsFixed(1));
-                  setState(() => _tsb = v);
-                  _tsbInputCtrl.text = v.toStringAsFixed(1);
-                }
-              : null,
-          constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
-        ),
-      ]),
+          ),
+          IconButton(
+            icon: const Icon(Icons.add, size: 18),
+            color: _tsb < 35 ? cs.primary : cs.onSurface.withValues(alpha: 0.3),
+            onPressed: _tsb < 35
+                ? () {
+                    final v = double.parse((_tsb + 0.1).toStringAsFixed(1));
+                    setState(() => _tsb = v);
+                    _tsbInputCtrl.text = v.toStringAsFixed(1);
+                  }
+                : null,
+            constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+          ),
+        ],
+      ),
     );
   }
 
@@ -620,84 +728,103 @@ class _BilirubinCalculatorState extends State<BilirubinCalculator> {
     return Card(
       elevation: 2,
       color: Theme.of(context).cardColor,
-      shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       child: Padding(
         padding: const EdgeInsets.all(18),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(children: [
-              Text('Neurotoxicity Risk Factors',
+            Row(
+              children: [
+                Text(
+                  'Neurotoxicity Risk Factors',
                   style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: cs.primary)),
-              const SizedBox(width: 6),
-              Tooltip(
-                message:
-                    'Any factor lowers phototherapy & exchange thresholds',
-                child: Icon(Icons.info_outline,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: cs.primary,
+                  ),
+                ),
+                const SizedBox(width: 6),
+                Tooltip(
+                  message:
+                      'Any factor lowers phototherapy & exchange thresholds',
+                  child: Icon(
+                    Icons.info_outline,
                     size: 16,
-                    color: cs.primary.withValues(alpha: 0.6)),
-              ),
-            ]),
+                    color: cs.primary.withValues(alpha: 0.6),
+                  ),
+                ),
+              ],
+            ),
             const SizedBox(height: 12),
-            _riskTile('Albumin <3.0 g/dL', _rfAlbumin,
-                (v) => setState(() => _rfAlbumin = v)),
             _riskTile(
-                'Isoimmune hemolytic disease / Positive DAT',
-                _rfIsoimmune,
-                (v) => setState(() => _rfIsoimmune = v)),
+              'Albumin <3.0 g/dL',
+              _rfAlbumin,
+              (v) => setState(() => _rfAlbumin = v),
+            ),
             _riskTile(
-                'G6PD deficiency or other hemolytic condition',
-                _rfG6PD,
-                (v) => setState(() => _rfG6PD = v)),
-            _riskTile('Sepsis', _rfSepsis,
-                (v) => setState(() => _rfSepsis = v)),
+              'Isoimmune hemolytic disease / Positive DAT',
+              _rfIsoimmune,
+              (v) => setState(() => _rfIsoimmune = v),
+            ),
             _riskTile(
-                'Significant clinical instability (past 24 hrs)',
-                _rfInstability,
-                (v) => setState(() => _rfInstability = v)),
+              'G6PD deficiency or other hemolytic condition',
+              _rfG6PD,
+              (v) => setState(() => _rfG6PD = v),
+            ),
+            _riskTile(
+              'Sepsis',
+              _rfSepsis,
+              (v) => setState(() => _rfSepsis = v),
+            ),
+            _riskTile(
+              'Significant clinical instability (past 24 hrs)',
+              _rfInstability,
+              (v) => setState(() => _rfInstability = v),
+            ),
             const SizedBox(height: 10),
             // These are semantic medical indicator colors — kept as-is
             AnimatedContainer(
               duration: const Duration(milliseconds: 200),
               width: double.infinity,
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 12, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               decoration: BoxDecoration(
                 color: _hasRisk
                     ? const Color(0xFFFFF8E1)
                     : const Color(0xFFE8F5E9),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                    color: _hasRisk
-                        ? const Color(0xFFF5A623)
-                        : const Color(0xFF2DBD8C)),
+                  color: _hasRisk
+                      ? const Color(0xFFF5A623)
+                      : const Color(0xFF2DBD8C),
+                ),
               ),
-              child: Row(children: [
-                Icon(
+              child: Row(
+                children: [
+                  Icon(
                     _hasRisk
                         ? Icons.warning_amber_rounded
                         : Icons.check_circle_outline,
                     size: 16,
                     color: _hasRisk
                         ? const Color(0xFFF5A623)
-                        : const Color(0xFF2DBD8C)),
-                const SizedBox(width: 8),
-                Text(
-                  _hasRisk
-                      ? 'Using risk-factor thresholds'
-                      : 'Using standard thresholds',
-                  style: TextStyle(
+                        : const Color(0xFF2DBD8C),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    _hasRisk
+                        ? 'Using risk-factor thresholds'
+                        : 'Using standard thresholds',
+                    style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
                       color: _hasRisk
                           ? const Color(0xFFF5A623)
-                          : const Color(0xFF2DBD8C)),
-                ),
-              ]),
+                          : const Color(0xFF2DBD8C),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -705,15 +832,12 @@ class _BilirubinCalculatorState extends State<BilirubinCalculator> {
     );
   }
 
-  Widget _riskTile(
-      String label, bool value, ValueChanged<bool> onChanged) {
+  Widget _riskTile(String label, bool value, ValueChanged<bool> onChanged) {
     final cs = Theme.of(context).colorScheme;
     return CheckboxListTile(
       value: value,
       onChanged: (v) => onChanged(v ?? false),
-      title: Text(label,
-          style: TextStyle(
-              fontSize: 13, color: cs.onSurface)),
+      title: Text(label, style: TextStyle(fontSize: 13, color: cs.onSurface)),
       activeColor: cs.primary,
       controlAffinity: ListTileControlAffinity.leading,
       contentPadding: EdgeInsets.zero,
@@ -727,8 +851,7 @@ class _BilirubinCalculatorState extends State<BilirubinCalculator> {
     return Card(
       elevation: 1,
       color: Theme.of(context).cardColor,
-      shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       child: InkWell(
         borderRadius: BorderRadius.circular(14),
         onTap: () => setState(() => _showAlbumin = !_showAlbumin),
@@ -736,41 +859,45 @@ class _BilirubinCalculatorState extends State<BilirubinCalculator> {
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [
-              Row(children: [
-                Icon(Icons.science_outlined,
-                    color: cs.primary, size: 18),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    'Enter albumin for B/A ratio assessment (optional)',
-                    style: TextStyle(
+              Row(
+                children: [
+                  Icon(Icons.science_outlined, color: cs.primary, size: 18),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'Enter albumin for B/A ratio assessment (optional)',
+                      style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
-                        color: cs.primary),
+                        color: cs.primary,
+                      ),
+                    ),
                   ),
-                ),
-                Icon(
-                    _showAlbumin
-                        ? Icons.expand_less
-                        : Icons.expand_more,
-                    color: cs.primary),
-              ]),
+                  Icon(
+                    _showAlbumin ? Icons.expand_less : Icons.expand_more,
+                    color: cs.primary,
+                  ),
+                ],
+              ),
               if (_showAlbumin) ...[
                 const SizedBox(height: 14),
-                Row(children: [
-                  Text('Albumin (g/dL):',
+                Row(
+                  children: [
+                    Text(
+                      'Albumin (g/dL):',
                       style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: cs.onSurface)),
-                  const SizedBox(width: 16),
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                          color: cs.outline),
-                      borderRadius: BorderRadius.circular(10),
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: cs.onSurface,
+                      ),
                     ),
-                    child: Row(
+                    const SizedBox(width: 16),
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: cs.outline),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           IconButton(
@@ -779,38 +906,50 @@ class _BilirubinCalculatorState extends State<BilirubinCalculator> {
                                 ? cs.primary
                                 : cs.onSurface.withValues(alpha: 0.3),
                             onPressed: _albumin > 1.0
-                                ? () => setState(() => _albumin =
-                                    double.parse((_albumin - 0.1)
-                                        .toStringAsFixed(1)))
+                                ? () => setState(
+                                    () => _albumin = double.parse(
+                                      (_albumin - 0.1).toStringAsFixed(1),
+                                    ),
+                                  )
                                 : null,
                             constraints: const BoxConstraints(
-                                minWidth: 36, minHeight: 36),
+                              minWidth: 36,
+                              minHeight: 36,
+                            ),
                           ),
-                          Text(_albumin.toStringAsFixed(1),
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: cs.primary)),
+                          Text(
+                            _albumin.toStringAsFixed(1),
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: cs.primary,
+                            ),
+                          ),
                           IconButton(
                             icon: const Icon(Icons.add, size: 16),
                             color: _albumin < 5.0
                                 ? cs.primary
                                 : cs.onSurface.withValues(alpha: 0.3),
                             onPressed: _albumin < 5.0
-                                ? () => setState(() => _albumin =
-                                    double.parse((_albumin + 0.1)
-                                        .toStringAsFixed(1)))
+                                ? () => setState(
+                                    () => _albumin = double.parse(
+                                      (_albumin + 0.1).toStringAsFixed(1),
+                                    ),
+                                  )
                                 : null,
                             constraints: const BoxConstraints(
-                                minWidth: 36, minHeight: 36),
+                              minWidth: 36,
+                              minHeight: 36,
+                            ),
                           ),
-                        ]),
-                  ),
-                  const SizedBox(width: 12),
-                  if (_albumin > 0)
-                    _tagChip(
-                        'B/A = ${(_tsb / _albumin).toStringAsFixed(2)}'),
-                ]),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    if (_albumin > 0)
+                      _tagChip('B/A = ${(_tsb / _albumin).toStringAsFixed(2)}'),
+                  ],
+                ),
               ],
             ],
           ),
@@ -829,30 +968,40 @@ class _BilirubinCalculatorState extends State<BilirubinCalculator> {
         color: _statusBg,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-            color: _statusColor.withValues(alpha: 0.4), width: 1.5),
+          color: _statusColor.withValues(alpha: 0.4),
+          width: 1.5,
+        ),
       ),
-      child: Column(children: [
-        Text(_statusEmoji,
-            style: const TextStyle(fontSize: 40)),
-        const SizedBox(height: 8),
-        Text(_classificationTitle,
+      child: Column(
+        children: [
+          Text(_statusEmoji, style: const TextStyle(fontSize: 40)),
+          const SizedBox(height: 8),
+          Text(
+            _classificationTitle,
             textAlign: TextAlign.center,
             style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: _statusColor)),
-        const SizedBox(height: 6),
-        Text('${_tsb.toStringAsFixed(1)} mg/dL',
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: _statusColor,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            '${_tsb.toStringAsFixed(1)} mg/dL',
             style: TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-                color: _statusColor)),
-        const SizedBox(height: 8),
-        Text(_actionText,
+              fontSize: 32,
+              fontWeight: FontWeight.bold,
+              color: _statusColor,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            _actionText,
             textAlign: TextAlign.center,
-            style: TextStyle(
-                fontSize: 13, color: _statusColor, height: 1.5)),
-      ]),
+            style: TextStyle(fontSize: 13, color: _statusColor, height: 1.5),
+          ),
+        ],
+      ),
     );
   }
 
@@ -864,8 +1013,7 @@ class _BilirubinCalculatorState extends State<BilirubinCalculator> {
     return Card(
       elevation: 2,
       color: Theme.of(context).cardColor,
-      shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -874,28 +1022,41 @@ class _BilirubinCalculatorState extends State<BilirubinCalculator> {
             Text(
               'Thresholds at GA $_ga wks · Age $h hrs (${d}d ${rem}h)',
               style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: cs.primary),
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: cs.primary,
+              ),
             ),
             const SizedBox(height: 12),
             // Threshold rows use semantic medical colors — kept as-is
             if (_photoThreshold != null)
-              _thresholdRow('Phototherapy', _photoThreshold!,
-                  _tsb >= _photoThreshold!),
+              _thresholdRow(
+                'Phototherapy',
+                _photoThreshold!,
+                _tsb >= _photoThreshold!,
+              ),
             if (_escalationThreshold != null)
-              _thresholdRow('Escalation (ET−2)',
-                  _escalationThreshold!, _tsb >= _escalationThreshold!),
+              _thresholdRow(
+                'Escalation (ET−2)',
+                _escalationThreshold!,
+                _tsb >= _escalationThreshold!,
+              ),
             if (_exchangeThreshold != null)
-              _thresholdRow('Exchange Transfusion', _exchangeThreshold!,
-                  _tsb >= _exchangeThreshold!),
+              _thresholdRow(
+                'Exchange Transfusion',
+                _exchangeThreshold!,
+                _tsb >= _exchangeThreshold!,
+              ),
             const SizedBox(height: 10),
-            Wrap(spacing: 6, children: [
-              _tagChip(_hasRisk
-                  ? 'Risk-factor thresholds'
-                  : 'Standard thresholds'),
-              _tagChip('GA group: $_gaKeyUsed'),
-            ]),
+            Wrap(
+              spacing: 6,
+              children: [
+                _tagChip(
+                  _hasRisk ? 'Risk-factor thresholds' : 'Standard thresholds',
+                ),
+                _tagChip('GA group: $_gaKeyUsed'),
+              ],
+            ),
           ],
         ),
       ),
@@ -903,58 +1064,59 @@ class _BilirubinCalculatorState extends State<BilirubinCalculator> {
   }
 
   // Threshold row uses semantic medical colors — kept as-is
-  Widget _thresholdRow(
-      String label, double threshold, bool atOrAbove) {
+  Widget _thresholdRow(String label, double threshold, bool atOrAbove) {
     final cs = Theme.of(context).colorScheme;
-    final color = atOrAbove
-        ? const Color(0xFFE53935)
-        : const Color(0xFF2DBD8C);
-    final bg = atOrAbove
-        ? const Color(0xFFFFEBEE)
-        : const Color(0xFFE8F5E9);
+    final color = atOrAbove ? const Color(0xFFE53935) : const Color(0xFF2DBD8C);
+    final bg = atOrAbove ? const Color(0xFFFFEBEE) : const Color(0xFFE8F5E9);
     final margin = threshold - _tsb;
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
-      padding:
-          const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
         color: bg,
         borderRadius: BorderRadius.circular(8),
-        border:
-            Border.all(color: color.withValues(alpha: 0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
-      child: Row(children: [
-        Expanded(
-          child: Text(label,
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              label,
               style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: cs.onSurface)),
-        ),
-        Text('${threshold.toStringAsFixed(1)} mg/dL',
-            style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                color: color)),
-        const SizedBox(width: 8),
-        Container(
-          padding:
-              const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-          decoration: BoxDecoration(
-            color: color.withValues(alpha: 0.12),
-            borderRadius: BorderRadius.circular(4),
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: cs.onSurface,
+              ),
+            ),
           ),
-          child: Text(
-            atOrAbove
-                ? '⚠️ At/Above'
-                : '✓ ${margin.toStringAsFixed(1)} below',
+          Text(
+            '${threshold.toStringAsFixed(1)} mg/dL',
             style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: color,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Text(
+              atOrAbove
+                  ? '⚠️ At/Above'
+                  : '✓ ${margin.toStringAsFixed(1)} below',
+              style: TextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.bold,
-                color: color),
+                color: color,
+              ),
+            ),
           ),
-        ),
-      ]),
+        ],
+      ),
     );
   }
 
@@ -972,46 +1134,52 @@ class _BilirubinCalculatorState extends State<BilirubinCalculator> {
       baThresh = 6.8;
     }
     final atThresh = ba >= baThresh;
-    final color =
-        atThresh ? const Color(0xFFE53935) : const Color(0xFF2DBD8C);
+    final color = atThresh ? const Color(0xFFE53935) : const Color(0xFF2DBD8C);
 
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: atThresh
-            ? const Color(0xFFFFEBEE)
-            : const Color(0xFFE8F5E9),
+        color: atThresh ? const Color(0xFFFFEBEE) : const Color(0xFFE8F5E9),
         borderRadius: BorderRadius.circular(14),
-        border:
-            Border.all(color: color.withValues(alpha: 0.4)),
+        border: Border.all(color: color.withValues(alpha: 0.4)),
       ),
       child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Bilirubin:Albumin (B/A) Ratio',
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Bilirubin:Albumin (B/A) Ratio',
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: color,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              Text(
+                'B/A = ${ba.toStringAsFixed(2)}',
                 style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: color)),
-            const SizedBox(height: 8),
-            Row(children: [
-              Text('B/A = ${ba.toStringAsFixed(2)}',
-                  style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: color)),
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: color,
+                ),
+              ),
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
                   '${atThresh ? "At/above" : "Below"} exchange threshold ($baThresh)',
                   style: TextStyle(
-                      fontSize: 12,
-                      color: color,
-                      fontWeight: FontWeight.w600),
+                    fontSize: 12,
+                    color: color,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
-            ]),
-          ]),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -1030,44 +1198,58 @@ class _BilirubinCalculatorState extends State<BilirubinCalculator> {
       decoration: BoxDecoration(
         color: const Color(0xFFFFF8E1),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(
-            color: const Color(0xFFF5A623), width: 1.5),
+        border: Border.all(color: const Color(0xFFF5A623), width: 1.5),
       ),
       child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Row(children: [
-              Icon(Icons.warning_amber_rounded,
-                  color: Color(0xFFF5A623), size: 18),
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Row(
+            children: [
+              Icon(
+                Icons.warning_amber_rounded,
+                color: Color(0xFFF5A623),
+                size: 18,
+              ),
               SizedBox(width: 8),
-              Text('Active Risk Factors',
-                  style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFFF5A623))),
-            ]),
-            const SizedBox(height: 8),
-            ...active.map((rf) => Padding(
-                  padding: const EdgeInsets.only(bottom: 4),
-                  child: Row(children: [
-                    const Icon(Icons.circle,
-                        size: 6, color: Color(0xFFF5A623)),
-                    const SizedBox(width: 8),
-                    Expanded(
-                        child: Text(rf,
-                            style: TextStyle(
-                                fontSize: 12,
-                                color: cs.onSurface))),
-                  ]),
-                )),
-            const SizedBox(height: 6),
-            Text(
-                'These risk factors lower phototherapy and exchange thresholds.',
+              Text(
+                'Active Risk Factors',
                 style: TextStyle(
-                    fontSize: 11,
-                    color: cs.onSurface.withValues(alpha: 0.6),
-                    fontStyle: FontStyle.italic)),
-          ]),
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFFF5A623),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          ...active.map(
+            (rf) => Padding(
+              padding: const EdgeInsets.only(bottom: 4),
+              child: Row(
+                children: [
+                  const Icon(Icons.circle, size: 6, color: Color(0xFFF5A623)),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      rf,
+                      style: TextStyle(fontSize: 12, color: cs.onSurface),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            'These risk factors lower phototherapy and exchange thresholds.',
+            style: TextStyle(
+              fontSize: 11,
+              color: cs.onSurface.withValues(alpha: 0.6),
+              fontStyle: FontStyle.italic,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -1126,36 +1308,51 @@ class _BilirubinCalculatorState extends State<BilirubinCalculator> {
         color: headerColor.withValues(alpha: 0.06),
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
-            color: headerColor.withValues(alpha: 0.3), width: 1.5),
+          color: headerColor.withValues(alpha: 0.3),
+          width: 1.5,
+        ),
       ),
       child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Clinical Actions',
-                style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: headerColor)),
-            const SizedBox(height: 10),
-            ...bullets.map((b) => Padding(
-                  padding: const EdgeInsets.only(bottom: 6),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('• ',
-                          style: TextStyle(
-                              color: headerColor,
-                              fontWeight: FontWeight.bold)),
-                      Expanded(
-                          child: Text(b,
-                              style: TextStyle(
-                                  fontSize: 13,
-                                  color: cs.onSurface,
-                                  height: 1.4))),
-                    ],
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Clinical Actions',
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: headerColor,
+            ),
+          ),
+          const SizedBox(height: 10),
+          ...bullets.map(
+            (b) => Padding(
+              padding: const EdgeInsets.only(bottom: 6),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '• ',
+                    style: TextStyle(
+                      color: headerColor,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                )),
-          ]),
+                  Expanded(
+                    child: Text(
+                      b,
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: cs.onSurface,
+                        height: 1.4,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -1168,33 +1365,45 @@ class _BilirubinCalculatorState extends State<BilirubinCalculator> {
         color: const Color(0xFFE3F2FD),
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
-            color: const Color(0xFF1976D2).withValues(alpha: 0.4)),
+          color: const Color(0xFF1976D2).withValues(alpha: 0.4),
+        ),
       ),
-      child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        const Icon(Icons.vaccines_outlined,
-            color: Color(0xFF1976D2), size: 20),
-        const SizedBox(width: 10),
-        Expanded(
-          child: Column(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Icon(
+            Icons.vaccines_outlined,
+            color: Color(0xFF1976D2),
+            size: 20,
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('IVIG Option',
-                    style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF1976D2))),
+                const Text(
+                  'IVIG Option',
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF1976D2),
+                  ),
+                ),
                 const SizedBox(height: 4),
                 Text(
                   '0.5–1 g/kg IV over 2 hours for positive DAT/isoimmune hemolysis. '
                   'May repeat in 12 hours. Discuss risks/benefits (possible NEC association).',
                   style: TextStyle(
-                      fontSize: 12,
-                      color: cs.onSurface,
-                      height: 1.5),
+                    fontSize: 12,
+                    color: cs.onSurface,
+                    height: 1.5,
+                  ),
                 ),
-              ]),
-        ),
-      ]),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -1208,36 +1417,42 @@ class _BilirubinCalculatorState extends State<BilirubinCalculator> {
         border: Border.all(color: cs.outline),
       ),
       child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('📚  Reference',
-                style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.bold,
-                    color: cs.primary)),
-            const SizedBox(height: 8),
-            Text(
-              'Kemper AR, Newman TB, Slaughter JL, et al.\n'
-              'Clinical Practice Guideline Revision: Management of\n'
-              'Hyperbilirubinemia in the Newborn Infant 35 or More\n'
-              'Weeks of Gestation. Pediatrics. 2022;150(3):e2022058859.',
-              style: TextStyle(
-                  fontSize: 11,
-                  color: cs.onSurface.withValues(alpha: 0.5),
-                  fontStyle: FontStyle.italic,
-                  height: 1.5),
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '📚  Reference',
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.bold,
+              color: cs.primary,
             ),
-            const SizedBox(height: 8),
-            Text(
-              'Thresholds based on expert opinion. TSB used (do not subtract '
-              'direct bilirubin). For clinical use by qualified professionals only. '
-              'Verify before acting.',
-              style: TextStyle(
-                  fontSize: 10,
-                  color: cs.onSurface.withValues(alpha: 0.5),
-                  height: 1.5),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Kemper AR, Newman TB, Slaughter JL, et al.\n'
+            'Clinical Practice Guideline Revision: Management of\n'
+            'Hyperbilirubinemia in the Newborn Infant 35 or More\n'
+            'Weeks of Gestation. Pediatrics. 2022;150(3):e2022058859.',
+            style: TextStyle(
+              fontSize: 11,
+              color: cs.onSurface.withValues(alpha: 0.5),
+              fontStyle: FontStyle.italic,
+              height: 1.5,
             ),
-          ]),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Thresholds based on expert opinion. TSB used (do not subtract '
+            'direct bilirubin). For clinical use by qualified professionals only. '
+            'Verify before acting.',
+            style: TextStyle(
+              fontSize: 10,
+              color: cs.onSurface.withValues(alpha: 0.5),
+              height: 1.5,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -1280,8 +1495,7 @@ class _IntStepperFieldState extends State<_IntStepperField> {
       final newText = widget.value.toString();
       if (_ctrl.text != newText) {
         _ctrl.text = newText;
-        _ctrl.selection =
-            TextSelection.collapsed(offset: newText.length);
+        _ctrl.selection = TextSelection.collapsed(offset: newText.length);
       }
     }
   }
@@ -1303,16 +1517,14 @@ class _IntStepperFieldState extends State<_IntStepperField> {
     final newVal = widget.value - 1;
     widget.onChanged(newVal);
     _ctrl.text = newVal.toString();
-    _ctrl.selection =
-        TextSelection.collapsed(offset: _ctrl.text.length);
+    _ctrl.selection = TextSelection.collapsed(offset: _ctrl.text.length);
   }
 
   void _increment() {
     final newVal = widget.value + 1;
     widget.onChanged(newVal);
     _ctrl.text = newVal.toString();
-    _ctrl.selection =
-        TextSelection.collapsed(offset: _ctrl.text.length);
+    _ctrl.selection = TextSelection.collapsed(offset: _ctrl.text.length);
   }
 
   @override
@@ -1321,11 +1533,14 @@ class _IntStepperFieldState extends State<_IntStepperField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(widget.label,
-            style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: cs.onSurface)),
+        Text(
+          widget.label,
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            color: cs.onSurface,
+          ),
+        ),
         const SizedBox(height: 6),
         Container(
           decoration: BoxDecoration(
@@ -1333,56 +1548,205 @@ class _IntStepperFieldState extends State<_IntStepperField> {
             borderRadius: BorderRadius.circular(10),
             color: Theme.of(context).cardColor,
           ),
-          child: Row(children: [
-            IconButton(
-              icon: const Icon(Icons.remove, size: 18),
-              color: widget.value > widget.min
-                  ? cs.primary
-                  : cs.onSurface.withValues(alpha: 0.3),
-              onPressed:
-                  widget.value > widget.min ? _decrement : null,
-              constraints:
-                  const BoxConstraints(minWidth: 44, minHeight: 44),
-            ),
-            Expanded(
-              child: Column(children: [
-                TextField(
-                  controller: _ctrl,
-                  keyboardType: TextInputType.number,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: cs.primary),
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.zero,
-                    isDense: true,
-                  ),
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly
+          child: Row(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.remove, size: 18),
+                color: widget.value > widget.min
+                    ? cs.primary
+                    : cs.onSurface.withValues(alpha: 0.3),
+                onPressed: widget.value > widget.min ? _decrement : null,
+                constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+              ),
+              Expanded(
+                child: Column(
+                  children: [
+                    TextField(
+                      controller: _ctrl,
+                      keyboardType: TextInputType.number,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: cs.primary,
+                      ),
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.zero,
+                        isDense: true,
+                      ),
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      onChanged: _handleTextChange,
+                    ),
+                    Text(
+                      widget.hint,
+                      style: TextStyle(
+                        fontSize: 10,
+                        color: cs.onSurface.withValues(alpha: 0.5),
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
                   ],
-                  onChanged: _handleTextChange,
                 ),
-                Text(widget.hint,
-                    style: TextStyle(
-                        fontSize: 10, color: cs.onSurface.withValues(alpha: 0.5)),
-                    textAlign: TextAlign.center),
-              ]),
-            ),
-            IconButton(
-              icon: const Icon(Icons.add, size: 18),
-              color: widget.value < widget.max
-                  ? cs.primary
-                  : cs.onSurface.withValues(alpha: 0.3),
-              onPressed:
-                  widget.value < widget.max ? _increment : null,
-              constraints:
-                  const BoxConstraints(minWidth: 44, minHeight: 44),
-            ),
-          ]),
+              ),
+              IconButton(
+                icon: const Icon(Icons.add, size: 18),
+                color: widget.value < widget.max
+                    ? cs.primary
+                    : cs.onSurface.withValues(alpha: 0.3),
+                onPressed: widget.value < widget.max ? _increment : null,
+                constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+              ),
+            ],
+          ),
         ),
       ],
+    );
+  }
+}
+
+/// How the baby's age is being entered.
+///
+/// Hours is the primary input and the default — the chart is indexed on hours
+/// and most people already know the number. The other two exist so nobody has
+/// to do date arithmetic to use a chart.
+enum _AgeMode { hours, daysHours, dateTime }
+
+/// A date-and-time field backed by the platform pickers.
+class _TimestampField extends StatelessWidget {
+  const _TimestampField({
+    required this.label,
+    required this.value,
+    required this.onChanged,
+  });
+
+  final String label;
+  final DateTime? value;
+  final ValueChanged<DateTime?> onChanged;
+
+  static String _fmt(DateTime d) {
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
+    final h = d.hour.toString().padLeft(2, '0');
+    final m = d.minute.toString().padLeft(2, '0');
+    return '${d.day} ${months[d.month - 1]} ${d.year}, $h:$m';
+  }
+
+  Future<void> _pick(BuildContext context) async {
+    final now = DateTime.now();
+    final seed = value ?? now;
+    final date = await showDatePicker(
+      context: context,
+      initialDate: seed,
+      // Two weeks back covers the whole range the chart plots (0–336 h) and
+      // stops a mis-tap landing in the previous decade.
+      firstDate: now.subtract(const Duration(days: 30)),
+      lastDate: now.add(const Duration(days: 1)),
+    );
+    if (date == null || !context.mounted) return;
+
+    final time = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.fromDateTime(seed),
+    );
+    if (time == null) return;
+
+    onChanged(
+      DateTime(date.year, date.month, date.day, time.hour, time.minute),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final v = value;
+    return InkWell(
+      borderRadius: BorderRadius.circular(10),
+      onTap: () => _pick(context),
+      child: InputDecorator(
+        decoration: InputDecoration(
+          labelText: label,
+          isDense: true,
+          border: const OutlineInputBorder(),
+          suffixIcon: v == null
+              ? const Icon(Icons.event_outlined, size: 20)
+              : IconButton(
+                  tooltip: 'Clear',
+                  icon: const Icon(Icons.close, size: 18),
+                  onPressed: () => onChanged(null),
+                ),
+        ),
+        child: Text(
+          v == null ? 'Tap to pick' : _fmt(v),
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: v == null ? FontWeight.w400 : FontWeight.w600,
+            color: v == null
+                ? cs.onSurface.withValues(alpha: 0.45)
+                : cs.onSurface,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Shows the age the two timestamps work out to, so the number the chart is
+/// actually using is visible rather than implied.
+class _DerivedAgeBanner extends StatelessWidget {
+  const _DerivedAgeBanner({required this.hours});
+  final int? hours;
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final h = hours;
+    final ok = h != null;
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      decoration: BoxDecoration(
+        color: (ok ? cs.primaryContainer : cs.errorContainer).withValues(
+          alpha: 0.45,
+        ),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            ok ? Icons.schedule : Icons.error_outline,
+            size: 18,
+            color: ok ? cs.onPrimaryContainer : cs.onErrorContainer,
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              ok
+                  ? 'Age at sampling: $h hours'
+                        '${h >= 24 ? '  (${h ~/ 24} d ${h % 24} h)' : ''}'
+                  : 'Set both times. The sample cannot be earlier than the '
+                        'birth.',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: ok ? FontWeight.w700 : FontWeight.w500,
+                color: ok ? cs.onPrimaryContainer : cs.onErrorContainer,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

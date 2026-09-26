@@ -37,9 +37,9 @@ void main() {
   test('kNeonatalFixedScoreCards matches the hub it describes', () {
     // The hub asserts this at runtime too, but an assert only fires in debug
     // and only if someone opens the screen. This fails in CI.
-    expect(kNeonatalFixedScoreCards, 8,
+    expect(kNeonatalFixedScoreCards, 9,
         reason: 'NICHD, LUS, Modified Ballard, POFRAS, CAN, Modified Finnegan, '
-            "Modified Bell's staging, SNAPPE-II");
+            "Modified Bell's staging, SNAPPE-II, AKI classification");
   });
 
   test('the paediatric count comes from the list, and is not zero', () {

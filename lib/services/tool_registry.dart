@@ -39,6 +39,7 @@ import '../screens/guides/modified_ballard_screen.dart';
 import '../screens/guides/pofras_screen.dart';
 import '../screens/guides/can_score_screen.dart';
 import '../screens/guides/neonatal_scores/bell_nec_screen.dart';
+import '../screens/guides/aki/aki_screen.dart';
 import '../screens/guides/neonatal_scores/neonatal_score_by_name.dart';
 
 /// Which part of the app a tool belongs to. Used to group the picker.
@@ -407,6 +408,40 @@ class ToolRegistry {
           'pneumatosis pneumoperitoneum perforation',
       () => const BellNecScreen(),
     );
+
+    // AKI, same reason — its own screen, no JSON row, so it is unsearchable
+    // unless named here.
+    //
+    // Registered twice, once per age band, because they are genuinely
+    // different answers: under 28 days the Neonatal Modified KDIGO is the only
+    // applicable system, and someone searching from a neonatal context should
+    // not land on a screen offering pRIFLE. The keyword lists are deliberately
+    // wider than the titles — nobody searching for this types "AKI
+    // Classification"; they type "renal failure", "oliguria", "creatinine",
+    // or a misspelling of one of those.
+    neo(
+      'AKI Classification (Neonatal)',
+      'Acute kidney injury — Neonatal Modified KDIGO',
+      'aki acute kidney injury renal failure insufficiency creatinine '
+          'oliguria oliguric anuria anuric urine output kdigo neonatal '
+          'modified staging nephrology dialysis rrt crrt azotaemia azotemia '
+          'uraemia uremia kidney failure',
+      () => const AkiScreen(entry: AkiEntry.neonatal),
+    );
+
+    add(ToolEntry(
+      key: 'score:aki-classification-paediatric',
+      label: 'AKI Classification (Paediatric)',
+      subtitle: 'Acute kidney injury — KDIGO, with pRIFLE',
+      icon: Icons.water_drop_outlined,
+      kind: ToolKind.score,
+      keywords: 'aki acute kidney injury renal failure insufficiency '
+          'creatinine oliguria oliguric anuria anuric urine output kdigo '
+          'prifle rifle paediatric pediatric staging classification '
+          'nephrology dialysis rrt crrt azotaemia azotemia uraemia uremia '
+          'kidney failure schwartz clearance',
+      build: () => const AkiScreen(entry: AkiEntry.paediatric),
+    ));
 
     for (final e in _fromAssets) {
       add(e);

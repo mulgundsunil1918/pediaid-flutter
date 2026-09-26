@@ -66,32 +66,10 @@ const List<String> _kCategories = [
 // Top-level (not a field on the State) so ToolRegistry can read it without
 // building the screen — that is what makes a guide pinnable to Quick Access.
 final List<_GuideItem> _kGuideItems = [
-  _GuideItem(
-    title: 'Rabies & Animal Bite',
-    // The subtitle feeds the registry's search keywords, so every word a
-    // clinician might type for this is here: dog bite, PEP, RIG, category.
-    subtitle:
-        'Assessment, wound management and post-exposure prophylaxis in '
-        'children — dog bite, exposure category, vaccine schedule, RIG/RMAb',
-    icon: Icons.pets_outlined,
-    categories: const [_kEmergency, _kReference],
-    badge: 'NEW',
-    build: (_) => const RabiesScreen(),
-  ),
-  // Neonatal Scores — surfaced first and highlighted; bundles all the
-  // neonatal scoring tools (incl. LATCH, POFRAS, Modified Ballard).
-  _GuideItem(
-    title: 'ROP Screening & Follow-up',
-    // "Retinopathy" belongs in the subtitle because the registry derives a
-    // guide's search keywords from it — without the full name, searching
-    // "retinopathy of prematurity" found nothing.
-    subtitle:
-        'Retinopathy of prematurity — eligibility, PMA timing, ICROP-3 '
-        'classification, Type 1/2 and follow-up',
-    icon: Icons.remove_red_eye_outlined,
-    categories: const [_kNeonatal],
-    build: (_) => const RopScreen(),
-  ),
+  // ORDER MATTERS HERE. The two score hubs lead the list because they are
+  // what the section is mostly used for; Rabies and ROP are whole modules but
+  // are reached far less often, and they sat on top only because they were
+  // the most recently built. Sunil's call, 26 Sep.
   _GuideItem(
     title: 'Neonatal Scores',
     subtitle: 'Apgar, Downes, Sarnat, Thompson, LATCH, POFRAS, Ballard & more',
@@ -113,6 +91,30 @@ final List<_GuideItem> _kGuideItems = [
     highlight: true,
     // Likewise computed from allPaediatricScores, not typed.
     build: (_) => const PaediatricScoresHub(),
+  ),
+  _GuideItem(
+    title: 'Rabies & Animal Bite',
+    // The subtitle feeds the registry's search keywords, so every word a
+    // clinician might type for this is here: dog bite, PEP, RIG, category.
+    subtitle:
+        'Assessment, wound management and post-exposure prophylaxis in '
+        'children — dog bite, exposure category, vaccine schedule, RIG/RMAb',
+    icon: Icons.pets_outlined,
+    categories: const [_kEmergency, _kReference],
+    badge: 'NEW',
+    build: (_) => const RabiesScreen(),
+  ),
+  _GuideItem(
+    title: 'ROP Screening & Follow-up',
+    // "Retinopathy" belongs in the subtitle because the registry derives a
+    // guide's search keywords from it — without the full name, searching
+    // "retinopathy of prematurity" found nothing.
+    subtitle:
+        'Retinopathy of prematurity — eligibility, PMA timing, ICROP-3 '
+        'classification, Type 1/2 and follow-up',
+    icon: Icons.remove_red_eye_outlined,
+    categories: const [_kNeonatal],
+    build: (_) => const RopScreen(),
   ),
   _GuideItem(
     title: 'GA Classification',

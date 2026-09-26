@@ -52,6 +52,15 @@ void main() {
         'bell': "Bell",
         'enterocolitis': "Bell",
         'weight velocity': 'Weight Velocity',
+        // AKI: nobody searches for the words in its title. These are what
+        // people actually type.
+        'aki': 'AKI',
+        'acute kidney injury': 'AKI',
+        'renal failure': 'AKI',
+        'oliguria': 'AKI',
+        'kdigo': 'AKI',
+        'prifle': 'AKI',
+        'creatinine': 'AKI',
       };
       final missing = <String>[];
       queries.forEach((q, expected) {

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../widgets/skeleton.dart';
 import '../../../data/scores_data_loader.dart';
 import 'bell_nec_screen.dart';
+import '../aki/aki_screen.dart';
 import 'score_detail_screen.dart';
 import 'nichd_hie_screen.dart';
 import 'lus_score_screen.dart';
@@ -20,7 +21,7 @@ import '../../scores/neonatal_scores.dart';
 /// count typed into two files drifts the moment a score is added — which is
 /// exactly what happened: the badge still read "14 scores" after seven more
 /// had been added. A test pins this against the real list.
-const int kNeonatalFixedScoreCards = 8;
+const int kNeonatalFixedScoreCards = 9;
 
 /// How many scores this hub actually offers, fixed cards plus JSON rows.
 ///
@@ -164,6 +165,26 @@ class _NeonatalScoresScreenState extends State<NeonatalScoresScreen> {
           onTap: () => Navigator.push(ctx,
               MaterialPageRoute(
                   builder: (_) => ScoreScaffold(def: snappeIIScore))),
+        ),
+      ),
+      // AKI is a classification, like Bell's, so it has its own screen for the
+      // same reason. Opened locked to the neonatal system: under 28 days the
+      // Neonatal Modified KDIGO is the only correct answer, and pRIFLE is not
+      // applicable at all.
+      _Entry(
+        'AKI Classification (Neonatal Modified KDIGO)',
+        'acute kidney injury AKI renal failure creatinine oliguria anuria '
+            'urine output KDIGO neonatal modified staging nephrology dialysis '
+            'RRT azotaemia azotemia kidney',
+        (ctx) => _ExtraScoreCard(
+          title: 'AKI Classification',
+          subtitle: 'Acute kidney injury — Neonatal Modified KDIGO',
+          number: 9,
+          onTap: () => Navigator.push(
+            ctx,
+            MaterialPageRoute(
+                builder: (_) => const AkiScreen(entry: AkiEntry.neonatal)),
+          ),
         ),
       ),
     ];
@@ -534,11 +555,6 @@ class _ScoreCard extends StatelessWidget {
     final cs = Theme.of(context).colorScheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    final paramCount = score.parameters.length;
-    final colCount = score.parameters.isNotEmpty
-        ? score.parameters.first.length
-        : 0;
-
     return Material(
       color: Theme.of(context).cardColor,
       borderRadius: BorderRadius.circular(12),
@@ -590,24 +606,12 @@ class _ScoreCard extends StatelessWidget {
                   ),
                 ),
               ),
-              // Meta chips
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  _MetaChip(
-                    '${paramCount}P',
-                    cs.onSurface.withValues(alpha: 0.35),
-                  ),
-                  const SizedBox(width: 6),
-                  _MetaChip(
-                    '${colCount}C',
-                    cs.onSurface.withValues(alpha: 0.35),
-                  ),
-                  const SizedBox(width: 8),
-                  Icon(Icons.chevron_right,
-                      color: cs.onSurface.withValues(alpha: 0.35), size: 20),
-                ],
-              ),
+              // The "8P 4C" chips that used to sit here are gone — Sunil's
+              // call, 26 Sep. They counted parameters and columns, which is a
+              // fact about the table's shape rather than anything clinical,
+              // and they read as a code in front of every score name.
+              Icon(Icons.chevron_right,
+                  color: cs.onSurface.withValues(alpha: 0.35), size: 20),
             ],
           ),
         ),
@@ -700,27 +704,3 @@ class _NichdCard extends StatelessWidget {
   }
 }
 
-class _MetaChip extends StatelessWidget {
-  final String label;
-  final Color color;
-  const _MetaChip(this.label, this.color);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.15),
-        borderRadius: BorderRadius.circular(5),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          fontSize: 10,
-          fontWeight: FontWeight.w600,
-          color: color,
-        ),
-      ),
-    );
-  }
-}

@@ -7,6 +7,7 @@
 // =============================================================================
 
 import 'package:flutter/material.dart';
+import '../guides/aki/aki_screen.dart';
 
 import 'adaptive_color.dart';
 import 'score_scaffold.dart';
@@ -55,11 +56,30 @@ class _PaediatricScoresHubState extends State<PaediatricScoresHub> {
     final q = _query.trim().toLowerCase();
     if (q.isEmpty) return allPaediatricScores;
     return allPaediatricScores
-        .where((s) =>
-            s.title.toLowerCase().contains(q) ||
-            s.subtitle.toLowerCase().contains(q) ||
-            s.system.toLowerCase().contains(q))
+        .where(
+          (s) =>
+              s.title.toLowerCase().contains(q) ||
+              s.subtitle.toLowerCase().contains(q) ||
+              s.system.toLowerCase().contains(q),
+        )
         .toList();
+  }
+
+  /// Whether the pinned AKI entry survives the current search.
+  ///
+  /// The keyword list is wider than the title on purpose — "renal failure",
+  /// "oliguria" and "creatinine" are what people actually type when they are
+  /// looking for this, and none of them appear in the words "AKI
+  /// Classification".
+  bool get _matchesAki {
+    final q = _query.trim().toLowerCase();
+    if (q.isEmpty) return true;
+    const keywords =
+        'aki acute kidney injury renal failure insufficiency '
+        'creatinine oliguria oliguric anuria anuric urine output kdigo prifle '
+        'rifle nephrology dialysis rrt crrt azotaemia azotemia uraemia uremia '
+        'staging classification';
+    return keywords.contains(q);
   }
 
   @override
@@ -70,8 +90,10 @@ class _PaediatricScoresHubState extends State<PaediatricScoresHub> {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text('Paediatric Scores',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17)),
+        title: const Text(
+          'Paediatric Scores',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+        ),
       ),
       body: Column(
         children: [
@@ -88,12 +110,12 @@ class _PaediatricScoresHubState extends State<PaediatricScoresHub> {
                       prefixIcon: const Icon(Icons.search, size: 20),
                       filled: true,
                       fillColor: Theme.of(context).cardColor,
-                      contentPadding:
-                          const EdgeInsets.symmetric(vertical: 12),
+                      contentPadding: const EdgeInsets.symmetric(vertical: 12),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide:
-                            BorderSide(color: cs.outline.withValues(alpha: 0.3)),
+                        borderSide: BorderSide(
+                          color: cs.outline.withValues(alpha: 0.3),
+                        ),
                       ),
                     ),
                   ),
@@ -110,30 +132,66 @@ class _PaediatricScoresHubState extends State<PaediatricScoresHub> {
                 color: cs.surfaceContainerHighest.withValues(alpha: 0.5),
                 borderRadius: BorderRadius.circular(11),
               ),
-              child: Row(children: [
-                _sortBtn('By system', !_azMode, () => setState(() => _azMode = false)),
-                const SizedBox(width: 4),
-                _sortBtn('A–Z', _azMode, () => setState(() => _azMode = true)),
-                const Spacer(),
-                Flexible(
-                  child: Padding(
-                  padding: const EdgeInsets.only(right: 8),
-                  child: Text('${items.length}',
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
+              child: Row(
+                children: [
+                  _sortBtn(
+                    'By system',
+                    !_azMode,
+                    () => setState(() => _azMode = false),
+                  ),
+                  const SizedBox(width: 4),
+                  _sortBtn(
+                    'A–Z',
+                    _azMode,
+                    () => setState(() => _azMode = true),
+                  ),
+                  const Spacer(),
+                  Flexible(
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: Text(
+                        '${items.length}',
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
                           fontSize: 12,
-                          color: cs.onSurface.withValues(alpha: 0.55))),
-                ),
-                ),
-              ]),
+                          color: cs.onSurface.withValues(alpha: 0.55),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
+          // AKI is pinned above the list rather than joining it, because this
+          // hub is built entirely from ScoreDef and AKI is a classification,
+          // not an additive score — the shared tile would sum columns that are
+          // not points. Same reason Bell's has its own screen.
+          //
+          // It still answers the search box: hiding it when the query does not
+          // match keeps it from looking like a result that ignores filtering.
+          if (_matchesAki)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 6),
+              child: _AkiPinnedTile(
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const AkiScreen(entry: AkiEntry.paediatric),
+                  ),
+                ),
+              ),
+            ),
           Expanded(
-            child: items.isEmpty
+            child: items.isEmpty && !_matchesAki
                 ? Center(
-                    child: Text('No scores match "$_query"',
-                        style: TextStyle(
-                            color: cs.onSurface.withValues(alpha: 0.5))))
+                    child: Text(
+                      'No scores match "$_query"',
+                      style: TextStyle(
+                        color: cs.onSurface.withValues(alpha: 0.5),
+                      ),
+                    ),
+                  )
                 : (_azMode ? _azList(items) : _systemList(items)),
           ),
         ],
@@ -151,11 +209,14 @@ class _PaediatricScoresHubState extends State<PaediatricScoresHub> {
           color: active ? cs.primary : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
         ),
-        child: Text(label,
-            style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w700,
-                color: active ? cs.onPrimary : cs.onSurface.withValues(alpha: 0.7))),
+        child: Text(
+          label,
+          style: TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w700,
+            color: active ? cs.onPrimary : cs.onSurface.withValues(alpha: 0.7),
+          ),
+        ),
       ),
     );
   }
@@ -191,21 +252,31 @@ class _PaediatricScoresHubState extends State<PaediatricScoresHub> {
     final cs = Theme.of(context).colorScheme;
     return Padding(
       padding: const EdgeInsets.fromLTRB(2, 12, 2, 8),
-      child: Row(children: [
-        Text(label.toUpperCase(),
+      child: Row(
+        children: [
+          Text(
+            label.toUpperCase(),
             style: TextStyle(
-                fontSize: 11.5,
-                fontWeight: FontWeight.w800,
-                letterSpacing: 0.8,
-                color: cs.primary)),
-        const SizedBox(width: 8),
-        Text('$n',
+              fontSize: 11.5,
+              fontWeight: FontWeight.w800,
+              letterSpacing: 0.8,
+              color: cs.primary,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Text(
+            '$n',
             style: TextStyle(
-                fontSize: 11.5, color: cs.onSurface.withValues(alpha: 0.45))),
-        const SizedBox(width: 10),
-        Expanded(
-            child: Divider(color: cs.primary.withValues(alpha: 0.2), height: 1)),
-      ]),
+              fontSize: 11.5,
+              color: cs.onSurface.withValues(alpha: 0.45),
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Divider(color: cs.primary.withValues(alpha: 0.2), height: 1),
+          ),
+        ],
+      ),
     );
   }
 
@@ -245,26 +316,93 @@ class _PaediatricScoresHubState extends State<PaediatricScoresHub> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(s.title,
-                          style: const TextStyle(
-                              fontSize: 14.5, fontWeight: FontWeight.w700)),
+                      Text(
+                        s.title,
+                        style: const TextStyle(
+                          fontSize: 14.5,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
                       const SizedBox(height: 2),
                       Text(
                         showSystem ? '${s.system} · ${s.subtitle}' : s.subtitle,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                            fontSize: 12,
-                            height: 1.35,
-                            color: cs.onSurface.withValues(alpha: 0.6)),
+                          fontSize: 12,
+                          height: 1.35,
+                          color: cs.onSurface.withValues(alpha: 0.6),
+                        ),
                       ),
                     ],
                   ),
                 ),
-                Icon(Icons.chevron_right,
-                    color: cs.onSurface.withValues(alpha: 0.3)),
+                Icon(
+                  Icons.chevron_right,
+                  color: cs.onSurface.withValues(alpha: 0.3),
+                ),
               ],
             ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// The pinned AKI entry at the top of the hub.
+class _AkiPinnedTile extends StatelessWidget {
+  const _AkiPinnedTile({required this.onTap});
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return Material(
+      color: cs.primaryContainer.withValues(alpha: 0.45),
+      borderRadius: BorderRadius.circular(12),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+          child: Row(
+            children: [
+              Icon(
+                Icons.water_drop_outlined,
+                size: 20,
+                color: cs.onPrimaryContainer,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'AKI Classification',
+                      style: TextStyle(
+                        fontSize: 14.5,
+                        fontWeight: FontWeight.w700,
+                        color: cs.onPrimaryContainer,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      'Acute kidney injury — KDIGO, with pRIFLE',
+                      style: TextStyle(
+                        fontSize: 11.5,
+                        color: cs.onPrimaryContainer.withValues(alpha: 0.75),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(
+                Icons.chevron_right,
+                size: 20,
+                color: cs.onPrimaryContainer.withValues(alpha: 0.6),
+              ),
+            ],
           ),
         ),
       ),
