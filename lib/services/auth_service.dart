@@ -170,10 +170,27 @@ class AuthService extends ChangeNotifier {
     String? blob;
 
     // Try flutter_secure_storage first (works on mobile; sometimes works on web).
+    //
+    // Read CONCURRENTLY, not one after another. Each read is a platform-channel
+    // hop into the Android Keystore, and on a number of OEM ROMs the first
+    // Keystore access after a device boot is slow — hundreds of milliseconds,
+    // sometimes seconds. Three of those back to back, on the boot path, before
+    // the first frame, is a large part of why the app opened instantly on one
+    // phone and took an age on another. They do not depend on each other, so
+    // there was never a reason to wait for one before starting the next.
+    //
+    // The timeout is a floor on the worst case: a wedged Keystore now costs
+    // six seconds and a signed-out-looking app, rather than a launch that
+    // never completes.
     try {
-      token   = await _storage.read(key: _kAccessToken);
-      refresh = await _storage.read(key: _kRefreshToken);
-      blob    = await _storage.read(key: _kUserBlob);
+      final values = await Future.wait([
+        _storage.read(key: _kAccessToken),
+        _storage.read(key: _kRefreshToken),
+        _storage.read(key: _kUserBlob),
+      ]).timeout(const Duration(seconds: 6));
+      token   = values[0];
+      refresh = values[1];
+      blob    = values[2];
     } catch (e) {
       debugPrint('[AuthService] secure_storage read failed: $e');
     }
