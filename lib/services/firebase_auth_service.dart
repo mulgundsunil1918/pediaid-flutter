@@ -51,8 +51,8 @@ class FirebaseAuthService {
   FirebaseFirestore? _firestoreOverride;
 
   FirebaseAuthService({FirebaseAuth? auth, FirebaseFirestore? firestore})
-      : _authOverride = auth,
-        _firestoreOverride = firestore;
+    : _authOverride = auth,
+      _firestoreOverride = firestore;
 
   // Lazy on purpose: touching FirebaseAuth.instance / FirebaseFirestore.instance
   // constructs the JS interop bindings, which can throw if this runs before
@@ -167,10 +167,11 @@ class FirebaseAuthService {
     // option at all, even though the flow works perfectly well through the
     // popup.
     if (kIsWeb) {
-      final cred =
-          await _auth.signInWithPopup(OAuthProvider('apple.com')
-            ..addScope('email')
-            ..addScope('name'));
+      final cred = await _auth.signInWithPopup(
+        OAuthProvider('apple.com')
+          ..addScope('email')
+          ..addScope('name'),
+      );
       return _afterAppleSignIn(cred);
     }
 
@@ -223,7 +224,8 @@ class FirebaseAuthService {
       );
     }
     final customToken =
-        (jsonDecode(resp.body) as Map<String, dynamic>)['customToken'] as String;
+        (jsonDecode(resp.body) as Map<String, dynamic>)['customToken']
+            as String;
     final cred = await _auth.signInWithCustomToken(customToken);
     return _afterAppleSignIn(
       cred,
@@ -261,13 +263,14 @@ class FirebaseAuthService {
     try {
       final doc = await _users.doc(user.uid).get();
       if (!doc.exists) {
-        final composed = [givenName ?? '', familyName ?? '']
-            .where((s) => s.isNotEmpty)
-            .join(' ')
-            .trim();
+        final composed = [
+          givenName ?? '',
+          familyName ?? '',
+        ].where((s) => s.isNotEmpty).join(' ').trim();
         final displayName = composed.isNotEmpty
             ? composed
-            : (user.displayName ?? (user.email ?? 'Apple user').split('@').first);
+            : (user.displayName ??
+                  (user.email ?? 'Apple user').split('@').first);
         await _users.doc(user.uid).set({
           'name': displayName,
           'email': user.email ?? appleEmail ?? '',
@@ -303,23 +306,58 @@ class FirebaseAuthService {
 
   // ── Profile update ─────────────────────────────────────────────────────────
 
+  /// Merges arbitrary fields into the user's profile document.
+  ///
+  /// Exists for the one-shot device-to-Firestore rescue, which writes keys
+  /// that are not part of the typed profile API — `legacyQualifications` and
+  /// `yearOfBirthEstimated` — and must not be reachable from ordinary UI
+  /// code, where [updateProfile] is the only sanctioned path.
+  Future<void> mergeProfileFields(Map<String, dynamic> fields) async {
+    final user = _auth.currentUser;
+    if (user == null || fields.isEmpty) return;
+    await _users.doc(user.uid).set(fields, SetOptions(merge: true));
+  }
+
   Future<void> updateProfile({
     String? name,
+    String? email,
     String? avatarUrl,
     String? avatarEmoji,
     String? specialty,
+    int? yearOfBirth,
+    String? gender,
+    List<String>? qualifications,
+    int? profileSchemaVersion,
+    bool clearGender = false,
   }) async {
     final user = _auth.currentUser;
     if (user == null) return;
 
     final updates = <String, dynamic>{};
     if (name != null) updates['name'] = name;
+    if (email != null) updates['email'] = email;
     if (avatarUrl != null) updates['avatarUrl'] = avatarUrl;
     if (avatarEmoji != null) updates['avatarEmoji'] = avatarEmoji;
     if (specialty != null) updates['specialty'] = specialty;
+    if (yearOfBirth != null) updates['yearOfBirth'] = yearOfBirth;
+    // Gender is optional, so unlike the others it must be possible to unset
+    // once set — hence the explicit flag rather than inferring it from null,
+    // which is indistinguishable from "not supplied".
+    if (clearGender) {
+      updates['gender'] = FieldValue.delete();
+    } else if (gender != null) {
+      updates['gender'] = gender;
+    }
+    if (qualifications != null) updates['qualifications'] = qualifications;
+    if (profileSchemaVersion != null) {
+      updates['profileSchemaVersion'] = profileSchemaVersion;
+    }
     if (updates.isEmpty) return;
 
-    await _users.doc(user.uid).update(updates);
+    // set/merge rather than update: update() throws if the document does not
+    // exist, and a profile written before the document was created — a signup
+    // whose Firestore write lost a race — would then be unrecoverable.
+    await _users.doc(user.uid).set(updates, SetOptions(merge: true));
     if (name != null) await user.updateDisplayName(name);
   }
 
@@ -375,8 +413,9 @@ class FirebaseAuthService {
     } catch (_) {
       // Offline or transient — fall through and use what we already have.
     }
-    final providers =
-        (_auth.currentUser ?? user).providerData.map((p) => p.providerId).toSet();
+    final providers = (_auth.currentUser ?? user).providerData
+        .map((p) => p.providerId)
+        .toSet();
 
     if (providers.contains('google.com')) {
       if (kIsWeb) {

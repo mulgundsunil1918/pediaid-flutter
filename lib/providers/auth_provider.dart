@@ -23,8 +23,12 @@ import '../utils/friendly_error.dart';
 class AuthProvider extends ChangeNotifier {
   final FirebaseAuthService _service;
 
+  /// The underlying service, for the one-shot profile rescue at boot, which
+  /// needs to write fields that are deliberately not on the typed profile API.
+  FirebaseAuthService get service => _service;
+
   AuthProvider({FirebaseAuthService? service})
-      : _service = service ?? FirebaseAuthService();
+    : _service = service ?? FirebaseAuthService();
 
   AppUser? _currentUser;
   bool _isLoading = false;
@@ -122,7 +126,9 @@ class AuthProvider extends ChangeNotifier {
       _setLoading(false);
       return _currentUser != null;
     } catch (e) {
-      debugPrint('[AuthProvider] Google sign-in error: $e'); // logged, not shown
+      debugPrint(
+        '[AuthProvider] Google sign-in error: $e',
+      ); // logged, not shown
       _error = friendlyError(e);
       _setLoading(false);
       return false;
@@ -242,9 +248,9 @@ class AuthProvider extends ChangeNotifier {
       // expired — which, at a one-hour expiry, is almost every cold start. It
       // takes no timeout of its own, so cap it here: a stuck token refresh
       // used to hold up the whole boot sequence.
-      final idToken = await _service.firebaseUser
-          ?.getIdToken()
-          .timeout(const Duration(seconds: 10));
+      final idToken = await _service.firebaseUser?.getIdToken().timeout(
+        const Duration(seconds: 10),
+      );
       if (idToken == null) {
         lastBridgeError = 'No Firebase token available.';
         debugPrint('[AuthProvider] legacy bridge skipped: no Firebase token');

@@ -19,6 +19,7 @@ import 'services/profile_store.dart';
 import 'services/guidelines_search_service.dart';
 import 'services/recents_service.dart';
 import 'services/push_service.dart';
+import 'services/profile_migration.dart';
 import 'providers/auth_provider.dart';
 import 'utils/prefs_keys.dart';
 import 'widgets/report_issue_overlay.dart';
@@ -107,13 +108,29 @@ void main() async {
   // ignore: unawaited_futures
   authProvider.refreshCurrentUser();
 
+  // One-shot rescue of profile data that only ever existed on this device.
+  //
+  // The Account screen wrote age, gender and qualifications to
+  // SharedPreferences and nowhere else, so that data has never been readable
+  // by anyone and every reinstall deletes it permanently. This copies it into
+  // Firestore, filling gaps only — the server wins wherever it has a value.
+  //
+  // Not awaited, and it cannot throw: a failed rescue leaves its marker unset
+  // and simply tries again on the next launch.
+  // ignore: unawaited_futures
+  migrateLocalProfileToFirestore(
+    service: authProvider.service,
+    currentUser: authProvider.currentUser,
+  );
+
   // Doctor profile (name, age, gender, emoji, qualifications, specialty)
   // lives in SharedPreferences. Use Firebase auth name as the initial
   // fallback for brand-new installs.
   try {
     await ProfileStore.instance.load(
-      fallbackFullName: authProvider.currentUser?.name
-          ?? AuthService.instance.currentUser?.fullName,
+      fallbackFullName:
+          authProvider.currentUser?.name ??
+          AuthService.instance.currentUser?.fullName,
     );
   } catch (e) {
     debugPrint('[boot] ProfileStore load failed: $e');
@@ -150,12 +167,14 @@ void main() async {
 
   try {
     await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      systemNavigationBarColor: Colors.transparent,
-      systemNavigationBarContrastEnforced: false,
-      systemNavigationBarDividerColor: Colors.transparent,
-    ));
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        systemNavigationBarColor: Colors.transparent,
+        systemNavigationBarContrastEnforced: false,
+        systemNavigationBarDividerColor: Colors.transparent,
+      ),
+    );
   } catch (e) {
     debugPrint('[boot] System UI config failed: $e');
   }
@@ -171,18 +190,22 @@ void main() async {
     final builder = resolveDeepLink();
     if (builder != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        reportNavigatorKey.currentState?.push(MaterialPageRoute(builder: builder));
+        reportNavigatorKey.currentState?.push(
+          MaterialPageRoute(builder: builder),
+        );
       });
     }
   }
 
-  runApp(MultiProvider(
-    providers: [
-      ChangeNotifierProvider.value(value: authProvider),
-      ChangeNotifierProvider(create: (_) => ThemeProvider()),
-    ],
-    child: const PediAidApp(),
-  ));
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(value: authProvider),
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+      ],
+      child: const PediAidApp(),
+    ),
+  );
 }
 
 class PediAidApp extends StatelessWidget {
@@ -208,9 +231,7 @@ class PediAidApp extends StatelessWidget {
       // AppConfigGate is outermost: if a released build is known to be
       // unsafe, that must be decided before anything else is shown. It is
       // invisible unless app-config.json says otherwise.
-      home: const AppConfigGate(
-        child: _OnboardingGate(child: _AuthGate()),
-      ),
+      home: const AppConfigGate(child: _OnboardingGate(child: _AuthGate())),
       // Floats a small "report an issue" button above every screen in the
       // app without needing to touch each of those screen files individually.
       builder: (context, child) => ReportIssueOverlay(child: child!),
