@@ -41,6 +41,79 @@ final List<ScoreDef> allPaediatricScores = [
   ...neonatalScores,
 ];
 
+/// A row in this hub.
+///
+/// Almost every row is a [ScoreDef]. AKI is not — it is a classification with
+/// its own screen, and the shared ScoreScaffold would sum columns that are not
+/// points and report a total out of a maximum that does not exist.
+///
+/// It was pinned above the list for exactly that reason, and that was wrong:
+/// pinned, it ignored both sort modes and sat out of A–Z order, which is the
+/// one thing a list sorted A–Z promises. The list now carries a small wrapper
+/// so a non-score entry can take its proper place among the scores.
+class _HubEntry {
+  const _HubEntry({
+    required this.title,
+    required this.subtitle,
+    required this.system,
+    required this.accent,
+    required this.open,
+    this.keywords = '',
+  });
+
+  factory _HubEntry.fromScore(ScoreDef s) => _HubEntry(
+    title: s.title,
+    subtitle: s.subtitle,
+    system: s.system,
+    accent: s.accent,
+    open: (ctx) => Navigator.push(
+      ctx,
+      MaterialPageRoute(builder: (_) => ScoreScaffold(def: s)),
+    ),
+  );
+
+  final String title;
+  final String subtitle;
+  final String system;
+  final Color accent;
+  final void Function(BuildContext) open;
+
+  /// Extra words to match in the search box. Empty for scores, whose title and
+  /// subtitle already carry their vocabulary; AKI needs it because nobody
+  /// searching for this types the words in its title.
+  final String keywords;
+
+  bool matches(String q) =>
+      title.toLowerCase().contains(q) ||
+      subtitle.toLowerCase().contains(q) ||
+      system.toLowerCase().contains(q) ||
+      (keywords.isNotEmpty && keywords.contains(q));
+}
+
+/// Everything this hub lists — the scores, plus the classifications that are
+/// not scores. Derived, so a score added to allPaediatricScores appears here
+/// without anyone remembering to add it twice.
+List<_HubEntry> _hubEntries() => [
+  ...allPaediatricScores.map(_HubEntry.fromScore),
+  _HubEntry(
+    title: 'AKI Classification',
+    subtitle: 'Acute kidney injury — KDIGO, with pRIFLE',
+    system: 'Renal',
+    accent: const Color(0xFF0288D1),
+    keywords:
+        'aki acute kidney injury renal failure insufficiency '
+        'creatinine oliguria oliguric anuria anuric urine output kdigo '
+        'prifle rifle nephrology dialysis rrt crrt azotaemia azotemia '
+        'uraemia uremia staging classification',
+    open: (ctx) => Navigator.push(
+      ctx,
+      MaterialPageRoute(
+        builder: (_) => const AkiScreen(entry: AkiEntry.paediatric),
+      ),
+    ),
+  ),
+];
+
 class PaediatricScoresHub extends StatefulWidget {
   const PaediatricScoresHub({super.key});
 
@@ -52,34 +125,11 @@ class _PaediatricScoresHubState extends State<PaediatricScoresHub> {
   bool _azMode = false;
   String _query = '';
 
-  List<ScoreDef> get _filtered {
+  List<_HubEntry> get _filtered {
+    final all = _hubEntries();
     final q = _query.trim().toLowerCase();
-    if (q.isEmpty) return allPaediatricScores;
-    return allPaediatricScores
-        .where(
-          (s) =>
-              s.title.toLowerCase().contains(q) ||
-              s.subtitle.toLowerCase().contains(q) ||
-              s.system.toLowerCase().contains(q),
-        )
-        .toList();
-  }
-
-  /// Whether the pinned AKI entry survives the current search.
-  ///
-  /// The keyword list is wider than the title on purpose — "renal failure",
-  /// "oliguria" and "creatinine" are what people actually type when they are
-  /// looking for this, and none of them appear in the words "AKI
-  /// Classification".
-  bool get _matchesAki {
-    final q = _query.trim().toLowerCase();
-    if (q.isEmpty) return true;
-    const keywords =
-        'aki acute kidney injury renal failure insufficiency '
-        'creatinine oliguria oliguric anuria anuric urine output kdigo prifle '
-        'rifle nephrology dialysis rrt crrt azotaemia azotemia uraemia uremia '
-        'staging classification';
-    return keywords.contains(q);
+    if (q.isEmpty) return all;
+    return all.where((e) => e.matches(q)).toList();
   }
 
   @override
@@ -145,45 +195,16 @@ class _PaediatricScoresHubState extends State<PaediatricScoresHub> {
                     _azMode,
                     () => setState(() => _azMode = true),
                   ),
-                  const Spacer(),
-                  Flexible(
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 8),
-                      child: Text(
-                        '${items.length}',
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: cs.onSurface.withValues(alpha: 0.55),
-                        ),
-                      ),
-                    ),
-                  ),
+                  // A bare "98" used to sit here. A number with no label says
+                  // nothing — the per-system headers already carry counts that
+                  // mean something, and this one was only ever the length of
+                  // whatever happened to be on screen.
                 ],
               ),
             ),
           ),
-          // AKI is pinned above the list rather than joining it, because this
-          // hub is built entirely from ScoreDef and AKI is a classification,
-          // not an additive score — the shared tile would sum columns that are
-          // not points. Same reason Bell's has its own screen.
-          //
-          // It still answers the search box: hiding it when the query does not
-          // match keeps it from looking like a result that ignores filtering.
-          if (_matchesAki)
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 6),
-              child: _AkiPinnedTile(
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => const AkiScreen(entry: AkiEntry.paediatric),
-                  ),
-                ),
-              ),
-            ),
           Expanded(
-            child: items.isEmpty && !_matchesAki
+            child: items.isEmpty
                 ? Center(
                     child: Text(
                       'No scores match "$_query"',
@@ -221,7 +242,7 @@ class _PaediatricScoresHubState extends State<PaediatricScoresHub> {
     );
   }
 
-  Widget _azList(List<ScoreDef> items) {
+  Widget _azList(List<_HubEntry> items) {
     final sorted = [...items]..sort((a, b) => a.title.compareTo(b.title));
     return ListView.builder(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
@@ -230,8 +251,8 @@ class _PaediatricScoresHubState extends State<PaediatricScoresHub> {
     );
   }
 
-  Widget _systemList(List<ScoreDef> items) {
-    final groups = <String, List<ScoreDef>>{};
+  Widget _systemList(List<_HubEntry> items) {
+    final groups = <String, List<_HubEntry>>{};
     for (final s in items) {
       groups.putIfAbsent(s.system, () => []).add(s);
     }
@@ -280,7 +301,7 @@ class _PaediatricScoresHubState extends State<PaediatricScoresHub> {
     );
   }
 
-  Widget _tile(ScoreDef s, {bool showSystem = false}) {
+  Widget _tile(_HubEntry s, {bool showSystem = false}) {
     final cs = Theme.of(context).colorScheme;
     final ink = adaptInk(context, s.accent);
     return Container(
@@ -294,10 +315,7 @@ class _PaediatricScoresHubState extends State<PaediatricScoresHub> {
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(12),
-          onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => ScoreScaffold(def: s)),
-          ),
+          onTap: () => s.open(context),
           child: Padding(
             padding: const EdgeInsets.all(13),
             child: Row(
@@ -343,66 +361,6 @@ class _PaediatricScoresHubState extends State<PaediatricScoresHub> {
                 ),
               ],
             ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// The pinned AKI entry at the top of the hub.
-class _AkiPinnedTile extends StatelessWidget {
-  const _AkiPinnedTile({required this.onTap});
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-    return Material(
-      color: cs.primaryContainer.withValues(alpha: 0.45),
-      borderRadius: BorderRadius.circular(12),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(12),
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-          child: Row(
-            children: [
-              Icon(
-                Icons.water_drop_outlined,
-                size: 20,
-                color: cs.onPrimaryContainer,
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'AKI Classification',
-                      style: TextStyle(
-                        fontSize: 14.5,
-                        fontWeight: FontWeight.w700,
-                        color: cs.onPrimaryContainer,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      'Acute kidney injury — KDIGO, with pRIFLE',
-                      style: TextStyle(
-                        fontSize: 11.5,
-                        color: cs.onPrimaryContainer.withValues(alpha: 0.75),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Icon(
-                Icons.chevron_right,
-                size: 20,
-                color: cs.onPrimaryContainer.withValues(alpha: 0.6),
-              ),
-            ],
           ),
         ),
       ),
