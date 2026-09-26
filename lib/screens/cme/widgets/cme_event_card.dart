@@ -643,18 +643,56 @@ class _FooterButtons extends StatelessWidget {
   final CmeEvent event;
   final bool isWebinar;
 
+  /// Opens an organiser-supplied link.
+  ///
+  /// Two silent-failure holes lived here. `Uri.tryParse` almost never returns
+  /// null — "forms.gle/abc" parses happily as a *relative* URI with no scheme,
+  /// which `launchUrl` then cannot open. And `launchUrl` signals that failure
+  /// by RETURNING FALSE, not by throwing, so the catch block never ran: the
+  /// button did nothing and said nothing. Which is exactly how it was reported.
   Future<void> _open(BuildContext context, String url) async {
-    final uri = Uri.tryParse(url);
-    if (uri == null) return;
-    try {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    } catch (_) {
-      if (context.mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Could not open link.')));
-      }
+    final uri = _resolve(url);
+    if (uri == null) {
+      _complain(context);
+      return;
     }
+    var opened = false;
+    try {
+      opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
+      if (!opened) {
+        // Some Android setups refuse externalApplication for a plain https
+        // link when no browser is set as default handler; the platform
+        // default view succeeds where it fails.
+        opened = await launchUrl(uri);
+      }
+    } catch (_) {
+      opened = false;
+    }
+    if (!opened && context.mounted) _complain(context);
+  }
+
+  /// Turns a hand-typed address into something launchable, or null.
+  ///
+  /// Organisers paste "www.iapcme.org/reg" and "forms.gle/abc123" into a
+  /// free-text field far more often than they paste a full URL.
+  static Uri? _resolve(String raw) {
+    final trimmed = raw.trim();
+    if (trimmed.isEmpty) return null;
+    final uri = Uri.tryParse(trimmed);
+    if (uri != null && uri.hasScheme && uri.host.isNotEmpty) return uri;
+    if (uri != null && (uri.scheme == 'mailto' || uri.scheme == 'tel')) {
+      return uri;
+    }
+    final prefixed = Uri.tryParse('https://$trimmed');
+    if (prefixed != null && prefixed.host.isNotEmpty) return prefixed;
+    return null;
+  }
+
+  void _complain(BuildContext context) {
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Could not open that link.')),
+    );
   }
 
   /// Asks which calendar, then creates the entry there.

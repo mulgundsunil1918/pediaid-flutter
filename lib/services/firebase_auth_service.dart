@@ -77,10 +77,36 @@ class FirebaseAuthService {
 
   // ── Read ──────────────────────────────────────────────────────────────────
 
-  Future<AppUser?> getCurrentUser() async {
+  /// Reads the signed-in user's profile document.
+  ///
+  /// [preferCache] exists for the boot path. Firestore's default `.get()` is a
+  /// SERVER read, and awaiting one before the first frame meant a phone on a
+  /// weak connection sat on a blank screen until Firestore gave up — one of
+  /// the two reasons the app sometimes took an age to open on Android. The
+  /// copy Firestore cached on the last launch is enough to decide which screen
+  /// to show; the caller refreshes from the server once the UI is up.
+  ///
+  /// Falls through to a server read when nothing is cached (a fresh install),
+  /// with a timeout, because a boot step may not hang indefinitely.
+  Future<AppUser?> getCurrentUser({bool preferCache = false}) async {
     final user = _auth.currentUser;
     if (user == null) return null;
-    final doc = await _users.doc(user.uid).get();
+
+    DocumentSnapshot<Map<String, dynamic>>? doc;
+    if (preferCache) {
+      try {
+        doc = await _users
+            .doc(user.uid)
+            .get(const GetOptions(source: Source.cache));
+      } catch (_) {
+        // Nothing cached yet. Not an error — fall through to the server.
+        doc = null;
+      }
+    }
+    doc ??= await _users
+        .doc(user.uid)
+        .get()
+        .timeout(const Duration(seconds: 8));
     if (!doc.exists) return null;
     return AppUser.fromFirestore(doc);
   }

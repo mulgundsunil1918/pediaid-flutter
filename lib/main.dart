@@ -61,7 +61,11 @@ void main() async {
   // already-signed-in users.
   final authProvider = AuthProvider();
   try {
-    await authProvider.loadCurrentUser();
+    // preferCache: the profile document is read from Firestore's on-disk
+    // cache, not the network. Deciding between the home screen and the login
+    // screen does not need a fresh copy, and waiting for one put a network
+    // round-trip in front of the first frame on every single launch.
+    await authProvider.loadCurrentUser(preferCache: true);
   } catch (e) {
     debugPrint('[boot] AuthProvider.loadCurrentUser failed: $e');
   }
@@ -78,13 +82,30 @@ void main() async {
   // If Firebase has a session but the legacy bridge above didn't restore
   // one (e.g. this device signed in via Firebase before the bridge existed,
   // or its legacy session was cleared independently), silently reconnect it
-  // now so CME/admin screens gated on the legacy session don't show
-  // "signed out" underneath an otherwise-signed-in app.
-  try {
-    await authProvider.bridgeLegacySessionIfNeeded();
-  } catch (e) {
+  // so CME/admin screens gated on the legacy session don't show "signed out"
+  // underneath an otherwise-signed-in app.
+  //
+  // NOT awaited. This is a Firebase token refresh followed by a POST to the
+  // backend, and it was the single worst thing in this function: on a cold
+  // start the token has usually expired (one-hour life) and the backend
+  // instance is asleep, so the sequence could take tens of seconds — all of
+  // it before the first frame, with nothing on screen. That is the
+  // "sometimes the app takes forever to open" on Android.
+  //
+  // It is safe to let it land late because AuthProvider is a ChangeNotifier
+  // and _bridgeLegacySession now notifies when it resolves, so anything
+  // gated on the legacy session rebuilds itself. The worst case is a second
+  // or two where a CME screen thinks it is signed out — against a blank
+  // screen for everyone, on every launch, that is not a close call.
+  // ignore: unawaited_futures
+  authProvider.bridgeLegacySessionIfNeeded().catchError((Object e) {
     debugPrint('[boot] legacy bridge failed: $e');
-  }
+  });
+
+  // And bring the cached profile up to date behind the first frame, so
+  // preferCache above cannot leave a renamed or re-roled account stale.
+  // ignore: unawaited_futures
+  authProvider.refreshCurrentUser();
 
   // Doctor profile (name, age, gender, emoji, qualifications, specialty)
   // lives in SharedPreferences. Use Firebase auth name as the initial

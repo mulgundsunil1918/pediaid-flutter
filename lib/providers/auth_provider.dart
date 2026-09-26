@@ -56,10 +56,15 @@ class AuthProvider extends ChangeNotifier {
   // ── Boot ──────────────────────────────────────────────────────────────────
 
   /// Called once in main() before runApp() to hydrate the Firebase session.
-  Future<bool> loadCurrentUser() async {
+  /// Hydrates the signed-in user at boot.
+  ///
+  /// [preferCache] reads the profile Firestore already cached instead of
+  /// waiting on the network, so the first frame is not held hostage to the
+  /// connection. Pair it with a later [refreshCurrentUser].
+  Future<bool> loadCurrentUser({bool preferCache = false}) async {
     _setLoading(true);
     try {
-      _currentUser = await _service.getCurrentUser();
+      _currentUser = await _service.getCurrentUser(preferCache: preferCache);
       _error = null;
     } catch (e) {
       _error = friendlyError(e);
@@ -68,6 +73,22 @@ class AuthProvider extends ChangeNotifier {
     _hasBootstrapped = true;
     _setLoading(false);
     return _currentUser != null;
+  }
+
+  /// Re-reads the profile from the server after the UI is already up.
+  ///
+  /// Silent by design: it exists to correct a cached profile, so a failure
+  /// leaves the cached one in place rather than signing anybody out.
+  Future<void> refreshCurrentUser() async {
+    try {
+      final fresh = await _service.getCurrentUser();
+      if (fresh != null) {
+        _currentUser = fresh;
+        notifyListeners();
+      }
+    } catch (e) {
+      debugPrint('[AuthProvider] refreshCurrentUser: $e');
+    }
   }
 
   /// Bridges an already-loaded Firebase session to the legacy backend, but
@@ -217,7 +238,13 @@ class AuthProvider extends ChangeNotifier {
   // bridge" gap: there is no password to reconcile any more.
   Future<void> _bridgeLegacySession(AppUser user) async {
     try {
-      final idToken = await _service.firebaseUser?.getIdToken();
+      // getIdToken() refreshes over the network whenever the cached token has
+      // expired — which, at a one-hour expiry, is almost every cold start. It
+      // takes no timeout of its own, so cap it here: a stuck token refresh
+      // used to hold up the whole boot sequence.
+      final idToken = await _service.firebaseUser
+          ?.getIdToken()
+          .timeout(const Duration(seconds: 10));
       if (idToken == null) {
         lastBridgeError = 'No Firebase token available.';
         debugPrint('[AuthProvider] legacy bridge skipped: no Firebase token');
@@ -225,6 +252,11 @@ class AuthProvider extends ChangeNotifier {
       }
       await AuthService.instance.loginWithFirebaseToken(idToken);
       lastBridgeError = null;
+      // The bridge no longer runs before the first frame, so screens are
+      // already built and looking at a signed-out legacy session by the time
+      // it lands. Without this they stay that way until something else
+      // happens to rebuild them.
+      notifyListeners();
     } catch (e) {
       // Recorded, not just printed. This failure is invisible to the user and
       // to anyone reading a bug report: the app stays signed in to Firebase
@@ -235,6 +267,7 @@ class AuthProvider extends ChangeNotifier {
       // the reason, so keep it.
       lastBridgeError = e.toString().replaceFirst('AuthException: ', '');
       debugPrint('[AuthProvider] legacy bridge failed for ${user.email}: $e');
+      notifyListeners();
     }
   }
 }
