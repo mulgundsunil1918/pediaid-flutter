@@ -21,6 +21,7 @@ import 'services/guidelines_search_service.dart';
 import 'services/recents_service.dart';
 import 'services/push_service.dart';
 import 'services/profile_migration.dart';
+import 'services/profile_sync.dart';
 import 'providers/auth_provider.dart';
 import 'utils/prefs_keys.dart';
 import 'widgets/report_issue_overlay.dart';
@@ -118,6 +119,12 @@ void main() async {
   //
   // Not awaited, and it cannot throw: a failed rescue leaves its marker unset
   // and simply tries again on the next launch.
+  // Retry any profile sync a previous launch could not complete — usually
+  // because the legacy session had not been bridged yet when the form was
+  // saved. A no-op when nothing is owed.
+  // ignore: unawaited_futures
+  retryPendingProfileSync();
+
   // ignore: unawaited_futures
   migrateLocalProfileToFirestore(
     service: authProvider.service,

@@ -25,6 +25,7 @@ import 'package:provider/provider.dart';
 import '../../models/app_user.dart';
 import '../../providers/auth_provider.dart';
 import '../../services/profile_store.dart';
+import '../../services/profile_sync.dart';
 import '../../services/qualifications_catalogue.dart';
 import '../auth/sign_out_flow.dart';
 
@@ -147,6 +148,16 @@ class _ProfileFormState extends State<ProfileForm> {
           qualifications: labelsFor(_qualifications),
         ),
       );
+
+      // Firestore has it; the form's job is done. The backend copy is what
+      // the admin dashboard reads, and it is fired here rather than awaited —
+      // telling someone their profile failed to save when it demonstrably did
+      // would be worse than a dashboard that is one launch behind.
+      final user = auth.currentUser;
+      if (user != null) {
+        // ignore: unawaited_futures
+        syncProfileToBackend(user);
+      }
 
       if (!mounted) return;
       widget.onSaved?.call();
