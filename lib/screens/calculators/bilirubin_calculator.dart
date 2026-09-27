@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/material.dart';
+
+import '../../widgets/timestamp_field.dart';
 import 'package:flutter/services.dart';
 import '../../widgets/download_original_chart_button.dart';
 
@@ -506,19 +508,19 @@ class _BilirubinCalculatorState extends State<BilirubinCalculator> {
             const SizedBox(height: 12),
 
             if (_ageMode == _AgeMode.dateTime) ...[
-              _TimestampField(
+              TimestampField(
                 label: 'Born at',
                 value: _birthAt,
                 onChanged: (v) => setState(() => _birthAt = v),
               ),
               const SizedBox(height: 12),
-              _TimestampField(
+              TimestampField(
                 label: 'Sample taken at',
                 value: _measuredAt,
                 onChanged: (v) => setState(() => _measuredAt = v),
               ),
               const SizedBox(height: 12),
-              _DerivedAgeBanner(hours: _hoursFromDates),
+              DerivedAgeBanner(hours: _hoursFromDates),
             ] else if (_ageMode == _AgeMode.hours) ...[
               _IntStepperField(
                 label: 'Age (hours)',
@@ -1611,142 +1613,3 @@ class _IntStepperFieldState extends State<_IntStepperField> {
 /// and most people already know the number. The other two exist so nobody has
 /// to do date arithmetic to use a chart.
 enum _AgeMode { hours, daysHours, dateTime }
-
-/// A date-and-time field backed by the platform pickers.
-class _TimestampField extends StatelessWidget {
-  const _TimestampField({
-    required this.label,
-    required this.value,
-    required this.onChanged,
-  });
-
-  final String label;
-  final DateTime? value;
-  final ValueChanged<DateTime?> onChanged;
-
-  static String _fmt(DateTime d) {
-    const months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
-    ];
-    final h = d.hour.toString().padLeft(2, '0');
-    final m = d.minute.toString().padLeft(2, '0');
-    return '${d.day} ${months[d.month - 1]} ${d.year}, $h:$m';
-  }
-
-  Future<void> _pick(BuildContext context) async {
-    final now = DateTime.now();
-    final seed = value ?? now;
-    final date = await showDatePicker(
-      context: context,
-      initialDate: seed,
-      // Two weeks back covers the whole range the chart plots (0–336 h) and
-      // stops a mis-tap landing in the previous decade.
-      firstDate: now.subtract(const Duration(days: 30)),
-      lastDate: now.add(const Duration(days: 1)),
-    );
-    if (date == null || !context.mounted) return;
-
-    final time = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.fromDateTime(seed),
-    );
-    if (time == null) return;
-
-    onChanged(
-      DateTime(date.year, date.month, date.day, time.hour, time.minute),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-    final v = value;
-    return InkWell(
-      borderRadius: BorderRadius.circular(10),
-      onTap: () => _pick(context),
-      child: InputDecorator(
-        decoration: InputDecoration(
-          labelText: label,
-          isDense: true,
-          border: const OutlineInputBorder(),
-          suffixIcon: v == null
-              ? const Icon(Icons.event_outlined, size: 20)
-              : IconButton(
-                  tooltip: 'Clear',
-                  icon: const Icon(Icons.close, size: 18),
-                  onPressed: () => onChanged(null),
-                ),
-        ),
-        child: Text(
-          v == null ? 'Tap to pick' : _fmt(v),
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: v == null ? FontWeight.w400 : FontWeight.w600,
-            color: v == null
-                ? cs.onSurface.withValues(alpha: 0.45)
-                : cs.onSurface,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// Shows the age the two timestamps work out to, so the number the chart is
-/// actually using is visible rather than implied.
-class _DerivedAgeBanner extends StatelessWidget {
-  const _DerivedAgeBanner({required this.hours});
-  final int? hours;
-
-  @override
-  Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-    final h = hours;
-    final ok = h != null;
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-      decoration: BoxDecoration(
-        color: (ok ? cs.primaryContainer : cs.errorContainer).withValues(
-          alpha: 0.45,
-        ),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Row(
-        children: [
-          Icon(
-            ok ? Icons.schedule : Icons.error_outline,
-            size: 18,
-            color: ok ? cs.onPrimaryContainer : cs.onErrorContainer,
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Text(
-              ok
-                  ? 'Age at sampling: $h hours'
-                        '${h >= 24 ? '  (${h ~/ 24} d ${h % 24} h)' : ''}'
-                  : 'Set both times. The sample cannot be earlier than the '
-                        'birth.',
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: ok ? FontWeight.w700 : FontWeight.w500,
-                color: ok ? cs.onPrimaryContainer : cs.onErrorContainer,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}

@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:fl_chart/fl_chart.dart';
+
+import '../../widgets/timestamp_field.dart';
 import '../../widgets/download_original_chart_button.dart';
 
 const double _umolPerMgDl = 17.1;
@@ -47,13 +49,35 @@ class NiceBilirubinScreen extends StatefulWidget {
 class _NiceBilirubinScreenState extends State<NiceBilirubinScreen> {
   // ── GA chips ────────────────────────────────────────────────────────────────
   static const List<String> _gaKeys = [
-    '23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38plus'
+    '23',
+    '24',
+    '25',
+    '26',
+    '27',
+    '28',
+    '29',
+    '30',
+    '31',
+    '32',
+    '33',
+    '34',
+    '35',
+    '36',
+    '37',
+    '38plus',
   ];
   String? _selectedGa;
 
-  // ── Age steppers ────────────────────────────────────────────────────────────
+  // ── Age ─────────────────────────────────────────────────────────────────────
   int _days = 0;
   int _hours = 0;
+
+  /// Whether age is being typed as days + hours, or worked out from two
+  /// timestamps. Steppers stay the default: the chart is indexed on age from
+  /// birth and most people already know the number.
+  bool _byDates = false;
+  DateTime? _birthAt;
+  DateTime? _sampledAt;
 
   // ── TSB ─────────────────────────────────────────────────────────────────────
   bool _isUmol = true; // true = µmol/L, false = mg/dL
@@ -112,7 +136,12 @@ class _NiceBilirubinScreenState extends State<NiceBilirubinScreen> {
     return (v * _umolPerMgDl);
   }
 
-  double _thresholdAt(double ageDays, double start, double plateauDay, double plateau) {
+  double _thresholdAt(
+    double ageDays,
+    double start,
+    double plateauDay,
+    double plateau,
+  ) {
     if (ageDays >= plateauDay) return plateau;
     return start + (ageDays / plateauDay) * (plateau - start);
   }
@@ -120,7 +149,10 @@ class _NiceBilirubinScreenState extends State<NiceBilirubinScreen> {
   String _toMgDl(num umol) => (umol / _umolPerMgDl).toStringAsFixed(1);
 
   bool get _canAssess =>
-      _selectedGa != null && _tsbValue != null && _tsbValue! > 0 && _data != null;
+      _selectedGa != null &&
+      _tsbValue != null &&
+      _tsbValue! > 0 &&
+      _data != null;
 
   void _assess() {
     if (!_canAssess) return;
@@ -148,11 +180,15 @@ class _NiceBilirubinScreenState extends State<NiceBilirubinScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: const [
-            Text('NICE Bilirubin Chart',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17)),
+            Text(
+              'NICE Bilirubin Chart',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+            ),
             SizedBox(height: 2),
-            Text('NICE CG98 \u00b7 23\u201338+ weeks',
-                style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500)),
+            Text(
+              'NICE CG98 \u00b7 23\u201338+ weeks',
+              style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
+            ),
           ],
         ),
       ),
@@ -160,41 +196,43 @@ class _NiceBilirubinScreenState extends State<NiceBilirubinScreen> {
           ? Center(
               child: Padding(
                 padding: const EdgeInsets.all(24),
-                child: Text('Failed to load NICE data:\n$_loadError',
-                    textAlign: TextAlign.center),
+                child: Text(
+                  'Failed to load NICE data:\n$_loadError',
+                  textAlign: TextAlign.center,
+                ),
               ),
             )
           : _data == null
-              ? const Center(child: CircularProgressIndicator())
-              : SingleChildScrollView(
-                  controller: _scrollCtrl,
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      _buildGaSection(),
-                      const SizedBox(height: 12),
-                      _buildAgeSection(),
-                      const SizedBox(height: 12),
-                      _buildTsbSection(),
-                      const SizedBox(height: 16),
-                      _buildAssessButton(),
-                      if (_showResults) ...[
-                        const SizedBox(height: 18),
-                        Container(key: _resultsKey),
-                        _buildRecommendationCard(),
-                        const SizedBox(height: 12),
-                        _buildChartCard(),
-                      ],
-                      const SizedBox(height: 14),
-                      _buildReferenceCard(),
-                      const DownloadOriginalChartButton(
-                        driveId: '1ne9-ekD0_DjeGAoRMZYcgZEhf_JmytPG',
-                      ),
-                      const SizedBox(height: 32),
-                    ],
+          ? const Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+              controller: _scrollCtrl,
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _buildGaSection(),
+                  const SizedBox(height: 12),
+                  _buildAgeSection(),
+                  const SizedBox(height: 12),
+                  _buildTsbSection(),
+                  const SizedBox(height: 16),
+                  _buildAssessButton(),
+                  if (_showResults) ...[
+                    const SizedBox(height: 18),
+                    Container(key: _resultsKey),
+                    _buildRecommendationCard(),
+                    const SizedBox(height: 12),
+                    _buildChartCard(),
+                  ],
+                  const SizedBox(height: 14),
+                  _buildReferenceCard(),
+                  const DownloadOriginalChartButton(
+                    driveId: '1ne9-ekD0_DjeGAoRMZYcgZEhf_JmytPG',
                   ),
-                ),
+                  const SizedBox(height: 32),
+                ],
+              ),
+            ),
     );
   }
 
@@ -253,54 +291,175 @@ class _NiceBilirubinScreenState extends State<NiceBilirubinScreen> {
   }
 
   // ── Section 2: Age steppers ─────────────────────────────────────────────────
+  /// Hours between birth and the sample, or null when that cannot be known.
+  ///
+  /// Null rather than 0 when a timestamp is missing or the sample precedes the
+  /// birth. Zero is a real, plottable age on this chart — the thresholds start
+  /// there — so it must never stand in for "not known".
+  int? get _hoursFromDates {
+    final b = _birthAt, m = _sampledAt;
+    if (b == null || m == null) return null;
+    final mins = m.difference(b).inMinutes;
+    if (mins < 0) return null;
+    return (mins + 30) ~/ 60; // nearest hour, not truncated
+  }
+
+  /// Pushes a derived age into the day/hour fields the chart reads.
+  ///
+  /// The NICE chart stops at 14 days, and its own stepper locks hours to 0
+  /// there. A derived age beyond that is clamped to the same place — and the
+  /// banner says so, because silently plotting a three-week-old at 14 days
+  /// would be the chart quietly answering a question it was not asked.
+  void _applyDerivedAge() {
+    final h = _hoursFromDates;
+    if (h == null) return;
+    final capped = h > 336 ? 336 : h;
+    _days = capped ~/ 24;
+    _hours = _days == 14 ? 0 : capped % 24;
+  }
+
   Widget _buildAgeSection() {
     final cs = Theme.of(context).colorScheme;
     final hoursLocked = _days == 14;
     final total = _totalHours();
+    final derived = _hoursFromDates;
     return _sectionCard(
       title: 'Age from Birth',
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: _stepperBox(
-                  label: 'Days',
-                  value: _days,
-                  min: 0,
-                  max: 14,
-                  onChanged: (v) => setState(() {
-                    _days = v;
-                    if (_days == 14) _hours = 0;
-                    _showResults = false;
-                  }),
-                ),
+          // Mode toggle. Steppers first, because they are the primary input.
+          SegmentedButton<bool>(
+            segments: const [
+              ButtonSegment(
+                value: false,
+                label: Text('Days + hours', style: TextStyle(fontSize: 12)),
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _stepperBox(
-                  label: 'Hours',
-                  value: _hours,
-                  min: 0,
-                  max: 23,
-                  enabled: !hoursLocked,
-                  onChanged: (v) => setState(() {
-                    _hours = v;
-                    _showResults = false;
-                  }),
+              ButtonSegment(
+                value: true,
+                label: Text('Date & time', style: TextStyle(fontSize: 12)),
+                icon: Icon(Icons.event_outlined, size: 15),
+              ),
+            ],
+            selected: {_byDates},
+            showSelectedIcon: false,
+            onSelectionChanged: (v) => setState(() {
+              _byDates = v.first;
+              _showResults = false;
+              if (_byDates) _applyDerivedAge();
+            }),
+          ),
+          const SizedBox(height: 14),
+
+          if (_byDates) ...[
+            TimestampField(
+              label: 'Date & time of birth',
+              value: _birthAt,
+              onChanged: (v) => setState(() {
+                _birthAt = v;
+                _applyDerivedAge();
+                _showResults = false;
+              }),
+            ),
+            const SizedBox(height: 12),
+            TimestampField(
+              label: 'Sample taken at',
+              value: _sampledAt,
+              onChanged: (v) => setState(() {
+                _sampledAt = v;
+                _applyDerivedAge();
+                _showResults = false;
+              }),
+            ),
+            const SizedBox(height: 12),
+            DerivedAgeBanner(hours: derived),
+            if (derived != null && derived > 336) ...[
+              const SizedBox(height: 10),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 10,
+                ),
+                decoration: BoxDecoration(
+                  color: cs.errorContainer.withValues(alpha: 0.5),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(
+                      Icons.warning_amber_rounded,
+                      size: 17,
+                      color: cs.onErrorContainer,
+                    ),
+                    const SizedBox(width: 9),
+                    Expanded(
+                      child: Text(
+                        'That is $derived hours — past the 14 days this chart '
+                        'covers. Plotted at 14 days 0 hours; the NICE '
+                        'thresholds do not extend beyond that.',
+                        style: TextStyle(
+                          fontSize: 12,
+                          height: 1.45,
+                          color: cs.onErrorContainer,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
-          ),
-          const SizedBox(height: 10),
-          Text(
-            'Total: $_days days $_hours hours ($total hours)',
-            style: TextStyle(
-              fontSize: 11.5,
-              color: cs.onSurface.withValues(alpha: 0.55),
+            const SizedBox(height: 12),
+            Text(
+              'Plotting at: $_days days $_hours hours ($total hours)',
+              style: TextStyle(
+                fontSize: 11.5,
+                fontWeight: FontWeight.w600,
+                color: cs.onSurface.withValues(alpha: 0.7),
+              ),
             ),
-          ),
+          ] else ...[
+            Row(
+              children: [
+                Expanded(
+                  child: _stepperBox(
+                    label: 'Days',
+                    value: _days,
+                    min: 0,
+                    max: 14,
+                    onChanged: (v) => setState(() {
+                      _days = v;
+                      if (_days == 14) _hours = 0;
+                      _showResults = false;
+                    }),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _stepperBox(
+                    label: 'Hours',
+                    value: _hours,
+                    min: 0,
+                    max: 23,
+                    enabled: !hoursLocked,
+                    onChanged: (v) => setState(() {
+                      _hours = v;
+                      _showResults = false;
+                    }),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Text(
+              'Total: $_days days $_hours hours ($total hours)',
+              style: TextStyle(
+                fontSize: 11.5,
+                color: cs.onSurface.withValues(alpha: 0.55),
+              ),
+            ),
+          ],
         ],
       ),
     );
@@ -318,12 +477,14 @@ class _NiceBilirubinScreenState extends State<NiceBilirubinScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label,
-            style: TextStyle(
-              color: cs.onSurface.withValues(alpha: 0.6),
-              fontSize: 11.5,
-              fontWeight: FontWeight.w600,
-            )),
+        Text(
+          label,
+          style: TextStyle(
+            color: cs.onSurface.withValues(alpha: 0.6),
+            fontSize: 11.5,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
         const SizedBox(height: 6),
         Container(
           decoration: BoxDecoration(
@@ -437,8 +598,9 @@ class _NiceBilirubinScreenState extends State<NiceBilirubinScreen> {
             ),
             child: TextField(
               controller: _tsbCtrl,
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: cs.onSurface,
@@ -453,8 +615,10 @@ class _NiceBilirubinScreenState extends State<NiceBilirubinScreen> {
                   fontWeight: FontWeight.w500,
                 ),
                 border: InputBorder.none,
-                contentPadding:
-                    const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                contentPadding: const EdgeInsets.symmetric(
+                  vertical: 12,
+                  horizontal: 12,
+                ),
                 suffixText: unitLabel,
                 suffixStyle: TextStyle(
                   color: cs.onSurface.withValues(alpha: 0.6),
@@ -488,9 +652,13 @@ class _NiceBilirubinScreenState extends State<NiceBilirubinScreen> {
     final cs = Theme.of(context).colorScheme;
     final radius = isLeft
         ? const BorderRadius.only(
-            topLeft: Radius.circular(8), bottomLeft: Radius.circular(8))
+            topLeft: Radius.circular(8),
+            bottomLeft: Radius.circular(8),
+          )
         : const BorderRadius.only(
-            topRight: Radius.circular(8), bottomRight: Radius.circular(8));
+            topRight: Radius.circular(8),
+            bottomRight: Radius.circular(8),
+          );
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -499,9 +667,7 @@ class _NiceBilirubinScreenState extends State<NiceBilirubinScreen> {
         decoration: BoxDecoration(
           color: selected ? cs.primary : Colors.transparent,
           border: Border.all(
-            color: selected
-                ? cs.primary
-                : cs.onSurface.withValues(alpha: 0.25),
+            color: selected ? cs.primary : cs.onSurface.withValues(alpha: 0.25),
           ),
           borderRadius: radius,
         ),
@@ -548,11 +714,17 @@ class _NiceBilirubinScreenState extends State<NiceBilirubinScreen> {
     final ageDaysFloat = ageHoursTotal / 24.0;
 
     final photoT = _thresholdAt(
-            ageDaysFloat, ga.photoStart, ga.photoPlateauDay, ga.photoPlateau)
-        .round();
+      ageDaysFloat,
+      ga.photoStart,
+      ga.photoPlateauDay,
+      ga.photoPlateau,
+    ).round();
     final exchT = _thresholdAt(
-            ageDaysFloat, ga.exchStart, ga.exchPlateauDay, ga.exchPlateau)
-        .round();
+      ageDaysFloat,
+      ga.exchStart,
+      ga.exchPlateauDay,
+      ga.exchPlateau,
+    ).round();
     final tsbUmol = _tsbUmol().round();
     final intensifiedT = exchT - 50;
 
@@ -571,7 +743,8 @@ class _NiceBilirubinScreenState extends State<NiceBilirubinScreen> {
       iconColor = dark ? const Color(0xFFA5D6A7) : const Color(0xFF1B5E20);
       icon = Icons.check_circle_outline;
       title = 'Below Phototherapy Threshold';
-      body = 'No phototherapy indicated at this age and gestation.\n\n'
+      body =
+          'No phototherapy indicated at this age and gestation.\n\n'
           'Phototherapy threshold:   __$photoT __\u00b5mol/L  (${_toMgDl(photoT)} mg/dL)\n'
           'Exchange threshold:       __$exchT __\u00b5mol/L  (${_toMgDl(exchT)} mg/dL)\n\n'
           'Monitor clinically. Recheck bilirubin as indicated.';
@@ -582,7 +755,8 @@ class _NiceBilirubinScreenState extends State<NiceBilirubinScreen> {
       iconColor = dark ? const Color(0xFFEF9A9A) : const Color(0xFFB71C1C);
       icon = Icons.emergency;
       title = 'At or Above Exchange Transfusion Threshold';
-      body = 'Exchange transfusion is indicated.\n\n'
+      body =
+          'Exchange transfusion is indicated.\n\n'
           'Exchange threshold:   __$exchT __\u00b5mol/L  (${_toMgDl(exchT)} mg/dL)\n\n'
           '\u2022 Perform double-volume exchange transfusion\n'
           '\u2022 Do not stop multiple phototherapy during exchange\n'
@@ -619,7 +793,8 @@ class _NiceBilirubinScreenState extends State<NiceBilirubinScreen> {
       iconColor = dark ? const Color(0xFFFFD54F) : const Color(0xFF5D4037);
       icon = Icons.warning_amber_rounded;
       title = 'At or Above Phototherapy Threshold';
-      body = 'Start single phototherapy.\n\n'
+      body =
+          'Start single phototherapy.\n\n'
           'Phototherapy threshold:   __$photoT __\u00b5mol/L  (${_toMgDl(photoT)} mg/dL)\n'
           'Exchange threshold:       __$exchT __\u00b5mol/L  (${_toMgDl(exchT)} mg/dL)\n\n'
           '\u2022 Repeat SBR 4\u20136 hrs after starting phototherapy\n'
@@ -677,10 +852,12 @@ class _NiceBilirubinScreenState extends State<NiceBilirubinScreen> {
         if (m.start > idx) {
           spans.add(TextSpan(text: line.substring(idx, m.start)));
         }
-        spans.add(TextSpan(
-          text: m.group(1),
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ));
+        spans.add(
+          TextSpan(
+            text: m.group(1),
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+        );
         idx = m.end;
       }
       if (idx < line.length) {
@@ -710,14 +887,24 @@ class _NiceBilirubinScreenState extends State<NiceBilirubinScreen> {
     final ageDaysFloat = ageHoursTotal / 24.0;
     final tsbUmol = _tsbUmol();
     final exchT = _thresholdAt(
-        ageDaysFloat, ga.exchStart, ga.exchPlateauDay, ga.exchPlateau);
+      ageDaysFloat,
+      ga.exchStart,
+      ga.exchPlateauDay,
+      ga.exchPlateau,
+    );
     final intensifiedT = exchT - 50;
 
-    final photoSpots = _series(ga.photoStart, ga.photoPlateauDay, ga.photoPlateau);
+    final photoSpots = _series(
+      ga.photoStart,
+      ga.photoPlateauDay,
+      ga.photoPlateau,
+    );
     final exchSpots = _series(ga.exchStart, ga.exchPlateauDay, ga.exchPlateau);
 
     final patientSpot = FlSpot(
-        ageDaysFloat.clamp(0, 14).toDouble(), tsbUmol.clamp(0, 550).toDouble());
+      ageDaysFloat.clamp(0, 14).toDouble(),
+      tsbUmol.clamp(0, 550).toDouble(),
+    );
 
     final extraLines = <HorizontalLine>[
       HorizontalLine(
@@ -809,18 +996,22 @@ class _NiceBilirubinScreenState extends State<NiceBilirubinScreen> {
                 ),
                 titlesData: FlTitlesData(
                   topTitles: const AxisTitles(
-                      sideTitles: SideTitles(showTitles: false)),
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
                   rightTitles: const AxisTitles(
-                      sideTitles: SideTitles(showTitles: false)),
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
                   leftTitles: AxisTitles(
                     axisNameWidget: Padding(
                       padding: const EdgeInsets.only(bottom: 4),
-                      child: Text('TSB (\u00b5mol/L)',
-                          style: TextStyle(
-                            fontSize: 10.5,
-                            color: cs.onSurface.withValues(alpha: 0.65),
-                            fontWeight: FontWeight.w600,
-                          )),
+                      child: Text(
+                        'TSB (\u00b5mol/L)',
+                        style: TextStyle(
+                          fontSize: 10.5,
+                          color: cs.onSurface.withValues(alpha: 0.65),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ),
                     axisNameSize: 18,
                     sideTitles: SideTitles(
@@ -831,11 +1022,13 @@ class _NiceBilirubinScreenState extends State<NiceBilirubinScreen> {
                         if (v % 100 != 0) return const SizedBox.shrink();
                         return Padding(
                           padding: const EdgeInsets.only(right: 4),
-                          child: Text('${v.toInt()}',
-                              style: TextStyle(
-                                fontSize: 10,
-                                color: cs.onSurface.withValues(alpha: 0.6),
-                              )),
+                          child: Text(
+                            '${v.toInt()}',
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: cs.onSurface.withValues(alpha: 0.6),
+                            ),
+                          ),
                         );
                       },
                     ),
@@ -843,12 +1036,14 @@ class _NiceBilirubinScreenState extends State<NiceBilirubinScreen> {
                   bottomTitles: AxisTitles(
                     axisNameWidget: Padding(
                       padding: const EdgeInsets.only(top: 4),
-                      child: Text('Days from birth',
-                          style: TextStyle(
-                            fontSize: 10.5,
-                            color: cs.onSurface.withValues(alpha: 0.65),
-                            fontWeight: FontWeight.w600,
-                          )),
+                      child: Text(
+                        'Days from birth',
+                        style: TextStyle(
+                          fontSize: 10.5,
+                          color: cs.onSurface.withValues(alpha: 0.65),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ),
                     axisNameSize: 18,
                     sideTitles: SideTitles(
@@ -859,11 +1054,13 @@ class _NiceBilirubinScreenState extends State<NiceBilirubinScreen> {
                         if (v % 2 != 0) return const SizedBox.shrink();
                         return Padding(
                           padding: const EdgeInsets.only(top: 2),
-                          child: Text('${v.toInt()}',
-                              style: TextStyle(
-                                fontSize: 10,
-                                color: cs.onSurface.withValues(alpha: 0.6),
-                              )),
+                          child: Text(
+                            '${v.toInt()}',
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: cs.onSurface.withValues(alpha: 0.6),
+                            ),
+                          ),
                         );
                       },
                     ),
@@ -908,11 +1105,11 @@ class _NiceBilirubinScreenState extends State<NiceBilirubinScreen> {
                       show: true,
                       getDotPainter: (spot, pct, bar, idx) =>
                           FlDotCirclePainter(
-                        radius: 6,
-                        color: const Color(0xFFD32F2F),
-                        strokeWidth: 1.5,
-                        strokeColor: Colors.white,
-                      ),
+                            radius: 6,
+                            color: const Color(0xFFD32F2F),
+                            strokeWidth: 1.5,
+                            strokeColor: Colors.white,
+                          ),
                     ),
                   ),
                 ],
@@ -930,17 +1127,21 @@ class _NiceBilirubinScreenState extends State<NiceBilirubinScreen> {
             runSpacing: 6,
             children: [
               _legendItem(
-                  swatch: _legendBox(const Color(0xFF1565C0)),
-                  text: 'Phototherapy threshold'),
+                swatch: _legendBox(const Color(0xFF1565C0)),
+                text: 'Phototherapy threshold',
+              ),
               _legendItem(
-                  swatch: _legendBox(const Color(0xFF8B0000)),
-                  text: 'Exchange threshold'),
+                swatch: _legendBox(const Color(0xFF8B0000)),
+                text: 'Exchange threshold',
+              ),
               _legendItem(
-                  swatch: _legendDashed(const Color(0xFFE65100)),
-                  text: 'Intensified zone (>72 hrs)'),
+                swatch: _legendDashed(const Color(0xFFE65100)),
+                text: 'Intensified zone (>72 hrs)',
+              ),
               _legendItem(
-                  swatch: _legendCircle(const Color(0xFFD32F2F)),
-                  text: 'Patient TSB'),
+                swatch: _legendCircle(const Color(0xFFD32F2F)),
+                text: 'Patient TSB',
+              ),
             ],
           ),
         ],
@@ -965,35 +1166,34 @@ class _NiceBilirubinScreenState extends State<NiceBilirubinScreen> {
       children: [
         swatch,
         const SizedBox(width: 6),
-        Text(text,
-            style: TextStyle(
-              fontSize: 10.5,
-              color: cs.onSurface.withValues(alpha: 0.7),
-            )),
+        Text(
+          text,
+          style: TextStyle(
+            fontSize: 10.5,
+            color: cs.onSurface.withValues(alpha: 0.7),
+          ),
+        ),
       ],
     );
   }
 
   Widget _legendBox(Color c) => Container(
-        width: 14,
-        height: 4,
-        decoration: BoxDecoration(
-          color: c,
-          borderRadius: BorderRadius.circular(2),
-        ),
-      );
+    width: 14,
+    height: 4,
+    decoration: BoxDecoration(color: c, borderRadius: BorderRadius.circular(2)),
+  );
 
   Widget _legendDashed(Color c) => SizedBox(
-        width: 14,
-        height: 4,
-        child: CustomPaint(painter: _DashedLinePainter(c)),
-      );
+    width: 14,
+    height: 4,
+    child: CustomPaint(painter: _DashedLinePainter(c)),
+  );
 
   Widget _legendCircle(Color c) => Container(
-        width: 10,
-        height: 10,
-        decoration: BoxDecoration(color: c, shape: BoxShape.circle),
-      );
+    width: 10,
+    height: 10,
+    decoration: BoxDecoration(color: c, shape: BoxShape.circle),
+  );
 
   // ── Section 7: Reference card ───────────────────────────────────────────────
   Widget _buildReferenceCard() {
@@ -1038,13 +1238,15 @@ class _NiceBilirubinScreenState extends State<NiceBilirubinScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title,
-              style: TextStyle(
-                color: cs.onSurface.withValues(alpha: 0.7),
-                fontSize: 11.5,
-                fontWeight: FontWeight.w700,
-                letterSpacing: 0.3,
-              )),
+          Text(
+            title,
+            style: TextStyle(
+              color: cs.onSurface.withValues(alpha: 0.7),
+              fontSize: 11.5,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.3,
+            ),
+          ),
           const SizedBox(height: 12),
           child,
         ],
