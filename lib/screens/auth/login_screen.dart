@@ -40,7 +40,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../providers/auth_provider.dart';
 import '../../services/push_service.dart';
 import '../../utils/prefs_keys.dart';
-import '../onboarding/profile_setup_screen.dart';
 
 /// Where the Apple button is shown: native iOS, and now the web too.
 ///
@@ -108,22 +107,14 @@ class _LoginScreenState extends State<LoginScreen> {
       PushService.instance.init();
     } catch (_) {}
 
-    // Every sign-in path — email, Google and Apple — funnels through here, so
-    // this is the one place the details step needs to be hooked in. The
-    // slide-based onboarding runs before sign-in and therefore cannot ask
-    // anything about the person; a social sign-up would otherwise leave
-    // specialty empty forever, since almost nobody goes looking for Account
-    // settings on their own.
-    if (mounted) {
-      final auth = context.read<AuthProvider>();
-      if (needsProfileSetup(auth)) {
-        await Navigator.of(
-          context,
-        ).push(MaterialPageRoute(builder: (_) => const ProfileSetupScreen()));
-        return; // ProfileSetupScreen pops back to the first route itself.
-      }
-    }
-
+    // No profile step is pushed from here any more.
+    //
+    // It used to push ProfileSetupScreen, which was skippable, collected two
+    // of the seven fields, and wrote to a different place from the Settings
+    // copy — so the two disagreed and neither was complete. ProfileGate now
+    // sits between the auth gate and the home screen and catches an
+    // incomplete profile wherever the person arrived from, which is also the
+    // only way to catch the people who signed in before any of this existed.
     if (mounted) Navigator.of(context).popUntil((route) => route.isFirst);
   }
 

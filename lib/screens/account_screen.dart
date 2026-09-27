@@ -30,6 +30,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'auth/sign_out_flow.dart';
+import 'profile/profile_form.dart';
 import '../models/app_user.dart';
 import '../providers/auth_provider.dart';
 import '../services/profile_store.dart';
@@ -113,7 +114,9 @@ class _AccountScreenState extends State<AccountScreen> {
             style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600),
           ),
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
         ),
       );
     }
@@ -157,7 +160,9 @@ class _AccountScreenState extends State<AccountScreen> {
         title: Text(
           'Delete account?',
           style: GoogleFonts.plusJakartaSans(
-              fontWeight: FontWeight.w700, color: Colors.red.shade700),
+            fontWeight: FontWeight.w700,
+            color: Colors.red.shade700,
+          ),
         ),
         content: Text(
           'This permanently deletes your account and all data. This cannot be undone.',
@@ -208,8 +213,11 @@ class _AccountScreenState extends State<AccountScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.account_circle_outlined,
-                    size: 64, color: cs.onSurface.withValues(alpha: 0.25)),
+                Icon(
+                  Icons.account_circle_outlined,
+                  size: 64,
+                  color: cs.onSurface.withValues(alpha: 0.25),
+                ),
                 const SizedBox(height: 16),
                 Text(
                   "You're not signed in",
@@ -239,7 +247,9 @@ class _AccountScreenState extends State<AccountScreen> {
                     ),
                     child: Text(
                       'Sign in',
-                      style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w800),
+                      style: GoogleFonts.plusJakartaSans(
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
                   ),
                 ),
@@ -257,12 +267,36 @@ class _AccountScreenState extends State<AccountScreen> {
           style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700),
         ),
         actions: [
-          if (!_editing)
-            IconButton(
-              icon: const Icon(Icons.edit_outlined),
-              tooltip: 'Edit profile',
-              onPressed: () => setState(() => _editing = true),
+          // Opens the SAME form the mandatory gate shows, rather than this
+          // screen's own inline editor.
+          //
+          // That editor wrote to ProfileStore and nowhere else — device-local,
+          // invisible to Academics and the admin screens, gone on reinstall —
+          // while the first-run screen wrote name and specialty to Firestore.
+          // The two disagreed and neither was complete. One form now, and the
+          // edit path and the gate path cannot drift because they are the same
+          // widget.
+          IconButton(
+            icon: const Icon(Icons.edit_outlined),
+            tooltip: 'Edit profile',
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => Scaffold(
+                  appBar: AppBar(title: const Text('Edit profile')),
+                  body: SafeArea(
+                    child: ProfileForm(
+                      isMandatory: false,
+                      onSaved: () {
+                        Navigator.pop(context);
+                        if (mounted) setState(() {});
+                      },
+                    ),
+                  ),
+                ),
+              ),
             ),
+          ),
         ],
       ),
       body: ListView(
@@ -275,7 +309,6 @@ class _AccountScreenState extends State<AccountScreen> {
             role: user.role,
             onTapEmoji: _pickEmoji,
           ),
-
 
           const SizedBox(height: 24),
 
@@ -399,9 +432,7 @@ class _AccountScreenState extends State<AccountScreen> {
             Center(
               child: TextButton(
                 onPressed: _handleDeleteAccount,
-                style: TextButton.styleFrom(
-                  foregroundColor: cs.error,
-                ),
+                style: TextButton.styleFrom(foregroundColor: cs.error),
                 child: Text(
                   'Delete account',
                   style: GoogleFonts.plusJakartaSans(
@@ -492,7 +523,10 @@ class _HeaderCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: cs.primary,
                     shape: BoxShape.circle,
-                    border: Border.all(color: cs.surfaceContainerHighest, width: 2),
+                    border: Border.all(
+                      color: cs.surfaceContainerHighest,
+                      width: 2,
+                    ),
                   ),
                   child: Icon(
                     Icons.edit_rounded,
@@ -898,10 +932,12 @@ class _SpecialtyCard extends StatelessWidget {
                 prefixIcon: Icon(Icons.medical_services_outlined),
               ),
               items: kMedicalSpecialties
-                  .map((s) => DropdownMenuItem<String>(
-                        value: s,
-                        child: Text(s, overflow: TextOverflow.ellipsis),
-                      ))
+                  .map(
+                    (s) => DropdownMenuItem<String>(
+                      value: s,
+                      child: Text(s, overflow: TextOverflow.ellipsis),
+                    ),
+                  )
                   .toList(),
               onChanged: (v) {
                 if (v != null) onChanged(v);
@@ -909,8 +945,11 @@ class _SpecialtyCard extends StatelessWidget {
             )
           : Row(
               children: [
-                Icon(Icons.medical_services_outlined,
-                    size: 18, color: cs.primary),
+                Icon(
+                  Icons.medical_services_outlined,
+                  size: 18,
+                  color: cs.primary,
+                ),
                 const SizedBox(width: 10),
                 Expanded(
                   child: Text(

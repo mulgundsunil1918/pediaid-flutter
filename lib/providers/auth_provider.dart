@@ -175,19 +175,34 @@ class AuthProvider extends ChangeNotifier {
 
   Future<void> updateProfile({
     String? name,
+    String? email,
     String? avatarEmoji,
     String? specialty,
+    int? yearOfBirth,
+    String? gender,
+    List<String>? qualifications,
+    int? profileSchemaVersion,
   }) async {
     await _service.updateProfile(
       name: name,
+      email: email,
       avatarEmoji: avatarEmoji,
       specialty: specialty,
+      yearOfBirth: yearOfBirth,
+      gender: gender,
+      qualifications: qualifications,
+      profileSchemaVersion: profileSchemaVersion,
     );
     if (_currentUser != null) {
       _currentUser = _currentUser!.copyWith(
         name: name,
+        email: email,
         avatarEmoji: avatarEmoji,
         specialty: specialty,
+        yearOfBirth: yearOfBirth,
+        gender: gender,
+        qualifications: qualifications,
+        profileSchemaVersion: profileSchemaVersion,
       );
       notifyListeners();
     }

@@ -11,6 +11,7 @@ import 'theme/theme_provider.dart';
 import 'screens/home/home_screen.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/onboarding/onboarding_screen.dart';
+import 'screens/profile/profile_gate.dart';
 import 'widgets/app_config_gate.dart';
 import 'services/tool_registry.dart';
 import 'services/lab_reference_service.dart';
@@ -314,6 +315,10 @@ class _AuthGate extends StatelessWidget {
     if (!auth.hasBootstrapped) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
-    return auth.isLoggedIn ? const HomeScreen() : const LoginScreen();
+    // ProfileGate sits between the two: signed in is not enough, the profile
+    // has to be complete. See profile_gate.dart.
+    return auth.isLoggedIn
+        ? const ProfileGate(child: HomeScreen())
+        : const LoginScreen();
   }
 }
