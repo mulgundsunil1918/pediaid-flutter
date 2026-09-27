@@ -111,7 +111,18 @@ const List<String> kProfileEmojis = [
 
 class DoctorProfile {
   final String fullName;
-  final int? age;
+
+  /// Year of birth, not age.
+  ///
+  /// This field WAS `int? age`, and that is exactly how it went wrong: the
+  /// profile form wrote a year of birth to Firestore while this cache kept the
+  /// age it had been holding for however long, so entering 1996 left the
+  /// Account screen still reading 24. A stored age is correct on the day it is
+  /// typed and decays silently every year after, and nothing tells you it has.
+  ///
+  /// [age] is derived from this now, so the two cannot disagree.
+  final int? yearOfBirth;
+
   final String? gender;
   final String profileEmoji;
   final List<String> qualifications;
@@ -119,17 +130,25 @@ class DoctorProfile {
 
   const DoctorProfile({
     required this.fullName,
-    required this.age,
+    required this.yearOfBirth,
     required this.gender,
     required this.profileEmoji,
     required this.qualifications,
     required this.specialty,
   });
 
+  /// Age today. Null when no year is recorded, and null rather than a silly
+  /// number when the stored year cannot be right.
+  int? get age {
+    if (yearOfBirth == null) return null;
+    final years = DateTime.now().year - yearOfBirth!;
+    return (years < 0 || years > 120) ? null : years;
+  }
+
   DoctorProfile copyWith({
     String? fullName,
-    int? age,
-    bool clearAge = false,
+    int? yearOfBirth,
+    bool clearYearOfBirth = false,
     String? gender,
     bool clearGender = false,
     String? profileEmoji,
@@ -138,7 +157,8 @@ class DoctorProfile {
   }) {
     return DoctorProfile(
       fullName: fullName ?? this.fullName,
-      age: clearAge ? null : (age ?? this.age),
+      yearOfBirth:
+          clearYearOfBirth ? null : (yearOfBirth ?? this.yearOfBirth),
       gender: clearGender ? null : (gender ?? this.gender),
       profileEmoji: profileEmoji ?? this.profileEmoji,
       qualifications: qualifications ?? this.qualifications,
@@ -148,7 +168,7 @@ class DoctorProfile {
 
   Map<String, dynamic> toJson() => {
         'fullName': fullName,
-        'age': age,
+        'yearOfBirth': yearOfBirth,
         'gender': gender,
         'profileEmoji': profileEmoji,
         'qualifications': qualifications,
@@ -158,7 +178,16 @@ class DoctorProfile {
   factory DoctorProfile.fromJson(Map<String, dynamic> json) {
     return DoctorProfile(
       fullName: (json['fullName'] as String?) ?? '',
-      age: (json['age'] as num?)?.toInt(),
+      // Reads the new key, and falls back to converting the legacy `age` for
+      // anyone whose cache predates this. The conversion is an estimate — the
+      // stored age had been decaying for an unknown time — but it puts them in
+      // the right decade and the form asks for a real year anyway.
+      yearOfBirth: (json['yearOfBirth'] as num?)?.toInt() ??
+          (() {
+            final legacy = (json['age'] as num?)?.toInt();
+            if (legacy == null || legacy <= 0 || legacy > 120) return null;
+            return DateTime.now().year - legacy;
+          })(),
       gender: json['gender'] as String?,
       profileEmoji: (json['profileEmoji'] as String?) ?? '🧑‍⚕️',
       qualifications: ((json['qualifications'] as List<dynamic>?) ?? const [])
@@ -170,7 +199,7 @@ class DoctorProfile {
 
   static const empty = DoctorProfile(
     fullName: '',
-    age: null,
+    yearOfBirth: null,
     gender: null,
     profileEmoji: '🧑‍⚕️',
     qualifications: [],

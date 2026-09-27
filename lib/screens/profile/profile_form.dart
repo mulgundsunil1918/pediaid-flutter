@@ -143,6 +143,10 @@ class _ProfileFormState extends State<ProfileForm> {
         ProfileStore.instance.profile.copyWith(
           fullName: _name.text.trim(),
           specialty: _specialty.text.trim(),
+          // The year was missing here, which is the whole bug: Firestore got
+          // 1996 and this cache kept the age it already held, so Account went
+          // on showing 24. Every field the form owns has to be written to both.
+          yearOfBirth: int.tryParse(_yob.text.trim()),
           gender: _gender,
           profileEmoji: _emoji,
           qualifications: labelsFor(_qualifications),

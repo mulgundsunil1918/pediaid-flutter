@@ -42,7 +42,7 @@ AppUser _remote({
 
 DoctorProfile _local({
   String fullName = '',
-  int? age,
+  int? age, // expressed as a year below — the store no longer holds an age
   String? gender,
   String profileEmoji = '',
   List<String> qualifications = const [],
@@ -50,7 +50,12 @@ DoctorProfile _local({
 }) =>
     DoctorProfile(
       fullName: fullName,
-      age: age,
+      // DoctorProfile holds a YEAR now and derives the age. Tests still think
+      // in ages because that is what the legacy cache held and what the
+      // migration converts, so the year is computed here.
+      yearOfBirth: (age == null || age <= 0 || age > 120)
+          ? null
+          : DateTime.now().year - age,
       gender: gender,
       profileEmoji: profileEmoji,
       qualifications: qualifications,

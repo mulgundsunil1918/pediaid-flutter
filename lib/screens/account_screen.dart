@@ -44,15 +44,16 @@ class AccountScreen extends StatefulWidget {
 }
 
 class _AccountScreenState extends State<AccountScreen> {
-  bool _editing = false;
-  bool _busy = false;
+  // The inline editor that used to live here is gone.
+  //
+  // It wrote to ProfileStore and nowhere else — device-local, invisible to
+  // Academics and the admin screens, gone on reinstall — while the first-run
+  // screen wrote name and specialty to Firestore. When the edit button was
+  // repointed at the shared ProfileForm, this became unreachable code that
+  // could still write to the store, which is worse than either. Edit now opens
+  // the same form the mandatory gate shows.
 
   // Edit-mode buffers — seeded from the current profile on entry
-  late String _fullName;
-  late int? _age;
-  late String? _gender;
-  late List<String> _qualifications;
-  late String _specialty;
 
   @override
   void initState() {
@@ -64,7 +65,6 @@ class _AccountScreenState extends State<AccountScreen> {
         ProfileStore.instance.load(fallbackFullName: auth.currentUser?.name);
       }
     });
-    _seedBuffers();
   }
 
   @override
@@ -75,58 +75,8 @@ class _AccountScreenState extends State<AccountScreen> {
 
   void _onProfileChange() {
     if (mounted) {
-      setState(() {
-        if (!_editing) _seedBuffers();
-      });
+      setState(() {});
     }
-  }
-
-  void _seedBuffers() {
-    final p = ProfileStore.instance.profile;
-    _fullName = p.fullName;
-    _age = p.age;
-    _gender = p.gender;
-    _qualifications = List.of(p.qualifications);
-    _specialty = p.specialty;
-  }
-
-  Future<void> _save() async {
-    setState(() => _busy = true);
-    final next = ProfileStore.instance.profile.copyWith(
-      fullName: _fullName.trim(),
-      age: _age,
-      clearAge: _age == null,
-      gender: _gender,
-      clearGender: _gender == null,
-      qualifications: _qualifications,
-      specialty: _specialty,
-    );
-    await ProfileStore.instance.save(next);
-    if (mounted) {
-      setState(() {
-        _editing = false;
-        _busy = false;
-      });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Profile updated',
-            style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600),
-          ),
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-        ),
-      );
-    }
-  }
-
-  void _cancel() {
-    setState(() {
-      _editing = false;
-      _seedBuffers();
-    });
   }
 
   Future<void> _pickEmoji() async {
@@ -315,14 +265,18 @@ class _AccountScreenState extends State<AccountScreen> {
           // ── Personal details ───────────────────────────────────────────
           _SectionHeader(label: 'Personal details'),
           const SizedBox(height: 10),
+          // profile.age is DERIVED from the stored year of birth now, not a
+          // stored age. Storing the age is what made this read 24 after a year
+          // of birth of 1996 was entered: the number was right when it was
+          // first typed and had been quietly decaying ever since.
           _PersonalDetailsCard(
-            editing: _editing,
-            fullName: _editing ? _fullName : profile.fullName,
-            age: _editing ? _age : profile.age,
-            gender: _editing ? _gender : profile.gender,
-            onNameChanged: (v) => _fullName = v,
-            onAgeChanged: (v) => setState(() => _age = v),
-            onGenderChanged: (v) => setState(() => _gender = v),
+            editing: false,
+            fullName: profile.fullName,
+            age: profile.age,
+            gender: profile.gender,
+            onNameChanged: (_) {},
+            onAgeChanged: (_) {},
+            onGenderChanged: (_) {},
           ),
 
           const SizedBox(height: 24),
@@ -331,9 +285,9 @@ class _AccountScreenState extends State<AccountScreen> {
           _SectionHeader(label: 'Qualifications'),
           const SizedBox(height: 10),
           _QualificationsCard(
-            editing: _editing,
-            selected: _editing ? _qualifications : profile.qualifications,
-            onChanged: (next) => setState(() => _qualifications = next),
+            editing: false,
+            selected: profile.qualifications,
+            onChanged: (_) {},
           ),
 
           const SizedBox(height: 24),
@@ -342,70 +296,15 @@ class _AccountScreenState extends State<AccountScreen> {
           _SectionHeader(label: 'Specialty'),
           const SizedBox(height: 10),
           _SpecialtyCard(
-            editing: _editing,
-            selected: _editing ? _specialty : profile.specialty,
-            onChanged: (v) => setState(() => _specialty = v),
+            editing: false,
+            selected: profile.specialty,
+            onChanged: (_) {},
           ),
 
           const SizedBox(height: 28),
 
-          // ── Edit-mode save/cancel row ─────────────────────────────────
-          if (_editing) ...[
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: _busy ? null : _cancel,
-                    style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                    ),
-                    child: Text(
-                      'Cancel',
-                      style: GoogleFonts.plusJakartaSans(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: FilledButton(
-                    onPressed: _busy ? null : _save,
-                    style: FilledButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                    ),
-                    child: _busy
-                        ? const SizedBox(
-                            width: 16,
-                            height: 16,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: Colors.white,
-                            ),
-                          )
-                        : Text(
-                            'Save changes',
-                            style: GoogleFonts.plusJakartaSans(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 28),
-          ],
-
           // ── Danger zone ───────────────────────────────────────────────
-          if (!_editing) ...[
+          ...[
             const SizedBox(height: 4),
             SizedBox(
               height: 50,
