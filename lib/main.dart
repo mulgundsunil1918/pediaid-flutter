@@ -125,6 +125,13 @@ void main() async {
   // ignore: unawaited_futures
   retryPendingProfileSync();
 
+  // And send any COMPLETE profile the backend has not confirmed at the current
+  // version — which is the only thing that rescues a profile saved in the nine
+  // minutes between the form shipping and this sync shipping, since those were
+  // never flagged as owing.
+  // ignore: unawaited_futures
+  ensureProfileSynced(authProvider.currentUser);
+
   // ignore: unawaited_futures
   migrateLocalProfileToFirestore(
     service: authProvider.service,

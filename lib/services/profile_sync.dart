@@ -30,6 +30,19 @@ import 'auth_service.dart';
 /// user object to still be in memory.
 const String _kPendingKey = 'profile_sync_pending_v1';
 
+/// The schema version this device last got accepted by the backend.
+///
+/// The pending flag alone was not enough, and the gap showed up within the
+/// hour: the form shipped at 08:54 and this sync at 09:03, so every profile
+/// completed in between was written to Firestore, never POSTed, and never
+/// flagged as owing — because the code that would have flagged it did not
+/// exist yet. Those profiles could never catch up.
+///
+/// Comparing versions instead of trusting a flag makes it self-healing: any
+/// profile the backend has not confirmed at the current version is sent, no
+/// matter why it was missed.
+const String _kSyncedVersionKey = 'profile_synced_version_v1';
+
 /// Builds the payload the backend's PUT /me expects.
 @visibleForTesting
 Map<String, dynamic> profileSyncPayload(AppUser u) => {
@@ -50,10 +63,29 @@ Future<bool> syncProfileToBackend(AppUser user, {http.Client? client}) async {
   final prefs = await SharedPreferences.getInstance();
   if (ok) {
     await prefs.remove(_kPendingKey);
+    await prefs.setInt(_kSyncedVersionKey, user.profileSchemaVersion);
   } else {
     await prefs.setString(_kPendingKey, jsonEncode(payload));
   }
   return ok;
+}
+
+/// Sends the profile if the backend has not confirmed this version of it.
+///
+/// Called at boot with whatever user the app hydrated. Cheap when there is
+/// nothing to do — one SharedPreferences read and no network — and it is the
+/// only thing that rescues a profile saved before this file existed.
+Future<void> ensureProfileSynced(AppUser? user, {http.Client? client}) async {
+  try {
+    if (user == null || !user.isProfileComplete) return;
+    final prefs = await SharedPreferences.getInstance();
+    final synced = prefs.getInt(_kSyncedVersionKey) ?? 0;
+    if (synced >= user.profileSchemaVersion) return;
+    final ok = await syncProfileToBackend(user, client: client);
+    debugPrint('[profile] backfill sync ${ok ? "sent" : "deferred"}');
+  } catch (e) {
+    debugPrint('[profile] backfill sync failed: $e');
+  }
 }
 
 /// Retries a sync left owing by an earlier launch.
