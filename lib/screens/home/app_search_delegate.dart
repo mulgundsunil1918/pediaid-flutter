@@ -320,12 +320,14 @@ List<_SearchItem> _buildAllItems() {
           ToolKind.calculator => 'Calculators & Tools',
           ToolKind.score => 'Scores',
           ToolKind.guide => 'Guides & Protocols',
+          ToolKind.drug => 'Drug Formulary',
         },
         icon: t.icon,
         color: switch (t.kind) {
           ToolKind.calculator => _kCalcColor,
           ToolKind.score => _kCalcColor,
           ToolKind.guide => _kGuideColor,
+          ToolKind.drug => _kDrugColor,
         },
         keywords: t.keywords
             .split(RegExp(r'\s+'))

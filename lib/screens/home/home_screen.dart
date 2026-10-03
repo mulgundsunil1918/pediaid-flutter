@@ -38,6 +38,8 @@ import '../calculators/double_volume_exchange.dart';
 import '../calculators/neonatal_bp_calculator.dart';
 import '../charts/growth_charts_screen.dart';
 import '../formulary/formulary_screen.dart';
+import '../formulary_v3/formulary_v3_data.dart';
+import '../formulary_v3/formulary_v3_hub.dart';
 import '../calculators/bp_hub_screen.dart';
 import '../calculators/jaundice_hub_screen.dart';
 import '../settings/settings_screen.dart';
@@ -1219,6 +1221,22 @@ class _HomeScreenState extends State<HomeScreen> with RouteAware {
         const Color(0xFFAD1457),
         () => open('resources', 'Resources', () => const ResourcesScreen()),
       ),
+      // Appended at the END of the list on purpose, not next to the existing
+      // Drug Formulary card above. The Showcase coachmark block below keys off
+      // hardcoded indices (0/2/4) into THIS list — inserting anywhere earlier
+      // would silently point a coachmark at the wrong card. The existing
+      // formulary (Neofax + Harriet Lane page images) stays the primary,
+      // unchanged entry point; this is new and additional, same posture as
+      // keeping Drug 2.0's data but hiding it, run in reverse — add visibly,
+      // touch nothing live.
+      _FeatureDef(
+        'Drug Formulary 3.0',
+        '${allFormularyV3Drugs.length} drugs · word-for-word · NEW',
+        Icons.science_rounded,
+        const Color(0xFF00838F),
+        () => open('formulary3', 'Drug Formulary 3.0',
+            () => const FormularyV3Hub()),
+      ),
     ];
 
     // Phone-width check drives the card height below.
@@ -1723,6 +1741,7 @@ class _HomeScreenState extends State<HomeScreen> with RouteAware {
       'devmile': () => const DevMilestonesHub(),
       'tdsc': () => const TdscAssistantScreen(),
       'formulary': () => const FormularyScreen(),
+      'formulary3': () => const FormularyV3Hub(),
       'labref': () => const LabReferenceScreen(),
       'guides': () => const GuidesScreen(),
       'cme': () => const CmeScreen(),

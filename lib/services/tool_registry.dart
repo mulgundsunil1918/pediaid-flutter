@@ -27,6 +27,9 @@
 import 'package:flutter/material.dart';
 
 import '../data/scores_data_loader.dart';
+import '../screens/formulary_v3/drug_detail_v3_screen.dart';
+import '../screens/formulary_v3/drug_entry_v3.dart';
+import '../screens/formulary_v3/formulary_v3_data.dart';
 import 'recents_service.dart';
 
 import '../screens/calculators/calculators_screen.dart';
@@ -43,7 +46,7 @@ import '../screens/guides/aki/aki_screen.dart';
 import '../screens/guides/neonatal_scores/neonatal_score_by_name.dart';
 
 /// Which part of the app a tool belongs to. Used to group the picker.
-enum ToolKind { calculator, score, guide }
+enum ToolKind { calculator, score, guide, drug }
 
 class ToolEntry {
   /// Stable, persisted identifier, e.g. `calc:qtc` or `score:pews`.
@@ -445,6 +448,28 @@ class ToolRegistry {
 
     for (final e in _fromAssets) {
       add(e);
+    }
+
+    // Drug Formulary 3.0 — all 489 entries, individually searchable. Brand
+    // names go into keywords (not the label) so typing "Tylenol" finds
+    // Acetaminophen without the results list showing "Tylenol" as if it were
+    // the drug's own name — the label stays the generic name the book uses.
+    //
+    // Cross-reference entries ("ACTH — See Corticotropin", 45 of them) are
+    // registered too and deliberately not filtered out: someone who types
+    // "ACTH" should find something, even though the full monograph lives
+    // under a different name — that is what the book itself does.
+    for (final d in allFormularyV3Drugs) {
+      if (d.name.isEmpty) continue;
+      add(ToolEntry(
+        key: 'drug:${_slug(d.name)}',
+        label: titleCaseDrugName(d.name),
+        subtitle: d.drugClass.isNotEmpty ? d.drugClass : d.brandNames,
+        icon: Icons.medication_outlined,
+        kind: ToolKind.drug,
+        keywords: '${d.brandNames} ${d.drugClass} formulary drug dose dosing',
+        build: () => DrugDetailV3Screen(drug: d),
+      ));
     }
 
     return List.unmodifiable(out);
