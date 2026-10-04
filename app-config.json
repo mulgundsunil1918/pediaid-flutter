@@ -3,6 +3,7 @@
   "_minVersion": "Builds strictly below this are blocked with an update screen. Use only for a genuinely unsafe build — a wrong dose, a broken calculator. Example: \"1.2.1\"",
   "_disabledTools": "Tool ids taken out of service; those screens show a notice instead of the tool. Example: [\"tpn-calculator\"]",
   "_notice": "Message shown at the top of the app. Example: \"Correction issued for TPN dosing — please update.\"",
+  "_profileGate": "The profile form (year of birth included) is compulsory. Only if saving it ever breaks: add \"profile-gate\" to disabledTools and it shows 'Do it later' on the next launch. Remove it again afterwards.",
 
   "minVersion": null,
   "disabledTools": [],
