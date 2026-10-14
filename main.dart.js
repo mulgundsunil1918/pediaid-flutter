@@ -180637,7 +180637,7 @@ break
 case 6:case 1:return B.L(q,r)
 case 2:return B.K(o.at(-1),r)}})
 return B.M($async$Fn,r)},
-p(a){var s,r=this,q=null,p=B.i(a).ax,o=B.bt(q,q,q,!0,!0,q,q,1,q,q,q,!1,q,!1,q,q,q,q,!0,q,q,q,q,q,B.f("NRP 8th Edition",q,q,q,q,q,B.x().$1$fontWeight(A.z),q,q,q),q,q,q,1,q,!0),n=B.ae(A.LX,p.b,q,72),m=r.e?"NRP 8th Edition opened in a new tab":"Opening NRP 8th Edition\u2026",l=p.k3
+p(a){var s,r=this,q=null,p=B.i(a).ax,o=B.bt(q,q,q,!0,!0,q,q,1,q,q,q,!1,q,!1,q,q,q,q,!0,q,q,q,q,q,B.f("NRP 9th Edition",q,q,q,q,q,B.x().$1$fontWeight(A.z),q,q,q),q,q,q,1,q,!0),n=B.ae(A.LX,p.b,q,72),m=r.e?"NRP 9th Edition opened in a new tab":"Opening NRP 9th Edition\u2026",l=p.k3
 m=B.f(m,q,q,q,q,q,B.x().$3$color$fontSize$fontWeight(l,16,A.z),A.am,q,q)
 s=r.f
 if(s==null)s=u.i0
@@ -257711,7 +257711,7 @@ q=B.ct(j,11,15,0,0,0,0)
 c=B.WO(k,k,"Hyderabad",A.wK,h,k,B.ct(e,8,1,0,0,0,0),k,16,g,f,"NNF's premier annual scientific meeting \u2014 state-of-the-art lectures, hands-on workshops on ventilation, surfactant, TPN, and NICU design, plus competitive paper and poster sessions.",q,m,"preview-2",!1,k,k,k,"National Neonatology Forum of India",3000,k,k,k,"neoupdate-2026",k,k,k,c,l,"Annual Conference of National Neonatology Forum",A.ePX,i,"NeoUpdate 2026",B.ct(e,8,1,0,0,0,0),"HICC")
 q=B.ct(j,8,16,0,0,0,0)
 p=B.ct(j,8,17,0,0,0,0)
-q=B.WO(k,k,"Bangalore",A.wK,h,k,B.ct(e,7,1,0,0,0,0),k,8,"AHA NRP",f,"AHA-affiliated NRP Provider course covering the 8th edition algorithm, hands-on skills stations (PPV, intubation, UVC, chest compressions), megacode simulation, and written exam. Certificate valid for 2 years.",p,"workshop","preview-3",!1,k,30,k,"PALS India",5000,k,k,k,"palsindia-nrp-2026",k,"NRP Master Trainer","Dr. Priya Sharma",q,l,"AHA-certified Neonatal Resuscitation Program",A.hFV,i,"NRP Provider Course \u2014 PALS India",B.ct(e,7,1,0,0,0,0),"KIMS Hospital")
+q=B.WO(k,k,"Bangalore",A.wK,h,k,B.ct(e,7,1,0,0,0,0),k,8,"AHA NRP",f,"AHA-affiliated NRP Provider course covering the 9th edition algorithm, hands-on skills stations (PPV, intubation, UVC, chest compressions), megacode simulation, and written exam. Certificate valid for 2 years.",p,"workshop","preview-3",!1,k,30,k,"PALS India",5000,k,k,k,"palsindia-nrp-2026",k,"NRP Master Trainer","Dr. Priya Sharma",q,l,"AHA-certified Neonatal Resuscitation Program",A.hFV,i,"NRP Provider Course \u2014 PALS India",B.ct(e,7,1,0,0,0,0),"KIMS Hospital")
 p=B.ct(j,9,5,19,0,0,0)
 o=B.ct(j,9,5,20,0,0,0)
 p=B.WO(k,k,k,A.wK,h,k,B.ct(e,8,15,0,0,0,0),k,1,g,f,"A focused one-hour webinar on rational antibiotic use in common paediatric infections \u2014 URTI, UTI, pneumonia, and neonatal sepsis. Includes case-based discussion and the latest ICMR resistance patterns.",o,"webinar","preview-4",!1,k,k,"https://example.com/webinar","Pediatric Infectious Diseases Chapter \u2014 IAP",0,k,k,k,"pedsid-webinar-abx-stewardship",k,"Professor, Dept of Pediatrics, AIIMS Delhi","Dr. Rakesh Lodha",p,l,"PedsID Monthly Webinar Series",A.ef6,i,"Antibiotic Stewardship in Paediatric Practice",B.ct(e,8,15,0,0,0,0),k)
